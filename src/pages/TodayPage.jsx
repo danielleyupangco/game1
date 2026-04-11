@@ -16,7 +16,7 @@ export default function TodayPage() {
   const { protocol, steps } = record
   const allDone = record.protocolComplete
   const doneCount = Object.keys(protocol).filter(k => k !== 'creatorDone' && protocol[k]).length
-  const totalItems = 8
+  const totalItems = 7
   const pct = doneCount / totalItems
 
   const today = new Date()
@@ -111,9 +111,11 @@ export default function TodayPage() {
         <div className="card" style={{ marginBottom: '12px' }}>
           <div style={{ marginBottom: '4px' }}>
             {PROTOCOL_ITEMS.map((item) => {
-              const isLinked = item.key === 'meditateDone' || item.key === 'plankDone' || item.key === 'journalDone'
-              const handleToggle = isLinked
-                ? () => navigate(item.key === 'journalDone' ? '/journal' : '/meditate')
+              // Meditate and plank navigate to their timer when unchecked (they auto-check on completion)
+              // Journal always toggles manually — user may write in physical notebook
+              const isTimerLinked = item.key === 'meditateDone' || item.key === 'plankDone'
+              const handleToggle = isTimerLinked && !protocol[item.key]
+                ? () => navigate('/meditate')
                 : () => toggleProtocol(item.key)
               return (
                 <CheckItem
@@ -122,7 +124,7 @@ export default function TodayPage() {
                   sublabel={item.sublabel}
                   icon={item.icon}
                   checked={protocol[item.key]}
-                  onToggle={isLinked && !protocol[item.key] ? handleToggle : () => toggleProtocol(item.key)}
+                  onToggle={handleToggle}
                 />
               )
             })}

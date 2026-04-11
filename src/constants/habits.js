@@ -38,14 +38,8 @@ export const PROTOCOL_ITEMS = [
   {
     key: 'journalDone',
     label: 'Journal entry written',
-    sublabel: 'Go to the Journal tab',
+    sublabel: 'Physical or digital — check when done',
     icon: '✍️',
-  },
-  {
-    key: 'noScrolling',
-    label: 'No mindless scrolling before bed',
-    sublabel: 'Phone down by 10 PM',
-    icon: '📵',
   },
 ]
 
@@ -76,7 +70,6 @@ export const DEFAULT_DAY_RECORD = {
     meditateDone: false,
     plankDone: false,
     journalDone: false,
-    noScrolling: false,
     creatorDone: false,
   },
   steps: { entered: 0, goal: 10000 },
@@ -96,7 +89,6 @@ export const PROTOCOL_KEYS = [
   'meditateDone',
   'plankDone',
   'journalDone',
-  'noScrolling',
 ]
 
 export function isProtocolComplete(protocol) {

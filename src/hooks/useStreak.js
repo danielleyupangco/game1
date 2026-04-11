@@ -65,7 +65,7 @@ export function useStreak(protocolComplete) {
     const record = get('day_' + key, null)
     if (!record) return { key, completion: 0 }
     const protocol = record.protocol ?? {}
-    const keys = ['noBreakfast', 'lunchLiquids', 'fastUntil630', 'stepsGoalMet', 'meditateDone', 'plankDone', 'journalDone', 'noScrolling']
+    const keys = ['noBreakfast', 'lunchLiquids', 'fastUntil630', 'stepsGoalMet', 'meditateDone', 'plankDone', 'journalDone']
     const done = keys.filter(k => protocol[k]).length
     return { key, completion: done / keys.length, isComplete: record.protocolComplete }
   })

@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useToday } from '../hooks/useToday'
 import { useStreak } from '../hooks/useStreak'
-import { get, set } from '../lib/storage'
-import { isoWeekKey, todayKey, formatDate } from '../lib/dateUtils'
+import { get, set, getAllDayKeys } from '../lib/storage'
+import { isoWeekKey, todayKey, formatDate, offsetDayKey } from '../lib/dateUtils'
+import { PROTOCOL_ITEMS, PROTOCOL_KEYS } from '../constants/habits'
 import ProgressRing from '../components/ui/ProgressRing'
 import { Flame, Trophy, Target } from 'lucide-react'
 
@@ -44,18 +45,13 @@ function WeekGrid({ weekDays }) {
 }
 
 function CalendarHeatmap({ last90 }) {
-  // Group by week columns (13 cols × 7 rows)
   const weeks = []
   let week = []
   for (let i = 0; i < last90.length; i++) {
     week.push(last90[i])
-    if (week.length === 7) {
-      weeks.push(week)
-      week = []
-    }
+    if (week.length === 7) { weeks.push(week); week = [] }
   }
   if (week.length > 0) weeks.push(week)
-
   const today = todayKey()
 
   return (
@@ -77,9 +73,7 @@ function CalendarHeatmap({ last90 }) {
                   key={key}
                   title={`${formatDate(key)} · ${Math.round(completion * 100)}%`}
                   style={{
-                    width: '11px',
-                    height: '11px',
-                    borderRadius: '2px',
+                    width: '11px', height: '11px', borderRadius: '2px',
                     background: bg,
                     border: key === today ? '1px solid rgba(45,212,191,0.5)' : 'none',
                     transition: 'background 0.3s ease',
@@ -87,6 +81,103 @@ function CalendarHeatmap({ last90 }) {
                 />
               )
             })}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function HabitConsistency() {
+  const today = todayKey()
+  // Build last 30 days of records
+  const days30 = []
+  for (let i = 29; i >= 0; i--) {
+    const key = offsetDayKey(-i)
+    if (key > today) continue
+    const record = get('day_' + key, null)
+    days30.push({ key, protocol: record?.protocol ?? {} })
+  }
+  const totalDays = days30.length
+
+  // For each protocol item compute how many days it was done
+  const stats = PROTOCOL_ITEMS.map(item => {
+    const done = days30.filter(d => d.protocol[item.key] === true).length
+    // Last 7 days
+    const last7 = days30.slice(-7)
+    const done7 = last7.filter(d => d.protocol[item.key] === true).length
+    return { ...item, done, done7, total: totalDays, pct: totalDays > 0 ? done / totalDays : 0 }
+  })
+
+  // Mini dots (last 14 days) per habit
+  const last14Keys = []
+  for (let i = 13; i >= 0; i--) {
+    const k = offsetDayKey(-i)
+    if (k <= today) last14Keys.push(k)
+  }
+
+  return (
+    <div className="card" style={{ marginBottom: '16px' }}>
+      <div style={{ marginBottom: '16px' }}>
+        <div style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#4b5563' }}>
+          Habit Consistency
+        </div>
+        <div style={{ fontSize: '11px', color: '#374151', marginTop: '2px' }}>Last 30 days</div>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {stats.map(({ key, icon, label, done, done7, total, pct }) => (
+          <div key={key}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '15px' }}>{icon}</span>
+                <span style={{ fontSize: '12px', color: '#9ca3af', fontFamily: 'var(--font-mono)' }}>
+                  {label.split(':')[0]}
+                </span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '10px', color: '#4b5563' }}>
+                  7d: <span style={{ color: done7 >= 5 ? '#2dd4bf' : done7 >= 3 ? '#eab308' : '#6b7280', fontWeight: 600 }}>{done7}/7</span>
+                </span>
+                <span style={{ fontSize: '11px', fontWeight: 700, color: pct >= 0.8 ? '#2dd4bf' : pct >= 0.5 ? '#eab308' : '#6b7280', minWidth: '36px', textAlign: 'right' }}>
+                  {done}/{total}
+                </span>
+              </div>
+            </div>
+
+            {/* Progress bar */}
+            <div style={{ height: '4px', background: '#1e1e1e', borderRadius: '2px', overflow: 'hidden', marginBottom: '5px' }}>
+              <div style={{
+                height: '100%',
+                width: `${pct * 100}%`,
+                background: pct >= 0.8
+                  ? '#2dd4bf'
+                  : pct >= 0.5
+                  ? 'linear-gradient(90deg, #eab308, #f97316)'
+                  : '#374151',
+                borderRadius: '2px',
+                transition: 'width 0.6s ease',
+              }} />
+            </div>
+
+            {/* Mini dot trail — last 14 days */}
+            <div style={{ display: 'flex', gap: '3px' }}>
+              {last14Keys.map(k => {
+                const dayRecord = get('day_' + k, null)
+                const checked = dayRecord?.protocol?.[key] === true
+                return (
+                  <div
+                    key={k}
+                    style={{
+                      flex: 1,
+                      height: '5px',
+                      borderRadius: '2px',
+                      background: checked ? '#2dd4bf' : k === today ? 'rgba(45,212,191,0.15)' : '#1e1e1e',
+                    }}
+                  />
+                )
+              })}
+            </div>
           </div>
         ))}
       </div>
@@ -104,8 +195,7 @@ function WeeklyReflection() {
   const [isEditing, setIsEditing] = useState(!saved)
 
   const handleSave = () => {
-    const data = { week: weekKey, reflection: text, rating, completedAt: new Date().toISOString() }
-    set(storageKey, data)
+    set(storageKey, { week: weekKey, reflection: text, rating, completedAt: new Date().toISOString() })
     setSaveStatus('saved')
     setIsEditing(false)
     setTimeout(() => setSaveStatus(''), 2000)
@@ -121,23 +211,15 @@ function WeeklyReflection() {
           <div style={{ fontSize: '11px', color: '#374151', marginTop: '2px' }}>{weekKey}</div>
         </div>
         {!isEditing && saved && (
-          <button
-            onClick={() => setIsEditing(true)}
-            style={{ fontSize: '10px', color: '#4b5563', background: 'none', border: 'none', cursor: 'pointer', letterSpacing: '0.06em' }}
-          >
+          <button onClick={() => setIsEditing(true)} style={{ fontSize: '10px', color: '#4b5563', background: 'none', border: 'none', cursor: 'pointer' }}>
             Edit
           </button>
         )}
       </div>
 
-      {/* Star rating */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '12px' }}>
         {[1, 2, 3, 4, 5].map(n => (
-          <button
-            key={n}
-            onClick={() => setRating(n)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', opacity: n <= rating ? 1 : 0.25, transition: 'opacity 0.15s' }}
-          >
+          <button key={n} onClick={() => setRating(n)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', opacity: n <= rating ? 1 : 0.2, transition: 'opacity 0.15s' }}>
             ★
           </button>
         ))}
@@ -153,11 +235,7 @@ function WeeklyReflection() {
             style={{ minHeight: '100px', lineHeight: '1.65', padding: '10px 12px' }}
             rows={5}
           />
-          <button
-            className="timer-btn"
-            onClick={handleSave}
-            style={{ marginTop: '10px', width: '100%', padding: '11px' }}
-          >
+          <button className="timer-btn" onClick={handleSave} style={{ marginTop: '10px', width: '100%', padding: '11px' }}>
             Save Reflection
           </button>
         </>
@@ -177,12 +255,10 @@ export default function ProgressPage() {
 
   const streakProgress = Math.min(currentStreak / WEEK_GOAL, 1)
   const atWeekGoal = currentStreak >= WEEK_GOAL
-
   const totalComplete = last90.filter(d => d.isComplete).length
 
   return (
     <div style={{ padding: '24px 20px', maxWidth: '480px', margin: '0 auto' }}>
-      {/* Header */}
       <div style={{ marginBottom: '24px' }}>
         <div style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#4b5563', marginBottom: '4px' }}>
           Your Journey
@@ -195,12 +271,7 @@ export default function ProgressPage() {
       {/* Streak hero */}
       <div className="card" style={{ marginBottom: '16px', textAlign: 'center', padding: '24px 16px' }}>
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
-          <ProgressRing
-            progress={streakProgress}
-            size={140}
-            strokeWidth={8}
-            color={atWeekGoal ? '#2dd4bf' : '#818cf8'}
-          >
+          <ProgressRing progress={streakProgress} size={140} strokeWidth={8} color={atWeekGoal ? '#2dd4bf' : '#818cf8'}>
             <div>
               <div style={{ fontSize: '38px', fontWeight: 700, color: '#f0f0f0', lineHeight: 1, fontFamily: 'var(--font-mono)' }}>
                 {currentStreak}
@@ -216,29 +287,20 @@ export default function ProgressPage() {
           {atWeekGoal ? '🎉 Week goal reached — keep going!' : `${WEEK_GOAL - currentStreak} days to your first milestone`}
         </div>
 
-        {/* Stats row */}
         <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #1a1a1a' }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-              <Flame size={13} color="#f97316" />
-              <span style={{ fontSize: '18px', fontWeight: 700, color: '#f0f0f0' }}>{currentStreak}</span>
+          {[
+            { icon: <Flame size={13} color="#f97316" />, value: currentStreak, label: 'Current' },
+            { icon: <Trophy size={13} color="#eab308" />, value: longestStreak, label: 'Best' },
+            { icon: <Target size={13} color="#818cf8" />, value: totalComplete, label: 'Total Days' },
+          ].map(({ icon, value, label }) => (
+            <div key={label} style={{ textAlign: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                {icon}
+                <span style={{ fontSize: '18px', fontWeight: 700, color: '#f0f0f0' }}>{value}</span>
+              </div>
+              <div style={{ fontSize: '9px', color: '#4b5563', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: '2px' }}>{label}</div>
             </div>
-            <div style={{ fontSize: '9px', color: '#4b5563', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: '2px' }}>Current</div>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-              <Trophy size={13} color="#eab308" />
-              <span style={{ fontSize: '18px', fontWeight: 700, color: '#f0f0f0' }}>{longestStreak}</span>
-            </div>
-            <div style={{ fontSize: '9px', color: '#4b5563', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: '2px' }}>Best</div>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-              <Target size={13} color="#818cf8" />
-              <span style={{ fontSize: '18px', fontWeight: 700, color: '#f0f0f0' }}>{totalComplete}</span>
-            </div>
-            <div style={{ fontSize: '9px', color: '#4b5563', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: '2px' }}>Total Days</div>
-          </div>
+          ))}
         </div>
       </div>
 
@@ -249,6 +311,9 @@ export default function ProgressPage() {
         </div>
         <WeekGrid weekDays={weekDays} />
       </div>
+
+      {/* Per-habit consistency */}
+      <HabitConsistency />
 
       {/* 90-day heatmap */}
       <div className="card" style={{ marginBottom: '16px' }}>
