@@ -49,6 +49,16 @@ export function useBreathingTimer(targetDuration = 300) {
       setPhaseIndex(nextPi)
       setPhase(PHASES[nextPi].name)
       if (nextPi === 0) setCycles(c => c + 1)
+      // Vibration cues for each phase transition
+      if (navigator.vibrate) {
+        const patterns = {
+          inhale: [80],           // single short pulse — begin inhale
+          hold: [60, 60, 60],     // double tap — hold
+          exhale: [200],          // long pulse — begin exhale
+          rest: [40],             // tiny tap — rest
+        }
+        navigator.vibrate(patterns[PHASES[nextPi].name] || [50])
+      }
     }
 
     rafRef.current = requestAnimationFrame(tick)
@@ -61,6 +71,7 @@ export function useBreathingTimer(targetDuration = 300) {
     sessionStartRef.current = now - sessionElapsed * 1000
     phaseStartRef.current = now - phaseElapsed * 1000
     setPhase(PHASES[phaseIndexRef.current].name)
+    if (navigator.vibrate) navigator.vibrate([80])
     rafRef.current = requestAnimationFrame(tick)
   }, [tick, sessionElapsed, phaseElapsed])
 

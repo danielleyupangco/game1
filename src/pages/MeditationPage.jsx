@@ -6,6 +6,8 @@ import { Play, Pause, RotateCcw, Plus, Minus } from 'lucide-react'
 import ProgressRing from '../components/ui/ProgressRing'
 
 const DURATIONS = [
+  { label: '30s', secs: 30 },
+  { label: '1 min', secs: 60 },
   { label: '3 min', secs: 180 },
   { label: '5 min', secs: 300 },
   { label: '10 min', secs: 600 },

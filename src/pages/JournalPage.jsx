@@ -162,11 +162,8 @@ export default function JournalPage() {
           style={{ minHeight: '180px', lineHeight: '1.7', padding: '12px 14px' }}
           rows={8}
         />
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
-          <div style={{ fontSize: '10px', color: '#374151' }}>
-            {charCount > 20 && <span style={{ color: '#2dd4bf' }}>✓ Logged</span>}
-          </div>
-          <div style={{ fontSize: '10px', color: '#374151' }}>{charCount} chars</div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: '8px' }}>
+          <div style={{ fontSize: '10px', color: '#374151' }}>{charCount > 0 ? `${charCount} chars` : ''}</div>
         </div>
       </div>
 

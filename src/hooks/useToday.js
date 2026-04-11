@@ -94,9 +94,7 @@ export function useToday() {
 
   const setJournal = useCallback((text) => {
     setRecord(prev => {
-      const protocol = { ...prev.protocol, journalDone: text.trim().length > 20 }
-      const next = { ...prev, journal: text, protocol }
-      next.protocolComplete = isProtocolComplete(protocol)
+      const next = { ...prev, journal: text }
       set('day_' + key, next)
       return next
     })
