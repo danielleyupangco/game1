@@ -8,8 +8,8 @@ three sections:
 | Section | Sources | Lookback |
 |---|---|---|
 | 🤖 AI News | TechCrunch AI, The Verge AI, VentureBeat AI, MIT Tech Review | 26 h |
-| 💡 Practical AI & Tips | One Useful Thing (Ethan Mollick), Simon Willison, Ben's Bites, Every | 96 h |
-| 🇵🇭 Philippines | Rappler, BusinessWorld, Philstar, Inquirer News, Inquirer Lifestyle, GMA News | 26 h |
+| 💡 Practical AI & Tips | One Useful Thing (Ethan Mollick), Simon Willison, Ben's Bites, Latent Space | 96 h |
+| 🇵🇭 Philippines | Rappler, BusinessMirror, Philstar, Inquirer News, Inquirer Lifestyle, GMA News | 26 h |
 
 No API keys or paid services are involved — only a free Telegram bot.
 
