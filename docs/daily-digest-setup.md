@@ -9,10 +9,11 @@ sections:
 |---|---|---|
 | 🤖 AI News | TechCrunch AI, The Verge AI, VentureBeat AI, MIT Tech Review | 26 h |
 | 💡 Practical AI & Tips | One Useful Thing (Ethan Mollick), Simon Willison, Ben's Bites, Latent Space | 96 h |
-| 🇵🇭 Philippines | Rappler, BusinessMirror, Philstar, Inquirer News, Inquirer Lifestyle, GMA News | 26 h |
-| 🚀 PH & SEA Startups | Tech in Asia, e27, KrASIA, Vulcan Post | 48 h |
-| 🌿 Health & Wellness | Harvard Health, ScienceDaily Health, Peter Attia | 48 h |
-| ✨ Social & Culture Trends | Vox Culture, Mashable, NYT Style, Hypebeast | 48 h |
+| 🇵🇭 Philippines | Rappler, Inquirer Business, Philstar, Inquirer News, Inquirer Lifestyle, GMA News | 26 h |
+| 🚀 PH & SEA Startups & Business | KrASIA, Vulcan Post, Rest of World, TechNode, DealStreetAsia, GMA Money | 48 h |
+| 🌿 Health & Wellness | ScienceDaily Health, Peter Attia, NPR Health, Guardian Wellness, NYT Well | 48 h |
+| ✨ Trends — Social, Design & Culture | Social Media Today, Mashable, Hypebeast, Dezeen, Colossal, Pitchfork, Nolisoli, When in Manila | 48 h |
+| 🏆 Sports | ESPN, Rappler Sports | 26 h |
 
 No API keys or paid services are involved — only a free Telegram bot.
 
