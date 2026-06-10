@@ -3,13 +3,16 @@
 Every day at **7:00 AM Philippine time**, a GitHub Action
 (`.github/workflows/daily-digest.yml`) runs `scripts/daily-digest.mjs`, which
 pulls headlines from RSS feeds and sends them to you on Telegram, grouped into
-three sections:
+sections:
 
 | Section | Sources | Lookback |
 |---|---|---|
 | 🤖 AI News | TechCrunch AI, The Verge AI, VentureBeat AI, MIT Tech Review | 26 h |
 | 💡 Practical AI & Tips | One Useful Thing (Ethan Mollick), Simon Willison, Ben's Bites, Latent Space | 96 h |
 | 🇵🇭 Philippines | Rappler, BusinessMirror, Philstar, Inquirer News, Inquirer Lifestyle, GMA News | 26 h |
+| 🚀 PH & SEA Startups | Tech in Asia, e27, KrASIA, Vulcan Post | 48 h |
+| 🌿 Health & Wellness | Harvard Health, ScienceDaily Health, Peter Attia | 48 h |
+| ✨ Social & Culture Trends | Vox Culture, Mashable, NYT Style, Hypebeast | 48 h |
 
 No API keys or paid services are involved — only a free Telegram bot.
 

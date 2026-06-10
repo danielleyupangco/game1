@@ -55,6 +55,41 @@ const SECTIONS = [
       { name: 'GMA News', url: 'https://data.gmanetwork.com/gno/rss/news/feed.xml' },
     ],
   },
+  {
+    title: '🚀 PH & SEA Startups',
+    windowHours: 48,
+    maxItems: 5,
+    maxPerFeed: 2,
+    feeds: [
+      { name: 'Tech in Asia', url: 'https://www.techinasia.com/feed' },
+      { name: 'e27', url: 'https://e27.co/feed/' },
+      { name: 'KrASIA', url: 'https://kr-asia.com/feed/' },
+      { name: 'Vulcan Post', url: 'https://vulcanpost.com/feed/' },
+    ],
+  },
+  {
+    title: '🌿 Health & Wellness',
+    windowHours: 48,
+    maxItems: 4,
+    maxPerFeed: 2,
+    feeds: [
+      { name: 'Harvard Health', url: 'https://www.health.harvard.edu/blog/feed' },
+      { name: 'ScienceDaily Health', url: 'https://www.sciencedaily.com/rss/health_medicine.xml' },
+      { name: 'Peter Attia', url: 'https://peterattiamd.com/feed/' },
+    ],
+  },
+  {
+    title: '✨ Social & Culture Trends',
+    windowHours: 48,
+    maxItems: 4,
+    maxPerFeed: 2,
+    feeds: [
+      { name: 'Vox Culture', url: 'https://www.vox.com/rss/culture/index.xml' },
+      { name: 'Mashable', url: 'https://mashable.com/feeds/rss/all' },
+      { name: 'NYT Style', url: 'https://rss.nytimes.com/services/xml/rss/nyt/FashionandStyle.xml' },
+      { name: 'Hypebeast', url: 'https://hypebeast.com/feed' },
+    ],
+  },
 ];
 
 const TELEGRAM_LIMIT = 4096;
