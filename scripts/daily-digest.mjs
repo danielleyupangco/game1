@@ -38,7 +38,7 @@ const SECTIONS = [
       { name: 'One Useful Thing', url: 'https://www.oneusefulthing.org/feed' },
       { name: 'Simon Willison', url: 'https://simonwillison.net/atom/everything/' },
       { name: "Ben's Bites", url: 'https://www.bensbites.com/feed' },
-      { name: 'Every', url: 'https://every.to/feed.xml' },
+      { name: 'Latent Space', url: 'https://www.latent.space/feed' },
     ],
   },
   {
@@ -48,7 +48,7 @@ const SECTIONS = [
     maxPerFeed: 3,
     feeds: [
       { name: 'Rappler', url: 'https://www.rappler.com/feed/' },
-      { name: 'BusinessWorld', url: 'https://www.bworldonline.com/feed/' },
+      { name: 'BusinessMirror', url: 'https://businessmirror.com.ph/feed/' },
       { name: 'Philstar', url: 'https://www.philstar.com/rss/headlines' },
       { name: 'Inquirer News', url: 'https://newsinfo.inquirer.net/feed' },
       { name: 'Inquirer Lifestyle', url: 'https://lifestyle.inquirer.net/feed' },
