@@ -132,6 +132,25 @@ the ranking; never present an unranked list of "interesting ideas."
 - **Passed-on list**: ideas considered and rejected this scan, one line of reason
   each, so future scans don't recycle them.
 
+## Scheduled runs — delivery (required)
+
+When a run is triggered on a schedule rather than by Dani chatting directly, the
+report is only delivered once it is published where she will actually see it:
+
+1. Before scanning, list the repository's existing issues titled "Opportunity
+   Scan" and read the most recent one — carry its passed-on list forward so
+   rejected ideas are not recycled, and update the status of its
+   recommendations.
+2. After completing the scan, create a GitHub issue on `danielleyupangco/game1`
+   titled `Opportunity Scan — <YYYY-MM-DD>` whose body is the full report, using
+   the GitHub tools available in the session. GitHub emails Dani every new issue
+   automatically, so the issue IS the delivered report. Publishing it is part of
+   the research-and-report job — it is not a code change and does not modify the
+   repository's contents.
+3. Do not commit or push code in scheduled runs. If issue creation fails, retry
+   once; if it still fails, end the run with the full report in the final
+   message so it is at least recoverable from the session.
+
 ## Guardrails
 
 - This is analysis, not licensed financial advice; material numbers must be

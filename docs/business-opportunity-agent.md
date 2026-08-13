@@ -34,9 +34,13 @@ To use it outside this repo, copy `.claude/agents/business-opportunity.md` into
 `~/.claude/agents/` on your machine.
 
 **Weekly automatic scan** — a Claude Routine ("Weekly Business Opportunity Scan")
-runs every Monday 8:00 AM Philippine time in a fresh cloud session, executes a full
-scan per the agent's method, and notifies you (push + email) with the report. Manage
-it (pause, reschedule, delete) from your Claude Routines list, or just ask Claude.
+runs every Monday 8:00 AM Philippine time in a fresh cloud session and executes a
+full scan per the agent's method. Each run delivers its report by posting a GitHub
+issue titled `Opportunity Scan — <date>` on this repo — GitHub then emails the full
+report to the repo owner automatically, so reports arrive in your inbox with no
+action needed. Past reports stay browsable under the repo's Issues tab. Manage the
+Routine (pause, reschedule, delete) from your Claude Routines list, or just ask
+Claude.
 
 ## What a report looks like
 
