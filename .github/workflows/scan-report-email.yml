@@ -1,0 +1,44 @@
+name: Email Scan Reports
+
+# GitHub suppresses notifications for a user's own actions, and the Claude
+# integration opens scan issues as the repo owner — so the owner never gets
+# emailed. This workflow re-posts the report as github-actions[bot], a
+# different actor, which makes GitHub send the owner a normal notification
+# email containing the full report.
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  relay:
+    if: startsWith(github.event.issue.title, 'Opportunity Scan')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Re-post report as Actions bot to trigger owner email
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.issue.body || '';
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: `📬 **Weekly Opportunity Scan delivered.** Full report below — GitHub emails this comment to the repo owner because it comes from the Actions bot rather than the owner's own account.\n\n---\n\n${body}`,
+            });
+
+      - name: Ping Telegram with report link
+        continue-on-error: true
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ -n "$TELEGRAM_BOT_TOKEN" ] && [ -n "$TELEGRAM_CHAT_ID" ]; then
+            curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+              --data-urlencode "chat_id=$TELEGRAM_CHAT_ID" \
+              --data-urlencode "text=📊 Weekly Opportunity Scan is ready: ${{ github.event.issue.html_url }}" >/dev/null
+          fi
