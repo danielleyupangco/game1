@@ -35,12 +35,26 @@ To use it outside this repo, copy `.claude/agents/business-opportunity.md` into
 
 **Weekly automatic scan** — a Claude Routine ("Weekly Business Opportunity Scan")
 runs every Monday 8:00 AM Philippine time in a fresh cloud session and executes a
-full scan per the agent's method. Each run delivers its report by posting a GitHub
-issue titled `Opportunity Scan — <date>` on this repo — GitHub then emails the full
-report to the repo owner automatically, so reports arrive in your inbox with no
-action needed. Past reports stay browsable under the repo's Issues tab. Manage the
-Routine (pause, reschedule, delete) from your Claude Routines list, or just ask
-Claude.
+full scan per the agent's method.
+
+Delivery works in three hops, because scheduled sessions have git but no GitHub
+API tools:
+
+1. The scheduled run writes its report to `reports/scan-<date>.md` and pushes it.
+2. `.github/workflows/scan-report-publish.yml` sees the pushed file and opens an
+   issue titled `Opportunity Scan — <date>` with the report as the body.
+3. Because the issue is opened by `github-actions[bot]` rather than the repo
+   owner, GitHub emails the full report to the owner — GitHub suppresses
+   notifications for your own actions, which is why the bot must be the author.
+
+So reports arrive in your inbox with no action needed, `reports/` is the archive
+in git, and the Issues tab is the readable archive. Manage the Routine (pause,
+reschedule, delete) from your Claude Routines list, or just ask Claude.
+
+A second workflow, `scan-report-email.yml`, covers the other path: if an
+`Opportunity Scan` issue is ever opened by the owner's own account (e.g. from an
+interactive session), it re-posts the report as a bot comment so that it, too,
+generates an email.
 
 ## What a report looks like
 

@@ -134,22 +134,30 @@ the ranking; never present an unranked list of "interesting ideas."
 
 ## Scheduled runs — delivery (required)
 
-When a run is triggered on a schedule rather than by Dani chatting directly, the
-report is only delivered once it is published where she will actually see it:
+A scheduled run is not finished when the analysis is done. It is finished when
+the report is pushed to the repository, because a pushed report is what reaches
+Dani's inbox. Scheduled sessions have Bash and git but usually have **no GitHub
+API tools**, so never plan to open an issue directly — push a file instead:
 
-1. Before scanning, list the repository's existing issues titled "Opportunity
-   Scan" and read the most recent one — carry its passed-on list forward so
-   rejected ideas are not recycled, and update the status of its
-   recommendations.
-2. After completing the scan, create a GitHub issue on `danielleyupangco/game1`
-   titled `Opportunity Scan — <YYYY-MM-DD>` whose body is the full report, using
-   the GitHub tools available in the session. GitHub emails Dani every new issue
-   automatically, so the issue IS the delivered report. Publishing it is part of
-   the research-and-report job — it is not a code change and does not modify the
-   repository's contents.
-3. Do not commit or push code in scheduled runs. If issue creation fails, retry
-   once; if it still fails, end the run with the full report in the final
-   message so it is at least recoverable from the session.
+1. **Read the previous reports first.** `ls reports/` and read the most recent
+   one. Carry its passed-on list forward so rejected ideas are not recycled, and
+   open the new report with a status update on its live recommendations.
+2. **Write the report to `reports/scan-<YYYY-MM-DD>.md`.** The file body is the
+   report itself, starting at `## Verdict` — no front matter, no title heading
+   (the workflow supplies the title from the filename date).
+3. **Commit and push it to the repository's default branch.** This push is the
+   delivery mechanism and is expected of every scheduled run — it is the one
+   repository write the run should make. Do not change any other file, and never
+   push analysis to a feature branch, where the workflow will not see it.
+4. A GitHub Actions workflow (`.github/workflows/scan-report-publish.yml`)
+   watches `reports/**.md`, opens an issue titled `Opportunity Scan — <date>`
+   with the file as the body, and GitHub emails it to Dani. Do not open the
+   issue yourself, even if GitHub tools happen to be available — the workflow
+   deduplicates by title and doing both creates noise.
+5. **If the push fails, say so loudly.** Retry once; if it still fails, end the
+   run by stating plainly that delivery failed and why, with the full report in
+   the message. A scan that was researched but never delivered must never be
+   reported as a success.
 
 ## Guardrails
 
