@@ -19,6 +19,7 @@ npm run dev      # http://localhost:5173
 | **Home** | Net worth, a one-line status per section, the three things most worth acting on, and an alert strip for anything off-target. |
 | **Investments** | Holdings, time-weighted performance vs. a benchmark, allocation drift by asset class / geography / currency, concentration and drawdown, and a rebalancing engine that shows its scoring. |
 | **Island T** | ADR, occupancy, RevPAR, seasonality; fixed vs. variable costs with break-even; monthly and trailing-12-month P&L; a DCF with a full assumptions panel, tornado and sensitivity table; capital-allocation modelling; and pricing suggestions built on the revenue/occupancy trade-off. |
+| **Analysis** | Written findings — each with the numbers behind it, the holdings it bears on, and one next step you can mark done. Separate from the Home alerts, which are rules that recompute; these are judgements that persist. |
 | **Data** | Import wizard, import history with the column mapping each batch used, and backup/restore. |
 | **Settings** | Currency, benchmark, drift band, and allocation targets. |
 
@@ -136,6 +137,25 @@ Any table exports to `.xlsx` with real numbers (not strings), Excel number forma
 and a header noting what the export is and which assumptions produced it. For PDF,
 use the browser's print dialogue — a print stylesheet drops the navigation and
 controls.
+
+## Shipping a copy with data in it
+
+The app is browser-local, so a fresh copy opens empty. To hand someone a build
+with their data already loaded:
+
+```bash
+npm run seed -- path/to/ledger-backup.json   # bakes the backup into the build
+npm run build:artifact                        # one self-contained .html file
+npm run seed -- --clear                       # back to the empty app
+```
+
+`src/seed/data.json` is gitignored — it is somebody's actual financial data and
+does not belong in version control. The seed loads once, only into a database
+that has never been written to, and never over the top of existing work.
+
+`build:artifact` inlines every chunk into a single HTML file (code splitting and
+the lazy ExcelJS import are collapsed for that build only), so the page needs no
+server and no module loading of its own.
 
 ## Development
 

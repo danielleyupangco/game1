@@ -224,3 +224,40 @@ export type PricingAssumptions = {
   maxRateChangePct: number
   weekendUpliftPct: number
 }
+
+// --- Analysis ---------------------------------------------------------------
+
+export type FindingSeverity = 'critical' | 'warning' | 'info' | 'positive'
+
+export type FindingStatus = 'open' | 'doing' | 'done' | 'dismissed'
+
+/**
+ * A written finding about the portfolio or the property.
+ *
+ * Distinct from the computed alerts on the Home page: those are rules that
+ * re-evaluate on every render, these are authored judgements that persist,
+ * carry their own evidence, and can be worked through and closed off. Both
+ * appear side by side so the dashboard is the whole picture rather than the
+ * half a rule engine can see.
+ */
+export type Finding = {
+  id: string
+  createdAt: string
+  author: string
+  severity: FindingSeverity
+  /** grouping label, e.g. "Cash drag", "Data quality" */
+  theme: string
+  title: string
+  /** paragraphs of the argument */
+  body: string[]
+  /** the numbers the claim rests on, so it can be checked rather than trusted */
+  evidence: { label: string; value: string }[]
+  /** holdings this bears on; matched against ticker or name */
+  related: string[]
+  section: 'investments' | 'airbnb' | 'data' | 'overall'
+  /** the single next step, if there is one */
+  action: string | null
+  status: FindingStatus
+  /** higher sorts first */
+  priority: number
+}

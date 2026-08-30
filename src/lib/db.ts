@@ -1,6 +1,7 @@
 import { openDB, type DBSchema, type IDBPDatabase } from 'idb'
 import type {
   BenchmarkPoint,
+  Finding,
   Booking,
   CapitalProject,
   DcfAssumptions,
@@ -25,18 +26,28 @@ interface LedgerDB extends DBSchema {
   bookings: { key: string; value: Booking; indexes: { checkIn: string } }
   expenses: { key: string; value: Expense; indexes: { date: string } }
   imports: { key: string; value: ImportBatch; indexes: { dataset: string } }
+  findings: { key: string; value: Finding; indexes: { status: string } }
   kv: { key: string; value: unknown }
 }
 
 const DB_NAME = 'ledger'
-const DB_VERSION = 1
+const DB_VERSION = 2
 
 let dbPromise: Promise<IDBPDatabase<LedgerDB>> | null = null
 
 function db() {
   if (!dbPromise) {
     dbPromise = openDB<LedgerDB>(DB_NAME, DB_VERSION, {
-      upgrade(database) {
+      upgrade(database, oldVersion) {
+        if (oldVersion >= 1) {
+          // v2 only adds the findings store; everything else is already there.
+          if (!database.objectStoreNames.contains('findings')) {
+            const store = database.createObjectStore('findings', { keyPath: 'id' })
+            store.createIndex('status', 'status')
+          }
+          return
+        }
+
         const holdings = database.createObjectStore('holdings', { keyPath: 'id' })
         holdings.createIndex('snapshotId', 'snapshotId')
 
@@ -58,6 +69,9 @@ function db() {
         const imports = database.createObjectStore('imports', { keyPath: 'id' })
         imports.createIndex('dataset', 'dataset')
 
+        const findings = database.createObjectStore('findings', { keyPath: 'id' })
+        findings.createIndex('status', 'status')
+
         database.createObjectStore('kv')
       },
     })
@@ -65,7 +79,15 @@ function db() {
   return dbPromise
 }
 
-type RecordStore = 'holdings' | 'snapshots' | 'transactions' | 'benchmark' | 'bookings' | 'expenses' | 'imports'
+type RecordStore =
+  | 'holdings'
+  | 'snapshots'
+  | 'transactions'
+  | 'benchmark'
+  | 'bookings'
+  | 'expenses'
+  | 'imports'
+  | 'findings'
 
 export async function getAll<K extends RecordStore>(store: K): Promise<LedgerDB[K]['value'][]> {
   return (await db()).getAll(store)
@@ -145,6 +167,7 @@ export type Backup = {
   bookings: Booking[]
   expenses: Expense[]
   imports: ImportBatch[]
+  findings: Finding[]
   settings: Settings | null
   dcf: DcfAssumptions | null
   pricing: PricingAssumptions | null
@@ -163,6 +186,7 @@ export async function exportBackup(): Promise<Backup> {
     bookings: await getAll('bookings'),
     expenses: await getAll('expenses'),
     imports: await getAll('imports'),
+    findings: await getAll('findings'),
     settings: await getKV<Settings | null>(KV.settings, null),
     dcf: await getKV<DcfAssumptions | null>(KV.dcf, null),
     pricing: await getKV<PricingAssumptions | null>(KV.pricing, null),
@@ -179,6 +203,7 @@ export async function importBackup(backup: Backup): Promise<void> {
     'bookings',
     'expenses',
     'imports',
+    'findings',
   ]
   for (const store of stores) await clearStore(store)
 
@@ -189,6 +214,7 @@ export async function importBackup(backup: Backup): Promise<void> {
   await putMany('bookings', backup.bookings ?? [])
   await putMany('expenses', backup.expenses ?? [])
   await putMany('imports', backup.imports ?? [])
+  await putMany('findings', backup.findings ?? [])
 
   if (backup.settings) await setKV(KV.settings, backup.settings)
   if (backup.dcf) await setKV(KV.dcf, backup.dcf)
@@ -206,6 +232,7 @@ export async function wipeEverything(): Promise<void> {
     'bookings',
     'expenses',
     'imports',
+    'findings',
   ]
   for (const store of stores) await database.clear(store)
   await database.clear('kv')

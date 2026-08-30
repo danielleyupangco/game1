@@ -7,6 +7,7 @@ const NAV = [
   { to: '/', label: 'Home', short: 'Home', icon: '◇' },
   { to: '/investments', label: 'Investments', short: 'Invest', icon: '◈' },
   { to: '/airbnb', label: 'Island T', short: 'Island', icon: '◉' },
+  { to: '/analysis', label: 'Analysis', short: 'Notes', icon: '✦' },
   { to: '/data', label: 'Data', short: 'Data', icon: '⇪' },
   { to: '/settings', label: 'Settings', short: 'Setup', icon: '⚙' },
 ]

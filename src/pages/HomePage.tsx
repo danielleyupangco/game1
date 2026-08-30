@@ -85,6 +85,15 @@ export function HomePage() {
     [positions, settings, performance, airbnbSeries, t12, freshness, holdings.length, bookings.length, expenses.length, snapshots.length],
   )
 
+  const openFindings = useMemo(
+    () =>
+      [...ledger.findings]
+        .filter((finding) => finding.status === 'open' || finding.status === 'doing')
+        .sort((a, b) => b.priority - a.priority),
+    [ledger.findings],
+  )
+  const criticalFindings = openFindings.filter((finding) => finding.severity === 'critical').length
+
   const nothingImported = holdings.length === 0 && bookings.length === 0 && expenses.length === 0
 
   if (!ready) {
@@ -136,6 +145,25 @@ export function HomePage() {
           </div>
         }
       />
+
+      {openFindings.length > 0 ? (
+        <Link
+          to="/analysis"
+          className="no-print flex items-center gap-3 rounded-xl border border-accent/30 bg-accent/[0.06] px-4 py-3 transition-colors hover:bg-accent/[0.1]"
+        >
+          <span className="text-[14px] text-accent">✦</span>
+          <div className="min-w-0 flex-1">
+            <div className="text-[13px] font-semibold text-ink">
+              {openFindings.length} written finding{openFindings.length === 1 ? '' : 's'} outstanding
+              {criticalFindings > 0 ? (
+                <span className="ml-1.5 font-normal text-neg">· {criticalFindings} to act on now</span>
+              ) : null}
+            </div>
+            <p className="mt-0.5 truncate text-[12px] text-ink-2">{openFindings[0].title}</p>
+          </div>
+          <span className="shrink-0 text-[11px] text-accent">Open analysis →</span>
+        </Link>
+      ) : null}
 
       {actions.length > 0 ? <AlertStrip actions={actions} /> : null}
 

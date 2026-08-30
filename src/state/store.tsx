@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from 'react'
 import * as db from '@/lib/db'
+import { SEED } from '@/seed'
 import { KV } from '@/lib/db'
 import { DEFAULT_DCF, DEFAULT_PRICING, DEFAULT_SETTINGS } from '@/state/defaults'
 import type {
@@ -17,6 +18,7 @@ import type {
   DatasetKey,
   DcfAssumptions,
   Expense,
+  Finding,
   Holding,
   ImportBatch,
   PricingAssumptions,
@@ -33,6 +35,7 @@ export type LedgerData = {
   bookings: Booking[]
   expenses: Expense[]
   imports: ImportBatch[]
+  findings: Finding[]
 }
 
 type Ctx = LedgerData & {
@@ -47,6 +50,8 @@ type Ctx = LedgerData & {
   savePricing: (patch: Partial<PricingAssumptions>) => Promise<void>
   saveProjects: (next: CapitalProject[]) => Promise<void>
   removeImport: (importId: string) => Promise<void>
+  saveFinding: (finding: Finding) => Promise<void>
+  removeFinding: (id: string) => Promise<void>
   /** most recent import timestamp per dataset, for the freshness indicators */
   freshness: Partial<Record<DatasetKey, string>>
 }
@@ -61,6 +66,7 @@ const EMPTY: LedgerData = {
   bookings: [],
   expenses: [],
   imports: [],
+  findings: [],
 }
 
 export function LedgerProvider({ children }: { children: ReactNode }) {
@@ -72,16 +78,29 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false)
 
   const reload = useCallback(async () => {
-    const [holdings, snapshots, transactions, benchmark, bookings, expenses, imports] = await Promise.all([
-      db.getAll('holdings'),
-      db.getAll('snapshots'),
-      db.getAll('transactions'),
-      db.getAll('benchmark'),
-      db.getAll('bookings'),
-      db.getAll('expenses'),
-      db.getAll('imports'),
-    ])
-    setData({ holdings, snapshots, transactions, benchmark, bookings, expenses, imports })
+    // A build can carry a pre-loaded dataset. Load it once, and only into a
+    // database that has never held anything — never over the top of real work.
+    if (SEED) {
+      const seeded = await db.getKV<boolean>('seedLoaded', false)
+      if (!seeded) {
+        const existing = await db.getAll('imports')
+        if (existing.length === 0) await db.importBackup(SEED)
+        await db.setKV('seedLoaded', true)
+      }
+    }
+
+    const [holdings, snapshots, transactions, benchmark, bookings, expenses, imports, findings] =
+      await Promise.all([
+        db.getAll('holdings'),
+        db.getAll('snapshots'),
+        db.getAll('transactions'),
+        db.getAll('benchmark'),
+        db.getAll('bookings'),
+        db.getAll('expenses'),
+        db.getAll('imports'),
+        db.getAll('findings'),
+      ])
+    setData({ holdings, snapshots, transactions, benchmark, bookings, expenses, imports, findings })
 
     // Merge stored values over defaults so a schema addition doesn't strand
     // an existing database on a missing key.
@@ -140,6 +159,21 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
     [reload],
   )
 
+  const saveFinding = useCallback(async (finding: Finding) => {
+    await db.putOne('findings', finding)
+    setData((prev) => ({
+      ...prev,
+      findings: prev.findings.some((f) => f.id === finding.id)
+        ? prev.findings.map((f) => (f.id === finding.id ? finding : f))
+        : [...prev.findings, finding],
+    }))
+  }, [])
+
+  const removeFinding = useCallback(async (id: string) => {
+    await db.deleteOne('findings', id)
+    setData((prev) => ({ ...prev, findings: prev.findings.filter((f) => f.id !== id) }))
+  }, [])
+
   const freshness = useMemo(() => {
     const out: Partial<Record<DatasetKey, string>> = {}
     for (const batch of data.imports) {
@@ -163,9 +197,11 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       savePricing,
       saveProjects,
       removeImport,
+      saveFinding,
+      removeFinding,
       freshness,
     }),
-    [data, ready, settings, dcf, pricing, projects, reload, saveSettings, saveDcf, savePricing, saveProjects, removeImport, freshness],
+    [data, ready, settings, dcf, pricing, projects, reload, saveSettings, saveDcf, savePricing, saveProjects, removeImport, saveFinding, removeFinding, freshness],
   )
 
   return <LedgerContext.Provider value={value}>{children}</LedgerContext.Provider>
