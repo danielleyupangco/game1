@@ -1,3 +1,5 @@
+import { saveFile, saveMode, toCsv } from '@/lib/save'
+
 // Loaded on demand — see the note in lib/workbook.ts.
 type ExcelJSModule = typeof import('exceljs')
 async function loadExcelJs(): Promise<ExcelJSModule> {
@@ -13,17 +15,6 @@ export type ExportColumn<T> = {
   numFmt?: string
 }
 
-function download(blob: Blob, fileName: string): void {
-  const url = URL.createObjectURL(blob)
-  const anchor = document.createElement('a')
-  anchor.href = url
-  anchor.download = fileName
-  document.body.appendChild(anchor)
-  anchor.click()
-  anchor.remove()
-  // Revoking immediately can cancel the download in some browsers.
-  setTimeout(() => URL.revokeObjectURL(url), 2000)
-}
 
 export async function exportTable<T>(
   rows: T[],
@@ -33,6 +24,21 @@ export async function exportTable<T>(
   /** printed above the table so an archived file explains itself */
   notes: string[] = [],
 ): Promise<void> {
+  const base = fileName.replace(/\.(xlsx|csv)$/i, '')
+
+  // A published page can only hand over the formats its host allows, and xlsx
+  // is not one of them. The same table goes out as csv there — notes included,
+  // so an archived file still says what it is.
+  if ((await saveMode()) === 'hosted') {
+    const matrix: (string | number | null)[][] = [
+      ...notes.map((note) => [note]),
+      columns.map((column) => column.header),
+      ...rows.map((row) => columns.map((column) => column.value(row))),
+    ]
+    await saveFile(`${base}.csv`, toCsv(matrix))
+    return
+  }
+
   const ExcelJS = await loadExcelJs()
   const workbook = new ExcelJS.Workbook()
   workbook.creator = 'Ledger'
@@ -74,16 +80,16 @@ export async function exportTable<T>(
   sheet.views = [{ state: 'frozen', ySplit: cursor - rows.length - 1 }]
 
   const buffer = await workbook.xlsx.writeBuffer()
-  download(
+  await saveFile(
+    `${base}.xlsx`,
     new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }),
-    fileName.endsWith('.xlsx') ? fileName : `${fileName}.xlsx`,
   )
 }
 
-export function exportJson(data: unknown, fileName: string): void {
-  download(
-    new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }),
+export async function exportJson(data: unknown, fileName: string): Promise<void> {
+  await saveFile(
     fileName.endsWith('.json') ? fileName : `${fileName}.json`,
+    JSON.stringify(data, null, 2),
   )
 }
 

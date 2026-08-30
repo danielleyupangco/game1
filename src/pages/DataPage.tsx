@@ -7,6 +7,7 @@ import { DataTable } from '@/components/ui/DataTable'
 import { useLedger } from '@/state/store'
 import { exportBackup, importBackup, wipeEverything, type Backup } from '@/lib/db'
 import { exportJson } from '@/lib/export'
+import { SaveDeclined } from '@/lib/save'
 import { relativeTime, shortDate } from '@/lib/format'
 import type { DatasetKey, ImportBatch } from '@/types'
 
@@ -197,10 +198,13 @@ export function DataPage() {
             <div className="flex flex-wrap gap-2">
               <Button
                 onClick={() => {
-                  void exportBackup().then((backup) => {
-                    exportJson(backup, `ledger-backup-${new Date().toISOString().slice(0, 10)}`)
-                    setMessage('Backup downloaded.')
-                  })
+                  void exportBackup()
+                    .then((backup) => exportJson(backup, `ledger-backup-${new Date().toISOString().slice(0, 10)}`))
+                    .then(() => setMessage('Backup saved.'))
+                    .catch((caught) => {
+                      if (caught instanceof SaveDeclined) return
+                      setMessage(caught instanceof Error ? caught.message : 'Backup failed.')
+                    })
                 }}
               >
                 Download backup

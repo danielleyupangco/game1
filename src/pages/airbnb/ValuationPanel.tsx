@@ -8,6 +8,7 @@ import { Button, Card, Pill, SectionHeader, TextInput, cx } from '@/components/u
 import { AssumptionInput } from '@/components/ui/AssumptionInput'
 import { Stat, StatGrid } from '@/components/ui/Stat'
 import { DataTable } from '@/components/ui/DataTable'
+import { ExportButton } from '@/components/ui/ExportButton'
 import { ChartFrame } from '@/components/charts/Chart'
 import { AXIS, DIVERGING, GRID, SEQUENTIAL, TOOLTIP_STYLE } from '@/components/charts/theme'
 import { money, num, pct, signedPct } from '@/lib/format'
@@ -144,10 +145,9 @@ export function ValuationPanel({ series }: { series: MonthMetrics[] }) {
               title="Projection"
               subtitle="The model, year by year. Free cash flow is EBITDA less tax and maintenance capex; present value applies the discount factor in the last column."
               right={
-                <Button
-                  size="sm"
-                  onClick={() =>
-                    void exportTable(
+                <ExportButton
+                    run={() =>
+                      exportTable(
                       result.years,
                       [
                         { header: 'Year', value: (y) => y.year },
@@ -170,11 +170,9 @@ export function ValuationPanel({ series }: { series: MonthMetrics[] }) {
                         `Discount rate ${pct(dcf.discountRate)} · terminal growth ${pct(dcf.terminalGrowth)}`,
                         `Equity value ${money(result.equityValue, 'PHP')} · terminal share ${pct(result.terminalShare, 0)}`,
                       ],
-                    )
+                      )
                   }
-                >
-                  Export xlsx
-                </Button>
+                />
               }
             />
             <DataTable

@@ -34,10 +34,11 @@ import {
   yearToDateReturn,
 } from '@/domain/investments/performance'
 import { proposeMoves, TRANSACTION_COST_RATE, type Move } from '@/domain/investments/rebalance'
-import { Button, Card, Pill, SectionHeader, Tabs, cx } from '@/components/ui/primitives'
+import { Card, Pill, SectionHeader, Tabs, cx } from '@/components/ui/primitives'
 import { Stat, StatGrid } from '@/components/ui/Stat'
 import { DataTable } from '@/components/ui/DataTable'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { ExportButton } from '@/components/ui/ExportButton'
 import { Freshness } from '@/components/ui/Freshness'
 import { ChartFrame, Legend, tooltipProps } from '@/components/charts/Chart'
 import { AXIS, GRID, SERIES, STATUS, TOOLTIP_STYLE } from '@/components/charts/theme'
@@ -167,10 +168,9 @@ function HoldingsView({ positions }: { positions: PositionView[] }) {
           title="Holdings"
           subtitle="Positions are grouped by ticker and currency. Click any row to see the source spreadsheet rows behind it."
           right={
-            <Button
-              size="sm"
-              onClick={() =>
-                void exportTable(
+            <ExportButton
+                run={() =>
+                  exportTable(
                   positions,
                   [
                     { header: 'Ticker', value: (p) => p.ticker },
@@ -189,11 +189,9 @@ function HoldingsView({ positions }: { positions: PositionView[] }) {
                   'holdings',
                   'Holdings',
                   [`Ledger export · ${new Date().toLocaleString()}`, 'Values converted to PHP at the snapshot FX rate.'],
-                )
+                  )
               }
-            >
-              Export xlsx
-            </Button>
+            />
           }
         />
         <DataTable
@@ -637,10 +635,9 @@ function AllocationView({ positions }: { positions: PositionView[] }) {
           title="Drift detail"
           subtitle={`Flagged when a bucket sits more than ${pct(settings.driftBandPct, 0)} of the portfolio away from its target. "Gap" is the peso amount that would need to move to close it exactly.`}
           right={
-            <Button
-              size="sm"
-              onClick={() =>
-                void exportTable(
+            <ExportButton
+                run={() =>
+                  exportTable(
                   rows,
                   [
                     { header: 'Bucket', value: (r) => r.key, width: 22 },
@@ -654,11 +651,9 @@ function AllocationView({ positions }: { positions: PositionView[] }) {
                   `allocation-${dimension}`,
                   'Allocation',
                   [`Drift band: ${pct(settings.driftBandPct, 0)} of portfolio`],
-                )
+                  )
               }
-            >
-              Export xlsx
-            </Button>
+            />
           }
         />
         <DataTable

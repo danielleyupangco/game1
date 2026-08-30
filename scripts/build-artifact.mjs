@@ -30,9 +30,26 @@ html = html.replace(/<link[^>]+rel="stylesheet"[^>]*href="([^"]+)"[^>]*>/g, (_, 
 })
 html = html.replace(/<script[^>]*src="([^"]+)"[^>]*><\/script>/g, (_, src) => {
   const js = fs.readFileSync(path.join(dist, src.replace(/^\.?\//, '')), 'utf8')
-  // A literal </script> inside the bundle would close the tag early.
-  return `<script type="module">\n${js.replace(/<\/script>/g, '<\\/script>')}\n</script>`
+  return `<script type="module">\n${escapeForInlineScript(js)}\n</script>`
 })
+
+/**
+ * Makes a bundle safe to paste between <script> tags.
+ *
+ * Two hazards: a literal </script> closes the tag early, and raw U+FFFD or a
+ * lone surrogate is not well-formed text the host will accept. HTML entities
+ * are not decoded inside a script element, so those characters are rewritten
+ * as JavaScript escapes — valid in string literals, template literals and
+ * regex literals alike, which is everywhere a minifier can put them.
+ */
+function escapeForInlineScript(source) {
+  return source
+    .replace(/<\/script>/gi, '<\\/script>')
+    .replace(/\uFFFD/g, '\\uFFFD')
+    .replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, (c) =>
+      `\\u${c.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0')}`,
+    )
+}
 
 // The host wraps the file in its own document skeleton, so hand back only the
 // page content: title, styles, body markup, then scripts. Vite emits the module

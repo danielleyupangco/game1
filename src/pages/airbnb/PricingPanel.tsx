@@ -3,10 +3,11 @@ import { CartesianGrid, Line, LineChart, ReferenceDot, ReferenceLine, Tooltip, X
 import { useLedger } from '@/state/store'
 import { aggregate, seasonality, trailing, type MonthMetrics } from '@/domain/airbnb/metrics'
 import { pricingHeadline, suggestByMonth, weekdayDemand, type MonthSuggestion } from '@/domain/airbnb/pricing'
-import { Button, Card, Pill, SectionHeader, cx } from '@/components/ui/primitives'
+import { Card, Pill, SectionHeader, cx } from '@/components/ui/primitives'
 import { AssumptionInput } from '@/components/ui/AssumptionInput'
 import { Stat, StatGrid } from '@/components/ui/Stat'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { ExportButton } from '@/components/ui/ExportButton'
 import { ChartFrame, Legend, tooltipProps } from '@/components/charts/Chart'
 import { AXIS, GRID, SERIES, STATUS, TOOLTIP_STYLE } from '@/components/charts/theme'
 import { money, num, pct, signedPct } from '@/lib/format'
@@ -158,10 +159,9 @@ export function PricingPanel({ series }: { series: MonthMetrics[] }) {
           title="Suggested rates by month"
           subtitle="Click a month to see its full revenue-vs-occupancy curve."
           right={
-            <Button
-              size="sm"
-              onClick={() =>
-                void exportTable(
+            <ExportButton
+                run={() =>
+                  exportTable(
                   suggestions,
                   [
                     { header: 'Month', value: (s) => s.label },
@@ -183,11 +183,9 @@ export function PricingPanel({ series }: { series: MonthMetrics[] }) {
                     `Elasticity ${pricing.priceElasticity} · max change ${pct(pricing.maxRateChangePct, 0)}`,
                     'Decision support from your own booking history. Not a forecast.',
                   ],
-                )
+                  )
               }
-            >
-              Export xlsx
-            </Button>
+            />
           }
         />
 

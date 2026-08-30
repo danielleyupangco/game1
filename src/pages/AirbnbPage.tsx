@@ -22,10 +22,11 @@ import {
   trailing,
   type MonthMetrics,
 } from '@/domain/airbnb/metrics'
-import { Button, Card, Pill, SectionHeader, Tabs, cx } from '@/components/ui/primitives'
+import { Card, Pill, SectionHeader, Tabs, cx } from '@/components/ui/primitives'
 import { Stat, StatGrid } from '@/components/ui/Stat'
 import { DataTable } from '@/components/ui/DataTable'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { ExportButton } from '@/components/ui/ExportButton'
 import { Freshness } from '@/components/ui/Freshness'
 import { ChartFrame, Legend, tooltipProps } from '@/components/charts/Chart'
 import { AXIS, GRID, SERIES, STATUS, TOOLTIP_STYLE } from '@/components/charts/theme'
@@ -273,10 +274,9 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
           title="Bookings"
           subtitle="Every reservation on file. Cancelled rows are kept for the record and excluded from revenue."
           right={
-            <Button
-              size="sm"
-              onClick={() =>
-                void exportTable(
+            <ExportButton
+                run={() =>
+                  exportTable(
                   bookings,
                   [
                     { header: 'Code', value: (b) => b.confirmationCode },
@@ -297,11 +297,9 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
                   'bookings',
                   'Bookings',
                   ['Ledger export · source file and row retained for every record.'],
-                )
+                  )
               }
-            >
-              Export xlsx
-            </Button>
+            />
           }
         />
         <DataTable
@@ -555,10 +553,9 @@ function PnlView({ series }: { series: MonthMetrics[] }) {
             { value: 'all', label: `All ${series.length} months` },
           ]}
         />
-        <Button
-          size="sm"
-          onClick={() =>
-            void exportTable(
+        <ExportButton
+            run={() =>
+              exportTable(
               rows,
               [
                 { header: 'Month', value: (m) => m.month },
@@ -576,11 +573,9 @@ function PnlView({ series }: { series: MonthMetrics[] }) {
               'island-t-pnl',
               'P&L',
               ['Revenue recognised over the nights stayed. Amounts in PHP.'],
-            )
+              )
           }
-        >
-          Export xlsx
-        </Button>
+        />
       </div>
 
       <StatGrid>
