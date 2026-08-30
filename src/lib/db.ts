@@ -1,0 +1,212 @@
+import { openDB, type DBSchema, type IDBPDatabase } from 'idb'
+import type {
+  BenchmarkPoint,
+  Booking,
+  CapitalProject,
+  DcfAssumptions,
+  Expense,
+  Holding,
+  ImportBatch,
+  PricingAssumptions,
+  Settings,
+  Snapshot,
+  Transaction,
+} from '@/types'
+
+/**
+ * All state lives in the browser. Nothing leaves the device — there is no
+ * server and no network call in this app beyond loading the page itself.
+ */
+interface LedgerDB extends DBSchema {
+  holdings: { key: string; value: Holding; indexes: { snapshotId: string } }
+  snapshots: { key: string; value: Snapshot; indexes: { asOf: string } }
+  transactions: { key: string; value: Transaction; indexes: { date: string } }
+  benchmark: { key: string; value: BenchmarkPoint; indexes: { date: string } }
+  bookings: { key: string; value: Booking; indexes: { checkIn: string } }
+  expenses: { key: string; value: Expense; indexes: { date: string } }
+  imports: { key: string; value: ImportBatch; indexes: { dataset: string } }
+  kv: { key: string; value: unknown }
+}
+
+const DB_NAME = 'ledger'
+const DB_VERSION = 1
+
+let dbPromise: Promise<IDBPDatabase<LedgerDB>> | null = null
+
+function db() {
+  if (!dbPromise) {
+    dbPromise = openDB<LedgerDB>(DB_NAME, DB_VERSION, {
+      upgrade(database) {
+        const holdings = database.createObjectStore('holdings', { keyPath: 'id' })
+        holdings.createIndex('snapshotId', 'snapshotId')
+
+        const snapshots = database.createObjectStore('snapshots', { keyPath: 'id' })
+        snapshots.createIndex('asOf', 'asOf')
+
+        const transactions = database.createObjectStore('transactions', { keyPath: 'id' })
+        transactions.createIndex('date', 'date')
+
+        const benchmark = database.createObjectStore('benchmark', { keyPath: 'id' })
+        benchmark.createIndex('date', 'date')
+
+        const bookings = database.createObjectStore('bookings', { keyPath: 'id' })
+        bookings.createIndex('checkIn', 'checkIn')
+
+        const expenses = database.createObjectStore('expenses', { keyPath: 'id' })
+        expenses.createIndex('date', 'date')
+
+        const imports = database.createObjectStore('imports', { keyPath: 'id' })
+        imports.createIndex('dataset', 'dataset')
+
+        database.createObjectStore('kv')
+      },
+    })
+  }
+  return dbPromise
+}
+
+type RecordStore = 'holdings' | 'snapshots' | 'transactions' | 'benchmark' | 'bookings' | 'expenses' | 'imports'
+
+export async function getAll<K extends RecordStore>(store: K): Promise<LedgerDB[K]['value'][]> {
+  return (await db()).getAll(store)
+}
+
+export async function putMany<K extends RecordStore>(
+  store: K,
+  rows: LedgerDB[K]['value'][],
+): Promise<void> {
+  const database = await db()
+  const tx = database.transaction(store, 'readwrite')
+  await Promise.all([...rows.map((row) => tx.store.put(row as never)), tx.done])
+}
+
+export async function putOne<K extends RecordStore>(store: K, row: LedgerDB[K]['value']): Promise<void> {
+  await (await db()).put(store, row as never)
+}
+
+export async function deleteOne(store: RecordStore, key: string): Promise<void> {
+  await (await db()).delete(store, key)
+}
+
+export async function clearStore(store: RecordStore): Promise<void> {
+  await (await db()).clear(store)
+}
+
+/**
+ * Removes every row that arrived in a given import, plus the import record.
+ * Undoing a bad import should leave nothing behind.
+ */
+export async function deleteImport(importId: string): Promise<void> {
+  const database = await db()
+  const batch = await database.get('imports', importId)
+  if (!batch) return
+
+  const rowStores: RecordStore[] = ['holdings', 'transactions', 'benchmark', 'bookings', 'expenses']
+  for (const store of rowStores) {
+    const rows = (await database.getAll(store)) as { id: string; prov?: { importId: string } }[]
+    const doomed = rows.filter((row) => row.prov?.importId === importId)
+    if (doomed.length === 0) continue
+    const tx = database.transaction(store, 'readwrite')
+    await Promise.all([...doomed.map((row) => tx.store.delete(row.id)), tx.done])
+  }
+
+  if (batch.snapshotId) {
+    const remaining = await database.getAllFromIndex('holdings', 'snapshotId', batch.snapshotId)
+    if (remaining.length === 0) await database.delete('snapshots', batch.snapshotId)
+  }
+
+  await database.delete('imports', importId)
+}
+
+export async function getKV<T>(key: string, fallback: T): Promise<T> {
+  const value = await (await db()).get('kv', key)
+  return value === undefined ? fallback : (value as T)
+}
+
+export async function setKV<T>(key: string, value: T): Promise<void> {
+  await (await db()).put('kv', value, key)
+}
+
+export const KV = {
+  settings: 'settings',
+  dcf: 'dcfAssumptions',
+  pricing: 'pricingAssumptions',
+  projects: 'capitalProjects',
+  mappingPresets: 'mappingPresets',
+} as const
+
+export type Backup = {
+  version: number
+  exportedAt: string
+  holdings: Holding[]
+  snapshots: Snapshot[]
+  transactions: Transaction[]
+  benchmark: BenchmarkPoint[]
+  bookings: Booking[]
+  expenses: Expense[]
+  imports: ImportBatch[]
+  settings: Settings | null
+  dcf: DcfAssumptions | null
+  pricing: PricingAssumptions | null
+  projects: CapitalProject[]
+}
+
+/** Whole-database JSON dump — the way to move data between laptop and phone. */
+export async function exportBackup(): Promise<Backup> {
+  return {
+    version: DB_VERSION,
+    exportedAt: new Date().toISOString(),
+    holdings: await getAll('holdings'),
+    snapshots: await getAll('snapshots'),
+    transactions: await getAll('transactions'),
+    benchmark: await getAll('benchmark'),
+    bookings: await getAll('bookings'),
+    expenses: await getAll('expenses'),
+    imports: await getAll('imports'),
+    settings: await getKV<Settings | null>(KV.settings, null),
+    dcf: await getKV<DcfAssumptions | null>(KV.dcf, null),
+    pricing: await getKV<PricingAssumptions | null>(KV.pricing, null),
+    projects: await getKV<CapitalProject[]>(KV.projects, []),
+  }
+}
+
+export async function importBackup(backup: Backup): Promise<void> {
+  const stores: RecordStore[] = [
+    'holdings',
+    'snapshots',
+    'transactions',
+    'benchmark',
+    'bookings',
+    'expenses',
+    'imports',
+  ]
+  for (const store of stores) await clearStore(store)
+
+  await putMany('holdings', backup.holdings ?? [])
+  await putMany('snapshots', backup.snapshots ?? [])
+  await putMany('transactions', backup.transactions ?? [])
+  await putMany('benchmark', backup.benchmark ?? [])
+  await putMany('bookings', backup.bookings ?? [])
+  await putMany('expenses', backup.expenses ?? [])
+  await putMany('imports', backup.imports ?? [])
+
+  if (backup.settings) await setKV(KV.settings, backup.settings)
+  if (backup.dcf) await setKV(KV.dcf, backup.dcf)
+  if (backup.pricing) await setKV(KV.pricing, backup.pricing)
+  if (backup.projects) await setKV(KV.projects, backup.projects)
+}
+
+export async function wipeEverything(): Promise<void> {
+  const database = await db()
+  const stores: RecordStore[] = [
+    'holdings',
+    'snapshots',
+    'transactions',
+    'benchmark',
+    'bookings',
+    'expenses',
+    'imports',
+  ]
+  for (const store of stores) await database.clear(store)
+  await database.clear('kv')
+}

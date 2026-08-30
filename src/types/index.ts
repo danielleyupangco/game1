@@ -1,0 +1,226 @@
+// ---------------------------------------------------------------------------
+// Domain types. Every imported record carries provenance back to its source
+// file + sheet + row so any number on screen can be traced to where it came from.
+// ---------------------------------------------------------------------------
+
+export type Currency = 'PHP' | 'USD'
+
+export type Provenance = {
+  /** id of the ImportBatch this row arrived in */
+  importId: string
+  /** original filename as uploaded */
+  fileName: string
+  sheetName: string
+  /** 1-based row number in the source sheet, including the header row */
+  rowNumber: number
+}
+
+export type WithProvenance = { id: string; prov: Provenance }
+
+// --- Investments -----------------------------------------------------------
+
+export type AssetClass =
+  | 'Equity'
+  | 'Fixed Income'
+  | 'Cash'
+  | 'Real Estate'
+  | 'Alternatives'
+  | 'Crypto'
+  | 'Unclassified'
+
+export const ASSET_CLASSES: AssetClass[] = [
+  'Equity',
+  'Fixed Income',
+  'Cash',
+  'Real Estate',
+  'Alternatives',
+  'Crypto',
+  'Unclassified',
+]
+
+/**
+ * One row of a portfolio snapshot: what you held, at what price, on `asOf`.
+ * Snapshots are versioned — importing the same portfolio at a later date adds a
+ * new snapshot rather than overwriting, which is what makes return series possible.
+ */
+export type Holding = WithProvenance & {
+  snapshotId: string
+  ticker: string
+  name: string
+  assetClass: AssetClass
+  geography: string
+  currency: Currency
+  quantity: number
+  /** total cost basis in the holding's own currency */
+  costBasis: number
+  /** price per unit in the holding's own currency */
+  price: number
+  /** quantity * price, in the holding's own currency */
+  value: number
+  account: string
+}
+
+export type Snapshot = {
+  id: string
+  /** ISO date (YYYY-MM-DD) the holdings were valued at */
+  asOf: string
+  label: string
+  createdAt: string
+  importId: string
+  /** FX rate used to convert USD -> PHP for this snapshot */
+  usdPhp: number
+}
+
+export type TxnType = 'buy' | 'sell' | 'dividend' | 'fee' | 'deposit' | 'withdrawal'
+
+/**
+ * External cashflows and trades. Deposits/withdrawals are what let us strip
+ * contribution effects out of returns (see domain/investments/performance.ts).
+ */
+export type Transaction = WithProvenance & {
+  date: string
+  ticker: string
+  type: TxnType
+  quantity: number
+  price: number
+  /** signed cash amount in `currency`: negative = money into the market */
+  amount: number
+  currency: Currency
+  fees: number
+  account: string
+  note: string
+}
+
+/** Benchmark index level series, e.g. PSEi close by date. */
+export type BenchmarkPoint = WithProvenance & {
+  date: string
+  level: number
+}
+
+// --- Airbnb (Island T) -----------------------------------------------------
+
+export type Booking = WithProvenance & {
+  confirmationCode: string
+  guestName: string
+  channel: string
+  bookedOn: string
+  checkIn: string
+  checkOut: string
+  nights: number
+  guests: number
+  /** total the guest paid, in `currency` */
+  grossRevenue: number
+  /** platform/host fees deducted */
+  fees: number
+  /** what actually lands: gross - fees */
+  netRevenue: number
+  currency: Currency
+  status: string
+}
+
+export type ExpenseNature = 'fixed' | 'variable'
+
+export type Expense = WithProvenance & {
+  date: string
+  category: string
+  /** fixed = incurred whether or not anyone books; variable = scales with stays */
+  nature: ExpenseNature
+  amount: number
+  currency: Currency
+  vendor: string
+  note: string
+}
+
+// --- Imports ---------------------------------------------------------------
+
+export type DatasetKey =
+  | 'holdings'
+  | 'transactions'
+  | 'benchmark'
+  | 'bookings'
+  | 'expenses'
+
+export type ImportBatch = {
+  id: string
+  dataset: DatasetKey
+  fileName: string
+  sheetName: string
+  importedAt: string
+  rowCount: number
+  /** target field -> source column header chosen in the mapping step */
+  mapping: Record<string, string>
+  /** rows the parser could not coerce, kept so nothing silently disappears */
+  rejected: { rowNumber: number; reason: string }[]
+  /** for holdings imports, the snapshot the rows landed in */
+  snapshotId?: string
+}
+
+// --- Settings & assumptions ------------------------------------------------
+
+export type AllocationTarget = {
+  key: string
+  /** target weight as a fraction (0.35 = 35%) */
+  weight: number
+}
+
+export type Settings = {
+  baseCurrency: Currency
+  usdPhp: number
+  benchmarkName: string
+  /** rebalancing band: drift beyond this fraction of the portfolio raises a flag */
+  driftBandPct: number
+  /** cash held outside the brokerage, in base currency */
+  cashOnHand: number
+  targetsByAssetClass: AllocationTarget[]
+  targetsByGeography: AllocationTarget[]
+  targetsByCurrency: AllocationTarget[]
+}
+
+export type DcfAssumptions = {
+  /** nights the property can physically sell per year */
+  availableNightsPerYear: number
+  /** occupancy in year 1, then ramping toward `terminalOccupancy` */
+  startOccupancy: number
+  terminalOccupancy: number
+  occupancyRampYears: number
+  adr: number
+  adrGrowth: number
+  variableCostPerNight: number
+  fixedCostPerYear: number
+  costInflation: number
+  /** effective tax rate applied to operating profit */
+  taxRate: number
+  maintenanceCapexPerYear: number
+  discountRate: number
+  terminalGrowth: number
+  projectionYears: number
+  netDebt: number
+}
+
+export type CapitalProject = {
+  id: string
+  name: string
+  /** upfront cash out, base currency */
+  capex: number
+  /** incremental annual net cash inflow once running */
+  annualCashflow: number
+  /** years before `annualCashflow` starts */
+  rampYears: number
+  /** how long the benefit lasts */
+  lifeYears: number
+  /** salvage/terminal value at end of life */
+  terminalValue: number
+  note: string
+}
+
+export type PricingAssumptions = {
+  /** how much occupancy moves for a 1% price move (negative; -0.6 = inelastic) */
+  priceElasticity: number
+  /** months treated as high season for Culion */
+  highSeasonMonths: number[]
+  /** target occupancy the engine steers toward */
+  targetOccupancy: number
+  /** cap on any single suggested rate move */
+  maxRateChangePct: number
+  weekendUpliftPct: number
+}
