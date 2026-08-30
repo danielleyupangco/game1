@@ -141,7 +141,13 @@ export function dateFromSheetName(name: string): string | null {
 function uniqueHeaders(raw: unknown[]): string[] {
   const seen = new Map<string, number>()
   return Array.from(raw, (cell, index) => {
-    let label = String(cell ?? '').trim()
+    // A date used as a column header is a period label, not a timestamp.
+    // Stringifying it whole would put "Thu Jan 01 2026 00:00:00 GMT+0000" on
+    // screen and leave the trailing time to be misread downstream.
+    let label =
+      cell instanceof Date && !Number.isNaN(cell.getTime())
+        ? cell.toISOString().slice(0, 10)
+        : String(cell ?? '').trim()
     if (!label) label = `Column ${index + 1}`
     const count = seen.get(label) ?? 0
     seen.set(label, count + 1)

@@ -3,7 +3,15 @@ import { daysInMonth, monthKey, monthRange, nightsByMonth } from '@/lib/dates'
 
 /** Cancelled reservations stay in the data for the record but earn nothing. */
 export function isActive(booking: Booking): boolean {
-  return !/cancel|declin|void|refund/i.test(booking.status)
+  return !/cancel|declin|void/i.test(booking.status)
+}
+
+/**
+ * A refund or correction, booked as a negative row. It nets off revenue and
+ * nights rather than spreading across a stay that never happened.
+ */
+export function isAdjustment(booking: Booking): boolean {
+  return booking.nights < 0 || booking.grossRevenue < 0 || booking.netRevenue < 0
 }
 
 function toBase(value: number, currency: Currency, usdPhp: number): number {
@@ -12,16 +20,22 @@ function toBase(value: number, currency: Currency, usdPhp: number): number {
 
 export type MonthMetrics = {
   month: string
-  /** revenue recognised in this month, apportioned by nights stayed */
+  /** room revenue recognised in this month, apportioned by nights stayed */
   revenue: number
+  /** ancillary revenue kept — catering, tours, transfers */
+  addOnRevenue: number
+  /** room + add-ons; what the P&L runs on */
+  totalRevenue: number
   grossRevenue: number
   nightsSold: number
   availableNights: number
   occupancy: number
   /** average daily rate = revenue / nights sold */
   adr: number
-  /** revenue per available night — the metric that catches "great rate, empty house" */
+  /** room revenue per available night — catches "great rate, empty house" */
   revpar: number
+  /** total revenue per available night, add-ons included */
+  totalRevpar: number
   bookings: number
   guestNights: number
   fixedCost: number
@@ -61,12 +75,15 @@ export function monthlyMetrics(input: MetricsInput): MonthMetrics[] {
     byMonth.set(month, {
       month,
       revenue: 0,
+      addOnRevenue: 0,
+      totalRevenue: 0,
       grossRevenue: 0,
       nightsSold: 0,
       availableNights: Math.round(daysInMonth(month) * availabilityRatio),
       occupancy: 0,
       adr: 0,
       revpar: 0,
+      totalRevpar: 0,
       bookings: 0,
       guestNights: 0,
       fixedCost: 0,
@@ -80,16 +97,32 @@ export function monthlyMetrics(input: MetricsInput): MonthMetrics[] {
   }
 
   for (const booking of active) {
-    const spread = nightsByMonth(booking.checkIn, booking.checkOut)
-    const totalNights = Object.values(spread).reduce((sum, n) => sum + n, 0) || booking.nights || 1
     const net = toBase(booking.netRevenue, booking.currency, input.usdPhp)
     const gross = toBase(booking.grossRevenue, booking.currency, input.usdPhp)
+    const addOns = toBase(booking.addOnRevenue, booking.currency, input.usdPhp)
+
+    if (isAdjustment(booking)) {
+      // Lands whole in the month it was recorded; there is no stay to spread.
+      const bucket = byMonth.get(monthKey(booking.checkIn))
+      if (bucket) {
+        bucket.revenue += net
+        bucket.addOnRevenue += addOns
+        bucket.grossRevenue += gross
+        bucket.nightsSold += booking.nights
+        bucket.sourceBookings.push(booking)
+      }
+      continue
+    }
+
+    const spread = nightsByMonth(booking.checkIn, booking.checkOut)
+    const totalNights = Object.values(spread).reduce((sum, n) => sum + n, 0) || booking.nights || 1
 
     for (const [month, nights] of Object.entries(spread)) {
       const bucket = byMonth.get(month)
       if (!bucket) continue
       const share = nights / totalNights
       bucket.revenue += net * share
+      bucket.addOnRevenue += addOns * share
       bucket.grossRevenue += gross * share
       bucket.nightsSold += nights
       bucket.guestNights += nights * booking.guests
@@ -110,12 +143,16 @@ export function monthlyMetrics(input: MetricsInput): MonthMetrics[] {
   }
 
   for (const bucket of byMonth.values()) {
+    bucket.totalRevenue = bucket.revenue + bucket.addOnRevenue
     bucket.occupancy = bucket.availableNights > 0 ? bucket.nightsSold / bucket.availableNights : 0
+    // ADR and RevPAR stay accommodation-only, which is what makes them
+    // comparable to anything outside this property.
     bucket.adr = bucket.nightsSold > 0 ? bucket.revenue / bucket.nightsSold : 0
     bucket.revpar = bucket.availableNights > 0 ? bucket.revenue / bucket.availableNights : 0
+    bucket.totalRevpar = bucket.availableNights > 0 ? bucket.totalRevenue / bucket.availableNights : 0
     bucket.totalCost = bucket.fixedCost + bucket.variableCost
-    bucket.netProfit = bucket.revenue - bucket.totalCost
-    bucket.netMargin = bucket.revenue > 0 ? bucket.netProfit / bucket.revenue : 0
+    bucket.netProfit = bucket.totalRevenue - bucket.totalCost
+    bucket.netMargin = bucket.totalRevenue > 0 ? bucket.netProfit / bucket.totalRevenue : 0
     // De-duplicate: a stay spanning three months was pushed three times.
     bucket.sourceBookings = [...new Map(bucket.sourceBookings.map((b) => [b.id, b])).values()]
   }
@@ -125,12 +162,15 @@ export function monthlyMetrics(input: MetricsInput): MonthMetrics[] {
 
 export type Totals = {
   revenue: number
+  addOnRevenue: number
+  totalRevenue: number
   grossRevenue: number
   nightsSold: number
   availableNights: number
   occupancy: number
   adr: number
   revpar: number
+  totalRevpar: number
   bookings: number
   fixedCost: number
   variableCost: number
@@ -146,6 +186,8 @@ export type Totals = {
 export function aggregate(series: MonthMetrics[]): Totals {
   const sum = (pick: (m: MonthMetrics) => number) => series.reduce((acc, m) => acc + pick(m), 0)
   const revenue = sum((m) => m.revenue)
+  const addOnRevenue = sum((m) => m.addOnRevenue)
+  const totalRevenue = revenue + addOnRevenue
   const nightsSold = sum((m) => m.nightsSold)
   const availableNights = sum((m) => m.availableNights)
   const fixedCost = sum((m) => m.fixedCost)
@@ -155,18 +197,21 @@ export function aggregate(series: MonthMetrics[]): Totals {
 
   return {
     revenue,
+    addOnRevenue,
+    totalRevenue,
     grossRevenue: sum((m) => m.grossRevenue),
     nightsSold,
     availableNights,
     occupancy: availableNights > 0 ? nightsSold / availableNights : 0,
     adr: nightsSold > 0 ? revenue / nightsSold : 0,
     revpar: availableNights > 0 ? revenue / availableNights : 0,
+    totalRevpar: availableNights > 0 ? totalRevenue / availableNights : 0,
     bookings,
     fixedCost,
     variableCost,
     totalCost,
-    netProfit: revenue - totalCost,
-    netMargin: revenue > 0 ? (revenue - totalCost) / revenue : 0,
+    netProfit: totalRevenue - totalCost,
+    netMargin: totalRevenue > 0 ? (totalRevenue - totalCost) / totalRevenue : 0,
     costPerBooking: bookings > 0 ? totalCost / bookings : 0,
     costPerAvailableNight: availableNights > 0 ? totalCost / availableNights : 0,
     variableCostPerNight: nightsSold > 0 ? variableCost / nightsSold : 0,

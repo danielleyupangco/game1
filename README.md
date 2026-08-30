@@ -18,7 +18,7 @@ npm run dev      # http://localhost:5173
 |---|---|
 | **Home** | Net worth, a one-line status per section, the three things most worth acting on, and an alert strip for anything off-target. |
 | **Investments** | Holdings, time-weighted performance vs. a benchmark, allocation drift by asset class / geography / currency, concentration and drawdown, and a rebalancing engine that shows its scoring. |
-| **Island T** | ADR, occupancy, RevPAR, seasonality; fixed vs. variable costs with break-even; monthly and trailing-12-month P&L; a DCF with a full assumptions panel, tornado and sensitivity table; capital-allocation modelling; and pricing suggestions built on the revenue/occupancy trade-off. |
+| **Island T** | ADR, occupancy, RevPAR, seasonality; room revenue and the share of add-on revenue you keep, tracked separately; fixed vs. variable costs with break-even; monthly and trailing-12-month P&L; a DCF with a full assumptions panel, tornado and sensitivity table; capital-allocation modelling; and pricing suggestions built on the revenue/occupancy trade-off. |
 | **Analysis** | Written findings — each with the numbers behind it, the holdings it bears on, and one next step you can mark done. Separate from the Home alerts, which are rules that recompute; these are judgements that persist. |
 | **Data** | Import wizard, import history with the column mapping each batch used, and backup/restore. |
 | **Settings** | Currency, benchmark, drift band, and allocation targets. |
@@ -40,6 +40,8 @@ It handles what real exports actually contain:
 - subtotal and grand-total rows, which are dropped so the sheet isn't double-counted
 - **several tables stacked in one sheet** — one block per owner or account. Each is detected, and you name it on import so it becomes the account on those rows
 - **a workbook of dated sheets** — if two or more sheet names read as dates ("August 13, 2026", "Oct 28, 2025 Portfolio"), the importer offers to load every one as its own snapshot in a single pass, giving you a full history instead of a single point
+- **a management P&L, with months across the top** — the crosstab layout is detected and read cell by cell, one record per populated cell. Totals, margins, night counts and occupancy rates are unticked by default (a night count is not a peso amount), each cost line's fixed/variable tag is editable, and any period column already covered by an earlier import is dropped so a fiscal-year sheet doesn't double-count the calendar year beside it
+- **refunds and cancellations booked as negative rows** — netted off revenue and nights rather than discarded
 
 Rows it can't parse are **listed with a reason before you commit**, never dropped
 silently.

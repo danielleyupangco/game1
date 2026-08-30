@@ -127,18 +127,24 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
   const monthData = series.map((month) => ({
     month: month.month,
     revenue: month.revenue,
+    addOns: month.addOnRevenue,
     occupancy: month.occupancy * 100,
     adr: month.adr,
     revpar: month.revpar,
   }))
+  const hasAddOns = series.some((month) => month.addOnRevenue > 0)
 
   return (
     <div className="space-y-4">
       <StatGrid>
         <Stat
           label="Revenue (T12M)"
-          value={money(t12.revenue, 'PHP', true)}
-          sub={`${t12.bookings} bookings · ${t12.nightsSold} nights sold`}
+          value={money(t12.totalRevenue, 'PHP', true)}
+          sub={
+            t12.addOnRevenue > 0
+              ? `${money(t12.revenue, 'PHP', true)} rooms + ${money(t12.addOnRevenue, 'PHP', true)} add-ons · ${t12.bookings} bookings`
+              : `${t12.bookings} bookings · ${t12.nightsSold} nights sold`
+          }
           onTrace={() =>
             trace({
               title: 'Trailing-12-month revenue',
@@ -172,7 +178,16 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
       <Card>
         <ChartFrame
           title="Monthly revenue"
-          caption="Net payout recognised over the nights stayed, so a stay spanning month-end reports on both sides rather than spiking one month."
+          caption={
+            hasAddOns
+              ? 'Room payout recognised over the nights stayed, with the share of catering, boat and tour revenue you keep stacked on top. A stay spanning month-end reports on both sides rather than spiking one month.'
+              : 'Net payout recognised over the nights stayed, so a stay spanning month-end reports on both sides rather than spiking one month.'
+          }
+          right={
+            hasAddOns ? (
+              <Legend items={[{ label: 'Rooms', color: SERIES[0] }, { label: 'Add-ons kept', color: SERIES[2] }]} />
+            ) : undefined
+          }
           height={230}
         >
           <BarChart data={monthData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
@@ -181,9 +196,15 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
             <YAxis {...AXIS} tickFormatter={(value: number) => money(value, 'PHP', true)} width={56} />
             <Tooltip
               {...TOOLTIP_STYLE}
-              {...tooltipProps((value) => [money(value, 'PHP'), 'Revenue'], (label) => monthLabel(label))}
+              {...tooltipProps(
+                (value, name) => [money(value, 'PHP'), name === 'addOns' ? 'Add-ons kept' : 'Rooms'],
+                (label) => monthLabel(label),
+              )}
             />
-            <Bar dataKey="revenue" fill={SERIES[0]} radius={[4, 4, 0, 0]} maxBarSize={34} />
+            <Bar dataKey="revenue" name="revenue" stackId="rev" fill={SERIES[0]} maxBarSize={34} />
+            {hasAddOns ? (
+              <Bar dataKey="addOns" name="addOns" stackId="rev" fill={SERIES[2]} radius={[4, 4, 0, 0]} maxBarSize={34} />
+            ) : null}
           </BarChart>
         </ChartFrame>
       </Card>
@@ -537,7 +558,7 @@ function PnlView({ series }: { series: MonthMetrics[] }) {
 
   const chartData = rows.map((month) => ({
     month: month.month,
-    revenue: month.revenue,
+    revenue: month.totalRevenue,
     cost: -month.totalCost,
     profit: month.netProfit,
   }))
@@ -564,7 +585,9 @@ function PnlView({ series }: { series: MonthMetrics[] }) {
                 { header: 'Occupancy', value: (m) => m.occupancy, numFmt: PCT_FMT },
                 { header: 'ADR', value: (m) => m.adr, numFmt: MONEY_FMT },
                 { header: 'RevPAR', value: (m) => m.revpar, numFmt: MONEY_FMT },
-                { header: 'Revenue', value: (m) => m.revenue, numFmt: MONEY_FMT },
+                { header: 'Room revenue', value: (m) => m.revenue, numFmt: MONEY_FMT },
+                { header: 'Add-on revenue kept', value: (m) => m.addOnRevenue, numFmt: MONEY_FMT },
+                { header: 'Total revenue', value: (m) => m.totalRevenue, numFmt: MONEY_FMT },
                 { header: 'Fixed cost', value: (m) => m.fixedCost, numFmt: MONEY_FMT },
                 { header: 'Variable cost', value: (m) => m.variableCost, numFmt: MONEY_FMT },
                 { header: 'Net profit', value: (m) => m.netProfit, numFmt: MONEY_FMT },
@@ -579,7 +602,15 @@ function PnlView({ series }: { series: MonthMetrics[] }) {
       </div>
 
       <StatGrid>
-        <Stat label="Revenue" value={money(totals.revenue, 'PHP', true)} sub={`${totals.months} months`} />
+        <Stat
+          label="Revenue"
+          value={money(totals.totalRevenue, 'PHP', true)}
+          sub={
+            totals.addOnRevenue > 0
+              ? `${money(totals.revenue, 'PHP', true)} rooms + ${money(totals.addOnRevenue, 'PHP', true)} add-ons`
+              : `${totals.months} months`
+          }
+        />
         <Stat label="Total cost" value={money(totals.totalCost, 'PHP', true)} sub={`${money(totals.fixedCost, 'PHP', true)} fixed`} />
         <Stat
           label="Net profit"
@@ -648,7 +679,20 @@ function PnlView({ series }: { series: MonthMetrics[] }) {
             { key: 'occ', header: 'Occ.', align: 'right', render: (m) => <span className={m.occupancy < 0.2 ? 'text-warn' : 'text-ink-2'}>{pct(m.occupancy, 0)}</span>, sortValue: (m) => m.occupancy },
             { key: 'adr', header: 'ADR', align: 'right', hideOnMobile: true, render: (m) => (m.adr > 0 ? money(m.adr, 'PHP') : '—'), sortValue: (m) => m.adr },
             { key: 'revpar', header: 'RevPAR', align: 'right', hideOnMobile: true, render: (m) => money(m.revpar, 'PHP'), sortValue: (m) => m.revpar },
-            { key: 'revenue', header: 'Revenue', align: 'right', render: (m) => money(m.revenue, 'PHP', true), sortValue: (m) => m.revenue },
+            {
+              key: 'revenue',
+              header: 'Revenue',
+              align: 'right',
+              render: (m) => (
+                <div>
+                  <div className="text-ink">{money(m.totalRevenue, 'PHP', true)}</div>
+                  {m.addOnRevenue > 0 ? (
+                    <div className="text-[11px] text-ink-3">incl. {money(m.addOnRevenue, 'PHP', true)} add-ons</div>
+                  ) : null}
+                </div>
+              ),
+              sortValue: (m) => m.totalRevenue,
+            },
             { key: 'cost', header: 'Cost', align: 'right', hideOnMobile: true, render: (m) => money(m.totalCost, 'PHP', true), sortValue: (m) => m.totalCost },
             { key: 'profit', header: 'Net', align: 'right', render: (m) => <span className={m.netProfit >= 0 ? 'text-pos' : 'text-neg'}>{money(m.netProfit, 'PHP', true)}</span>, sortValue: (m) => m.netProfit },
             { key: 'margin', header: 'Margin', align: 'right', hideOnMobile: true, render: (m) => (m.revenue > 0 ? <span className={m.netMargin >= 0 ? 'text-ink-2' : 'text-neg'}>{pct(m.netMargin, 0)}</span> : <span className="text-ink-3">—</span>), sortValue: (m) => m.netMargin },
@@ -659,7 +703,7 @@ function PnlView({ series }: { series: MonthMetrics[] }) {
               <td className="num px-2.5 py-2 text-right text-ink-2">{pct(totals.occupancy, 0)}</td>
               <td className="hidden sm:table-cell" />
               <td className="hidden sm:table-cell" />
-              <td className="num px-2.5 py-2 text-right font-medium text-ink">{money(totals.revenue, 'PHP', true)}</td>
+              <td className="num px-2.5 py-2 text-right font-medium text-ink">{money(totals.totalRevenue, 'PHP', true)}</td>
               <td className="num hidden px-2.5 py-2 text-right text-ink-2 sm:table-cell">{money(totals.totalCost, 'PHP', true)}</td>
               <td className="num px-2.5 py-2 text-right font-medium">
                 <span className={totals.netProfit >= 0 ? 'text-pos' : 'text-neg'}>{money(totals.netProfit, 'PHP', true)}</span>

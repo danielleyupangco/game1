@@ -13,6 +13,12 @@ export type Provenance = {
   sheetName: string
   /** 1-based row number in the source sheet, including the header row */
   rowNumber: number
+  /**
+   * Column header the value came from. Only set for crosstab imports, where a
+   * single source row becomes many records and the row number alone would not
+   * say which cell produced which one.
+   */
+  column?: string
 }
 
 export type WithProvenance = { id: string; prov: Provenance }
@@ -114,6 +120,13 @@ export type Booking = WithProvenance & {
   fees: number
   /** what actually lands: gross - fees */
   netRevenue: number
+  /**
+   * Ancillary revenue you keep — catering, boat trips, tours — net of anything
+   * passed through to crew or suppliers. Kept apart from room revenue because
+   * ADR and RevPAR are accommodation measures: folding add-ons into them would
+   * flatter the rate and make the numbers incomparable to any benchmark.
+   */
+  addOnRevenue: number
   currency: Currency
   status: string
 }

@@ -293,7 +293,10 @@ export function buildBookings(ctx: BuildContext): BuildResult<Booking> {
     if (!checkOut) return { ok: false, reason: 'needs a check-out date or a night count' }
 
     const nights = mappedNights ?? daysBetween(checkIn, checkOut)
-    if (nights <= 0) return { ok: false, reason: 'check-out is not after check-in' }
+    if (nights === 0) return { ok: false, reason: 'zero nights' }
+    if (nights < 0 && mappedNights === null) {
+      return { ok: false, reason: 'check-out is before check-in' }
+    }
 
     const gross = read.number('grossRevenue')
     const net = read.number('netRevenue')
@@ -302,6 +305,11 @@ export function buildBookings(ctx: BuildContext): BuildResult<Booking> {
     const fees = Math.abs(read.number('fees') ?? 0)
     const grossRevenue = gross ?? (net as number) + fees
     const netRevenue = net ?? grossRevenue - fees
+
+    // Booking ledgers record refunds and cancellations as negative rows —
+    // minus one night, minus the payout. Dropping them would overstate both
+    // revenue and occupancy, so they are kept and netted off instead.
+    const isAdjustment = nights < 0 || grossRevenue < 0
 
     return {
       ok: true,
@@ -319,8 +327,9 @@ export function buildBookings(ctx: BuildContext): BuildResult<Booking> {
         grossRevenue,
         fees,
         netRevenue,
+        addOnRevenue: read.number('addOnRevenue') ?? 0,
         currency: read.currency('currency'),
-        status: read.text('status', 'confirmed'),
+        status: read.text('status', isAdjustment ? 'adjustment' : 'confirmed'),
       },
     }
   })

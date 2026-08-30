@@ -1,13 +1,20 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { parseWorkbook, type ParsedWorkbook, type SheetPreview } from '@/lib/workbook'
 import { DATASETS, type FieldSpec } from '@/lib/schema'
 import { autoMap, BUILDERS, missingRequired, type Mapping } from '@/lib/mapping'
+import {
+  buildCrosstabExpenses,
+  detectPeriodColumns,
+  guessLabelColumn,
+  looksLikeCrosstab,
+  type PeriodColumn,
+} from '@/lib/crosstab'
 import * as db from '@/lib/db'
 import { uid } from '@/lib/id'
 import { today } from '@/lib/dates'
 import { useLedger } from '@/state/store'
 import { Button, Card, Field, Pill, Select, TextInput, cx, inputClass } from '@/components/ui/primitives'
-import type { DatasetKey, ImportBatch, Snapshot } from '@/types'
+import type { DatasetKey, Expense, ImportBatch, Snapshot } from '@/types'
 
 type Step = 'file' | 'sheet' | 'map' | 'review'
 
@@ -25,7 +32,7 @@ export function ImportWizard({
   dataset: DatasetKey
   onDone: () => void
 }) {
-  const { reload, settings, snapshots } = useLedger()
+  const { reload, settings, snapshots, expenses: ledgerExpenses } = useLedger()
   const spec = DATASETS[dataset]
 
   const [step, setStep] = useState<Step>('file')
@@ -43,6 +50,13 @@ export function ImportWizard({
   const [sectionLabels, setSectionLabels] = useState<string[]>([])
   const [sectionOn, setSectionOn] = useState<boolean[]>([])
   const [progress, setProgress] = useState<string | null>(null)
+  /** expenses only: months across the top rather than one row per expense */
+  const [crosstab, setCrosstab] = useState(false)
+  const [labelColumn, setLabelColumn] = useState(0)
+  const [periodYear, setPeriodYear] = useState(new Date().getFullYear())
+  const [excludedRows, setExcludedRows] = useState<number[]>([])
+  const [natures, setNatures] = useState<Record<string, 'fixed' | 'variable'>>({})
+  const [excludedPeriods, setExcludedPeriods] = useState<number[]>([])
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
@@ -81,6 +95,22 @@ export function ImportWizard({
 
         // A workbook whose sheets are named by date is a history, not a single
         // portfolio. Offer to import the whole thing as dated snapshots.
+        // Months across the top rather than one row per record: a management
+        // P&L or expense summary, which has to be read cell by cell.
+        if (dataset === 'expenses') {
+          const year = best.impliedDate
+            ? Number(best.impliedDate.slice(0, 4))
+            : Number((best.name.match(/20\d{2}/) ?? [])[0]) || new Date().getFullYear()
+          if (looksLikeCrosstab(best, year)) {
+            setCrosstab(true)
+            setPeriodYear(year)
+            setLabelColumn(guessLabelColumn(best, detectPeriodColumns(best.headers, year)))
+            setStep(usable.length > 1 ? 'sheet' : 'map')
+            setBusy(false)
+            return
+          }
+        }
+
         const dated = usable.filter((candidate) => candidate.impliedDate)
         if (dataset === 'holdings' && dated.length >= 2) {
           setMulti(true)
@@ -116,6 +146,99 @@ export function ImportWizard({
       excludedSections: sectionOn.map((on, i) => (on ? -1 : i)).filter((i) => i >= 0),
     })
   }, [sheet, mapping, dataset, dayFirst, workbook, sectionLabels, sectionOn])
+
+  const periods = useMemo(
+    () => (sheet && crosstab ? detectPeriodColumns(sheet.headers, periodYear) : []),
+    [sheet, crosstab, periodYear],
+  )
+
+  const crossPreview = useMemo(() => {
+    if (!sheet || !crosstab) return null
+    return buildCrosstabExpenses({
+      sheet,
+      fileName: workbook?.fileName ?? '',
+      importId: 'preview',
+      labelColumn,
+      periods,
+      currency: 'PHP',
+      excludedRows,
+      excludedPeriods,
+      natures,
+    })
+  }, [sheet, crosstab, workbook, labelColumn, periods, excludedRows, excludedPeriods, natures])
+
+  /**
+   * Months this dataset already has records for. A P&L covering a fiscal year
+   * overlaps the calendar year either side of it, and importing both would
+   * double the shared months without anything on screen saying so.
+   */
+  const coveredMonths = useMemo(() => {
+    const months = new Set<string>()
+    for (const expense of ledgerExpenses) months.add(expense.date.slice(0, 7))
+    return months
+  }, [ledgerExpenses])
+
+  const overlapping = useMemo(
+    () => periods.filter((period) => coveredMonths.has(period.date.slice(0, 7))),
+    [periods, coveredMonths],
+  )
+
+  // Pre-exclude the clashing columns rather than silently doubling them.
+  useEffect(() => {
+    if (overlapping.length === 0) return
+    setExcludedPeriods((prev) => (prev.length > 0 ? prev : overlapping.map((period) => period.index)))
+  }, [overlapping])
+
+  // Summary rows restate the rows above them; pre-excluding them stops a sheet
+  // being double-counted, while leaving the choice visible and reversible.
+  useEffect(() => {
+    if (!crossPreview) return
+    setExcludedRows((prev) =>
+      prev.length > 0 ? prev : crossPreview.labels.filter((row) => row.isSummary).map((row) => row.rowIndex),
+    )
+  }, [crossPreview])
+
+  const commitCrosstab = useCallback(async () => {
+    if (!sheet || !workbook) return
+    setBusy(true)
+    setError(null)
+    try {
+      const importId = uid('imp')
+      const result = buildCrosstabExpenses({
+        sheet,
+        fileName: workbook.fileName,
+        importId,
+        labelColumn,
+        periods,
+        currency: 'PHP',
+        excludedRows,
+        excludedPeriods,
+        natures,
+      })
+      if (result.rows.length === 0) {
+        setError('Nothing to import — every row was excluded or empty.')
+        setBusy(false)
+        return
+      }
+      await db.putMany('expenses', result.rows)
+      await db.putOne('imports', {
+        id: importId,
+        dataset: 'expenses',
+        fileName: workbook.fileName,
+        sheetName: sheet.name,
+        importedAt: new Date().toISOString(),
+        rowCount: result.rows.length,
+        mapping: { layout: 'months across columns', category: sheet.headers[labelColumn] ?? '(first column)' },
+        rejected: result.rejected,
+      })
+      await reload()
+      onDone()
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : 'Import failed.')
+    } finally {
+      setBusy(false)
+    }
+  }, [sheet, workbook, labelColumn, periods, excludedRows, excludedPeriods, natures, reload, onDone])
 
   /** Sheets that will be imported as snapshots in multi mode, oldest first. */
   const multiSheets = useMemo(() => {
@@ -369,6 +492,16 @@ export function ImportWizard({
                   onClick={() => {
                     setSheetName(candidate.name)
                     setMapping(autoMap(candidate.headers, dataset))
+                    const year =
+                      Number((candidate.name.match(/20\d{2}/) ?? [])[0]) ||
+                      (candidate.impliedDate ? Number(candidate.impliedDate.slice(0, 4)) : new Date().getFullYear())
+                    const isCross = dataset === 'expenses' && looksLikeCrosstab(candidate, year)
+                    setCrosstab(isCross)
+                    setExcludedRows([])
+                    if (isCross) {
+                      setPeriodYear(year)
+                      setLabelColumn(guessLabelColumn(candidate, detectPeriodColumns(candidate.headers, year)))
+                    }
                     setStep('map')
                   }}
                   className={cx(
@@ -402,7 +535,30 @@ export function ImportWizard({
         </div>
       ) : null}
 
-      {step === 'map' && sheet ? (
+      {step === 'map' && crosstab && sheet ? (
+        <CrosstabStep
+          sheet={sheet}
+          periods={periods}
+          labelColumn={labelColumn}
+          setLabelColumn={setLabelColumn}
+          periodYear={periodYear}
+          setPeriodYear={setPeriodYear}
+          labels={crossPreview?.labels ?? []}
+          excludedRows={excludedRows}
+          setExcludedRows={setExcludedRows}
+          natures={natures}
+          setNatures={setNatures}
+          excludedPeriods={excludedPeriods}
+          setExcludedPeriods={setExcludedPeriods}
+          coveredMonths={coveredMonths}
+          onUseRowLayout={() => {
+            setCrosstab(false)
+            setMapping(autoMap(sheet.headers, dataset))
+          }}
+        />
+      ) : null}
+
+      {step === 'map' && !crosstab && sheet ? (
         <MappingStep
           sheet={sheet}
           fields={spec.fields}
@@ -412,6 +568,25 @@ export function ImportWizard({
           setDayFirst={setDayFirst}
           blanks={preview?.blanks ?? {}}
         />
+      ) : null}
+
+      {step === 'review' && crosstab && crossPreview && sheet ? (
+        <div className="space-y-3">
+          <div className="grid gap-2 sm:grid-cols-3">
+            <SummaryTile label="Records" value={String(crossPreview.rows.length)} tone="pos" />
+            <SummaryTile
+              label="Categories"
+              value={String(crossPreview.labels.length - excludedRows.length)}
+              tone="neutral"
+            />
+            <SummaryTile label="Periods" value={String(periods.length)} tone="neutral" />
+          </div>
+          <p className="text-[12px] leading-relaxed text-ink-2">
+            Each populated cell becomes one expense, dated to the end of its column's month and tagged with its row
+            label. Both the row and the column are kept, so any figure traces back to the exact cell.
+          </p>
+          <CrossPreviewTable rows={crossPreview.rows.slice(0, 10)} />
+        </div>
       ) : null}
 
       {step === 'review' && multi && workbook ? (
@@ -573,8 +748,25 @@ export function ImportWizard({
             </span>
           ) : null}
           {step === 'map' ? (
-            <Button variant="primary" disabled={missing.length > 0} onClick={() => setStep('review')}>
-              {multi ? `Preview ${multiSheets.length} snapshots` : `Preview ${preview?.rows.length ?? 0} rows`}
+            <Button
+              variant="primary"
+              disabled={crosstab ? periods.length === 0 : missing.length > 0}
+              onClick={() => setStep('review')}
+            >
+              {crosstab
+                ? `Preview ${crossPreview?.rows.length ?? 0} records`
+                : multi
+                  ? `Preview ${multiSheets.length} snapshots`
+                  : `Preview ${preview?.rows.length ?? 0} rows`}
+            </Button>
+          ) : null}
+          {step === 'review' && crosstab ? (
+            <Button
+              variant="primary"
+              disabled={busy || (crossPreview?.rows.length ?? 0) === 0}
+              onClick={() => void commitCrosstab()}
+            >
+              {busy ? 'Importing…' : `Import ${crossPreview?.rows.length ?? 0} records`}
             </Button>
           ) : null}
           {step === 'review' && multi ? (
@@ -586,7 +778,7 @@ export function ImportWizard({
               {busy ? (progress ?? 'Importing…') : `Import ${multiSheets.length} snapshots`}
             </Button>
           ) : null}
-          {step === 'review' && !multi ? (
+          {step === 'review' && !multi && !crosstab ? (
             <Button variant="primary" disabled={busy || preview?.rows.length === 0} onClick={() => void commit()}>
               {busy ? 'Importing…' : `Import ${preview?.rows.length ?? 0} rows`}
             </Button>
@@ -772,6 +964,227 @@ function PreviewTable({ rows, fields }: { rows: unknown[]; fields: FieldSpec[] }
                 </tr>
               )
             })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+function CrosstabStep({
+  sheet,
+  periods,
+  labelColumn,
+  setLabelColumn,
+  periodYear,
+  setPeriodYear,
+  labels,
+  excludedRows,
+  setExcludedRows,
+  natures,
+  setNatures,
+  excludedPeriods,
+  setExcludedPeriods,
+  coveredMonths,
+  onUseRowLayout,
+}: {
+  sheet: SheetPreview
+  periods: PeriodColumn[]
+  labelColumn: number
+  setLabelColumn: (index: number) => void
+  periodYear: number
+  setPeriodYear: (year: number) => void
+  labels: {
+    rowIndex: number
+    rowNumber: number
+    label: string
+    total: number
+    cells: number
+    isSummary: boolean
+    nature: 'fixed' | 'variable'
+  }[]
+  excludedRows: number[]
+  setExcludedRows: (rows: number[]) => void
+  natures: Record<string, 'fixed' | 'variable'>
+  setNatures: (next: Record<string, 'fixed' | 'variable'>) => void
+  excludedPeriods: number[]
+  setExcludedPeriods: (next: number[]) => void
+  coveredMonths: Set<string>
+  onUseRowLayout: () => void
+}) {
+  const excluded = new Set(excludedRows)
+  const toggle = (rowIndex: number) =>
+    setExcludedRows(excluded.has(rowIndex) ? excludedRows.filter((i) => i !== rowIndex) : [...excludedRows, rowIndex])
+
+  const includedTotal = labels
+    .filter((row) => !excluded.has(row.rowIndex))
+    .reduce((sum, row) => sum + row.total, 0)
+  const clashing = periods.filter((period) => coveredMonths.has(period.date.slice(0, 7)))
+
+  return (
+    <div className="space-y-3">
+      <div className="rounded-lg border border-accent/30 bg-accent/[0.06] px-3 py-2.5 text-[12px] leading-relaxed text-ink-2">
+        <span className="font-semibold text-accent">This sheet reads as a matrix, not a list.</span> Periods run across
+        the top and categories down the side, so one row becomes one expense per month rather than a single record.{' '}
+        <button type="button" onClick={onUseRowLayout} className="text-accent underline hover:no-underline">
+          Treat it as one row per expense instead
+        </button>
+        .
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Field label="Category column" hint="The column holding the name of each cost line.">
+          <Select
+            value={String(labelColumn)}
+            onChange={(value) => setLabelColumn(Number(value))}
+            options={sheet.headers.map((header, index) => ({ value: String(index), label: header }))}
+          />
+        </Field>
+        <Field
+          label="Year for month names"
+          hint="Column headers like “January” carry no year. Dates are set to month end."
+        >
+          <input
+            type="number"
+            value={periodYear}
+            onChange={(event) => setPeriodYear(Number(event.target.value) || periodYear)}
+            className={cx(inputClass, 'num')}
+          />
+        </Field>
+      </div>
+
+      <div>
+        <p className="mb-1.5 text-[11px] uppercase tracking-wide text-ink-3">
+          {periods.length - excludedPeriods.length} of {periods.length} period column
+          {periods.length === 1 ? '' : 's'} will be imported
+        </p>
+        {clashing.length > 0 ? (
+          <div className="mb-2 rounded-lg border border-warn/30 bg-warn/5 px-3 py-2 text-[11.5px] leading-relaxed text-warn">
+            {clashing.length} month{clashing.length === 1 ? ' is' : 's are'} already covered by an earlier expense
+            import — a fiscal-year sheet overlaps the calendar years either side of it. Those columns are unticked, so
+            the shared months aren't counted twice. Tick one back only if you meant to replace what's there.
+          </div>
+        ) : null}
+        <div className="flex flex-wrap gap-1">
+          {periods.map((period) => {
+            const on = !excludedPeriods.includes(period.index)
+            const clash = coveredMonths.has(period.date.slice(0, 7))
+            return (
+              <button
+                key={period.index}
+                type="button"
+                onClick={() =>
+                  setExcludedPeriods(
+                    on ? [...excludedPeriods, period.index] : excludedPeriods.filter((i) => i !== period.index),
+                  )
+                }
+                title={`Column “${period.header}” → ${period.date}${clash ? ' · already imported' : ''}`}
+                className={cx(
+                  'rounded border px-1.5 py-0.5 text-[11px] transition-colors',
+                  on
+                    ? 'border-line bg-surface-2 text-ink-2 hover:text-ink'
+                    : 'border-line-soft bg-transparent text-ink-3 line-through',
+                  clash && on && 'border-warn/40 text-warn',
+                )}
+              >
+                <span className="num">{period.date.slice(0, 7)}</span>
+              </button>
+            )
+          })}
+          {periods.length === 0 ? (
+            <span className="text-[12px] text-warn">
+              No date columns recognised. Check the year, or use the row-per-expense layout.
+            </span>
+          ) : null}
+        </div>
+      </div>
+
+      <div>
+        <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
+          <p className="text-[11px] uppercase tracking-wide text-ink-3">Rows to import</p>
+          <span className="num text-[11px] text-ink-2">
+            {includedTotal.toLocaleString('en-US', { maximumFractionDigits: 0 })} total across included rows
+          </span>
+        </div>
+        <p className="mb-2 text-[11px] leading-relaxed text-ink-3">
+          Totals and margins restate the rows above them; night counts and occupancy rates aren't money at all. Both
+          are unticked by default so the sheet isn't counted twice and a night count doesn't land in the accounts as
+          pesos. Tick anything that is a real cost line, and click the fixed/variable tag to correct it — that split
+          drives break-even and cost per available night.
+        </p>
+        <div className="max-h-64 space-y-0.5 overflow-y-auto rounded-lg border border-line p-2">
+          {labels.map((row) => {
+            const on = !excluded.has(row.rowIndex)
+            return (
+              <label
+                key={row.rowIndex}
+                className={cx(
+                  'flex cursor-pointer items-center gap-2 rounded px-1.5 py-1 hover:bg-surface-2',
+                  !on && 'opacity-45',
+                )}
+              >
+                <input type="checkbox" checked={on} onChange={() => toggle(row.rowIndex)} className="accent-accent" />
+                <span className="min-w-0 flex-1 truncate text-[12px] text-ink">{row.label}</span>
+                <span className="num shrink-0 text-[11px] text-ink-3">
+                  {row.cells} × · {row.total.toLocaleString('en-US', { maximumFractionDigits: 0 })}
+                </span>
+                {on ? (
+                  <button
+                    type="button"
+                    title="Fixed costs run whether or not anyone books; variable costs scale with stays"
+                    onClick={(event) => {
+                      event.preventDefault()
+                      setNatures({ ...natures, [row.label]: row.nature === 'fixed' ? 'variable' : 'fixed' })
+                    }}
+                    className={cx(
+                      'shrink-0 rounded border px-1.5 py-0.5 text-[10px] font-medium',
+                      row.nature === 'fixed'
+                        ? 'border-line bg-surface-3 text-ink-2'
+                        : 'border-accent/40 bg-accent/15 text-accent',
+                    )}
+                  >
+                    {row.nature}
+                  </button>
+                ) : null}
+              </label>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function CrossPreviewTable({ rows }: { rows: Expense[] }) {
+  if (rows.length === 0) return null
+  return (
+    <div>
+      <p className="mb-1.5 text-[11px] uppercase tracking-wide text-ink-3">First records, as they'll be stored</p>
+      <div className="overflow-x-auto rounded-lg border border-line">
+        <table className="w-full min-w-max text-left text-[12px]">
+          <thead>
+            <tr className="border-b border-line bg-surface-2 text-[10px] uppercase tracking-wide text-ink-3">
+              <th className="px-2 py-1.5 font-medium">Source cell</th>
+              <th className="px-2 py-1.5 font-medium">Date</th>
+              <th className="px-2 py-1.5 font-medium">Category</th>
+              <th className="px-2 py-1.5 font-medium">Type</th>
+              <th className="px-2 py-1.5 text-right font-medium">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.id} className="border-b border-line-soft last:border-0">
+                <td className="num px-2 py-1.5 text-ink-3">
+                  #{row.prov.rowNumber} · {row.prov.column}
+                </td>
+                <td className="num px-2 py-1.5 text-ink-2">{row.date}</td>
+                <td className="px-2 py-1.5 text-ink">{row.category}</td>
+                <td className="px-2 py-1.5 text-ink-2">{row.nature}</td>
+                <td className="num px-2 py-1.5 text-right text-ink">
+                  {row.amount.toLocaleString('en-US', { maximumFractionDigits: 0 })}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

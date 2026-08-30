@@ -140,10 +140,15 @@ export function toTxnType(value: unknown): TxnType | null {
   return null
 }
 
+/**
+ * A cost line named "per night" or "per stay" states its own behaviour, so it
+ * is checked before anything else — those words beat every other keyword.
+ */
+const PER_UNIT_HINTS = /\bper\s*(night|stay|guest|booking|head|pax|trip)\b/i
 const VARIABLE_COST_HINTS =
-  /cater|food|meal|grocer|fuel|boat|gas|clean|laundry|linen|guest|amenit|water deliver|supplies|consumab|transfer|welcome|commission/i
+  /cater|food|meal|grocer|fuel|boat|gas|clean|laundry|linen|guest|amenit|water deliver|consumab|transfer|welcome|commission|cogs/i
 const FIXED_COST_HINTS =
-  /tax|insur|salar|wage|crew|staff|caretaker|allan|maintenance|repair|internet|permit|licen|depreciat|rent|subscription|security/i
+  /tax|insur|salar|wage|crew|staff|caretaker|allan|maintenance|repair|internet|starlink|permit|licen|depreciat|rent|subscription|security|towel|supplies/i
 
 /**
  * Classifies an expense when the sheet doesn't say. Keyword-driven and
@@ -154,8 +159,9 @@ export function toExpenseNature(value: unknown, category: string): ExpenseNature
   const text = String(value ?? '').trim().toLowerCase()
   if (text.startsWith('f')) return 'fixed'
   if (text.startsWith('v')) return 'variable'
-  if (VARIABLE_COST_HINTS.test(category)) return 'variable'
+  if (PER_UNIT_HINTS.test(category)) return 'variable'
   if (FIXED_COST_HINTS.test(category)) return 'fixed'
+  if (VARIABLE_COST_HINTS.test(category)) return 'variable'
   return 'fixed'
 }
 

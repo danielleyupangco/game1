@@ -5,6 +5,13 @@ import { priceCurve, suggestByMonth, weekdayDemand } from '@/domain/airbnb/prici
 import { DEFAULT_DCF, DEFAULT_PRICING } from '@/state/defaults'
 import { nightsByMonth } from '@/lib/dates'
 import { dateFromSheetName } from '@/lib/workbook'
+import {
+  buildCrosstabExpenses,
+  detectPeriodColumns,
+  headerToDate,
+  isSummaryLabel,
+  looksLikeMetricRow,
+} from '@/lib/crosstab'
 import { toExpenseNature, toISO, toNumber } from '@/lib/coerce'
 import type { Booking, CapitalProject, Expense, Provenance } from '@/types'
 
@@ -28,6 +35,7 @@ function booking(checkIn: string, checkOut: string, net: number, over: Partial<B
     grossRevenue: net,
     fees: 0,
     netRevenue: net,
+    addOnRevenue: 0,
     currency: 'PHP',
     status: 'confirmed',
     ...over,
@@ -361,5 +369,248 @@ describe('awkward sheet structures', () => {
     expect(dateFromSheetName('Feb 2026')).toBe('2026-02-28')
     expect(dateFromSheetName('10 big bets AI')).toBeNull()
     expect(dateFromSheetName('Sheet1')).toBeNull()
+  })
+})
+
+describe('refund and cancellation rows', () => {
+  it('nets a negative-night refund off revenue and occupancy', () => {
+    const refund = booking('2026-03-20', '2026-03-22', -20000, { nights: -2, status: 'adjustment' })
+    const series = monthlyMetrics({
+      bookings: [booking('2026-03-01', '2026-03-11', 100000), refund],
+      expenses: [],
+      usdPhp: 58,
+      availableNightsPerYear: 365,
+    })
+    const march = series.find((m) => m.month === '2026-03')!
+    expect(march.nightsSold).toBe(8)
+    expect(march.revenue).toBeCloseTo(80000)
+  })
+
+  it('books a refund whole into one month rather than spreading it', () => {
+    const refund = booking('2026-03-30', '2026-04-02', -30000, { nights: -3, status: 'adjustment' })
+    const series = monthlyMetrics({
+      bookings: [booking('2026-03-01', '2026-03-11', 100000), refund],
+      expenses: [],
+      usdPhp: 58,
+      availableNightsPerYear: 365,
+    })
+    expect(series.find((m) => m.month === '2026-03')!.revenue).toBeCloseTo(70000)
+    expect(series.find((m) => m.month === '2026-04')?.revenue ?? 0).toBeCloseTo(0)
+  })
+
+  it('still excludes rows the sheet marks cancelled', () => {
+    const series = monthlyMetrics({
+      bookings: [
+        booking('2026-03-01', '2026-03-03', 30000),
+        booking('2026-03-10', '2026-03-14', 40000, { status: 'Cancelled by guest' }),
+      ],
+      expenses: [],
+      usdPhp: 58,
+      availableNightsPerYear: 365,
+    })
+    expect(series[0].revenue).toBeCloseTo(30000)
+    expect(series[0].nightsSold).toBe(2)
+  })
+})
+
+describe('add-on revenue', () => {
+  it('keeps add-ons out of ADR but in total revenue', () => {
+    const series = monthlyMetrics({
+      bookings: [booking('2026-03-01', '2026-03-03', 40000, { addOnRevenue: 20000 })],
+      expenses: [],
+      usdPhp: 58,
+      availableNightsPerYear: 365,
+    })
+    const march = series[0]
+    expect(march.adr).toBeCloseTo(20000)
+    expect(march.revenue).toBeCloseTo(40000)
+    expect(march.addOnRevenue).toBeCloseTo(20000)
+    expect(march.totalRevenue).toBeCloseTo(60000)
+    expect(march.totalRevpar).toBeGreaterThan(march.revpar)
+  })
+
+  it('runs margin off total revenue, not room revenue alone', () => {
+    const totals = aggregate(
+      monthlyMetrics({
+        bookings: [booking('2026-03-01', '2026-03-03', 40000, { addOnRevenue: 20000 })],
+        expenses: [expense('2026-03-15', 'Crew', 30000)],
+        usdPhp: 58,
+        availableNightsPerYear: 365,
+      }),
+    )
+    expect(totals.totalRevenue).toBeCloseTo(60000)
+    expect(totals.netProfit).toBeCloseTo(30000)
+    expect(totals.netMargin).toBeCloseTo(0.5)
+  })
+})
+
+describe('crosstab import', () => {
+  it('reads month names, real dates and abbreviations as periods', () => {
+    expect(headerToDate('January', 2026)).toBe('2026-01-31')
+    expect(headerToDate('Febuary', 2026)).toBe('2026-02-28')
+    expect(headerToDate('Jan-26', 2020)).toBe('2026-01-31')
+    expect(headerToDate('2026-03-01', 2020)).toBe('2026-03-01')
+    expect(headerToDate('Category', 2026)).toBeNull()
+    expect(headerToDate('', 2026)).toBeNull()
+  })
+
+  it('turns one row into one record per populated period, keeping the cell reference', () => {
+    const sheet = {
+      name: 'P&L',
+      headers: ['Line', 'January', 'February', 'March'],
+      rows: [['Salaries', 34000, 34000, null]],
+      rowNumbers: [5],
+      sections: [],
+      impliedDate: null,
+    }
+    const periods = detectPeriodColumns(sheet.headers, 2026)
+    expect(periods).toHaveLength(3)
+    const result = buildCrosstabExpenses({
+      sheet,
+      fileName: 'f.xlsx',
+      importId: 'i',
+      labelColumn: 0,
+      periods,
+      currency: 'PHP',
+      excludedRows: [],
+      natures: {},
+    })
+    expect(result.rows).toHaveLength(2)
+    expect(result.rows[0].date).toBe('2026-01-31')
+    expect(result.rows[0].category).toBe('Salaries')
+    expect(result.rows[0].prov.column).toBe('January')
+    expect(result.rows[0].prov.rowNumber).toBe(5)
+  })
+
+  it('recognises summary rows so a sheet is not counted twice', () => {
+    expect(isSummaryLabel('Total')).toBe(true)
+    expect(isSummaryLabel('EBITDA % of sales')).toBe(true)
+    expect(isSummaryLabel('Gross Profit')).toBe(true)
+    expect(isSummaryLabel('Salaries')).toBe(false)
+    expect(isSummaryLabel('Starlink')).toBe(false)
+  })
+})
+
+describe('crosstab row classification', () => {
+  it('treats ratios and small counts as metrics, not money', () => {
+    expect(looksLikeMetricRow([0.58, 0.53, 0.51])).toBe(true)
+    expect(looksLikeMetricRow([18, 15, 16, 25])).toBe(true)
+    expect(looksLikeMetricRow([31, 28, 31, 30])).toBe(true)
+    expect(looksLikeMetricRow([34000, 34000, 34000])).toBe(false)
+    expect(looksLikeMetricRow([2700, 2700])).toBe(false)
+    expect(looksLikeMetricRow([])).toBe(false)
+  })
+
+  it('flags the rows a management P&L interleaves with its costs', () => {
+    const sheet = {
+      name: 'P&L',
+      headers: ['Line', 'January', 'February'],
+      rows: [
+        ['Nights', 18, 15],
+        ['Occupancy', 0.58, 0.53],
+        ['Revenue - reservations', 373908, 289330],
+        ['Salary', 34000, 34000],
+        ['Starlink', 2700, 2700],
+        ['EBITDA', 272708, 194130],
+      ],
+      rowNumbers: [3, 4, 5, 6, 7, 8],
+      sections: [],
+      impliedDate: null,
+    }
+    const result = buildCrosstabExpenses({
+      sheet,
+      fileName: 'f.xlsx',
+      importId: 'i',
+      labelColumn: 0,
+      periods: detectPeriodColumns(sheet.headers, 2026),
+      currency: 'PHP',
+      excludedRows: [],
+      natures: {},
+    })
+    const summary = Object.fromEntries(result.labels.map((row) => [row.label, row.isSummary]))
+    expect(summary['Nights']).toBe(true)
+    expect(summary['Occupancy']).toBe(true)
+    expect(summary['Revenue - reservations']).toBe(true)
+    expect(summary['EBITDA']).toBe(true)
+    expect(summary['Salary']).toBe(false)
+    expect(summary['Starlink']).toBe(false)
+  })
+})
+
+describe('period header strictness', () => {
+  it('refuses headers that merely contain a date', () => {
+    // A sheet title, and the placeholder name given to an empty header cell.
+    expect(headerToDate('Y3 - Jan 1 to Dec 31 2026', 2026)).toBeNull()
+    expect(headerToDate('Column 1', 2026)).toBeNull()
+    expect(headerToDate('Column 3', 2026)).toBeNull()
+    expect(headerToDate('Y3', 2026)).toBeNull()
+    expect(headerToDate('Income statement PHP', 2026)).toBeNull()
+  })
+
+  it('still accepts the shapes a period column actually uses', () => {
+    expect(headerToDate('2026-01-01', 2020)).toBe('2026-01-01')
+    expect(headerToDate('2026-02', 2020)).toBe('2026-02-28')
+    expect(headerToDate('03/01/2026', 2020)).toBe('2026-03-01')
+    expect(headerToDate('Apr', 2026)).toBe('2026-04-30')
+  })
+})
+
+describe('fixed vs variable classification', () => {
+  it('reads a per-unit cost line as variable whatever else it says', () => {
+    expect(toExpenseNature('', 'Per night costs')).toBe('variable')
+    expect(toExpenseNature('', 'Per stay costs')).toBe('variable')
+    expect(toExpenseNature('', 'Maintenance per stay')).toBe('variable')
+  })
+
+  it('keeps flat monthly lines fixed', () => {
+    expect(toExpenseNature('', 'Supplies (towels)')).toBe('fixed')
+    expect(toExpenseNature('', 'Starlink')).toBe('fixed')
+    expect(toExpenseNature('', 'Salary')).toBe('fixed')
+    expect(toExpenseNature('', 'Depreciation')).toBe('fixed')
+  })
+})
+
+describe('overlapping period columns', () => {
+  const sheet = {
+    name: 'Y1 P&L',
+    headers: ['Line', '2024-12-01', '2025-01-01', '2025-02-01'],
+    rows: [['Salary', 34000, 34000, 34000]],
+    rowNumbers: [6],
+    sections: [],
+    impliedDate: null,
+  }
+
+  it('imports every period when none are excluded', () => {
+    const result = buildCrosstabExpenses({
+      sheet,
+      fileName: 'f.xlsx',
+      importId: 'i',
+      labelColumn: 0,
+      periods: detectPeriodColumns(sheet.headers, 2025),
+      currency: 'PHP',
+      excludedRows: [],
+      natures: {},
+    })
+    expect(result.rows).toHaveLength(3)
+  })
+
+  it('drops the columns a previous import already covered', () => {
+    const periods = detectPeriodColumns(sheet.headers, 2025)
+    const alreadyImported = new Set(['2025-01', '2025-02'])
+    const result = buildCrosstabExpenses({
+      sheet,
+      fileName: 'f.xlsx',
+      importId: 'i',
+      labelColumn: 0,
+      periods,
+      currency: 'PHP',
+      excludedRows: [],
+      excludedPeriods: periods
+        .filter((period) => alreadyImported.has(period.date.slice(0, 7)))
+        .map((period) => period.index),
+      natures: {},
+    })
+    expect(result.rows).toHaveLength(1)
+    expect(result.rows[0].date.slice(0, 7)).toBe('2024-12')
   })
 })
