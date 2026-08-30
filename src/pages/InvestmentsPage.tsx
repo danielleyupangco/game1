@@ -370,29 +370,65 @@ function PerformanceView({
 
   return (
     <div className="space-y-4">
+      {!series.contributionsKnown ? (
+        <div className="rounded-lg border border-warn/40 bg-warn/[0.07] px-3.5 py-3 text-[12.5px] leading-relaxed text-ink-2">
+          <p className="mb-1.5 font-semibold text-warn">These are value changes, not returns.</p>
+          <p>
+            No deposits or withdrawals have been imported, so the app cannot tell money you added from money you made —
+            every peso that arrived in the portfolio is being counted as a gain. At least{' '}
+            <span className="num font-medium text-ink">{money(series.estimatedNewMoney, 'PHP', true)}</span> of the
+            change came in as positions that simply appeared between snapshots, and that is a floor, not a total: it
+            cannot see cash added to a holding you already owned.
+          </p>
+          <p className="mt-1.5">
+            Import a transactions sheet with your deposits and withdrawals under{' '}
+            <a href="#/data?dataset=transactions" className="text-accent hover:underline">
+              Data → Transactions
+            </a>{' '}
+            and every figure on this tab becomes a real return.
+          </p>
+        </div>
+      ) : null}
+
       <StatGrid>
         <Stat
-          label="Since inception"
+          label={series.contributionsKnown ? 'Since inception' : 'Value change'}
           value={signedPct(series.sinceInception)}
-          tone={series.sinceInception >= 0 ? 'pos' : 'neg'}
-          sub={`${num(series.years, 1)} years, time-weighted`}
+          tone={series.contributionsKnown ? (series.sinceInception >= 0 ? 'pos' : 'neg') : 'warn'}
+          sub={
+            series.contributionsKnown
+              ? `${num(series.years, 1)} years, time-weighted`
+              : `${num(series.years, 1)} years — includes contributions`
+          }
         />
         <Stat
-          label="Annualised"
+          label={series.contributionsKnown ? 'Annualised' : 'Annualised change'}
           value={Number.isFinite(series.annualised) ? signedPct(series.annualised) : '—'}
-          tone={series.annualised >= 0 ? 'pos' : 'neg'}
-          sub="Compound annual, contributions stripped out"
+          tone={series.contributionsKnown ? (series.annualised >= 0 ? 'pos' : 'neg') : 'warn'}
+          sub={
+            series.contributionsKnown
+              ? 'Compound annual, contributions stripped out'
+              : 'Not a return — contributions are not separated'
+          }
         />
         <Stat
-          label="Year to date"
+          label={series.contributionsKnown ? 'Year to date' : 'Value change YTD'}
           value={Number.isFinite(yearToDateReturn(series)) ? signedPct(yearToDateReturn(series)) : '—'}
-          tone={yearToDateReturn(series) >= 0 ? 'pos' : 'neg'}
-          sub="Chain-linked from the first snapshot this year"
+          tone={series.contributionsKnown ? (yearToDateReturn(series) >= 0 ? 'pos' : 'neg') : 'warn'}
+          sub={
+            series.contributionsKnown
+              ? 'Chain-linked from the first snapshot this year'
+              : 'Includes anything added this year'
+          }
         />
         <Stat
           label="Money-weighted"
-          value={Number.isFinite(mwr) ? signedPct(mwr) : '—'}
-          sub="What your money earned, timing included"
+          value={series.contributionsKnown && Number.isFinite(mwr) ? signedPct(mwr) : '—'}
+          sub={
+            series.contributionsKnown
+              ? 'What your money earned, timing included'
+              : 'Needs deposit and withdrawal records'
+          }
           hint="IRR of actual cashflows. Differs from time-weighted when large contributions land before a good or bad stretch."
         />
       </StatGrid>
@@ -407,11 +443,19 @@ function PerformanceView({
 
       <Card>
         <ChartFrame
-          title={hasBenchmark ? `Growth of ₱1 vs ${benchmarkName}` : 'Growth of ₱1'}
+          title={
+            series.contributionsKnown
+              ? hasBenchmark
+                ? `Growth of ₱1 vs ${benchmarkName}`
+                : 'Growth of ₱1'
+              : 'Portfolio value, indexed'
+          }
           caption={
-            hasBenchmark
-              ? `Both lines start at 1 on your first snapshot date, so the gap is relative performance. The portfolio line is time-weighted — it measures your selections, not the size of your contributions.`
-              : `Time-weighted growth of the portfolio, indexed to 1 at the first snapshot. Import ${benchmarkName} index levels under Data to overlay a benchmark.`
+            !series.contributionsKnown
+              ? 'Indexed to 1 at your first snapshot. Because deposits are not imported, this line rises when you add money as well as when markets do — it is not comparable to a benchmark, which is why none is drawn.'
+              : hasBenchmark
+                ? `Both lines start at 1 on your first snapshot date, so the gap is relative performance. The portfolio line is time-weighted — it measures your selections, not the size of your contributions.`
+                : `Time-weighted growth of the portfolio, indexed to 1 at the first snapshot. Import ${benchmarkName} index levels under Data to overlay a benchmark.`
           }
           right={<Legend items={hasBenchmark ? [{ label: 'Portfolio', color: SERIES[0] }, { label: benchmarkName, color: SERIES[1] }] : [{ label: 'Portfolio', color: SERIES[0] }]} />}
           height={260}
@@ -469,7 +513,11 @@ function PerformanceView({
       <Card>
         <SectionHeader
           title="Period detail"
-          subtitle="The building blocks of the return above. Modified Dietz weights each cashflow by the fraction of the period it was invested."
+          subtitle={
+            series.contributionsKnown
+              ? 'The building blocks of the return above. Modified Dietz weights each cashflow by the fraction of the period it was invested.'
+              : 'Change in value between consecutive snapshots. With no cashflow records, a period that jumps because you added money is indistinguishable here from one that rose on markets — look for the large, sudden ones.'
+          }
         />
         <DataTable
           rows={series.periods}
@@ -551,6 +599,13 @@ function AllocationView({ positions }: { positions: PositionView[] }) {
             and drift flags appear here and on the Home page.
           </p>
         </Card>
+      ) : rows.filter((row) => row.value > 0).length <= 1 ? (
+        <div className="rounded-lg border border-warn/30 bg-warn/5 px-3 py-2.5 text-[12px] leading-relaxed text-warn">
+          Every holding falls into a single bucket on this dimension, so there is nothing to rebalance between and the
+          drift against your target is not meaningful. This almost always means the imported sheet had no column for it
+          — map one under <span className="text-ink">Data → Portfolio holdings</span>, or clear the targets for this
+          dimension in Settings so it stops raising a flag.
+        </div>
       ) : null}
 
       <Card>

@@ -22,6 +22,15 @@ export type SheetPreview = {
   rows: unknown[][]
   /** source row number of rows[i], so provenance survives blank-row skipping */
   rowNumbers: number[]
+  /**
+   * Sheets often stack several tables under repeated headers — one block per
+   * account, owner or period. Each section is a contiguous run of rows under
+   * one header, so they can be labelled and included separately on import.
+   * A plain single-table sheet has exactly one section.
+   */
+  sections: { label: string; startIndex: number; endIndex: number }[]
+  /** date parsed out of the sheet name, when it reads as one */
+  impliedDate: string | null
 }
 
 export type ParsedWorkbook = {
@@ -42,6 +51,11 @@ function cellToPrimitive(value: ExcelJSNamespace.CellValue): unknown {
     }
     if ('hyperlink' in obj) return obj.text ?? obj.hyperlink
     if ('error' in obj) return null
+    // A formula whose result was never cached by the writing application. There
+    // is no value to recover, and returning the object would stringify to
+    // "[object Object]" and be imported as if it were data.
+    if ('formula' in obj || 'sharedFormula' in obj) return null
+    return null
   }
   return value
 }
@@ -70,9 +84,63 @@ function findHeaderRow(matrix: unknown[][]): number {
   return best
 }
 
+/** True when a row repeats the header — the start of another stacked table. */
+function looksLikeHeader(row: unknown[], headers: string[]): boolean {
+  const cells = row.map((cell) => String(cell ?? '').trim().toLowerCase()).filter(Boolean)
+  if (cells.length < 2) return false
+  const known = new Set(headers.map((h) => h.toLowerCase()))
+  const matches = cells.filter((cell) => known.has(cell)).length
+  return matches >= Math.max(2, Math.ceil(cells.length * 0.6))
+}
+
+/**
+ * Subtotal and grand-total rows. Importing these would double-count the sheet,
+ * so they are dropped — but only when the label is a total on its own, never
+ * when it merely contains the word (a fund called "Total Intl Stock Index"
+ * is a holding, not a subtotal).
+ */
+const TOTAL_ROW = /^(grand\s+)?(total|subtotal|sub-total|sum|net total)\s*[:.]?$/i
+
+function isTotalRow(row: unknown[]): boolean {
+  const labels = row.map((cell) => String(cell ?? '').trim()).filter(Boolean)
+  if (labels.length === 0) return false
+  return TOTAL_ROW.test(labels[0])
+}
+
+/**
+ * Reads a date out of a sheet name — "August 13, 2026", "Oct 28, 2025 Portfolio",
+ * "2026-08-13", "Q3 2026". Returns null when the name isn't a date, which is the
+ * common case for a plain single-snapshot workbook.
+ */
+export function dateFromSheetName(name: string): string | null {
+  const iso = name.match(/(20\d{2})[-/](\d{1,2})[-/](\d{1,2})/)
+  if (iso) return `${iso[1]}-${iso[2].padStart(2, '0')}-${iso[3].padStart(2, '0')}`
+
+  const MONTHS: Record<string, number> = {
+    jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6,
+    jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12,
+  }
+  const named = name.match(/([A-Za-z]{3,9})\.?\s+(\d{1,2})\s*,?\s*(20\d{2})/)
+  if (named) {
+    const month = MONTHS[named[1].slice(0, 3).toLowerCase()]
+    if (month) return `${named[3]}-${String(month).padStart(2, '0')}-${named[2].padStart(2, '0')}`
+  }
+  const monthYear = name.match(/([A-Za-z]{3,9})\.?\s+(20\d{2})/)
+  if (monthYear) {
+    const month = MONTHS[monthYear[1].slice(0, 3).toLowerCase()]
+    // Month with no day: use the last day of that month, which is what a
+    // "March 2026" portfolio sheet almost always means.
+    if (month) {
+      const lastDay = new Date(Number(monthYear[2]), month, 0).getDate()
+      return `${monthYear[2]}-${String(month).padStart(2, '0')}-${lastDay}`
+    }
+  }
+  return null
+}
+
 function uniqueHeaders(raw: unknown[]): string[] {
   const seen = new Map<string, number>()
-  return raw.map((cell, index) => {
+  return Array.from(raw, (cell, index) => {
     let label = String(cell ?? '').trim()
     if (!label) label = `Column ${index + 1}`
     const count = seen.get(label) ?? 0
@@ -98,30 +166,83 @@ export async function parseWorkbook(file: File): Promise<ParsedWorkbook> {
     const sourceRowNumbers: number[] = []
     worksheet.eachRow({ includeEmpty: false }, (row: ExcelJSNamespace.Row, rowNumber: number) => {
       const values = row.values as ExcelJSNamespace.CellValue[]
-      // ExcelJS row.values is 1-indexed with a leading hole.
-      matrix.push(values.slice(1).map(cellToPrimitive))
+      // ExcelJS returns a 1-indexed *sparse* array — empty cells are holes, not
+      // undefined entries. Array.from fills them in, which matters because a
+      // hole survives .map() and would later be read as a missing column.
+      const dense = Array.from({ length: Math.max(0, values.length - 1) }, (_, i) =>
+        cellToPrimitive(values[i + 1] ?? null),
+      )
+      matrix.push(dense)
       sourceRowNumbers.push(rowNumber)
     })
     if (matrix.length === 0) {
-      sheets.push({ name: worksheet.name, headers: [], rows: [], rowNumbers: [] })
+      sheets.push({
+        name: worksheet.name,
+        headers: [],
+        rows: [],
+        rowNumbers: [],
+        sections: [],
+        impliedDate: dateFromSheetName(worksheet.name),
+      })
       return
     }
 
     const headerIndex = findHeaderRow(matrix)
     const headers = uniqueHeaders(matrix[headerIndex] ?? [])
-    const rows: unknown[][] = []
-    const rowNumbers: number[] = []
-    for (let i = headerIndex + 1; i < matrix.length; i++) {
-      const row = matrix[i]
-      const hasContent = row.some((cell) => cell !== null && cell !== undefined && String(cell).trim() !== '')
-      if (!hasContent) continue
-      rows.push(row)
-      rowNumbers.push(sourceRowNumbers[i])
-    }
-    sheets.push({ name: worksheet.name, headers, rows, rowNumbers })
+    sheets.push({
+      name: worksheet.name,
+      headers,
+      ...collectRows(matrix, sourceRowNumbers, headerIndex, headers),
+      impliedDate: dateFromSheetName(worksheet.name),
+    })
   })
 
   return { fileName: file.name, sheets }
+}
+
+
+/**
+ * Walks the rows below a header, dropping blank rows, subtotal rows and any
+ * repeated header, and records where each stacked table starts and ends.
+ */
+function collectRows(
+  matrix: unknown[][],
+  sourceRowNumbers: number[],
+  headerIndex: number,
+  headers: string[],
+): Pick<SheetPreview, 'rows' | 'rowNumbers' | 'sections'> {
+  const rows: unknown[][] = []
+  const rowNumbers: number[] = []
+  const sections: SheetPreview['sections'] = []
+  let sectionStart = 0
+
+  const closeSection = () => {
+    if (rows.length > sectionStart) {
+      sections.push({
+        label: `Section ${sections.length + 1}`,
+        startIndex: sectionStart,
+        endIndex: rows.length,
+      })
+      sectionStart = rows.length
+    }
+  }
+
+  for (let i = headerIndex + 1; i < matrix.length; i++) {
+    const row = matrix[i] ?? []
+    const hasContent = row.some((cell) => cell !== null && cell !== undefined && String(cell).trim() !== '')
+    if (!hasContent) continue
+    if (isTotalRow(row)) continue
+    if (looksLikeHeader(row, headers)) {
+      // Another table starts here; everything after it is a new section.
+      closeSection()
+      continue
+    }
+    rows.push(row)
+    rowNumbers.push(sourceRowNumbers[i] ?? i + 1)
+  }
+  closeSection()
+
+  return { rows, rowNumbers, sections }
 }
 
 /** Minimal RFC-4180 CSV reader — handles quoted fields and embedded commas. */
@@ -160,12 +281,11 @@ function parseCsv(text: string): SheetPreview {
 
   const headerIndex = findHeaderRow(matrix)
   const headers = uniqueHeaders(matrix[headerIndex] ?? [])
-  const rows: unknown[][] = []
-  const rowNumbers: number[] = []
-  for (let i = headerIndex + 1; i < matrix.length; i++) {
-    if (!matrix[i].some((cell) => cell.trim() !== '')) continue
-    rows.push(matrix[i])
-    rowNumbers.push(i + 1)
+  const sourceRowNumbers = matrix.map((_, i) => i + 1)
+  return {
+    name: 'CSV',
+    headers,
+    ...collectRows(matrix, sourceRowNumbers, headerIndex, headers),
+    impliedDate: null,
   }
-  return { name: 'CSV', headers, rows, rowNumbers }
 }

@@ -35,7 +35,10 @@ It handles what real exports actually contain:
 - currency symbols and thousands separators — `₱ 12,000`, `$1,234.56`
 - `YYYY-MM-DD`, `MM/DD/YYYY`, `DD/MM/YYYY` (there's a toggle), `5 Mar 2026`, and Excel serial numbers
 - multiple sheets — it picks the one that maps best and lets you switch
-- formula cells (it reads the computed result)
+- formula cells (it reads the computed result, and ignores a formula whose result was never cached)
+- subtotal and grand-total rows, which are dropped so the sheet isn't double-counted
+- **several tables stacked in one sheet** — one block per owner or account. Each is detected, and you name it on import so it becomes the account on those rows
+- **a workbook of dated sheets** — if two or more sheet names read as dates ("August 13, 2026", "Oct 28, 2025 Portfolio"), the importer offers to load every one as its own snapshot in a single pass, giving you a full history instead of a single point
 
 Rows it can't parse are **listed with a reason before you commit**, never dropped
 silently.

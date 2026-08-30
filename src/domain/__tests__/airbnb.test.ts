@@ -4,6 +4,7 @@ import { evaluateProject, irr, npv, paybackYears, projectCashflows, runDcf, sens
 import { priceCurve, suggestByMonth, weekdayDemand } from '@/domain/airbnb/pricing'
 import { DEFAULT_DCF, DEFAULT_PRICING } from '@/state/defaults'
 import { nightsByMonth } from '@/lib/dates'
+import { dateFromSheetName } from '@/lib/workbook'
 import { toExpenseNature, toISO, toNumber } from '@/lib/coerce'
 import type { Booking, CapitalProject, Expense, Provenance } from '@/types'
 
@@ -349,5 +350,16 @@ describe('spreadsheet coercion', () => {
     expect(toExpenseNature('', 'Crew salaries')).toBe('fixed')
     // An explicit column always wins over the keyword guess.
     expect(toExpenseNature('Variable', 'Property tax')).toBe('variable')
+  })
+})
+
+describe('awkward sheet structures', () => {
+  it('reads a date out of a sheet name', () => {
+    expect(dateFromSheetName('August 13, 2026')).toBe('2026-08-13')
+    expect(dateFromSheetName('Oct 28, 2025 Portfolio')).toBe('2025-10-28')
+    expect(dateFromSheetName('2026-08-13 holdings')).toBe('2026-08-13')
+    expect(dateFromSheetName('Feb 2026')).toBe('2026-02-28')
+    expect(dateFromSheetName('10 big bets AI')).toBeNull()
+    expect(dateFromSheetName('Sheet1')).toBeNull()
   })
 })

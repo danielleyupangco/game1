@@ -36,6 +36,13 @@ export function ImportWizard({
   const [asOf, setAsOf] = useState(today())
   const [label, setLabel] = useState('')
   const [usdPhp, setUsdPhp] = useState(String(settings.usdPhp))
+  /** holdings only: import every dated sheet as its own snapshot */
+  const [multi, setMulti] = useState(false)
+  const [sheetDates, setSheetDates] = useState<Record<string, string>>({})
+  const [sheetOn, setSheetOn] = useState<Record<string, boolean>>({})
+  const [sectionLabels, setSectionLabels] = useState<string[]>([])
+  const [sectionOn, setSectionOn] = useState<boolean[]>([])
+  const [progress, setProgress] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
@@ -69,7 +76,22 @@ export function ImportWizard({
         setSheetName(best.name)
         setMapping(autoMap(best.headers, dataset))
         setLabel(file.name.replace(/\.(xlsx|xlsm|csv)$/i, ''))
-        setStep(usable.length > 1 ? 'sheet' : 'map')
+        setSectionLabels(best.sections.map((section) => section.label))
+        setSectionOn(best.sections.map(() => true))
+
+        // A workbook whose sheets are named by date is a history, not a single
+        // portfolio. Offer to import the whole thing as dated snapshots.
+        const dated = usable.filter((candidate) => candidate.impliedDate)
+        if (dataset === 'holdings' && dated.length >= 2) {
+          setMulti(true)
+          setSheetDates(Object.fromEntries(dated.map((c) => [c.name, c.impliedDate!])))
+          setSheetOn(Object.fromEntries(usable.map((c) => [c.name, Boolean(c.impliedDate)])))
+          setAsOf(dated[0].impliedDate!)
+          setStep('map')
+        } else {
+          if (best.impliedDate) setAsOf(best.impliedDate)
+          setStep(usable.length > 1 ? 'sheet' : 'map')
+        }
       } catch (caught) {
         setError(caught instanceof Error ? caught.message : 'Could not read that file.')
       } finally {
@@ -84,16 +106,93 @@ export function ImportWizard({
     const importId = 'preview'
     const build = BUILDERS[dataset]
     return build({
-      sheet: { ...sheet, rows: sheet.rows, rowNumbers: sheet.rowNumbers },
+      sheet,
       fileName: workbook?.fileName ?? '',
       mapping,
       importId,
       dayFirst,
       snapshotId: 'preview',
+      sectionLabels,
+      excludedSections: sectionOn.map((on, i) => (on ? -1 : i)).filter((i) => i >= 0),
     })
-  }, [sheet, mapping, dataset, dayFirst, workbook])
+  }, [sheet, mapping, dataset, dayFirst, workbook, sectionLabels, sectionOn])
+
+  /** Sheets that will be imported as snapshots in multi mode, oldest first. */
+  const multiSheets = useMemo(() => {
+    if (!multi || !workbook) return []
+    return workbook.sheets
+      .filter((candidate) => sheetOn[candidate.name] && sheetDates[candidate.name])
+      .map((candidate) => ({ sheet: candidate, asOf: sheetDates[candidate.name] }))
+      .sort((a, b) => (a.asOf < b.asOf ? -1 : 1))
+  }, [multi, workbook, sheetOn, sheetDates])
 
   const missing = useMemo(() => missingRequired(mapping, dataset), [mapping, dataset])
+
+  const commitMulti = useCallback(async () => {
+    if (!workbook || multiSheets.length === 0) return
+    setBusy(true)
+    setError(null)
+    try {
+      const build = BUILDERS.holdings
+      const excludedSections = sectionOn.map((on, i) => (on ? -1 : i)).filter((i) => i >= 0)
+      let imported = 0
+
+      for (const { sheet: target, asOf: sheetAsOf } of multiSheets) {
+        setProgress(`${target.name} (${imported + 1} of ${multiSheets.length})`)
+        const importId = uid('imp')
+        const snapshotId = uid('snp')
+        // Mapping is by header name, so a sheet with an extra or reordered
+        // column still resolves — only a renamed header would need re-mapping.
+        const result = build({
+          sheet: target,
+          fileName: workbook.fileName,
+          mapping,
+          importId,
+          dayFirst,
+          snapshotId,
+          sectionLabels,
+          excludedSections,
+        })
+        if (result.rows.length === 0) continue
+
+        await db.putOne('snapshots', {
+          id: snapshotId,
+          asOf: sheetAsOf,
+          label: target.name,
+          createdAt: new Date().toISOString(),
+          importId,
+          usdPhp: Number(usdPhp) || settings.usdPhp,
+        })
+        await db.putMany('holdings', result.rows)
+        await db.putOne('imports', {
+          id: importId,
+          dataset: 'holdings',
+          fileName: workbook.fileName,
+          sheetName: target.name,
+          importedAt: new Date().toISOString(),
+          rowCount: result.rows.length,
+          mapping,
+          rejected: result.rejected,
+          snapshotId,
+        })
+        imported++
+      }
+
+      if (imported === 0) {
+        setError('Nothing imported — every row in every sheet was rejected. Check the mapping.')
+        setBusy(false)
+        setProgress(null)
+        return
+      }
+      await reload()
+      onDone()
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : 'Import failed.')
+    } finally {
+      setBusy(false)
+      setProgress(null)
+    }
+  }, [workbook, multiSheets, mapping, dayFirst, sectionLabels, sectionOn, usdPhp, settings.usdPhp, reload, onDone])
 
   const commit = useCallback(async () => {
     if (!sheet || !workbook || !preview) return
@@ -110,6 +209,8 @@ export function ImportWizard({
         importId,
         dayFirst,
         snapshotId,
+        sectionLabels,
+        excludedSections: sectionOn.map((on, i) => (on ? -1 : i)).filter((i) => i >= 0),
       })
 
       if (result.rows.length === 0) {
@@ -151,7 +252,54 @@ export function ImportWizard({
     } finally {
       setBusy(false)
     }
-  }, [sheet, workbook, preview, dataset, mapping, dayFirst, asOf, label, usdPhp, settings.usdPhp, reload, onDone])
+  }, [sheet, workbook, preview, dataset, mapping, dayFirst, asOf, label, usdPhp, settings.usdPhp, sectionLabels, sectionOn, reload, onDone])
+
+  // A sheet that stacks several tables (one per owner or account) needs those
+  // blocks named, or every row lands under one undifferentiated account.
+  const sectionPanel =
+    sheet && sheet.sections.length > 1 ? (
+      <div className="rounded-lg border border-line bg-surface-2 p-3">
+        <p className="mb-2 text-[12px] leading-relaxed text-ink-2">
+          <span className="font-medium text-ink">
+            {sheet.sections.length} separate tables in this sheet.
+          </span>{' '}
+          Name each one and it becomes the account on those rows, so you can see the split. Untick anything you don't
+          want imported.
+        </p>
+        <div className="space-y-1.5">
+          {sheet.sections.map((section, index) => {
+            const first = sheet.rows[section.startIndex]?.[0]
+            const count = section.endIndex - section.startIndex
+            return (
+              <div key={index} className="flex flex-wrap items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={sectionOn[index] ?? true}
+                  onChange={(event) => {
+                    const next = [...sectionOn]
+                    next[index] = event.target.checked
+                    setSectionOn(next)
+                  }}
+                  className="accent-accent"
+                />
+                <input
+                  value={sectionLabels[index] ?? section.label}
+                  onChange={(event) => {
+                    const next = [...sectionLabels]
+                    next[index] = event.target.value
+                    setSectionLabels(next)
+                  }}
+                  className="w-36 rounded border border-line bg-surface-3 px-2 py-1 text-[12px] text-ink outline-none focus:border-accent/60"
+                />
+                <span className="min-w-0 flex-1 truncate text-[11px] text-ink-3">
+                  {count} rows, starting “{String(first ?? '')}”
+                </span>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    ) : null
 
   return (
     <Card className="space-y-4">
@@ -246,6 +394,14 @@ export function ImportWizard({
         </div>
       ) : null}
 
+      {step === 'map' && multi ? (
+        <div className="rounded-lg border border-accent/30 bg-accent/[0.06] px-3 py-2 text-[12px] leading-relaxed text-ink-2">
+          Mapping is read from <span className="text-ink">{sheetName}</span> and applied to every sheet by column{' '}
+          <em>name</em>, so sheets with an extra or reordered column still import. A sheet that renamed its headers
+          would need its own import.
+        </div>
+      ) : null}
+
       {step === 'map' && sheet ? (
         <MappingStep
           sheet={sheet}
@@ -258,8 +414,92 @@ export function ImportWizard({
         />
       ) : null}
 
-      {step === 'review' && preview && sheet ? (
+      {step === 'review' && multi && workbook ? (
         <div className="space-y-3">
+          <div className="rounded-lg border border-accent/30 bg-accent/[0.06] px-3 py-2.5 text-[12px] leading-relaxed text-ink-2">
+            <span className="font-semibold text-accent">
+              {multiSheets.length} dated sheets found.
+            </span>{' '}
+            Each becomes its own snapshot, so importing this one file gives you a full history rather than a single
+            point — which is what makes returns, drawdown and drift-over-time computable. Dates come from the sheet
+            names; correct any that are wrong.
+          </div>
+
+          <div className="max-h-72 space-y-1 overflow-y-auto rounded-lg border border-line p-2">
+            {workbook.sheets
+              .filter((candidate) => candidate.rows.length > 0)
+              .map((candidate) => {
+                const on = sheetOn[candidate.name] ?? false
+                const built = BUILDERS.holdings({
+                  sheet: candidate,
+                  fileName: workbook.fileName,
+                  mapping,
+                  importId: 'preview',
+                  dayFirst,
+                  snapshotId: 'preview',
+                  sectionLabels,
+                  excludedSections: sectionOn.map((v, i) => (v ? -1 : i)).filter((i) => i >= 0),
+                })
+                return (
+                  <div
+                    key={candidate.name}
+                    className={cx(
+                      'flex flex-wrap items-center gap-2 rounded-md px-2 py-1.5',
+                      on ? 'bg-surface-2' : 'opacity-45',
+                    )}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={on}
+                      onChange={(event) => setSheetOn({ ...sheetOn, [candidate.name]: event.target.checked })}
+                      className="accent-accent"
+                    />
+                    <span className="min-w-0 flex-1 truncate text-[12px] text-ink">{candidate.name}</span>
+                    <span className="num text-[11px] text-ink-3">
+                      {built.rows.length} rows
+                      {built.rejected.length > 0 ? (
+                        <span className="ml-1 text-warn">+{built.rejected.length} skipped</span>
+                      ) : null}
+                    </span>
+                    <input
+                      type="date"
+                      value={sheetDates[candidate.name] ?? ''}
+                      onChange={(event) => setSheetDates({ ...sheetDates, [candidate.name]: event.target.value })}
+                      className="num rounded border border-line bg-surface-3 px-1.5 py-0.5 text-[11px] text-ink outline-none focus:border-accent/60"
+                    />
+                  </div>
+                )
+              })}
+          </div>
+
+          {sectionPanel}
+
+          <div className="grid gap-3 rounded-lg border border-line bg-surface-2 p-3 sm:grid-cols-2">
+            <Field
+              label="USD → PHP rate"
+              hint="Applied to every snapshot in this import. Edit an individual snapshot later if your sheet used different rates."
+            >
+              <TextInput value={usdPhp} onChange={setUsdPhp} type="number" />
+            </Field>
+            <div className="flex items-end">
+              <button
+                type="button"
+                onClick={() => {
+                  setMulti(false)
+                  setStep('sheet')
+                }}
+                className="text-[12px] text-accent hover:underline"
+              >
+                Import just one sheet instead
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {step === 'review' && !multi && preview && sheet ? (
+        <div className="space-y-3">
+          {sectionPanel}
           <div className="grid gap-2 sm:grid-cols-3">
             <SummaryTile label="Rows ready" value={String(preview.rows.length)} tone="pos" />
             <SummaryTile
@@ -334,10 +574,19 @@ export function ImportWizard({
           ) : null}
           {step === 'map' ? (
             <Button variant="primary" disabled={missing.length > 0} onClick={() => setStep('review')}>
-              Preview {preview?.rows.length ?? 0} rows
+              {multi ? `Preview ${multiSheets.length} snapshots` : `Preview ${preview?.rows.length ?? 0} rows`}
             </Button>
           ) : null}
-          {step === 'review' ? (
+          {step === 'review' && multi ? (
+            <Button
+              variant="primary"
+              disabled={busy || multiSheets.length === 0}
+              onClick={() => void commitMulti()}
+            >
+              {busy ? (progress ?? 'Importing…') : `Import ${multiSheets.length} snapshots`}
+            </Button>
+          ) : null}
+          {step === 'review' && !multi ? (
             <Button variant="primary" disabled={busy || preview?.rows.length === 0} onClick={() => void commit()}>
               {busy ? 'Importing…' : `Import ${preview?.rows.length ?? 0} rows`}
             </Button>

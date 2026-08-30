@@ -13,7 +13,7 @@ import { Freshness } from '@/components/ui/Freshness'
 import { ChartFrame, tooltipProps } from '@/components/charts/Chart'
 import { AXIS, GRID, SERIES, TOOLTIP_STYLE } from '@/components/charts/theme'
 import { useProvenance } from '@/components/ui/Provenance'
-import { money, monthLabel, pct, shortDate, signedPct } from '@/lib/format'
+import { money, monthLabel, num, pct, shortDate, signedPct } from '@/lib/format'
 
 export function HomePage() {
   const ledger = useLedger()
@@ -204,11 +204,15 @@ export function HomePage() {
           emptyLink="/data?dataset=holdings"
           emptyCta="Import holdings"
           status={
-            performance
-              ? `Return YTD ${Number.isFinite(yearToDateReturn(performance)) ? signedPct(yearToDateReturn(performance)) : 'not enough history'} · since inception ${signedPct(performance.sinceInception)}`
-              : `${positions.length} positions worth ${money(liquid, 'PHP', true)} · import again later for a return`
+            !performance
+              ? `${positions.length} positions worth ${money(liquid, 'PHP', true)} · import again later for a return`
+              : performance.contributionsKnown
+                ? `Return YTD ${Number.isFinite(yearToDateReturn(performance)) ? signedPct(yearToDateReturn(performance)) : 'not enough history'} · since inception ${signedPct(performance.sinceInception)}`
+                : `Value up ${signedPct(performance.sinceInception)} over ${num(performance.years, 1)} years — but contributions aren't separated, so this is not a return`
           }
-          statusTone={performance && performance.sinceInception >= 0 ? 'pos' : performance ? 'neg' : 'neutral'}
+          statusTone={
+            !performance ? 'neutral' : !performance.contributionsKnown ? 'neutral' : performance.sinceInception >= 0 ? 'pos' : 'neg'
+          }
         >
           {netWorthSeries.length >= 2 ? (
             <ChartFrame

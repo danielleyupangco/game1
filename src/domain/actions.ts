@@ -55,6 +55,11 @@ export function buildActions(input: ActionInput): ActionItem[] {
       const targets = targetsFor(input.settings, dimension)
       if (targets.length === 0) continue
       const rows = allocationBy(input.positions, dimension, targets, input.settings.driftBandPct)
+      // A dimension where every holding lands in one bucket carries no
+      // information — usually the source sheet had no column for it. Reporting
+      // "100% vs a 50% target" there is an artefact of missing data, not drift.
+      const populated = rows.filter((row) => row.value > 0)
+      if (populated.length <= 1) continue
       const worst = rows
         .filter((row) => row.status === 'over' || row.status === 'under')
         .sort((a, b) => Math.abs(b.drift ?? 0) - Math.abs(a.drift ?? 0))[0]
@@ -166,6 +171,18 @@ export function buildActions(input: ActionInput): ActionItem[] {
   }
 
   // --- Data gaps -----------------------------------------------------------
+  if (input.hasHoldings && input.performance && !input.performance.contributionsKnown) {
+    push({
+      id: 'no-cashflows',
+      severity: 'warning',
+      title: 'Performance figures include your contributions',
+      detail: `With no deposit or withdrawal records, money you added is counted as money you made. At least ${money(input.performance.estimatedNewMoney, 'PHP', true)} of the change arrived as new positions. Import transactions to turn this into a real return.`,
+      section: 'data',
+      link: '/data?dataset=transactions',
+      weight: 30,
+    })
+  }
+
   if (input.hasHoldings && input.snapshotCount < 2) {
     push({
       id: 'need-second-snapshot',

@@ -40,6 +40,19 @@ export type PerformanceSeries = {
   years: number
   /** true when any period carried flows large enough to distort the estimate */
   lowConfidence: boolean
+  /**
+   * False when no deposit or withdrawal transactions cover the period. Without
+   * them there is no way to tell a contribution from a gain, so these figures
+   * are change-in-value, not return, and must not be labelled as return.
+   */
+  contributionsKnown: boolean
+  /**
+   * Rough scale of money that arrived as new positions rather than as market
+   * movement: the first-seen value of every holding that wasn't in the previous
+   * snapshot. An estimate, and an undercount — it cannot see money added to a
+   * position you already held.
+   */
+  estimatedNewMoney: number
 }
 
 /** External flows only: deposits and withdrawals move money in and out of the portfolio. */
@@ -111,6 +124,11 @@ export function buildPerformance(
   const last = values[values.length - 1]?.snapshot.asOf
   const years = first && last ? daysBetween(first, last) / 365.25 : 0
 
+  const contributionsKnown =
+    first !== undefined &&
+    last !== undefined &&
+    flows.some((flow) => flow.date >= first && flow.date <= last)
+
   return {
     periods,
     index,
@@ -118,7 +136,37 @@ export function buildPerformance(
     annualised: years > 0.05 ? Math.pow(cumulative, 1 / years) - 1 : Number.NaN,
     years,
     lowConfidence: periods.some((p) => p.flowRatio > 0.2),
+    contributionsKnown,
+    estimatedNewMoney: estimateNewMoney(holdings, ordered, usdPhp),
   }
+}
+
+/**
+ * Sums the opening value of every position that appears for the first time in a
+ * later snapshot. Money that shows up as a brand-new holding is a contribution,
+ * not a gain, so this gives a floor on how much of the change in value was new
+ * money — useful precisely when transaction data is missing.
+ */
+function estimateNewMoney(holdings: Holding[], ordered: Snapshot[], usdPhp: number): number {
+  if (ordered.length < 2) return 0
+  const seen = new Set<string>()
+  let total = 0
+
+  ordered.forEach((snapshot, index) => {
+    const positions = buildPositions(holdings, snapshot)
+    for (const position of positions) {
+      const key = position.ticker
+      if (index === 0) {
+        seen.add(key)
+        continue
+      }
+      if (!seen.has(key)) {
+        seen.add(key)
+        total += position.currency === 'USD' ? position.valueNative * usdPhp : position.valueNative
+      }
+    }
+  })
+  return total
 }
 
 /** Chain-linked return over the trailing `months`, or NaN if history is too short. */

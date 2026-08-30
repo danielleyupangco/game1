@@ -135,19 +135,43 @@ export type BuildContext = {
   dayFirst: boolean
   /** holdings only */
   snapshotId?: string
+  /**
+   * Labels for each stacked table in the sheet, in order. When a sheet holds
+   * one block per owner or account, these become the account on every row —
+   * unless the sheet has an explicit account column, which always wins.
+   */
+  sectionLabels?: string[]
+  /** sections the user unticked; their rows are skipped entirely */
+  excludedSections?: number[]
+}
+
+/** Which stacked table a row index falls into, and what it's called. */
+function sectionOf(ctx: BuildContext, index: number): { index: number; label: string } | null {
+  const sections = ctx.sheet.sections
+  if (!sections || sections.length <= 1) return null
+  for (let i = 0; i < sections.length; i++) {
+    if (index >= sections[i].startIndex && index < sections[i].endIndex) {
+      return { index: i, label: ctx.sectionLabels?.[i] ?? sections[i].label }
+    }
+  }
+  return null
 }
 
 function buildRows<T>(
   dataset: DatasetKey,
   ctx: BuildContext,
-  make: (read: Reader, prov: Provenance) => RowResult<T>,
+  make: (read: Reader, prov: Provenance, sectionLabel: string | null) => RowResult<T>,
 ): BuildResult<T> {
   const spec = DATASETS[dataset]
   const rows: T[] = []
   const rejected: { rowNumber: number; reason: string }[] = []
   const blanks: Record<string, number> = {}
+  const excluded = new Set(ctx.excludedSections ?? [])
 
   ctx.sheet.rows.forEach((row, index) => {
+    const section = sectionOf(ctx, index)
+    if (section && excluded.has(section.index)) return
+
     const rowNumber = ctx.sheet.rowNumbers[index] ?? index + 2
     const prov: Provenance = {
       importId: ctx.importId,
@@ -156,7 +180,7 @@ function buildRows<T>(
       rowNumber,
     }
     const read = makeReader(ctx.sheet.headers, row, ctx.mapping, spec, ctx.dayFirst, blanks)
-    const result = make(read, prov)
+    const result = make(read, prov, section?.label ?? null)
     if (result.ok) rows.push(result.value)
     else rejected.push({ rowNumber, reason: result.reason })
   })
@@ -165,16 +189,25 @@ function buildRows<T>(
 }
 
 export function buildHoldings(ctx: BuildContext): BuildResult<Holding> {
-  return buildRows<Holding>('holdings', ctx, (read, prov) => {
+  return buildRows<Holding>('holdings', ctx, (read, prov, sectionLabel) => {
     const ticker = read.text('ticker')
-    if (!ticker) return { ok: false, reason: 'no ticker' }
-    const quantity = read.number('quantity')
-    if (quantity === null) return { ok: false, reason: 'quantity is not a number' }
+    if (!ticker) return { ok: false, reason: 'no name or ticker' }
 
+    // Many portfolio sheets track market value only, with no share counts. That
+    // is enough for allocation, weights and performance, so quantity is optional
+    // and a single unit is assumed when it is absent.
+    const mappedQuantity = read.number('quantity')
     const price = read.number('price')
     const mappedValue = read.number('value')
-    const value = mappedValue ?? (price !== null ? quantity * price : null)
-    if (value === null) return { ok: false, reason: 'needs either a market value or a price' }
+
+    const value =
+      mappedValue ?? (mappedQuantity !== null && price !== null ? mappedQuantity * price : null)
+    if (value === null) {
+      return { ok: false, reason: 'needs a market value, or a quantity and a price' }
+    }
+    if (value === 0) return { ok: false, reason: 'zero market value' }
+
+    const quantity = mappedQuantity ?? 1
     const unitPrice = price ?? (quantity !== 0 ? value / quantity : 0)
 
     return {
@@ -183,7 +216,9 @@ export function buildHoldings(ctx: BuildContext): BuildResult<Holding> {
         id: uid('hld'),
         prov,
         snapshotId: ctx.snapshotId ?? '',
-        ticker: ticker.toUpperCase(),
+        // A long descriptive label is a name, not a ticker; upper-casing it
+        // would turn "XSLWEIF (World Equity Index)" into shouting.
+        ticker: ticker.length <= 8 && !ticker.includes(' ') ? ticker.toUpperCase() : ticker,
         name: read.text('name', ticker),
         assetClass: toAssetClass(read.raw('assetClass') ?? read.raw('name') ?? ticker),
         geography: read.text('geography', 'Unspecified'),
@@ -192,7 +227,7 @@ export function buildHoldings(ctx: BuildContext): BuildResult<Holding> {
         costBasis: read.number('costBasis') ?? 0,
         price: unitPrice,
         value,
-        account: read.text('account', 'Default'),
+        account: read.text('account', sectionLabel ?? 'Default'),
       },
     }
   })

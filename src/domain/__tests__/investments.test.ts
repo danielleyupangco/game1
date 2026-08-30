@@ -259,3 +259,41 @@ describe('rebalancing engine', () => {
     expect(moves.some((m) => m.id.startsWith('concentration-BIG'))).toBe(true)
   })
 })
+
+describe('missing cashflow data', () => {
+  it('does not claim a return when no deposits or withdrawals are known', () => {
+    const snaps = [snapshot('s1', '2026-01-01'), snapshot('s2', '2026-12-31')]
+    const holdings = [holding('s1', 'X', 1_000_000), holding('s2', 'X', 1_500_000)]
+    const series = buildPerformance(holdings, snaps, [], 58)
+    expect(series.contributionsKnown).toBe(false)
+  })
+
+  it('knows contributions once a deposit covers the window', () => {
+    const snaps = [snapshot('s1', '2026-01-01'), snapshot('s2', '2026-12-31')]
+    const holdings = [holding('s1', 'X', 1_000_000), holding('s2', 'X', 1_500_000)]
+    const series = buildPerformance(holdings, snaps, [txn('2026-06-01', 'deposit', 400_000)], 58)
+    expect(series.contributionsKnown).toBe(true)
+  })
+
+  it('counts a position that appears later as new money, not as a gain', () => {
+    const snaps = [snapshot('s1', '2026-01-01'), snapshot('s2', '2026-12-31')]
+    const holdings = [
+      holding('s1', 'X', 1_000_000),
+      holding('s2', 'X', 1_000_000),
+      holding('s2', 'NEW', 500_000),
+    ]
+    const series = buildPerformance(holdings, snaps, [], 58)
+    expect(series.estimatedNewMoney).toBeCloseTo(500_000)
+  })
+
+  it('converts a new USD position into base currency', () => {
+    const snaps = [snapshot('s1', '2026-01-01', 58), snapshot('s2', '2026-12-31', 58)]
+    const holdings = [
+      holding('s1', 'X', 1_000),
+      holding('s2', 'X', 1_000),
+      holding('s2', 'USDPOS', 100, { currency: 'USD' }),
+    ]
+    const series = buildPerformance(holdings, snaps, [], 58)
+    expect(series.estimatedNewMoney).toBeCloseTo(5_800)
+  })
+})
