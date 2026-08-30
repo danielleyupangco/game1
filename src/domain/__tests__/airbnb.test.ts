@@ -38,6 +38,8 @@ function booking(checkIn: string, checkOut: string, net: number, over: Partial<B
     addOnRevenue: 0,
     currency: 'PHP',
     status: 'confirmed',
+    country: '',
+    rating: '',
     ...over,
   }
 }

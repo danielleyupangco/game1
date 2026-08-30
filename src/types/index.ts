@@ -129,6 +129,10 @@ export type Booking = WithProvenance & {
   addOnRevenue: number
   currency: Currency
   status: string
+  /** where the guest travelled from, when the sheet records it */
+  country: string
+  /** host's own grade for the stay, when the sheet records one */
+  rating: string
 }
 
 export type ExpenseNature = 'fixed' | 'variable'

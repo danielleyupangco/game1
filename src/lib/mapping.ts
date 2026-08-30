@@ -330,6 +330,8 @@ export function buildBookings(ctx: BuildContext): BuildResult<Booking> {
         addOnRevenue: read.number('addOnRevenue') ?? 0,
         currency: read.currency('currency'),
         status: read.text('status', isAdjustment ? 'adjustment' : 'confirmed'),
+        country: read.text('country'),
+        rating: read.text('rating'),
       },
     }
   })

@@ -36,8 +36,9 @@ import { monthName } from '@/lib/dates'
 import { exportTable, MONEY_FMT, PCT_FMT } from '@/lib/export'
 import { ValuationPanel } from '@/pages/airbnb/ValuationPanel'
 import { PricingPanel } from '@/pages/airbnb/PricingPanel'
+import { InsightsPanel } from '@/pages/airbnb/InsightsPanel'
 
-type View = 'revenue' | 'costs' | 'pnl' | 'valuation' | 'pricing'
+type View = 'revenue' | 'insights' | 'costs' | 'pnl' | 'valuation' | 'pricing'
 
 export function AirbnbPage() {
   const { bookings, expenses, settings, dcf, freshness } = useLedger()
@@ -86,6 +87,7 @@ export function AirbnbPage() {
           onChange={setView}
           options={[
             { value: 'revenue', label: 'Revenue' },
+            { value: 'insights', label: 'Insights' },
             { value: 'costs', label: 'Costs' },
             { value: 'pnl', label: 'P&L' },
             { value: 'valuation', label: 'Valuation' },
@@ -95,6 +97,7 @@ export function AirbnbPage() {
       </div>
 
       {view === 'revenue' ? <RevenueView series={series} /> : null}
+      {view === 'insights' ? <InsightsPanel /> : null}
       {view === 'costs' ? <CostView series={series} /> : null}
       {view === 'pnl' ? <PnlView series={series} /> : null}
       {view === 'valuation' ? <ValuationPanel series={series} /> : null}
@@ -317,7 +320,7 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
                   ],
                   'bookings',
                   'Bookings',
-                  ['Ledger export · source file and row retained for every record.'],
+                  ['Buddy export · source file and row retained for every record.'],
                   )
               }
             />

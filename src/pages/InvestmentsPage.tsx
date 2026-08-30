@@ -188,7 +188,7 @@ function HoldingsView({ positions }: { positions: PositionView[] }) {
                   ],
                   'holdings',
                   'Holdings',
-                  [`Ledger export · ${new Date().toLocaleString()}`, 'Values converted to PHP at the snapshot FX rate.'],
+                  [`Buddy export · ${new Date().toLocaleString()}`, 'Values converted to PHP at the snapshot FX rate.'],
                   )
               }
             />

@@ -199,7 +199,7 @@ export function DataPage() {
               <Button
                 onClick={() => {
                   void exportBackup()
-                    .then((backup) => exportJson(backup, `ledger-backup-${new Date().toISOString().slice(0, 10)}`))
+                    .then((backup) => exportJson(backup, `buddy-backup-${new Date().toISOString().slice(0, 10)}`))
                     .then(() => setMessage('Backup saved.'))
                     .catch((caught) => {
                       if (caught instanceof SaveDeclined) return
@@ -225,7 +225,7 @@ export function DataPage() {
                       await reload()
                       setMessage('Backup restored.')
                     } catch {
-                      setMessage('That file could not be read as a Ledger backup.')
+                      setMessage('That file could not be read as a Buddy backup.')
                     }
                   })
                 }}

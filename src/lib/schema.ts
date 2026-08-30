@@ -96,6 +96,8 @@ export const DATASETS: Record<DatasetKey, DatasetSpec> = {
       { key: 'channel', label: 'Channel', type: 'string', synonyms: ['channel', 'source', 'platform', 'listing', 'via'], default: 'Direct' },
       { key: 'currency', label: 'Currency', type: 'currency', synonyms: ['currency', 'ccy'], default: 'PHP' },
       { key: 'status', label: 'Status', type: 'string', synonyms: ['status', 'state'], default: 'confirmed', hint: 'Rows reading cancelled are kept but excluded from revenue.' },
+      { key: 'country', label: 'Guest country', type: 'string', synonyms: ['country', 'origin', 'nationality', 'from', 'market'], default: '' },
+      { key: 'rating', label: 'Guest rating', type: 'string', synonyms: ['guest rating', 'rating', 'grade', 'score'], default: '' },
     ],
   },
 

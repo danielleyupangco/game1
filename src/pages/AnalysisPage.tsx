@@ -1,33 +1,8 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { useLedger } from '@/state/store'
-import { Card, Pill, SectionHeader, Tabs, cx } from '@/components/ui/primitives'
+import { Card, Pill, SectionHeader, Tabs } from '@/components/ui/primitives'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { relativeTime } from '@/lib/format'
-import type { Finding, FindingSeverity, FindingStatus } from '@/types'
-
-const SEVERITY_TONE: Record<FindingSeverity, 'neg' | 'warn' | 'info' | 'pos'> = {
-  critical: 'neg',
-  warning: 'warn',
-  info: 'info',
-  positive: 'pos',
-}
-
-const SEVERITY_LABEL: Record<FindingSeverity, string> = {
-  critical: 'Act now',
-  warning: 'Look into',
-  info: 'Context',
-  positive: 'Working',
-}
-
-const STATUS_ORDER: FindingStatus[] = ['open', 'doing', 'done', 'dismissed']
-
-const STATUS_LABEL: Record<FindingStatus, string> = {
-  open: 'Open',
-  doing: 'In progress',
-  done: 'Done',
-  dismissed: 'Dismissed',
-}
+import { FindingList } from '@/components/ui/FindingList'
 
 /**
  * The written analysis, kept as data rather than prose in a chat window.
@@ -38,18 +13,16 @@ const STATUS_LABEL: Record<FindingStatus, string> = {
  * of somebody's opinion on one particular day.
  */
 export function AnalysisPage() {
-  const { findings, saveFinding, holdings } = useLedger()
+  const { findings } = useLedger()
   const [filter, setFilter] = useState<'live' | 'all'>('live')
+  const [scope, setScope] = useState<'all' | 'investments' | 'airbnb'>('all')
 
   const visible = useMemo(() => {
-    const list = filter === 'live' ? findings.filter((f) => f.status === 'open' || f.status === 'doing') : findings
-    return [...list].sort((a, b) => {
-      const statusGap = STATUS_ORDER.indexOf(a.status) - STATUS_ORDER.indexOf(b.status)
-      return statusGap !== 0 ? statusGap : b.priority - a.priority
-    })
-  }, [findings, filter])
-
-  const themes = useMemo(() => [...new Set(visible.map((f) => f.theme))], [visible])
+    let list = findings
+    if (filter === 'live') list = list.filter((f) => f.status === 'open' || f.status === 'doing')
+    if (scope !== 'all') list = list.filter((f) => f.section === scope)
+    return list
+  }, [findings, filter, scope])
 
   const counts = useMemo(
     () => ({
@@ -57,6 +30,8 @@ export function AnalysisPage() {
       doing: findings.filter((f) => f.status === 'doing').length,
       done: findings.filter((f) => f.status === 'done').length,
       critical: findings.filter((f) => f.status === 'open' && f.severity === 'critical').length,
+      investments: findings.filter((f) => f.section === 'investments').length,
+      airbnb: findings.filter((f) => f.section === 'airbnb').length,
     }),
     [findings],
   )
@@ -88,7 +63,7 @@ export function AnalysisPage() {
         }
       />
 
-      <div className="no-print flex flex-wrap items-center justify-between gap-2">
+      <div className="no-print flex flex-wrap items-center gap-2">
         <Tabs
           value={filter}
           onChange={setFilter}
@@ -97,142 +72,26 @@ export function AnalysisPage() {
             { value: 'all', label: `Everything (${findings.length})` },
           ]}
         />
+        <Tabs
+          value={scope}
+          onChange={setScope}
+          options={[
+            { value: 'all', label: 'Both' },
+            { value: 'investments', label: `Portfolio (${counts.investments})` },
+            { value: 'airbnb', label: `Island T (${counts.airbnb})` },
+          ]}
+        />
       </div>
-
-      {themes.map((theme) => (
-        <section key={theme}>
-          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-ink-3">{theme}</h2>
-          <div className="space-y-2.5">
-            {visible
-              .filter((finding) => finding.theme === theme)
-              .map((finding) => (
-                <FindingCard
-                  key={finding.id}
-                  finding={finding}
-                  holdingNames={holdings.map((h) => h.ticker)}
-                  onStatus={(status) => void saveFinding({ ...finding, status })}
-                />
-              ))}
-          </div>
-        </section>
-      ))}
 
       {visible.length === 0 ? (
         <Card>
           <p className="py-6 text-center text-[13px] text-ink-2">
-            Nothing outstanding. Switch to “Everything” to see what's been closed off.
+            Nothing outstanding here. Switch to “Everything” to see what's been closed off.
           </p>
         </Card>
-      ) : null}
+      ) : (
+        <FindingList findings={visible} />
+      )}
     </div>
-  )
-}
-
-function FindingCard({
-  finding,
-  holdingNames,
-  onStatus,
-}: {
-  finding: Finding
-  holdingNames: string[]
-  onStatus: (status: FindingStatus) => void
-}) {
-  const [open, setOpen] = useState(finding.severity === 'critical' && finding.status === 'open')
-  const closed = finding.status === 'done' || finding.status === 'dismissed'
-
-  const known = useMemo(
-    () => finding.related.filter((name) => holdingNames.includes(name)),
-    [finding.related, holdingNames],
-  )
-
-  return (
-    <Card padded={false} className={cx('overflow-hidden', closed && 'opacity-55')}>
-      <button
-        type="button"
-        onClick={() => setOpen((prev) => !prev)}
-        className="flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-2"
-      >
-        <span className="mt-0.5 shrink-0">
-          <Pill tone={SEVERITY_TONE[finding.severity]}>{SEVERITY_LABEL[finding.severity]}</Pill>
-        </span>
-        <div className="min-w-0 flex-1">
-          <h3 className={cx('text-[13.5px] font-semibold leading-snug text-ink', closed && 'line-through')}>
-            {finding.title}
-          </h3>
-          <p className="mt-1 line-clamp-2 text-[12px] leading-relaxed text-ink-2">{finding.body[0]}</p>
-        </div>
-        <span className="shrink-0 text-[11px] text-ink-3">{open ? '▾' : '▸'}</span>
-      </button>
-
-      {open ? (
-        <div className="border-t border-line px-4 py-3">
-          {finding.body.slice(1).map((paragraph, index) => (
-            <p key={index} className="mb-2 text-[12.5px] leading-relaxed text-ink-2">
-              {paragraph}
-            </p>
-          ))}
-
-          {finding.evidence.length > 0 ? (
-            <div className="my-3 overflow-x-auto rounded-lg border border-line">
-              <table className="w-full min-w-max text-left text-[12px]">
-                <tbody>
-                  {finding.evidence.map((row) => (
-                    <tr key={row.label} className="border-b border-line-soft last:border-0">
-                      <td className="px-2.5 py-1.5 text-ink-2">{row.label}</td>
-                      <td className="num px-2.5 py-1.5 text-right font-medium text-ink">{row.value}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : null}
-
-          {finding.action ? (
-            <div className="mb-3 rounded-lg border border-accent/30 bg-accent/[0.07] px-3 py-2">
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-accent">Next step</span>
-              <p className="mt-1 text-[12.5px] leading-relaxed text-ink">{finding.action}</p>
-            </div>
-          ) : null}
-
-          {known.length > 0 ? (
-            <div className="mb-3 flex flex-wrap items-center gap-1.5">
-              <span className="text-[11px] text-ink-3">Bears on:</span>
-              {known.map((name) => (
-                <Link
-                  key={name}
-                  to="/investments"
-                  className="rounded border border-line bg-surface-2 px-1.5 py-0.5 text-[11px] text-ink-2 transition-colors hover:text-accent"
-                >
-                  {name}
-                </Link>
-              ))}
-            </div>
-          ) : null}
-
-          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line pt-2.5">
-            <span className="text-[11px] text-ink-3">
-              {finding.author} · {relativeTime(finding.createdAt)}
-            </span>
-            <div className="no-print flex items-center gap-1">
-              {STATUS_ORDER.map((status) => (
-                <button
-                  key={status}
-                  type="button"
-                  onClick={() => onStatus(status)}
-                  className={cx(
-                    'rounded-md border px-2 py-1 text-[11px] font-medium transition-colors',
-                    finding.status === status
-                      ? 'border-accent/40 bg-accent/15 text-accent'
-                      : 'border-line bg-surface-2 text-ink-3 hover:text-ink',
-                  )}
-                >
-                  {STATUS_LABEL[status]}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      ) : null}
-    </Card>
   )
 }

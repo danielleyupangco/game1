@@ -41,7 +41,7 @@ export async function exportTable<T>(
 
   const ExcelJS = await loadExcelJs()
   const workbook = new ExcelJS.Workbook()
-  workbook.creator = 'Ledger'
+  workbook.creator = 'Buddy'
   workbook.created = new Date()
   // Excel rejects sheet names over 31 chars or containing []*?/\:
   const sheet = workbook.addWorksheet(sheetName.replace(/[[\]*?/\\:]/g, '-').slice(0, 31))

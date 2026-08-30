@@ -103,7 +103,7 @@ export function HomePage() {
   if (nothingImported) {
     return (
       <div className="space-y-4">
-        <SectionHeader title="Home" />
+        <SectionHeader title="Main" />
         <Card className="px-6 py-12 text-center">
           <h2 className="text-[18px] font-semibold tracking-tight text-ink">Nothing imported yet</h2>
           <p className="mx-auto mt-2 max-w-lg text-[13px] leading-relaxed text-ink-2">
@@ -136,7 +136,7 @@ export function HomePage() {
   return (
     <div className="space-y-4">
       <SectionHeader
-        title="Home"
+        title="Main"
         subtitle={snapshot ? `Portfolio valued ${shortDate(snapshot.asOf)}` : 'No portfolio snapshot yet'}
         right={
           <div className="flex flex-wrap items-center gap-1.5">
