@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { aggregate, costBreakdown, monthlyMetrics, seasonality } from '@/domain/airbnb/metrics'
+import { aggregate, costBreakdown, monthlyMetrics, seasonality, trailing, upcoming } from '@/domain/airbnb/metrics'
 import { evaluateProject, irr, npv, paybackYears, projectCashflows, runDcf, sensitivity, tornado } from '@/domain/airbnb/dcf'
 import { priceCurve, suggestByMonth, weekdayDemand } from '@/domain/airbnb/pricing'
 import { DEFAULT_DCF, DEFAULT_PRICING } from '@/state/defaults'
 import { nightsByMonth } from '@/lib/dates'
 import { dateFromSheetName } from '@/lib/workbook'
+import { buildFloors, capexProgress, floorAt, summariseCosts } from '@/domain/airbnb/pricefloor'
 import {
   buildCrosstabExpenses,
   detectPeriodColumns,
@@ -614,5 +615,103 @@ describe('overlapping period columns', () => {
     })
     expect(result.rows).toHaveLength(1)
     expect(result.rows[0].date.slice(0, 7)).toBe('2024-12')
+  })
+})
+
+describe('trailing window', () => {
+  const series = monthlyMetrics({
+    bookings: [
+      booking('2026-06-01', '2026-06-05', 40000),
+      booking('2026-08-01', '2026-08-04', 30000),
+      // A stay next season: on the book, not yet earned.
+      booking('2026-12-20', '2026-12-27', 90000),
+    ],
+    expenses: [],
+    usdPhp: 58,
+    availableNightsPerYear: 365,
+  })
+
+  it('stops at the current month rather than the last row', () => {
+    const window = trailing(series, 12, '2026-08')
+    expect(window.some((month) => month.month === '2026-12')).toBe(false)
+    expect(window.some((month) => month.month === '2026-08')).toBe(true)
+    expect(aggregate(window).revenue).toBeCloseTo(70000)
+  })
+
+  it('does not let a future booking inflate what was earned', () => {
+    const naive = aggregate(series.slice(-12))
+    const anchored = aggregate(trailing(series, 12, '2026-08'))
+    expect(naive.revenue).toBeGreaterThan(anchored.revenue)
+    expect(anchored.revenue).toBeCloseTo(70000)
+  })
+
+  it('separates what is still ahead', () => {
+    const ahead = upcoming(series, '2026-08')
+    expect(aggregate(ahead).revenue).toBeCloseTo(90000)
+  })
+
+  it('falls back rather than returning nothing when everything is ahead', () => {
+    expect(trailing(series, 12, '2020-01').length).toBeGreaterThan(0)
+  })
+})
+
+describe('price floor', () => {
+  const model = {
+    fixedMonthly: [{ id: 'a', label: 'Crew', amount: 50000 }],
+    perNight: [{ id: 'b', label: 'Diesel', amount: 2000 }],
+    perStay: [{ id: 'c', label: 'Laundry', amount: 1500 }],
+    platformFeePct: 0.03,
+    nightsPerStay: 3,
+    availableNightsPerYear: 365,
+  }
+
+  it('spreads per-booking costs over the nights in a stay', () => {
+    const costs = summariseCosts(model)
+    expect(costs.fixedPerYear).toBe(600000)
+    expect(costs.variablePerNight).toBeCloseTo(2000 + 1500 / 3)
+  })
+
+  it('makes each night carry more fixed cost as the year empties', () => {
+    const busy = floorAt(model, 200)
+    const quiet = floorAt(model, 50)
+    expect(quiet.breakEvenRate).toBeGreaterThan(busy.breakEvenRate)
+    expect(busy.fixedPerNight).toBeCloseTo(600000 / 200)
+  })
+
+  it('grosses the listed rate up for the platform fee', () => {
+    const scenario = floorAt(model, 100)
+    expect(scenario.listedRate).toBeCloseTo(scenario.breakEvenRate / 0.97)
+    expect(scenario.listedRate).toBeGreaterThan(scenario.breakEvenRate)
+  })
+
+  it('reports no break-even when the rate is below variable cost', () => {
+    const floors = buildFloors(model)
+    expect(Number.isNaN(floors.breakEvenNightsAt(1000))).toBe(true)
+    expect(floors.breakEvenNightsAt(20000)).toBeGreaterThan(0)
+  })
+})
+
+describe('capex progress', () => {
+  it('tracks spend against budget and groups it by type', () => {
+    const progress = capexProgress(1000000, [
+      { amount: 265000, category: 'Equipment' },
+      { amount: 100000, category: 'Repairs & maintenance' },
+      { amount: 67000, category: 'Repairs & maintenance' },
+    ])
+    expect(progress.spent).toBe(432000)
+    expect(progress.remaining).toBe(568000)
+    expect(progress.usedShare).toBeCloseTo(0.432)
+    expect(progress.over).toBe(false)
+    expect(progress.byCategory[0]).toEqual({
+      category: 'Equipment',
+      amount: 265000,
+      share: 265000 / 432000,
+    })
+  })
+
+  it('flags going over budget', () => {
+    const progress = capexProgress(100000, [{ amount: 150000, category: 'Building works' }])
+    expect(progress.over).toBe(true)
+    expect(progress.remaining).toBe(-50000)
   })
 })

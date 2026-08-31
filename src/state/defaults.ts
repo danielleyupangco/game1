@@ -1,4 +1,4 @@
-import type { DcfAssumptions, PricingAssumptions, Settings } from '@/types'
+import type { CostModel, DcfAssumptions, PricingAssumptions, Settings } from '@/types'
 
 /**
  * Every assumption in this app is defined here and editable in the UI.
@@ -74,4 +74,28 @@ export const ASSUMPTION_NOTES: Record<keyof DcfAssumptions, string> = {
   terminalGrowth: 'Perpetual growth after the projection window. Must stay below the discount rate.',
   projectionYears: 'Explicit forecast horizon before the terminal value takes over.',
   netDebt: 'Debt against the property minus cash held in the business. Subtracted from enterprise value to get equity value.',
+}
+
+/**
+ * The operating cost model, as an owner keeps it: what you pay every month
+ * whatever happens, what each night sold costs you, and what each booking
+ * costs you. Edited in the app — these are only the starting shape.
+ */
+export const DEFAULT_COST_MODEL: CostModel = {
+  fixedMonthly: [
+    { id: 'salaries', label: 'Crew salaries', amount: 34000 },
+    { id: 'maintenance', label: 'Maintenance', amount: 13000 },
+    { id: 'connectivity', label: 'Starlink', amount: 2700 },
+    { id: 'supplies', label: 'Towels and supplies', amount: 2000 },
+    { id: 'depreciation', label: 'Solar and genset wear', amount: 12750 },
+  ],
+  perNight: [{ id: 'power', label: 'Generator diesel and electricity', amount: 2000 }],
+  perStay: [
+    { id: 'water', label: 'Water pump', amount: 600 },
+    { id: 'gas', label: 'Cooking gas', amount: 600 },
+    { id: 'laundry', label: 'Laundry and soap', amount: 1500 },
+  ],
+  platformFeePct: 0.03,
+  nightsPerStay: 3,
+  availableNightsPerYear: 365,
 }

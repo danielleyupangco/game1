@@ -10,11 +10,13 @@ import {
 import * as db from '@/lib/db'
 import { SEED } from '@/seed'
 import { KV } from '@/lib/db'
-import { DEFAULT_DCF, DEFAULT_PRICING, DEFAULT_SETTINGS } from '@/state/defaults'
+import { DEFAULT_COST_MODEL, DEFAULT_DCF, DEFAULT_PRICING, DEFAULT_SETTINGS } from '@/state/defaults'
 import type {
   BenchmarkPoint,
   Booking,
   CapitalProject,
+  CapitalSpend,
+  CostModel,
   DatasetKey,
   DcfAssumptions,
   Expense,
@@ -36,6 +38,7 @@ export type LedgerData = {
   expenses: Expense[]
   imports: ImportBatch[]
   findings: Finding[]
+  capitalSpend: CapitalSpend[]
 }
 
 type Ctx = LedgerData & {
@@ -44,6 +47,7 @@ type Ctx = LedgerData & {
   dcf: DcfAssumptions
   pricing: PricingAssumptions
   projects: CapitalProject[]
+  costModel: CostModel
   reload: () => Promise<void>
   saveSettings: (patch: Partial<Settings>) => Promise<void>
   saveDcf: (patch: Partial<DcfAssumptions>) => Promise<void>
@@ -52,6 +56,11 @@ type Ctx = LedgerData & {
   removeImport: (importId: string) => Promise<void>
   saveFinding: (finding: Finding) => Promise<void>
   removeFinding: (id: string) => Promise<void>
+  saveCostModel: (patch: Partial<CostModel>) => Promise<void>
+  addCapitalSpend: (spend: CapitalSpend) => Promise<void>
+  removeCapitalSpend: (id: string) => Promise<void>
+  /** append hand-entered rows to a dataset and refresh */
+  addRecords: <K extends 'expenses' | 'bookings'>(store: K, rows: LedgerData[K]) => Promise<void>
   /** most recent import timestamp per dataset, for the freshness indicators */
   freshness: Partial<Record<DatasetKey, string>>
 }
@@ -67,6 +76,7 @@ const EMPTY: LedgerData = {
   expenses: [],
   imports: [],
   findings: [],
+  capitalSpend: [],
 }
 
 export function LedgerProvider({ children }: { children: ReactNode }) {
@@ -75,6 +85,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
   const [dcf, setDcf] = useState<DcfAssumptions>(DEFAULT_DCF)
   const [pricing, setPricing] = useState<PricingAssumptions>(DEFAULT_PRICING)
   const [projects, setProjects] = useState<CapitalProject[]>([])
+  const [costModel, setCostModel] = useState<CostModel>(DEFAULT_COST_MODEL)
   const [ready, setReady] = useState(false)
 
   const reload = useCallback(async () => {
@@ -89,7 +100,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    const [holdings, snapshots, transactions, benchmark, bookings, expenses, imports, findings] =
+    const [holdings, snapshots, transactions, benchmark, bookings, expenses, imports, findings, capitalSpend] =
       await Promise.all([
         db.getAll('holdings'),
         db.getAll('snapshots'),
@@ -99,8 +110,9 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
         db.getAll('expenses'),
         db.getAll('imports'),
         db.getAll('findings'),
+        db.getAll('capitalSpend'),
       ])
-    setData({ holdings, snapshots, transactions, benchmark, bookings, expenses, imports, findings })
+    setData({ holdings, snapshots, transactions, benchmark, bookings, expenses, imports, findings, capitalSpend })
 
     // Merge stored values over defaults so a schema addition doesn't strand
     // an existing database on a missing key.
@@ -108,6 +120,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
     setDcf({ ...DEFAULT_DCF, ...(await db.getKV<Partial<DcfAssumptions>>(KV.dcf, {})) })
     setPricing({ ...DEFAULT_PRICING, ...(await db.getKV<Partial<PricingAssumptions>>(KV.pricing, {})) })
     setProjects(await db.getKV<CapitalProject[]>(KV.projects, []))
+    setCostModel({ ...DEFAULT_COST_MODEL, ...(await db.getKV<Partial<CostModel>>(KV.costModel, {})) })
     setReady(true)
   }, [])
 
@@ -174,6 +187,38 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
     setData((prev) => ({ ...prev, findings: prev.findings.filter((f) => f.id !== id) }))
   }, [])
 
+  const saveCostModel = useCallback(async (patch: Partial<CostModel>) => {
+    setCostModel((prev) => {
+      const next = { ...prev, ...patch }
+      void db.setKV(KV.costModel, next)
+      return next
+    })
+  }, [])
+
+  const addCapitalSpend = useCallback(async (spend: CapitalSpend) => {
+    await db.putOne('capitalSpend', spend)
+    setData((prev) => ({
+      ...prev,
+      capitalSpend: prev.capitalSpend.some((row) => row.id === spend.id)
+        ? prev.capitalSpend.map((row) => (row.id === spend.id ? spend : row))
+        : [...prev.capitalSpend, spend],
+    }))
+  }, [])
+
+  const removeCapitalSpend = useCallback(async (id: string) => {
+    await db.deleteOne('capitalSpend', id)
+    setData((prev) => ({ ...prev, capitalSpend: prev.capitalSpend.filter((row) => row.id !== id) }))
+  }, [])
+
+  const addRecords = useCallback(
+    async <K extends 'expenses' | 'bookings'>(store: K, rows: LedgerData[K]) => {
+      if (rows.length === 0) return
+      await db.putMany(store, rows as never[])
+      setData((prev) => ({ ...prev, [store]: [...prev[store], ...rows] }) as LedgerData)
+    },
+    [],
+  )
+
   const freshness = useMemo(() => {
     const out: Partial<Record<DatasetKey, string>> = {}
     for (const batch of data.imports) {
@@ -191,6 +236,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       dcf,
       pricing,
       projects,
+      costModel,
       reload,
       saveSettings,
       saveDcf,
@@ -199,9 +245,13 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       removeImport,
       saveFinding,
       removeFinding,
+      saveCostModel,
+      addCapitalSpend,
+      removeCapitalSpend,
+      addRecords,
       freshness,
     }),
-    [data, ready, settings, dcf, pricing, projects, reload, saveSettings, saveDcf, savePricing, saveProjects, removeImport, saveFinding, removeFinding, freshness],
+    [data, ready, settings, dcf, pricing, projects, costModel, reload, saveSettings, saveDcf, savePricing, saveProjects, removeImport, saveFinding, removeFinding, saveCostModel, addCapitalSpend, removeCapitalSpend, addRecords, freshness],
   )
 
   return <LedgerContext.Provider value={value}>{children}</LedgerContext.Provider>

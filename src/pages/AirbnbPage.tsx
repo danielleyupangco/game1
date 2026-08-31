@@ -37,12 +37,15 @@ import { exportTable, MONEY_FMT, PCT_FMT } from '@/lib/export'
 import { ValuationPanel } from '@/pages/airbnb/ValuationPanel'
 import { PricingPanel } from '@/pages/airbnb/PricingPanel'
 import { InsightsPanel } from '@/pages/airbnb/InsightsPanel'
+import { OwnerPanel } from '@/pages/airbnb/OwnerPanel'
+import { CapitalPanel } from '@/pages/airbnb/CapitalPanel'
+import { CostModelPanel } from '@/pages/airbnb/CostModelPanel'
 
-type View = 'revenue' | 'insights' | 'costs' | 'pnl' | 'valuation' | 'pricing'
+type View = 'plain' | 'revenue' | 'insights' | 'costs' | 'costmodel' | 'pnl' | 'capital' | 'valuation' | 'pricing'
 
 export function AirbnbPage() {
   const { bookings, expenses, settings, dcf, freshness } = useLedger()
-  const [view, setView] = useState<View>('revenue')
+  const [view, setView] = useState<View>('plain')
 
   const series = useMemo(
     () =>
@@ -86,17 +89,23 @@ export function AirbnbPage() {
           value={view}
           onChange={setView}
           options={[
+            { value: 'plain', label: 'Overview' },
             { value: 'revenue', label: 'Revenue' },
             { value: 'insights', label: 'Insights' },
             { value: 'costs', label: 'Costs' },
+            { value: 'costmodel', label: 'Cost model' },
             { value: 'pnl', label: 'P&L' },
+            { value: 'capital', label: 'Capital' },
             { value: 'valuation', label: 'Valuation' },
             { value: 'pricing', label: 'Pricing' },
           ]}
         />
       </div>
 
+      {view === 'plain' ? <OwnerPanel /> : null}
       {view === 'revenue' ? <RevenueView series={series} /> : null}
+      {view === 'costmodel' ? <CostModelPanel /> : null}
+      {view === 'capital' ? <CapitalPanel /> : null}
       {view === 'insights' ? <InsightsPanel /> : null}
       {view === 'costs' ? <CostView series={series} /> : null}
       {view === 'pnl' ? <PnlView series={series} /> : null}

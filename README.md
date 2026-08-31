@@ -19,10 +19,43 @@ npm run dev      # http://localhost:5173
 | **Hub** | One screen for where you stand: a node per part of the operation, each carrying the two or three numbers that decide whether it needs you today. Falls back to a plain list on a phone. |
 | **Main** | Net worth, a one-line status per section, the three things most worth acting on, and an alert strip for anything off-target. |
 | **Investments** | Holdings, time-weighted performance vs. a benchmark, allocation drift by asset class / geography / currency, concentration and drawdown, and a rebalancing engine that shows its scoring. |
-| **Island T** | An Insights tab — year on year, this year's pace against last, booking lead time, guest origin, the shape of a stay, and what a night has to earn — alongside ADR, occupancy, RevPAR, seasonality; room revenue and the share of add-on revenue you keep, tracked separately; fixed vs. variable costs with break-even; monthly and trailing-12-month P&L; a DCF with a full assumptions panel, tornado and sensitivity table; capital-allocation modelling; and pricing suggestions built on the revenue/occupancy trade-off. |
+| **Island T** | An **Overview** written in plain words for anyone who doesn't work in spreadsheets — money in, money out, what's left, what's booked — plus a **Cost model** you can edit that gives a price *floor*, a **Capital** tab tracking spend against project budgets, and an Insights tab — year on year, this year's pace against last, booking lead time, guest origin, the shape of a stay, and what a night has to earn — alongside ADR, occupancy, RevPAR, seasonality; room revenue and the share of add-on revenue you keep, tracked separately; fixed vs. variable costs with break-even; monthly and trailing-12-month P&L; a DCF with a full assumptions panel, tornado and sensitivity table; capital-allocation modelling; and pricing suggestions built on the revenue/occupancy trade-off. |
 | **Analysis** | Written findings — each with the numbers behind it, the holdings it bears on, and one next step you can mark done. Separate from the Home alerts, which are rules that recompute; these are judgements that persist. |
 | **Data** | Import wizard, import history with the column mapping each batch used, and backup/restore. |
 | **Settings** | Currency, benchmark, drift band, and allocation targets. |
+
+## Adding things by hand
+
+Not everything arrives in a spreadsheet. **+ Add** in the header records three
+kinds of thing, and each lands in the same store as imported data — so it flows
+straight into the P&L, the insights and the valuation, with no separate manual
+ledger to reconcile:
+
+- **A running cost** — with an optional monthly repeat, and a fixed/variable tag
+  it guesses from the description and lets you override.
+- **A booking** — room payout and the add-on share you keep entered separately,
+  because rate and occupancy are accommodation measures and mixing them in
+  would flatter both.
+- **Capital spend** — attached to a project so it counts against a budget.
+
+Every hand-entered row records that it was typed rather than imported, and by
+whom, so a shared book still says where each number came from.
+
+### Capital is not a cost
+
+Capital spend has its own tab and never appears in the P&L. Diesel is a cost —
+it's gone once burnt, and it reduces the year's profit. A generator is capital:
+the money leaves the bank but you still own a generator. Folding the two
+together is what makes a good year with a big build look like a bad one.
+
+### The cost model gives a floor, not a price
+
+Editing fixed monthly, per-night and per-booking costs yields the rate below
+which a booking loses money, at each level of occupancy — and it rises sharply
+as the year empties, because fixed costs don't care how busy you are. It is
+deliberately not framed as a suggested price: what a guest will pay is set by
+what else they could book, and setting price from cost is how operators give
+that away. The Pricing tab answers what to charge.
 
 ## Importing your spreadsheets
 

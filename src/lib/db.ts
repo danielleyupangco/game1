@@ -1,6 +1,8 @@
 import { openDB, type DBSchema, type IDBPDatabase } from 'idb'
 import type {
   BenchmarkPoint,
+  CapitalSpend,
+  CostModel,
   Finding,
   Booking,
   CapitalProject,
@@ -27,11 +29,12 @@ interface LedgerDB extends DBSchema {
   expenses: { key: string; value: Expense; indexes: { date: string } }
   imports: { key: string; value: ImportBatch; indexes: { dataset: string } }
   findings: { key: string; value: Finding; indexes: { status: string } }
+  capitalSpend: { key: string; value: CapitalSpend; indexes: { projectId: string } }
   kv: { key: string; value: unknown }
 }
 
 const DB_NAME = 'ledger'
-const DB_VERSION = 2
+const DB_VERSION = 3
 
 let dbPromise: Promise<IDBPDatabase<LedgerDB>> | null = null
 
@@ -39,11 +42,15 @@ function db() {
   if (!dbPromise) {
     dbPromise = openDB<LedgerDB>(DB_NAME, DB_VERSION, {
       upgrade(database, oldVersion) {
+        // Later versions only add stores; existing data is left untouched.
         if (oldVersion >= 1) {
-          // v2 only adds the findings store; everything else is already there.
           if (!database.objectStoreNames.contains('findings')) {
             const store = database.createObjectStore('findings', { keyPath: 'id' })
             store.createIndex('status', 'status')
+          }
+          if (!database.objectStoreNames.contains('capitalSpend')) {
+            const store = database.createObjectStore('capitalSpend', { keyPath: 'id' })
+            store.createIndex('projectId', 'projectId')
           }
           return
         }
@@ -72,6 +79,9 @@ function db() {
         const findings = database.createObjectStore('findings', { keyPath: 'id' })
         findings.createIndex('status', 'status')
 
+        const capitalSpend = database.createObjectStore('capitalSpend', { keyPath: 'id' })
+        capitalSpend.createIndex('projectId', 'projectId')
+
         database.createObjectStore('kv')
       },
     })
@@ -88,6 +98,7 @@ type RecordStore =
   | 'expenses'
   | 'imports'
   | 'findings'
+  | 'capitalSpend'
 
 export async function getAll<K extends RecordStore>(store: K): Promise<LedgerDB[K]['value'][]> {
   return (await db()).getAll(store)
@@ -155,6 +166,7 @@ export const KV = {
   pricing: 'pricingAssumptions',
   projects: 'capitalProjects',
   mappingPresets: 'mappingPresets',
+  costModel: 'costModel',
 } as const
 
 export type Backup = {
@@ -168,10 +180,12 @@ export type Backup = {
   expenses: Expense[]
   imports: ImportBatch[]
   findings: Finding[]
+  capitalSpend: CapitalSpend[]
   settings: Settings | null
   dcf: DcfAssumptions | null
   pricing: PricingAssumptions | null
   projects: CapitalProject[]
+  costModel: CostModel | null
 }
 
 /** Whole-database JSON dump — the way to move data between laptop and phone. */
@@ -187,10 +201,12 @@ export async function exportBackup(): Promise<Backup> {
     expenses: await getAll('expenses'),
     imports: await getAll('imports'),
     findings: await getAll('findings'),
+    capitalSpend: await getAll('capitalSpend'),
     settings: await getKV<Settings | null>(KV.settings, null),
     dcf: await getKV<DcfAssumptions | null>(KV.dcf, null),
     pricing: await getKV<PricingAssumptions | null>(KV.pricing, null),
     projects: await getKV<CapitalProject[]>(KV.projects, []),
+    costModel: await getKV<CostModel | null>(KV.costModel, null),
   }
 }
 
@@ -204,6 +220,7 @@ export async function importBackup(backup: Backup): Promise<void> {
     'expenses',
     'imports',
     'findings',
+    'capitalSpend',
   ]
   for (const store of stores) await clearStore(store)
 
@@ -215,11 +232,13 @@ export async function importBackup(backup: Backup): Promise<void> {
   await putMany('expenses', backup.expenses ?? [])
   await putMany('imports', backup.imports ?? [])
   await putMany('findings', backup.findings ?? [])
+  await putMany('capitalSpend', backup.capitalSpend ?? [])
 
   if (backup.settings) await setKV(KV.settings, backup.settings)
   if (backup.dcf) await setKV(KV.dcf, backup.dcf)
   if (backup.pricing) await setKV(KV.pricing, backup.pricing)
   if (backup.projects) await setKV(KV.projects, backup.projects)
+  if (backup.costModel) await setKV(KV.costModel, backup.costModel)
 }
 
 export async function wipeEverything(): Promise<void> {
@@ -233,6 +252,7 @@ export async function wipeEverything(): Promise<void> {
     'expenses',
     'imports',
     'findings',
+    'capitalSpend',
   ]
   for (const store of stores) await database.clear(store)
   await database.clear('kv')

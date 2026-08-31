@@ -219,8 +219,32 @@ export function aggregate(series: MonthMetrics[]): Totals {
   }
 }
 
-export function trailing(series: MonthMetrics[], months: number): MonthMetrics[] {
-  return series.slice(-months)
+/**
+ * The last `months` months up to and including `endMonth`, which defaults to
+ * the current month.
+ *
+ * Anchoring to today rather than to the last row matters: a booking ledger
+ * contains future stays, so slicing the tail of the series would quietly count
+ * months that have not happened as though they had — turning next season's
+ * reservations into this year's earnings.
+ */
+export function trailing(
+  series: MonthMetrics[],
+  months: number,
+  endMonth: string = new Date().toISOString().slice(0, 7),
+): MonthMetrics[] {
+  const upToNow = series.filter((month) => month.month <= endMonth)
+  // A series entirely in the future has no trailing window; fall back to the
+  // earliest months rather than returning nothing at all.
+  return (upToNow.length > 0 ? upToNow : series).slice(-months)
+}
+
+/** Months still ahead of us — reservations on the book, not earnings. */
+export function upcoming(
+  series: MonthMetrics[],
+  fromMonth: string = new Date().toISOString().slice(0, 7),
+): MonthMetrics[] {
+  return series.filter((month) => month.month > fromMonth)
 }
 
 export function yearToDate(series: MonthMetrics[], year: string): MonthMetrics[] {

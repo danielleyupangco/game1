@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { cx } from '@/components/ui/primitives'
+import { QuickAdd } from '@/components/entry/QuickAdd'
 import { useLedger } from '@/state/store'
 
 /**
@@ -21,6 +22,7 @@ export function Shell({ children }: { children: ReactNode }) {
   const { ready } = useLedger()
   const location = useLocation()
   const [clock, setClock] = useState(() => new Date())
+  const [adding, setAdding] = useState(false)
 
   useEffect(() => {
     const timer = window.setInterval(() => setClock(new Date()), 30000)
@@ -29,6 +31,7 @@ export function Shell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-full bg-bg">
+      <QuickAdd open={adding} onClose={() => setAdding(false)} />
       <header className="no-print sticky top-0 z-30 border-b border-line bg-bg/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-[1180px] flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2.5">
           <div className="flex items-baseline gap-2.5">
@@ -67,7 +70,16 @@ export function Shell({ children }: { children: ReactNode }) {
             ))}
           </nav>
 
-          <div className="num ml-auto text-[11px] tracking-wide text-ink-3">
+          <button
+            type="button"
+            onClick={() => setAdding(true)}
+            title="Record a cost, a booking or something you bought"
+            className="ml-auto rounded-lg border border-accent/40 bg-accent/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-accent transition-colors hover:bg-accent/25"
+          >
+            + Add
+          </button>
+
+          <div className="num text-[11px] tracking-wide text-ink-3">
             {clock.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
             <span className="ml-1.5 text-ink-3/70">
               {clock.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}

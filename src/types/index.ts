@@ -19,6 +19,10 @@ export type Provenance = {
    * say which cell produced which one.
    */
   column?: string
+  /** true when someone typed this in rather than importing it */
+  manual?: boolean
+  /** who entered it, so a shared book says who recorded what */
+  enteredBy?: string
 }
 
 export type WithProvenance = { id: string; prov: Provenance }
@@ -214,10 +218,23 @@ export type DcfAssumptions = {
   netDebt: number
 }
 
+export const CAPEX_CATEGORIES = [
+  'Repairs & maintenance',
+  'Equipment',
+  'Building works',
+  'Furniture & fittings',
+  'Power & water',
+  'Boat & transport',
+  'Expansion',
+  'Other',
+] as const
+
+export type CapexCategory = (typeof CAPEX_CATEGORIES)[number]
+
 export type CapitalProject = {
   id: string
   name: string
-  /** upfront cash out, base currency */
+  /** budget for the whole project — what you expect it to cost */
   capex: number
   /** incremental annual net cash inflow once running */
   annualCashflow: number
@@ -228,6 +245,50 @@ export type CapitalProject = {
   /** salvage/terminal value at end of life */
   terminalValue: number
   note: string
+  /** open projects are still spending; done ones are closed out */
+  status?: 'planned' | 'active' | 'done'
+}
+
+/**
+ * Money actually spent on a capital item.
+ *
+ * Deliberately not an Expense: capital spend buys something that lasts, so it
+ * leaves the bank without reducing this year's profit. Keeping the two apart is
+ * what stops a ₱3.9M build looking like a catastrophic trading year.
+ */
+export type CapitalSpend = WithProvenance & {
+  /** the project this belongs to, or '' for one-off spend */
+  projectId: string
+  date: string
+  item: string
+  category: CapexCategory | string
+  amount: number
+  currency: Currency
+  vendor: string
+  note: string
+}
+
+/**
+ * The operating cost model, as an owner thinks about it: things you pay every
+ * month whatever happens, things that cost you per night sold, and things that
+ * cost you per booking. It is the input to the price floor.
+ */
+export type CostLineItem = {
+  id: string
+  label: string
+  amount: number
+}
+
+export type CostModel = {
+  fixedMonthly: CostLineItem[]
+  perNight: CostLineItem[]
+  perStay: CostLineItem[]
+  /** platform commission taken off the top, as a fraction */
+  platformFeePct: number
+  /** average nights in a booking, used to spread per-stay costs */
+  nightsPerStay: number
+  /** nights the property can sell in a year */
+  availableNightsPerYear: number
 }
 
 export type PricingAssumptions = {

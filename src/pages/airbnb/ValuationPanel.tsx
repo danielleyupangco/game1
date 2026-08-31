@@ -1,10 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Bar, BarChart, CartesianGrid, ReferenceLine, Tooltip, XAxis, YAxis } from 'recharts'
 import { useLedger } from '@/state/store'
 import { aggregate, trailing, type MonthMetrics } from '@/domain/airbnb/metrics'
-import { DEFAULT_TORNADO, evaluateProject, runDcf, sensitivity, tornado } from '@/domain/airbnb/dcf'
+import { DEFAULT_TORNADO, runDcf, sensitivity, tornado } from '@/domain/airbnb/dcf'
 import { ASSUMPTION_NOTES } from '@/state/defaults'
-import { Button, Card, Pill, SectionHeader, TextInput, cx } from '@/components/ui/primitives'
+import { Button, Card, SectionHeader, cx } from '@/components/ui/primitives'
 import { AssumptionInput } from '@/components/ui/AssumptionInput'
 import { Stat, StatGrid } from '@/components/ui/Stat'
 import { DataTable } from '@/components/ui/DataTable'
@@ -13,8 +13,7 @@ import { ChartFrame } from '@/components/charts/Chart'
 import { AXIS, DIVERGING, GRID, SEQUENTIAL, TOOLTIP_STYLE } from '@/components/charts/theme'
 import { money, num, pct, signedPct } from '@/lib/format'
 import { exportTable, MONEY_FMT, PCT_FMT } from '@/lib/export'
-import { uid } from '@/lib/id'
-import type { CapitalProject, DcfAssumptions } from '@/types'
+import type { DcfAssumptions } from '@/types'
 
 export function ValuationPanel({ series }: { series: MonthMetrics[] }) {
   const { dcf, saveDcf } = useLedger()
@@ -257,7 +256,16 @@ export function ValuationPanel({ series }: { series: MonthMetrics[] }) {
         </>
       ) : null}
 
-      <CapitalAllocation dcfEquity={result.equityValue} discountRate={dcf.discountRate} />
+      <Card>
+        <SectionHeader
+          title="Thinking about spending on the property?"
+          subtitle="Budgets, what's been spent against them, and whether a project earns its keep all live on the Capital tab."
+        />
+        <p className="text-[12.5px] leading-relaxed text-ink-2">
+          Capital spend is kept out of this valuation and out of the P&amp;L on purpose: it buys something that lasts,
+          so it leaves the bank without reducing the year's profit.
+        </p>
+      </Card>
     </div>
   )
 }
@@ -368,137 +376,3 @@ function SensitivityTable({
 }
 
 // --- Capital allocation ----------------------------------------------------
-
-function CapitalAllocation({ dcfEquity, discountRate }: { dcfEquity: number; discountRate: number }) {
-  const { projects, saveProjects, holdings, snapshots, transactions, settings } = useLedger()
-  const [expected, setExpected] = useState('10')
-
-  const portfolioReturn = (Number(expected) || 0) / 100
-  const results = useMemo(
-    () => projects.map((project) => evaluateProject(project, discountRate, portfolioReturn)),
-    [projects, discountRate, portfolioReturn],
-  )
-
-  const addProject = () => {
-    const project: CapitalProject = {
-      id: uid('prj'),
-      name: 'New project',
-      capex: 1000000,
-      annualCashflow: 300000,
-      rampYears: 1,
-      lifeYears: 10,
-      terminalValue: 0,
-      note: '',
-    }
-    void saveProjects([...projects, project])
-  }
-
-  const update = (id: string, patch: Partial<CapitalProject>) => {
-    void saveProjects(projects.map((project) => (project.id === id ? { ...project, ...patch } : project)))
-  }
-
-  return (
-    <Card>
-      <SectionHeader
-        title="Capital allocation"
-        subtitle="Model a reinvestment against the alternative of putting the same cash in your portfolio. A project only earns the money if it beats what the money would do elsewhere."
-        right={<Button size="sm" onClick={addProject}>Add project</Button>}
-      />
-
-      <div className="mb-3 flex flex-wrap items-end gap-3 rounded-lg border border-line bg-surface-2 p-3">
-        <label className="block">
-          <span className="mb-1 block text-[11px] font-medium text-ink-2">Portfolio expected return</span>
-          <div className="relative w-32">
-            <TextInput value={expected} onChange={setExpected} type="number" />
-            <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] text-ink-3">%</span>
-          </div>
-        </label>
-        <p className="max-w-xl flex-1 text-[11px] leading-relaxed text-ink-2">
-          This is the hurdle. Your own portfolio history is the honest starting point —{' '}
-          {snapshots.length >= 2 && holdings.length > 0
-            ? 'the Investments tab shows your annualised return; use that rather than a number you like.'
-            : 'once you have two or more portfolio snapshots, the Investments tab will show your actual annualised return to use here.'}{' '}
-          Projects are discounted at the property's {pct(discountRate)} rate, which is higher because a single island is
-          a riskier place for a peso than a diversified portfolio.
-          {transactions.length === 0 && settings.cashOnHand === 0 ? '' : ''}
-        </p>
-      </div>
-
-      {projects.length === 0 ? (
-        <p className="py-6 text-center text-[13px] text-ink-2">
-          No projects yet. Add one — a fourth room, solar, a boat, a marketing push — and it's ranked against your
-          portfolio on NPV, IRR and payback.
-        </p>
-      ) : (
-        <div className="space-y-2.5">
-          {results
-            .slice()
-            .sort((a, b) => b.npv - a.npv)
-            .map((result) => (
-              <div key={result.project.id} className="rounded-lg border border-line bg-surface-2 p-3">
-                <div className="mb-2.5 flex flex-wrap items-center justify-between gap-2">
-                  <input
-                    value={result.project.name}
-                    onChange={(event) => update(result.project.id, { name: event.target.value })}
-                    className="min-w-0 flex-1 border-0 bg-transparent text-[13px] font-semibold text-ink outline-none"
-                  />
-                  <div className="flex items-center gap-2">
-                    <Pill tone={result.npv > 0 ? 'pos' : 'neg'}>
-                      NPV {money(result.npv, 'PHP', true)}
-                    </Pill>
-                    <Pill tone={result.spreadVsPortfolio > 0 ? 'pos' : 'warn'}>
-                      IRR {Number.isFinite(result.irr) ? pct(result.irr) : '—'}
-                    </Pill>
-                    <button
-                      type="button"
-                      onClick={() => void saveProjects(projects.filter((p) => p.id !== result.project.id))}
-                      className="text-[11px] text-ink-3 transition-colors hover:text-neg"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                </div>
-
-                <div className="grid gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
-                  <AssumptionInput label="Upfront capex" value={result.project.capex} kind="money" step={100000} onChange={(next) => update(result.project.id, { capex: next })} />
-                  <AssumptionInput label="Annual cash inflow" value={result.project.annualCashflow} kind="money" step={50000} onChange={(next) => update(result.project.id, { annualCashflow: next })} />
-                  <AssumptionInput label="Ramp years" value={result.project.rampYears} kind="number" step={1} suffix="yr" onChange={(next) => update(result.project.id, { rampYears: next })} />
-                  <AssumptionInput label="Life" value={result.project.lifeYears} kind="number" step={1} suffix="yr" onChange={(next) => update(result.project.id, { lifeYears: next })} />
-                  <AssumptionInput label="Terminal value" value={result.project.terminalValue} kind="money" step={100000} onChange={(next) => update(result.project.id, { terminalValue: next })} />
-                </div>
-
-                <div className="mt-2.5 grid grid-cols-2 gap-2 border-t border-line pt-2.5 sm:grid-cols-4">
-                  <MiniStat label="Payback" value={Number.isFinite(result.payback) ? `${num(result.payback, 1)} yrs` : 'never'} tone={Number.isFinite(result.payback) && result.payback < 6 ? 'pos' : 'warn'} />
-                  <MiniStat label="Profitability index" value={Number.isFinite(result.profitabilityIndex) ? num(result.profitabilityIndex, 2) : '—'} tone={result.profitabilityIndex > 1 ? 'pos' : 'neg'} />
-                  <MiniStat
-                    label="vs portfolio"
-                    value={Number.isFinite(result.spreadVsPortfolio) ? `${result.spreadVsPortfolio >= 0 ? '+' : ''}${(result.spreadVsPortfolio * 100).toFixed(1)} pp` : '—'}
-                    tone={result.spreadVsPortfolio > 0 ? 'pos' : 'neg'}
-                  />
-                  <MiniStat label="Capex vs island value" value={dcfEquity > 0 ? pct(result.project.capex / dcfEquity, 0) : '—'} tone="neutral" />
-                </div>
-
-                <p className="mt-2 text-[11px] leading-relaxed text-ink-2">
-                  {result.npv > 0 && result.spreadVsPortfolio > 0
-                    ? `Beats the portfolio by ${(result.spreadVsPortfolio * 100).toFixed(1)} pp and returns its capex in ${Number.isFinite(result.payback) ? `${num(result.payback, 1)} years` : 'no finite time'}. The case for doing it rests on the annual cash inflow being real — that is the assumption to stress, not the discount rate.`
-                    : result.npv > 0
-                      ? `Positive NPV at the property's ${pct(discountRate)} discount rate, but its IRR trails your ${pct(portfolioReturn)} portfolio hurdle. Doing it means accepting a lower return for a less liquid asset.`
-                      : `Negative NPV at ${pct(discountRate)}. As modelled, the cash does better in the portfolio.`}
-                </p>
-              </div>
-            ))}
-        </div>
-      )}
-    </Card>
-  )
-}
-
-function MiniStat({ label, value, tone }: { label: string; value: string; tone: 'pos' | 'neg' | 'warn' | 'neutral' }) {
-  const tones = { pos: 'text-pos', neg: 'text-neg', warn: 'text-warn', neutral: 'text-ink' }
-  return (
-    <div>
-      <div className="text-[10px] uppercase tracking-wide text-ink-3">{label}</div>
-      <div className={cx('num mt-0.5 text-[13px] font-semibold', tones[tone])}>{value}</div>
-    </div>
-  )
-}
