@@ -228,6 +228,8 @@ function BookingForm({ onDone }: { onDone: () => void }) {
   const [addOns, setAddOns] = useState('')
   const [channel, setChannel] = useState('Airbnb')
   const [country, setCountry] = useState('')
+  const [contact, setContact] = useState('')
+  const [notes, setNotes] = useState('')
   const [who, setWho] = useEnteredBy()
   const [busy, setBusy] = useState(false)
 
@@ -239,7 +241,11 @@ function BookingForm({ onDone }: { onDone: () => void }) {
   )
   const roomValue = Number(room) || 0
   const addOnValue = Number(addOns) || 0
-  const valid = nights > 0 && roomValue + addOnValue > 0
+  // A future stay is often agreed before any money moves, so a named upcoming
+  // booking is allowed to carry no amount yet — it still belongs in the diary,
+  // and it still blocks those nights in the forecast.
+  const future = checkIn > today()
+  const valid = nights > 0 && (roomValue + addOnValue > 0 || (future && guestName.trim().length > 0))
 
   const submit = async () => {
     if (!valid) return
@@ -260,9 +266,12 @@ function BookingForm({ onDone }: { onDone: () => void }) {
       netRevenue: roomValue,
       addOnRevenue: addOnValue,
       currency: 'PHP',
-      status: 'confirmed',
+      status: future ? 'upcoming' : 'confirmed',
       country: country.trim(),
       rating: '',
+      review: '',
+      notes: notes.trim(),
+      contact: contact.trim(),
     }
     await addRecords('bookings', [booking])
     setBusy(false)
@@ -295,7 +304,10 @@ function BookingForm({ onDone }: { onDone: () => void }) {
           alone, so mixing them would flatter both.
         </p>
         <div className="grid gap-3 sm:grid-cols-2">
-          <Field label="Room payout (₱)" hint="What actually reached you, after platform fees">
+          <Field
+            label="Room payout (₱)"
+            hint={future ? 'What you expect to receive, after platform fees — leave blank if not agreed yet' : 'What actually reached you, after platform fees'}
+          >
             <TextInput value={room} onChange={setRoom} type="number" placeholder="0" />
           </Field>
           <Field label="Add-ons you kept (₱)" hint="Your share only, not what the guest paid in total">
@@ -312,17 +324,29 @@ function BookingForm({ onDone }: { onDone: () => void }) {
           <TextInput value={country} onChange={setCountry} placeholder="Optional" />
         </Field>
       </div>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Field label="Contact" hint="Phone, email or handle — however you reach them.">
+          <TextInput value={contact} onChange={setContact} placeholder="Optional" />
+        </Field>
+        <Field label="Notes" hint="Dietary needs, arrival plans, anything the crew should know.">
+          <TextInput value={notes} onChange={setNotes} placeholder="Optional" />
+        </Field>
+      </div>
       <EnteredBy value={who} onChange={setWho} />
 
       <div className="flex items-center justify-between gap-3 border-t border-line pt-3">
         <span className="text-[12px] text-ink-2">
-          {valid ? (
+          {valid && roomValue + addOnValue === 0 ? (
+            <>
+              {nights} night{nights === 1 ? '' : 's'} held · amount still to be agreed
+            </>
+          ) : valid ? (
             <>
               <span className="num text-ink">{money(roomValue + addOnValue, 'PHP')}</span> over {nights} night
               {nights === 1 ? '' : 's'} · rate {money(roomValue / nights, 'PHP')}
             </>
           ) : (
-            'Needs dates and an amount'
+            future ? 'Needs dates and either a name or an amount' : 'Needs dates and an amount'
           )}
         </span>
         <Button variant="primary" disabled={busy || !valid} onClick={() => void submit()}>

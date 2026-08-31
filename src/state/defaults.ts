@@ -1,4 +1,4 @@
-import type { CostModel, DcfAssumptions, PricingAssumptions, Settings } from '@/types'
+import type { CostModel, DcfAssumptions, ForecastAssumptions, PricingAssumptions, Settings } from '@/types'
 
 /**
  * Every assumption in this app is defined here and editable in the UI.
@@ -98,4 +98,15 @@ export const DEFAULT_COST_MODEL: CostModel = {
   platformFeePct: 0.03,
   nightsPerStay: 3,
   availableNightsPerYear: 365,
+}
+
+export const DEFAULT_FORECAST: ForecastAssumptions = {
+  openingCash: 0,
+  adrGrowth: 0.04,
+  // The cautious case assumes barely half the usual pickup still arrives; the
+  // hopeful one assumes a strong finish. Both act only on what is NOT yet booked.
+  lowFactor: 0.5,
+  highFactor: 1.3,
+  horizonMonths: 12,
+  includeCapex: true,
 }

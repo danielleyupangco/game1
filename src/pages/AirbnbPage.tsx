@@ -40,8 +40,21 @@ import { InsightsPanel } from '@/pages/airbnb/InsightsPanel'
 import { OwnerPanel } from '@/pages/airbnb/OwnerPanel'
 import { CapitalPanel } from '@/pages/airbnb/CapitalPanel'
 import { CostModelPanel } from '@/pages/airbnb/CostModelPanel'
+import { ForecastPanel } from '@/pages/airbnb/ForecastPanel'
+import { GuestsPanel } from '@/pages/airbnb/GuestsPanel'
 
-type View = 'plain' | 'revenue' | 'insights' | 'costs' | 'costmodel' | 'pnl' | 'capital' | 'valuation' | 'pricing'
+type View =
+  | 'plain'
+  | 'revenue'
+  | 'forecast'
+  | 'guests'
+  | 'insights'
+  | 'costs'
+  | 'costmodel'
+  | 'pnl'
+  | 'capital'
+  | 'valuation'
+  | 'pricing'
 
 export function AirbnbPage() {
   const { bookings, expenses, settings, dcf, freshness } = useLedger()
@@ -91,6 +104,8 @@ export function AirbnbPage() {
           options={[
             { value: 'plain', label: 'Overview' },
             { value: 'revenue', label: 'Revenue' },
+            { value: 'forecast', label: 'Forecast' },
+            { value: 'guests', label: 'Guests' },
             { value: 'insights', label: 'Insights' },
             { value: 'costs', label: 'Costs' },
             { value: 'costmodel', label: 'Cost model' },
@@ -104,6 +119,8 @@ export function AirbnbPage() {
 
       {view === 'plain' ? <OwnerPanel /> : null}
       {view === 'revenue' ? <RevenueView series={series} /> : null}
+      {view === 'forecast' ? <ForecastPanel /> : null}
+      {view === 'guests' ? <GuestsPanel /> : null}
       {view === 'costmodel' ? <CostModelPanel /> : null}
       {view === 'capital' ? <CapitalPanel /> : null}
       {view === 'insights' ? <InsightsPanel /> : null}

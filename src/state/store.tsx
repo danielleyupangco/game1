@@ -10,7 +10,7 @@ import {
 import * as db from '@/lib/db'
 import { SEED } from '@/seed'
 import { KV } from '@/lib/db'
-import { DEFAULT_COST_MODEL, DEFAULT_DCF, DEFAULT_PRICING, DEFAULT_SETTINGS } from '@/state/defaults'
+import { DEFAULT_COST_MODEL, DEFAULT_DCF, DEFAULT_FORECAST, DEFAULT_PRICING, DEFAULT_SETTINGS } from '@/state/defaults'
 import type {
   BenchmarkPoint,
   Booking,
@@ -18,6 +18,7 @@ import type {
   CapitalSpend,
   CostModel,
   DatasetKey,
+  ForecastAssumptions,
   DcfAssumptions,
   Expense,
   Finding,
@@ -48,6 +49,7 @@ type Ctx = LedgerData & {
   pricing: PricingAssumptions
   projects: CapitalProject[]
   costModel: CostModel
+  forecast: ForecastAssumptions
   reload: () => Promise<void>
   saveSettings: (patch: Partial<Settings>) => Promise<void>
   saveDcf: (patch: Partial<DcfAssumptions>) => Promise<void>
@@ -57,6 +59,8 @@ type Ctx = LedgerData & {
   saveFinding: (finding: Finding) => Promise<void>
   removeFinding: (id: string) => Promise<void>
   saveCostModel: (patch: Partial<CostModel>) => Promise<void>
+  saveForecast: (patch: Partial<ForecastAssumptions>) => Promise<void>
+  updateBooking: (booking: import('@/types').Booking) => Promise<void>
   addCapitalSpend: (spend: CapitalSpend) => Promise<void>
   removeCapitalSpend: (id: string) => Promise<void>
   /** append hand-entered rows to a dataset and refresh */
@@ -86,6 +90,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
   const [pricing, setPricing] = useState<PricingAssumptions>(DEFAULT_PRICING)
   const [projects, setProjects] = useState<CapitalProject[]>([])
   const [costModel, setCostModel] = useState<CostModel>(DEFAULT_COST_MODEL)
+  const [forecast, setForecast] = useState<ForecastAssumptions>(DEFAULT_FORECAST)
   const [ready, setReady] = useState(false)
 
   const reload = useCallback(async () => {
@@ -121,6 +126,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
     setPricing({ ...DEFAULT_PRICING, ...(await db.getKV<Partial<PricingAssumptions>>(KV.pricing, {})) })
     setProjects(await db.getKV<CapitalProject[]>(KV.projects, []))
     setCostModel({ ...DEFAULT_COST_MODEL, ...(await db.getKV<Partial<CostModel>>(KV.costModel, {})) })
+    setForecast({ ...DEFAULT_FORECAST, ...(await db.getKV<Partial<ForecastAssumptions>>(KV.forecast, {})) })
     setReady(true)
   }, [])
 
@@ -195,6 +201,22 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
+  const saveForecast = useCallback(async (patch: Partial<ForecastAssumptions>) => {
+    setForecast((prev) => {
+      const next = { ...prev, ...patch }
+      void db.setKV(KV.forecast, next)
+      return next
+    })
+  }, [])
+
+  const updateBooking = useCallback(async (booking: import('@/types').Booking) => {
+    await db.putOne('bookings', booking)
+    setData((prev) => ({
+      ...prev,
+      bookings: prev.bookings.map((row) => (row.id === booking.id ? booking : row)),
+    }))
+  }, [])
+
   const addCapitalSpend = useCallback(async (spend: CapitalSpend) => {
     await db.putOne('capitalSpend', spend)
     setData((prev) => ({
@@ -237,6 +259,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       pricing,
       projects,
       costModel,
+      forecast,
       reload,
       saveSettings,
       saveDcf,
@@ -246,12 +269,14 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       saveFinding,
       removeFinding,
       saveCostModel,
+      saveForecast,
+      updateBooking,
       addCapitalSpend,
       removeCapitalSpend,
       addRecords,
       freshness,
     }),
-    [data, ready, settings, dcf, pricing, projects, costModel, reload, saveSettings, saveDcf, savePricing, saveProjects, removeImport, saveFinding, removeFinding, saveCostModel, addCapitalSpend, removeCapitalSpend, addRecords, freshness],
+    [data, ready, settings, dcf, pricing, projects, costModel, forecast, reload, saveSettings, saveDcf, savePricing, saveProjects, removeImport, saveFinding, removeFinding, saveCostModel, saveForecast, updateBooking, addCapitalSpend, removeCapitalSpend, addRecords, freshness],
   )
 
   return <LedgerContext.Provider value={value}>{children}</LedgerContext.Provider>

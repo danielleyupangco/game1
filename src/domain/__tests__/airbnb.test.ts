@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { aggregate, costBreakdown, monthlyMetrics, seasonality, trailing, upcoming } from '@/domain/airbnb/metrics'
 import { evaluateProject, irr, npv, paybackYears, projectCashflows, runDcf, sensitivity, tornado } from '@/domain/airbnb/dcf'
 import { priceCurve, suggestByMonth, weekdayDemand } from '@/domain/airbnb/pricing'
-import { DEFAULT_DCF, DEFAULT_PRICING } from '@/state/defaults'
+import { DEFAULT_COST_MODEL, DEFAULT_DCF, DEFAULT_FORECAST, DEFAULT_PRICING } from '@/state/defaults'
+import { buildCashForecast, buildForecast } from '@/domain/airbnb/forecast'
+import { guestProfiles, matchesQuery, summariseGuestBook, toStays } from '@/domain/airbnb/guests'
 import { nightsByMonth } from '@/lib/dates'
 import { dateFromSheetName } from '@/lib/workbook'
 import { buildFloors, capexProgress, floorAt, summariseCosts } from '@/domain/airbnb/pricefloor'
@@ -41,6 +43,9 @@ function booking(checkIn: string, checkOut: string, net: number, over: Partial<B
     status: 'confirmed',
     country: '',
     rating: '',
+    review: '',
+    notes: '',
+    contact: '',
     ...over,
   }
 }
@@ -713,5 +718,165 @@ describe('capex progress', () => {
     const progress = capexProgress(100000, [{ amount: 150000, category: 'Building works' }])
     expect(progress.over).toBe(true)
     expect(progress.remaining).toBe(-50000)
+  })
+})
+
+describe('forecast', () => {
+  // Two full years of stays, booked a consistent 60 days ahead, so the pickup
+  // curve has something real to learn from.
+  const history: Booking[] = []
+  for (const year of [2023, 2024]) {
+    for (let month = 1; month <= 12; month += 1) {
+      const mm = String(month).padStart(2, '0')
+      history.push(
+        booking(`${year}-${mm}-05`, `${year}-${mm}-08`, 45000, {
+          id: `h-${year}-${mm}-a`,
+          bookedOn: `${year}-${mm === '01' ? '01' : mm}-01`,
+        }),
+        booking(`${year}-${mm}-15`, `${year}-${mm}-18`, 45000, { id: `h-${year}-${mm}-b` }),
+      )
+    }
+  }
+  const series = monthlyMetrics({ bookings: history, expenses: [], usdPhp: 58, availableNightsPerYear: 365 })
+
+  const run = (extra: Booking[] = [], asOf = '2025-01-15') =>
+    buildForecast({
+      bookings: [...history, ...extra],
+      series,
+      assumptions: { ...DEFAULT_FORECAST, horizonMonths: 6 },
+      availableNightsPerYear: 365,
+      asOf,
+    })
+
+  it('projects the requested horizon starting from the current month', () => {
+    const forecast = run()
+    expect(forecast.months).toHaveLength(6)
+    expect(forecast.months[0].month).toBe('2025-01')
+    expect(forecast.months[5].month).toBe('2025-06')
+  })
+
+  it('never forecasts fewer nights than are already booked', () => {
+    const forecast = run([booking('2025-03-01', '2025-03-21', 300000, { id: 'big', bookedOn: '2025-01-02' })])
+    const march = forecast.months.find((month) => month.month === '2025-03')!
+    expect(march.booked).toBe(20)
+    expect(march.expected).toBeGreaterThanOrEqual(march.booked)
+    expect(march.low).toBeGreaterThanOrEqual(march.booked)
+  })
+
+  it('never forecasts more nights than the property can sell', () => {
+    const forecast = run()
+    for (const month of forecast.months) {
+      expect(month.expected).toBeLessThanOrEqual(month.availableNights)
+      expect(month.high).toBeLessThanOrEqual(month.availableNights)
+    }
+  })
+
+  it('brackets the central case with the cautious and hopeful ones', () => {
+    const forecast = run()
+    for (const month of forecast.months) {
+      expect(month.low).toBeLessThanOrEqual(month.expected + 1e-9)
+      expect(month.high).toBeGreaterThanOrEqual(month.expected - 1e-9)
+    }
+  })
+
+  it('builds a pickup curve that never falls as the date approaches', () => {
+    const { curve } = run()
+    const shares = curve.points.map((point) => point.share)
+    for (let i = 1; i < shares.length; i += 1) expect(shares[i]).toBeLessThanOrEqual(shares[i - 1] + 1e-9)
+  })
+
+  it('flags thin history rather than pretending the curve is solid', () => {
+    const sparse = [booking('2024-06-01', '2024-06-04', 45000, { id: 's1' })]
+    const thin = buildForecast({
+      bookings: sparse,
+      series: monthlyMetrics({ bookings: sparse, expenses: [], usdPhp: 58, availableNightsPerYear: 365 }),
+      assumptions: DEFAULT_FORECAST,
+      availableNightsPerYear: 365,
+      asOf: '2025-01-15',
+    })
+    expect(thin.thin).toBe(true)
+  })
+
+  it('tracks cash down to the month it would run out', () => {
+    const forecast = run()
+    const cash = buildCashForecast(forecast, DEFAULT_COST_MODEL, 50000, 0, [
+      { month: forecast.months[1].month, amount: 4000000 },
+    ])
+    expect(cash.months).toHaveLength(forecast.months.length)
+    expect(cash.months[0].opening).toBe(50000)
+    // Each month opens where the previous one closed.
+    for (let i = 1; i < cash.months.length; i += 1) {
+      expect(cash.months[i].opening).toBeCloseTo(cash.months[i - 1].closing, 6)
+    }
+    expect(cash.runsOutIn).not.toBeNull()
+    expect(cash.lowest!.closing).toBeLessThan(0)
+  })
+
+  it('leaves capital spend out of the P&L but takes it out of the bank', () => {
+    const forecast = run()
+    const withoutCapex = buildCashForecast(forecast, DEFAULT_COST_MODEL, 500000, 0, [])
+    const withCapex = buildCashForecast(forecast, DEFAULT_COST_MODEL, 500000, 0, [
+      { month: forecast.months[0].month, amount: 100000 },
+    ])
+    const last = forecast.months.length - 1
+    expect(withCapex.months[last].closing).toBeCloseTo(withoutCapex.months[last].closing - 100000, 6)
+  })
+})
+
+describe('guest book', () => {
+  const asOf = '2025-06-15'
+  const stays = toStays(
+    [
+      booking('2025-01-02', '2025-01-05', 45000, { id: 'g1', guestName: 'Maria  Santos', country: 'PH' }),
+      booking('2025-06-14', '2025-06-18', 60000, { id: 'g2', guestName: 'Here Now' }),
+      booking('2025-09-01', '2025-09-05', 80000, { id: 'g3', guestName: 'maria santos', bookedOn: '2025-06-01' }),
+      booking('2025-03-01', '2025-03-04', -12000, { id: 'refund', nights: -3 }),
+      booking('2025-04-01', '2025-04-03', 30000, { id: 'g4', guestName: '' }),
+      booking('2025-05-01', '2025-05-03', 30000, { id: 'g5', guestName: '  ' }),
+    ],
+    asOf,
+  )
+
+  it('sorts every stay into past, present or future', () => {
+    const segments = Object.fromEntries(stays.map((stay) => [stay.id, stay.segment]))
+    expect(segments.g1).toBe('past')
+    expect(segments.g2).toBe('now')
+    expect(segments.g3).toBe('upcoming')
+  })
+
+  it('drops refund rows — they are money, not people', () => {
+    expect(stays.some((stay) => stay.id === 'refund')).toBe(false)
+  })
+
+  it('matches the same guest across spellings, and only across names', () => {
+    const profiles = guestProfiles(stays)
+    const maria = profiles.find((profile) => profile.key === 'n:maria santos')!
+    expect(maria.stays).toHaveLength(2)
+    expect(maria.repeat).toBe(true)
+    // The two unnamed bookings must not be folded into one phantom guest.
+    expect(profiles.filter((profile) => profile.key.startsWith('b:'))).toHaveLength(2)
+    expect(profiles.every((profile) => profile.key.startsWith('b:') ? !profile.repeat : true)).toBe(true)
+  })
+
+  it('counts what is promised but not yet earned', () => {
+    const summary = summariseGuestBook(stays, guestProfiles(stays))
+    expect(summary.here).toHaveLength(1)
+    expect(summary.nextArrival!.id).toBe('g3')
+    expect(summary.bookedAhead).toBe(80000)
+    expect(summary.hosted).toBe(3)
+  })
+
+  it('measures lead time from the day the booking was made', () => {
+    const upcomingStay = stays.find((stay) => stay.id === 'g3')!
+    expect(upcomingStay.leadTime).toBe(92)
+    expect(upcomingStay.distance).toBe(78)
+  })
+
+  it('searches across every field a host would look in', () => {
+    const maria = stays.find((stay) => stay.id === 'g1')!
+    expect(matchesQuery(maria, 'santos')).toBe(true)
+    expect(matchesQuery(maria, 'PH')).toBe(true)
+    expect(matchesQuery(maria, 'zzz')).toBe(false)
+    expect(matchesQuery(maria, '')).toBe(true)
   })
 })

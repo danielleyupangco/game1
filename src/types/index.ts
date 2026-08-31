@@ -137,6 +137,34 @@ export type Booking = WithProvenance & {
   country: string
   /** host's own grade for the stay, when the sheet records one */
   rating: string
+  /** what the guest wrote afterwards */
+  review: string
+  /** anything the host needs to remember: dietary needs, arrival plans */
+  notes: string
+  /** phone, email or handle — however you reach them */
+  contact: string
+}
+
+/**
+ * Forward-looking assumptions. Kept apart from the DCF: that values the whole
+ * business over a decade, this asks what the next twelve months look like.
+ */
+export type ForecastAssumptions = {
+  /** cash in the business account today */
+  openingCash: number
+  /** rate growth applied to next year's expected ADR */
+  adrGrowth: number
+  /** multipliers on expected pickup for the cautious and hopeful cases */
+  lowFactor: number
+  highFactor: number
+  /** months to project */
+  horizonMonths: number
+  /**
+   * Whether unspent project budgets are treated as cash leaving the account.
+   * On by default — the conservative reading — but it dominates the runway on a
+   * small property, so it is a visible switch rather than a buried constant.
+   */
+  includeCapex: boolean
 }
 
 export type ExpenseNature = 'fixed' | 'variable'

@@ -4,6 +4,7 @@ import type {
   CapitalSpend,
   CostModel,
   Finding,
+  ForecastAssumptions,
   Booking,
   CapitalProject,
   DcfAssumptions,
@@ -167,6 +168,7 @@ export const KV = {
   projects: 'capitalProjects',
   mappingPresets: 'mappingPresets',
   costModel: 'costModel',
+  forecast: 'forecastAssumptions',
 } as const
 
 export type Backup = {
@@ -186,6 +188,7 @@ export type Backup = {
   pricing: PricingAssumptions | null
   projects: CapitalProject[]
   costModel: CostModel | null
+  forecast: ForecastAssumptions | null
 }
 
 /** Whole-database JSON dump — the way to move data between laptop and phone. */
@@ -207,6 +210,7 @@ export async function exportBackup(): Promise<Backup> {
     pricing: await getKV<PricingAssumptions | null>(KV.pricing, null),
     projects: await getKV<CapitalProject[]>(KV.projects, []),
     costModel: await getKV<CostModel | null>(KV.costModel, null),
+    forecast: await getKV<ForecastAssumptions | null>(KV.forecast, null),
   }
 }
 
@@ -239,6 +243,7 @@ export async function importBackup(backup: Backup): Promise<void> {
   if (backup.pricing) await setKV(KV.pricing, backup.pricing)
   if (backup.projects) await setKV(KV.projects, backup.projects)
   if (backup.costModel) await setKV(KV.costModel, backup.costModel)
+  if (backup.forecast) await setKV(KV.forecast, backup.forecast)
 }
 
 export async function wipeEverything(): Promise<void> {

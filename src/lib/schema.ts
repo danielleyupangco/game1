@@ -98,6 +98,9 @@ export const DATASETS: Record<DatasetKey, DatasetSpec> = {
       { key: 'status', label: 'Status', type: 'string', synonyms: ['status', 'state'], default: 'confirmed', hint: 'Rows reading cancelled are kept but excluded from revenue.' },
       { key: 'country', label: 'Guest country', type: 'string', synonyms: ['country', 'origin', 'nationality', 'from', 'market'], default: '' },
       { key: 'rating', label: 'Guest rating', type: 'string', synonyms: ['guest rating', 'rating', 'grade', 'score'], default: '' },
+      { key: 'review', label: 'Guest review', type: 'string', synonyms: ['review', 'guest review', 'feedback', 'comment', 'testimonial'], default: '' },
+      { key: 'contact', label: 'Contact', type: 'string', synonyms: ['contact', 'email', 'phone', 'mobile', 'number'], default: '' },
+      { key: 'notes', label: 'Notes', type: 'string', synonyms: ['notes', 'remarks', 'requests', 'memo'], default: '' },
     ],
   },
 

@@ -332,6 +332,9 @@ export function buildBookings(ctx: BuildContext): BuildResult<Booking> {
         status: read.text('status', isAdjustment ? 'adjustment' : 'confirmed'),
         country: read.text('country'),
         rating: read.text('rating'),
+        review: read.text('review'),
+        notes: read.text('notes'),
+        contact: read.text('contact'),
       },
     }
   })
