@@ -3,6 +3,7 @@ import { parseWorkbook, type ParsedWorkbook, type SheetPreview } from '@/lib/wor
 import { DATASETS, type FieldSpec } from '@/lib/schema'
 import { looksLikeAirbnbPayout, parseAirbnbPayout, reconcile, type AirbnbParseResult } from '@/lib/airbnb-csv'
 import { looksLikeAddOnForm, matchQuotes, parseAddOnForm, type AddOnParseResult } from '@/lib/addon-form'
+import { looksLikeMetricsSheet, parseMetricsSheet, type MetricsParseResult } from '@/lib/metrics-sheet'
 import { autoMap, BUILDERS, missingRequired, type Mapping } from '@/lib/mapping'
 import {
   buildCrosstabExpenses,
@@ -57,7 +58,7 @@ export function ImportWizard({
    * export and the guest add-on form — so they are recognised and read whole
    * rather than mapped column by column.
    */
-  const [known, setKnown] = useState<'airbnb' | 'addons' | null>(null)
+  const [known, setKnown] = useState<'airbnb' | 'addons' | 'metrics' | null>(null)
   /** expenses only: months across the top rather than one row per expense */
   const [crosstab, setCrosstab] = useState(false)
   const [labelColumn, setLabelColumn] = useState(0)
@@ -101,10 +102,14 @@ export function ImportWizard({
         setSectionLabels(best.sections.map((section) => section.label))
         setSectionOn(best.sections.map(() => true))
 
-        const recognised = usable.find((candidate) => looksLikeAirbnbPayout(candidate) || looksLikeAddOnForm(candidate))
+        const recognised = usable.find(
+          (candidate) => looksLikeAirbnbPayout(candidate) || looksLikeMetricsSheet(candidate) || looksLikeAddOnForm(candidate),
+        )
         if (recognised) {
           setSheetName(recognised.name)
-          setKnown(looksLikeAirbnbPayout(recognised) ? 'airbnb' : 'addons')
+          setKnown(
+            looksLikeAirbnbPayout(recognised) ? 'airbnb' : looksLikeMetricsSheet(recognised) ? 'metrics' : 'addons',
+          )
           setStep('review')
           setBusy(false)
           return
@@ -340,6 +345,11 @@ export function ImportWizard({
     return parseAirbnbPayout(sheet, { importId: 'preview', fileName: workbook.fileName, sheetName: sheet.name })
   }, [known, sheet, workbook])
 
+  const metricsParse = useMemo<MetricsParseResult | null>(() => {
+    if (known !== 'metrics' || !sheet || !workbook) return null
+    return parseMetricsSheet(sheet, { importId: 'preview', fileName: workbook.fileName, sheetName: sheet.name })
+  }, [known, sheet, workbook])
+
   const addOnParse = useMemo<AddOnParseResult | null>(() => {
     if (known !== 'addons' || !sheet || !workbook) return null
     return parseAddOnForm(sheet, { importId: 'preview', fileName: workbook.fileName, sheetName: sheet.name })
@@ -389,6 +399,37 @@ export function ImportWizard({
         await db.putMany('bookings', bookings)
         await db.putMany('resolutions', result.resolutions)
         rowCount = bookings.length + result.resolutions.length
+        rejected = result.rejected
+      } else if (known === 'metrics') {
+        const result = parseMetricsSheet(sheet, prov)
+        const bookings = await db.getAll('bookings')
+        // Country, review and party size exist nowhere else, so they are
+        // written onto every payout row sharing the confirmation code —
+        // an altered reservation is several rows but one stay.
+        const byCode = new Map(result.details.map((detail) => [detail.confirmationCode, detail]))
+        const updates = bookings
+          .filter((booking) => byCode.has(booking.confirmationCode))
+          .map((booking) => {
+            const detail = byCode.get(booking.confirmationCode)!
+            return {
+              ...booking,
+              guestName: detail.guestName || booking.guestName,
+              country: detail.country || booking.country,
+              review: detail.review || booking.review,
+              guests: detail.guests || booking.guests,
+              // The sheet's add-on column is superseded by the quotes below.
+              addOnRevenue: 0,
+            }
+          })
+        if (updates.length > 0) await db.putMany('bookings', updates)
+        // Replace any earlier quotes for the same stays rather than stacking.
+        const existing = await db.getAll('addons')
+        const codes = new Set(result.quotes.map((quote) => `${quote.guestName}|${quote.checkIn}`))
+        for (const quote of existing) {
+          if (codes.has(`${quote.guestName}|${quote.checkIn}`)) await db.deleteOne('addons', quote.id)
+        }
+        await db.putMany('addons', result.quotes)
+        rowCount = result.quotes.length
         rejected = result.rejected
       } else {
         const result = parseAddOnForm(sheet, prov)
@@ -811,6 +852,58 @@ export function ImportWizard({
         </div>
       ) : null}
 
+      {step === 'review' && known === 'metrics' && metricsParse ? (
+        <div className="space-y-3">
+          <div className="rounded-lg border border-info/25 bg-info/[0.04] p-3">
+            <h3 className="text-[12.5px] font-semibold text-ink">Recognised as your metrics tab</h3>
+            <p className="mt-1 text-[11.5px] leading-relaxed text-ink-2">
+              This is the only sheet that carries all three sides of the add-on trade against a confirmation code —
+              what the guest was charged, what Kuya Allan quoted, and the balance you keep — plus the country and
+              review that no export has. Room revenue is not taken from here: the Airbnb payout export stays the
+              authority on money actually received.
+            </p>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-4">
+            <SummaryTile label="Stays updated" value={String(metricsParse.details.length)} tone="pos" />
+            <SummaryTile label="Add-on records" value={String(metricsParse.quotes.length)} tone="pos" />
+            <SummaryTile
+              label="Reviews found"
+              value={String(metricsParse.details.filter((detail) => detail.review.trim()).length)}
+              tone="neutral"
+            />
+            <SummaryTile
+              label="Rows that do not add up"
+              value={String(metricsParse.inconsistent.length)}
+              tone={metricsParse.inconsistent.length > 0 ? 'warn' : 'neutral'}
+            />
+          </div>
+          {metricsParse.inconsistent.length > 0 ? (
+            <div className="rounded-lg border border-warn/25 bg-warn/[0.06] p-3 text-[11.5px] leading-relaxed text-ink-2">
+              On these stays the Balance column does not equal requested less To Allan. The sheet's own figure is kept,
+              but one of the three is wrong:{' '}
+              {metricsParse.inconsistent
+                .map(
+                  (row) =>
+                    `${row.code} (says ${Math.round(row.recorded).toLocaleString()}, computes ${Math.round(row.expected).toLocaleString()})`,
+                )
+                .join(', ')}
+              .
+            </div>
+          ) : (
+            <div className="rounded-lg border border-line bg-surface-2 p-3 text-[11.5px] leading-relaxed text-ink-2">
+              Every row adds up: requested less To Allan equals the Balance recorded, across all{' '}
+              {metricsParse.quotes.length} stays with add-ons. Your patong on them is{' '}
+              <span className="num text-ink">
+                {new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP', maximumFractionDigits: 0 }).format(
+                  metricsParse.quotes.reduce((sum, quote) => sum + quote.margin, 0),
+                )}
+              </span>
+              .
+            </div>
+          )}
+        </div>
+      ) : null}
+
       {step === 'review' && known === 'addons' && addOnParse ? (
         <div className="space-y-3">
           <div className="rounded-lg border border-info/25 bg-info/[0.04] p-3">
@@ -979,6 +1072,11 @@ export function ImportWizard({
               {busy
                 ? 'Importing…'
                 : `Import ${airbnbParse.bookings.length} stays and ${airbnbParse.resolutions.length} resolutions`}
+            </Button>
+          ) : null}
+          {step === 'review' && known === 'metrics' && metricsParse ? (
+            <Button variant="primary" disabled={busy} onClick={() => void commitKnown()}>
+              {busy ? 'Importing…' : `Update ${metricsParse.details.length} stays`}
             </Button>
           ) : null}
           {step === 'review' && known === 'addons' && addOnParse ? (

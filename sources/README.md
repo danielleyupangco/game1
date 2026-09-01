@@ -13,6 +13,7 @@ guest records; only this README is committed.
 | Airbnb transaction export (`airbnb_*.csv`) | Room revenue, fees, stay dates, guest name, confirmation code, and the resolution payouts that reconcile the bank | Airbnb → Account → Transaction history → Export CSV. Take both the **completed** and the **upcoming/pending** exports. |
 | Guest add-on form responses (`addon-form.csv`) | The margin kept on food, boats and tours — guest total less the island crew's cost | Island T v2 sheet → Pipeline / form responses tab → File → Download → CSV |
 | Airbnb host inbox (no export exists) | Party size, guest country, the review | Typed into the guest record in the app. The Guests tab lists which stays are still missing them. |
+| Mastersheet metrics tab (`y3_2026_metrics.csv`) | The add-on trade with all three sides against a confirmation code — `requested` (guest charged), `To Allan` (crew quote), `Balance` (your patong) — plus guest country and review | Mastersheet → the year's `- metrics` tab → download as CSV. Recognised on sight; room revenue is **not** taken from it, the Airbnb export stays the authority on money received. |
 | Mastersheet (`Island_T__Mastersheet.xlsx`) | Historical expenses, capital spend, dividends — the years before the exports above start | One-off import; superseded for revenue by the Airbnb export |
 
 ## Refreshing
