@@ -232,6 +232,67 @@ export type ForecastAssumptions = {
   includeCapex: boolean
 }
 
+/**
+ * A distribution of profit to the owners. Not an expense: it comes out of
+ * money already earned, so it never touches the P&L — it only moves cash. Kept
+ * separate for exactly that reason, since folding it into costs is what makes
+ * a profitable year look like a loss.
+ */
+export type DividendPayout = WithProvenance & {
+  date: string
+  amount: number
+  currency: Currency
+  /** who received what, so a two-owner business can see its own split */
+  recipients: { name: string; amount: number }[]
+  approvedBy: string
+  note: string
+}
+
+/**
+ * A competing listing being watched.
+ *
+ * Airbnb cannot be read automatically from here, so every figure on a
+ * competitor is something a person saw and recorded on a date. The listing is
+ * the identity; what it cost and offered on a given day is an observation
+ * against it, which is what makes a price history possible at all.
+ */
+export type CompetitorListing = {
+  id: string
+  /** the numeric id in the airbnb.com/rooms/<id> URL */
+  roomId: string
+  name: string
+  host: string
+  area: string
+  url: string
+  /** why this one is worth watching */
+  note: string
+  /** false once a listing is no longer worth tracking, rather than deleting it */
+  active: boolean
+  addedAt: string
+}
+
+export type CompetitorObservation = WithProvenance & {
+  listingId: string
+  /** the day someone actually looked */
+  observedOn: string
+  /** the dates the price was quoted for, since a rate is meaningless without them */
+  quotedFor: string
+  nights: number
+  guests: number
+  /** all-in nightly rate before Airbnb's guest fee, in `currency` */
+  nightlyRate: number
+  cleaningFee: number
+  currency: Currency
+  bedrooms: number
+  maxGuests: number
+  rating: number
+  reviewCount: number
+  /** how much of the next 90 days is already taken, when the calendar shows it */
+  nightsBookedNext90: number
+  amenities: string[]
+  note: string
+}
+
 export type ExpenseNature = 'fixed' | 'variable'
 
 export type Expense = WithProvenance & {
@@ -289,6 +350,18 @@ export type Settings = {
   targetsByAssetClass: AllocationTarget[]
   targetsByGeography: AllocationTarget[]
   targetsByCurrency: AllocationTarget[]
+  /**
+   * The month from which the add-on margin is genuinely the owner's.
+   *
+   * Room revenue has always been hers. Food, boats and tours are the island
+   * crew's business; she keeps only a margin on it, and she only began
+   * recording that margin in Y3. Earlier sheets carry an "add ons revenue"
+   * column that is the crew's gross, not her income, so counting it would
+   * overstate what the business earned. Stays before this month keep the
+   * figure on the record but leave it out of income — and because it is a
+   * setting rather than a constant, the judgement is visible and reversible.
+   */
+  addOnIncomeFrom: string
 }
 
 export type DcfAssumptions = {

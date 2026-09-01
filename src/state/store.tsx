@@ -19,7 +19,10 @@ import type {
   CapitalProject,
   CapitalSpend,
   CostModel,
+  CompetitorListing,
+  CompetitorObservation,
   DatasetKey,
+  DividendPayout,
   ForecastAssumptions,
   DcfAssumptions,
   Expense,
@@ -45,6 +48,9 @@ export type LedgerData = {
   capitalSpend: CapitalSpend[]
   resolutions: Resolution[]
   addons: AddOnQuote[]
+  dividends: DividendPayout[]
+  competitors: CompetitorListing[]
+  observations: CompetitorObservation[]
 }
 
 type Ctx = LedgerData & {
@@ -72,6 +78,11 @@ type Ctx = LedgerData & {
   addRecords: <K extends 'expenses' | 'bookings'>(store: K, rows: LedgerData[K]) => Promise<void>
   /** flip a form submission between counted and excluded, and re-apply margins */
   saveAddOn: (quote: AddOnQuote) => Promise<void>
+  addDividend: (payout: DividendPayout) => Promise<void>
+  removeDividend: (id: string) => Promise<void>
+  saveCompetitor: (listing: CompetitorListing) => Promise<void>
+  removeCompetitor: (id: string) => Promise<void>
+  addObservation: (observation: CompetitorObservation) => Promise<void>
   /** most recent import timestamp per dataset, for the freshness indicators */
   freshness: Partial<Record<DatasetKey, string>>
 }
@@ -90,6 +101,9 @@ const EMPTY: LedgerData = {
   capitalSpend: [],
   resolutions: [],
   addons: [],
+  dividends: [],
+  competitors: [],
+  observations: [],
 }
 
 export function LedgerProvider({ children }: { children: ReactNode }) {
@@ -126,6 +140,9 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       capitalSpend,
       resolutions,
       addons,
+      dividends,
+      competitors,
+      observations,
     ] = await Promise.all([
       db.getAll('holdings'),
       db.getAll('snapshots'),
@@ -138,6 +155,9 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       db.getAll('capitalSpend'),
       db.getAll('resolutions'),
       db.getAll('addons'),
+      db.getAll('dividends'),
+      db.getAll('competitors'),
+      db.getAll('observations'),
     ])
     setData({
       holdings,
@@ -151,6 +171,9 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       capitalSpend,
       resolutions,
       addons,
+      dividends,
+      competitors,
+      observations,
     })
 
     // Merge stored values over defaults so a schema addition doesn't strand
@@ -299,6 +322,45 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
     [],
   )
 
+  const addDividend = useCallback(async (payout: DividendPayout) => {
+    await db.putOne('dividends', payout)
+    setData((prev) => ({
+      ...prev,
+      dividends: prev.dividends.some((row) => row.id === payout.id)
+        ? prev.dividends.map((row) => (row.id === payout.id ? payout : row))
+        : [...prev.dividends, payout],
+    }))
+  }, [])
+
+  const removeDividend = useCallback(async (id: string) => {
+    await db.deleteOne('dividends', id)
+    setData((prev) => ({ ...prev, dividends: prev.dividends.filter((row) => row.id !== id) }))
+  }, [])
+
+  const saveCompetitor = useCallback(async (listing: CompetitorListing) => {
+    await db.putOne('competitors', listing)
+    setData((prev) => ({
+      ...prev,
+      competitors: prev.competitors.some((row) => row.id === listing.id)
+        ? prev.competitors.map((row) => (row.id === listing.id ? listing : row))
+        : [...prev.competitors, listing],
+    }))
+  }, [])
+
+  const removeCompetitor = useCallback(async (id: string) => {
+    await db.deleteOne('competitors', id)
+    setData((prev) => ({
+      ...prev,
+      competitors: prev.competitors.filter((row) => row.id !== id),
+      observations: prev.observations.filter((row) => row.listingId !== id),
+    }))
+  }, [])
+
+  const addObservation = useCallback(async (observation: CompetitorObservation) => {
+    await db.putOne('observations', observation)
+    setData((prev) => ({ ...prev, observations: [...prev.observations, observation] }))
+  }, [])
+
   const freshness = useMemo(() => {
     const out: Partial<Record<DatasetKey, string>> = {}
     for (const batch of data.imports) {
@@ -330,12 +392,17 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       saveForecast,
       updateBooking,
       saveAddOn,
+      addDividend,
+      removeDividend,
+      saveCompetitor,
+      removeCompetitor,
+      addObservation,
       addCapitalSpend,
       removeCapitalSpend,
       addRecords,
       freshness,
     }),
-    [data, ready, settings, dcf, pricing, projects, costModel, forecast, reload, saveSettings, saveDcf, savePricing, saveProjects, removeImport, saveFinding, removeFinding, saveCostModel, saveForecast, updateBooking, saveAddOn, addCapitalSpend, removeCapitalSpend, addRecords, freshness],
+    [data, ready, settings, dcf, pricing, projects, costModel, forecast, reload, saveSettings, saveDcf, savePricing, saveProjects, removeImport, saveFinding, removeFinding, saveCostModel, saveForecast, updateBooking, saveAddOn, addDividend, removeDividend, saveCompetitor, removeCompetitor, addObservation, addCapitalSpend, removeCapitalSpend, addRecords, freshness],
   )
 
   return <LedgerContext.Provider value={value}>{children}</LedgerContext.Provider>

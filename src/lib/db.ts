@@ -3,7 +3,10 @@ import type {
   AddOnQuote,
   BenchmarkPoint,
   CapitalSpend,
+  CompetitorListing,
+  CompetitorObservation,
   CostModel,
+  DividendPayout,
   Finding,
   ForecastAssumptions,
   Booking,
@@ -35,11 +38,14 @@ interface LedgerDB extends DBSchema {
   capitalSpend: { key: string; value: CapitalSpend; indexes: { projectId: string } }
   resolutions: { key: string; value: Resolution; indexes: { confirmationCode: string } }
   addons: { key: string; value: AddOnQuote; indexes: { checkIn: string } }
+  dividends: { key: string; value: DividendPayout; indexes: { date: string } }
+  competitors: { key: string; value: CompetitorListing }
+  observations: { key: string; value: CompetitorObservation; indexes: { listingId: string } }
   kv: { key: string; value: unknown }
 }
 
 const DB_NAME = 'ledger'
-const DB_VERSION = 4
+const DB_VERSION = 6
 
 let dbPromise: Promise<IDBPDatabase<LedgerDB>> | null = null
 
@@ -64,6 +70,17 @@ function db() {
           if (!database.objectStoreNames.contains('addons')) {
             const store = database.createObjectStore('addons', { keyPath: 'id' })
             store.createIndex('checkIn', 'checkIn')
+          }
+          if (!database.objectStoreNames.contains('dividends')) {
+            const store = database.createObjectStore('dividends', { keyPath: 'id' })
+            store.createIndex('date', 'date')
+          }
+          if (!database.objectStoreNames.contains('competitors')) {
+            database.createObjectStore('competitors', { keyPath: 'id' })
+          }
+          if (!database.objectStoreNames.contains('observations')) {
+            const store = database.createObjectStore('observations', { keyPath: 'id' })
+            store.createIndex('listingId', 'listingId')
           }
           return
         }
@@ -101,6 +118,13 @@ function db() {
         const addons = database.createObjectStore('addons', { keyPath: 'id' })
         addons.createIndex('checkIn', 'checkIn')
 
+        const dividends = database.createObjectStore('dividends', { keyPath: 'id' })
+        dividends.createIndex('date', 'date')
+
+        database.createObjectStore('competitors', { keyPath: 'id' })
+        const observations = database.createObjectStore('observations', { keyPath: 'id' })
+        observations.createIndex('listingId', 'listingId')
+
         database.createObjectStore('kv')
       },
     })
@@ -120,6 +144,9 @@ type RecordStore =
   | 'capitalSpend'
   | 'resolutions'
   | 'addons'
+  | 'dividends'
+  | 'competitors'
+  | 'observations'
 
 export async function getAll<K extends RecordStore>(store: K): Promise<LedgerDB[K]['value'][]> {
   return (await db()).getAll(store)
@@ -205,6 +232,9 @@ export type Backup = {
   capitalSpend: CapitalSpend[]
   resolutions: Resolution[]
   addons: AddOnQuote[]
+  dividends: DividendPayout[]
+  competitors: CompetitorListing[]
+  observations: CompetitorObservation[]
   settings: Settings | null
   dcf: DcfAssumptions | null
   pricing: PricingAssumptions | null
@@ -229,6 +259,9 @@ export async function exportBackup(): Promise<Backup> {
     capitalSpend: await getAll('capitalSpend'),
     resolutions: await getAll('resolutions'),
     addons: await getAll('addons'),
+    dividends: await getAll('dividends'),
+    competitors: await getAll('competitors'),
+    observations: await getAll('observations'),
     settings: await getKV<Settings | null>(KV.settings, null),
     dcf: await getKV<DcfAssumptions | null>(KV.dcf, null),
     pricing: await getKV<PricingAssumptions | null>(KV.pricing, null),
@@ -251,6 +284,9 @@ export async function importBackup(backup: Backup): Promise<void> {
     'capitalSpend',
     'resolutions',
     'addons',
+    'dividends',
+    'competitors',
+    'observations',
   ]
   for (const store of stores) await clearStore(store)
 
@@ -265,6 +301,9 @@ export async function importBackup(backup: Backup): Promise<void> {
   await putMany('capitalSpend', backup.capitalSpend ?? [])
   await putMany('resolutions', backup.resolutions ?? [])
   await putMany('addons', backup.addons ?? [])
+  await putMany('dividends', backup.dividends ?? [])
+  await putMany('competitors', backup.competitors ?? [])
+  await putMany('observations', backup.observations ?? [])
 
   if (backup.settings) await setKV(KV.settings, backup.settings)
   if (backup.dcf) await setKV(KV.dcf, backup.dcf)

@@ -33,3 +33,7 @@ dist-artifact/
 
 # tsc build info
 *.tsbuildinfo
+
+# Real financial and guest records — never committed. See sources/README.md.
+sources/*
+!sources/README.md

@@ -1,0 +1,605 @@
+import { useMemo, useState } from 'react'
+import { useLedger } from '@/state/store'
+import { buildActualCash, buildStatement, expenseMatrix, totalStatement, type StatementMonth } from '@/domain/airbnb/statement'
+import type { MonthMetrics } from '@/domain/airbnb/metrics'
+import { Button, Card, Field, SectionHeader, Tabs, TextInput, cx, inputClass } from '@/components/ui/primitives'
+import { Stat, StatGrid } from '@/components/ui/Stat'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { money, monthLabel, num, pct, shortDate } from '@/lib/format'
+import { uid } from '@/lib/id'
+import { today } from '@/lib/dates'
+import type { DividendPayout } from '@/types'
+
+type View = 'income' | 'cash' | 'expenses' | 'dividends'
+
+/**
+ * The statements, in the shape the owner already reads them.
+ *
+ * Deliberately line-by-line rather than summarised: this is the page she shows
+ * her mother, and a number nobody can trace back to a line is a number nobody
+ * argues with.
+ */
+export function StatementPanel({ series }: { series: MonthMetrics[] }) {
+  const { expenses, capitalSpend, dividends, settings, resolutions, saveSettings } = useLedger()
+  const [view, setView] = useState<View>('income')
+  const [year, setYear] = useState<string>('all')
+
+  const addOnGrossByMonth = useMemo(() => {
+    const out: Record<string, number> = {}
+    for (const row of resolutions) out[row.date.slice(0, 7)] = (out[row.date.slice(0, 7)] ?? 0) + row.amount
+    return out
+  }, [resolutions])
+
+  const full = useMemo(
+    () => buildStatement({ series, expenses, addOnIncomeFrom: settings.addOnIncomeFrom, addOnGrossByMonth }),
+    [series, expenses, settings.addOnIncomeFrom, addOnGrossByMonth],
+  )
+
+  const years = useMemo(() => [...new Set(full.map((month) => month.month.slice(0, 4)))].sort(), [full])
+  const months = useMemo(
+    () => (year === 'all' ? full : full.filter((month) => month.month.startsWith(year))),
+    [full, year],
+  )
+  const total = useMemo(() => totalStatement(months), [months])
+
+  const capitalByMonth = useMemo(() => {
+    const out: Record<string, number> = {}
+    for (const row of capitalSpend) out[row.date.slice(0, 7)] = (out[row.date.slice(0, 7)] ?? 0) + row.amount
+    return out
+  }, [capitalSpend])
+
+  const cash = useMemo(() => buildActualCash(months, capitalByMonth, dividends), [months, capitalByMonth, dividends])
+
+  if (series.length === 0) {
+    return (
+      <EmptyState
+        title="Nothing to report on yet"
+        body="The statements are built from bookings and expenses. Import either and they fill in."
+        dataset="bookings"
+      />
+    )
+  }
+
+  const excludedBefore = full
+    .filter((month) => month.month < settings.addOnIncomeFrom)
+    .reduce((sum, month) => sum + month.addOnGross, 0)
+
+  return (
+    <div className="space-y-4">
+      <Card className="border-info/25 bg-info/[0.04]">
+        <div className="flex gap-3">
+          <span className="mt-0.5 text-[14px] text-info">◫</span>
+          <div className="min-w-0">
+            <h3 className="text-[13px] font-semibold text-ink">Whose money is whose</h3>
+            <p className="mt-1 max-w-3xl text-[12px] leading-relaxed text-ink-2">
+              The room is yours: every peso a guest pays to sleep on the island is your revenue. Food, boats and tours
+              are Kuya Allan's business — the guest's money passes through you to him, and what you keep is the margin
+              on top. So the statement below shows room revenue as the business, and your add-on margin as a second,
+              smaller line. Adding the whole add-on amount to revenue would show a business roughly twice this size
+              earning the same profit, which is the single easiest way to mislead yourself here.
+            </p>
+            {excludedBefore > 0 ? (
+              <p className="mt-2 max-w-3xl rounded-lg border border-warn/25 bg-warn/[0.06] px-3 py-2 text-[11.5px] leading-relaxed text-ink-2">
+                You began recording your own margin in{' '}
+                <span className="num text-ink">{monthLabel(settings.addOnIncomeFrom)}</span>. Before then the sheets
+                carry an add-on column totalling{' '}
+                <span className="num text-warn">{money(excludedBefore, 'PHP', true)}</span>, which is the crew's gross
+                rather than your income — so it is held out of revenue and shown as a memo instead. If any of that was
+                genuinely yours, move the date back and it comes straight in.
+                <span className="mt-2 flex items-center gap-2">
+                  <span className="text-ink-3">Counting my margin from</span>
+                  <input
+                    type="month"
+                    value={settings.addOnIncomeFrom}
+                    onChange={(event) => void saveSettings({ addOnIncomeFrom: event.target.value })}
+                    className={cx(inputClass, 'w-40')}
+                  />
+                </span>
+              </p>
+            ) : null}
+          </div>
+        </div>
+      </Card>
+
+      <div className="flex flex-wrap items-center gap-2">
+        <Tabs
+          value={view}
+          onChange={setView}
+          options={[
+            { value: 'income', label: 'Income statement' },
+            { value: 'cash', label: 'Cash flow' },
+            { value: 'expenses', label: 'Expense summary' },
+            { value: 'dividends', label: `Dividends (${dividends.length})` },
+          ]}
+        />
+        <Tabs
+          value={year}
+          onChange={setYear}
+          options={[{ value: 'all', label: 'All' }, ...years.map((y) => ({ value: y, label: y }))]}
+        />
+      </div>
+
+      {view === 'income' ? <IncomeStatement months={months} total={total} /> : null}
+      {view === 'cash' ? <CashFlow months={months} cash={cash} /> : null}
+      {view === 'expenses' ? <ExpenseSummary months={months} /> : null}
+      {view === 'dividends' ? <Dividends /> : null}
+    </div>
+  )
+}
+
+/** A month column plus a total column, laid out like the sheet it replaces. */
+function StatementTable({
+  months,
+  total,
+  rows,
+}: {
+  months: StatementMonth[]
+  total: StatementMonth
+  rows: {
+    label: string
+    value: (month: StatementMonth) => number
+    kind?: 'money' | 'pct' | 'count'
+    emphasis?: 'head' | 'total' | 'sub'
+    hint?: string
+  }[]
+}) {
+  const format = (value: number, kind: 'money' | 'pct' | 'count' = 'money') =>
+    kind === 'pct' ? pct(value, 0) : kind === 'count' ? num(value, 0) : value === 0 ? '—' : money(value, 'PHP', true)
+
+  return (
+    <div className="overflow-x-auto rounded-xl border border-line">
+      <table className="w-full min-w-[720px] border-collapse text-[12px]">
+        <thead>
+          <tr className="bg-surface-2">
+            <th className="sticky left-0 z-10 bg-surface-2 px-3 py-2 text-left font-medium text-ink-2">&nbsp;</th>
+            {months.map((month) => (
+              <th key={month.month} className="whitespace-nowrap px-3 py-2 text-right font-medium text-ink-2">
+                {monthLabel(month.month)}
+              </th>
+            ))}
+            <th className="whitespace-nowrap border-l border-line px-3 py-2 text-right font-semibold text-ink">
+              Total
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr
+              key={row.label}
+              className={cx(
+                'border-t border-line',
+                row.emphasis === 'head' && 'bg-surface-2/60',
+                row.emphasis === 'total' && 'bg-surface-2/40 font-semibold',
+              )}
+            >
+              <td
+                title={row.hint}
+                className={cx(
+                  'sticky left-0 z-10 whitespace-nowrap bg-bg px-3 py-1.5 text-left',
+                  row.emphasis === 'head' && 'bg-surface-2/60 font-semibold text-ink',
+                  row.emphasis === 'total' && 'bg-surface-2/40 font-semibold text-ink',
+                  row.emphasis === 'sub' && 'pl-6 text-ink-2',
+                  !row.emphasis && 'text-ink',
+                )}
+              >
+                {row.label}
+              </td>
+              {months.map((month) => (
+                <td key={month.month} className="num whitespace-nowrap px-3 py-1.5 text-right text-ink-2">
+                  {format(row.value(month), row.kind)}
+                </td>
+              ))}
+              <td className="num whitespace-nowrap border-l border-line px-3 py-1.5 text-right font-medium text-ink">
+                {format(row.value(total), row.kind)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function IncomeStatement({ months, total }: { months: StatementMonth[]; total: StatementMonth }) {
+  const categories = useMemo(() => {
+    const seen = new Set<string>()
+    for (const month of months) for (const key of Object.keys(month.byCategory)) seen.add(key)
+    return [...seen].filter((key) => key !== 'Depreciation' && !key.startsWith('Per '))
+  }, [months])
+
+  return (
+    <div className="space-y-4">
+      <StatGrid>
+        <Stat label="Room revenue" value={money(total.roomRevenue, 'PHP', true)} sub={`${num(total.nightsSold, 0)} nights sold`} />
+        <Stat
+          label="Your add-on margin"
+          value={money(total.addOnMargin, 'PHP', true)}
+          sub={total.addOnGross > 0 ? `on ${money(total.addOnGross, 'PHP', true)} passing through` : 'on food, boats and tours'}
+        />
+        <Stat
+          label="EBITDA"
+          value={money(total.ebitda, 'PHP', true)}
+          tone={total.ebitda >= 0 ? 'pos' : 'neg'}
+          sub={`${pct(total.ebitdaPct, 0)} of revenue`}
+        />
+        <Stat
+          label="Occupancy"
+          value={pct(total.occupancy, 0)}
+          sub={`${num(total.stays, 0)} stays · rate ${money(total.adr, 'PHP', true)}`}
+        />
+      </StatGrid>
+
+      <StatementTable
+        months={months}
+        total={total}
+        rows={[
+          { label: 'Nights sold', value: (m) => m.nightsSold, kind: 'count' },
+          { label: 'Nights available', value: (m) => m.availableNights, kind: 'count' },
+          { label: 'Occupancy', value: (m) => m.occupancy, kind: 'pct' },
+          { label: 'Stays', value: (m) => m.stays, kind: 'count' },
+          { label: 'REVENUE', value: (m) => m.revenue, emphasis: 'head' },
+          { label: 'Room revenue', value: (m) => m.roomRevenue, emphasis: 'sub' },
+          { label: 'Add-on margin kept', value: (m) => m.addOnMargin, emphasis: 'sub' },
+          {
+            label: 'Add-ons passing through (memo)',
+            value: (m) => m.addOnGross,
+            emphasis: 'sub',
+            hint: 'The crew’s gross on food, boats and tours. Shown for scale — it is not your income and is not in any total.',
+          },
+          { label: 'Cost of sales', value: (m) => m.cogs, emphasis: 'head' },
+          { label: 'as % of revenue', value: (m) => m.cogsPct, kind: 'pct', emphasis: 'sub' },
+          { label: 'GROSS PROFIT', value: (m) => m.grossProfit, emphasis: 'total' },
+          { label: 'Gross margin', value: (m) => m.grossMargin, kind: 'pct', emphasis: 'sub' },
+          { label: 'OPERATING COSTS', value: (m) => m.opex, emphasis: 'head' },
+          ...categories.map((category) => ({
+            label: category,
+            value: (m: StatementMonth) => m.byCategory[category] ?? 0,
+            emphasis: 'sub' as const,
+          })),
+          { label: 'as % of revenue', value: (m) => m.opexPct, kind: 'pct' as const, emphasis: 'sub' as const },
+          { label: 'EBITDA', value: (m) => m.ebitda, emphasis: 'total' },
+          { label: 'EBITDA margin', value: (m) => m.ebitdaPct, kind: 'pct', emphasis: 'sub' },
+          { label: 'Depreciation', value: (m) => m.depreciation },
+          { label: 'EBIT', value: (m) => m.ebit, emphasis: 'total' },
+          { label: 'EBIT margin', value: (m) => m.ebitPct, kind: 'pct', emphasis: 'sub' },
+        ]}
+      />
+      <p className="text-[11.5px] leading-relaxed text-ink-3">
+        Depreciation is the island's equipment wearing out — a real cost, but not money leaving the bank this month,
+        which is why EBITDA sits above it. Capital spend and dividends appear nowhere here; both move cash without being
+        costs, and they have their own tabs.
+      </p>
+    </div>
+  )
+}
+
+function CashFlow({ months, cash }: { months: StatementMonth[]; cash: ReturnType<typeof buildActualCash> }) {
+  const totals = cash.reduce(
+    (sum, month) => ({
+      operating: sum.operating + month.operating,
+      operatingCosts: sum.operatingCosts + month.operatingCosts,
+      investing: sum.investing + month.investing,
+      financing: sum.financing + month.financing,
+      net: sum.net + month.net,
+    }),
+    { operating: 0, operatingCosts: 0, investing: 0, financing: 0, net: 0 },
+  )
+
+  return (
+    <div className="space-y-4">
+      <StatGrid>
+        <Stat label="Cash from operations" value={money(totals.operating - totals.operatingCosts, 'PHP', true)} tone="pos" sub="What the business itself threw off" />
+        <Stat label="Spent on the island" value={money(-totals.investing, 'PHP', true)} sub="Building work and equipment" />
+        <Stat label="Paid out to owners" value={money(-totals.financing, 'PHP', true)} sub="Dividends taken" />
+        <Stat
+          label="Net movement"
+          value={money(totals.net, 'PHP', true)}
+          tone={totals.net >= 0 ? 'pos' : 'neg'}
+          sub="Across the period shown"
+        />
+      </StatGrid>
+
+      <div className="overflow-x-auto rounded-xl border border-line">
+        <table className="w-full min-w-[720px] border-collapse text-[12px]">
+          <thead>
+            <tr className="bg-surface-2">
+              <th className="sticky left-0 z-10 bg-surface-2 px-3 py-2 text-left font-medium text-ink-2">&nbsp;</th>
+              {months.map((month) => (
+                <th key={month.month} className="whitespace-nowrap px-3 py-2 text-right font-medium text-ink-2">
+                  {monthLabel(month.month)}
+                </th>
+              ))}
+              <th className="border-l border-line px-3 py-2 text-right font-semibold text-ink">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(
+              [
+                ['Money in from guests', (m: (typeof cash)[number]) => m.operating, 'head'],
+                ['Running costs paid', (m: (typeof cash)[number]) => -m.operatingCosts, 'sub'],
+                ['Cash from operations', (m: (typeof cash)[number]) => m.operating - m.operatingCosts, 'total'],
+                ['Building and equipment', (m: (typeof cash)[number]) => -m.investing, 'head'],
+                ['Dividends to owners', (m: (typeof cash)[number]) => -m.financing, 'head'],
+                ['NET MOVEMENT', (m: (typeof cash)[number]) => m.net, 'total'],
+                ['Running balance', (m: (typeof cash)[number]) => m.running, 'sub'],
+              ] as [string, (m: (typeof cash)[number]) => number, string][]
+            ).map(([label, pick, emphasis]) => (
+              <tr
+                key={label}
+                className={cx(
+                  'border-t border-line',
+                  emphasis === 'head' && 'bg-surface-2/60',
+                  emphasis === 'total' && 'bg-surface-2/40 font-semibold',
+                )}
+              >
+                <td
+                  className={cx(
+                    'sticky left-0 z-10 whitespace-nowrap bg-bg px-3 py-1.5',
+                    emphasis === 'head' && 'bg-surface-2/60 font-semibold text-ink',
+                    emphasis === 'total' && 'bg-surface-2/40 font-semibold text-ink',
+                    emphasis === 'sub' && 'pl-6 text-ink-2',
+                  )}
+                >
+                  {label}
+                </td>
+                {cash.map((month) => {
+                  const value = pick(month)
+                  return (
+                    <td
+                      key={month.month}
+                      className={cx('num whitespace-nowrap px-3 py-1.5 text-right', value < 0 ? 'text-neg' : 'text-ink-2')}
+                    >
+                      {value === 0 ? '—' : money(value, 'PHP', true)}
+                    </td>
+                  )
+                })}
+                <td className="num whitespace-nowrap border-l border-line px-3 py-1.5 text-right font-medium text-ink">
+                  {label === 'Running balance'
+                    ? money(cash[cash.length - 1]?.running ?? 0, 'PHP', true)
+                    : money(cash.reduce((sum, month) => sum + pick(month), 0), 'PHP', true)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="text-[11.5px] leading-relaxed text-ink-3">
+        The running balance starts from zero and counts only what this dashboard has recorded — it is the movement, not
+        your bank balance. Put your real opening balance into the Forecast tab and the forward-looking version becomes
+        an actual runway.
+      </p>
+    </div>
+  )
+}
+
+function ExpenseSummary({ months }: { months: StatementMonth[] }) {
+  const { expenses } = useLedger()
+  const keys = months.map((month) => month.month)
+  const rows = useMemo(() => expenseMatrix(expenses, keys), [expenses, keys.join(',')])
+  const columnTotal = (month: string) => rows.reduce((sum, row) => sum + (row.byMonth[month] ?? 0), 0)
+  const grand = rows.reduce((sum, row) => sum + row.total, 0)
+
+  return (
+    <div className="space-y-3">
+      <SectionHeader
+        title="Every cost, by category and month"
+        subtitle="The same layout as your expense summary sheet, built from the rows themselves — so a figure here is one click from the receipt it came from."
+      />
+      <div className="overflow-x-auto rounded-xl border border-line">
+        <table className="w-full min-w-[720px] border-collapse text-[12px]">
+          <thead>
+            <tr className="bg-surface-2">
+              <th className="sticky left-0 z-10 bg-surface-2 px-3 py-2 text-left font-medium text-ink-2">Category</th>
+              {keys.map((month) => (
+                <th key={month} className="whitespace-nowrap px-3 py-2 text-right font-medium text-ink-2">
+                  {monthLabel(month)}
+                </th>
+              ))}
+              <th className="border-l border-line px-3 py-2 text-right font-semibold text-ink">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.category} className="border-t border-line">
+                <td className="sticky left-0 z-10 whitespace-nowrap bg-bg px-3 py-1.5 text-ink">{row.category}</td>
+                {keys.map((month) => (
+                  <td key={month} className="num whitespace-nowrap px-3 py-1.5 text-right text-ink-2">
+                    {row.byMonth[month] ? money(row.byMonth[month], 'PHP', true) : '—'}
+                  </td>
+                ))}
+                <td className="num whitespace-nowrap border-l border-line px-3 py-1.5 text-right font-medium text-ink">
+                  {money(row.total, 'PHP', true)}
+                </td>
+              </tr>
+            ))}
+            <tr className="border-t border-line bg-surface-2/40 font-semibold">
+              <td className="sticky left-0 z-10 bg-surface-2/40 px-3 py-1.5 text-ink">Total expenses</td>
+              {keys.map((month) => (
+                <td key={month} className="num whitespace-nowrap px-3 py-1.5 text-right text-ink">
+                  {columnTotal(month) ? money(columnTotal(month), 'PHP', true) : '—'}
+                </td>
+              ))}
+              <td className="num whitespace-nowrap border-l border-line px-3 py-1.5 text-right text-ink">
+                {money(grand, 'PHP', true)}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Dividends: profit taken out of the business.
+ *
+ * On its own page because it is neither a cost nor an investment — it is the
+ * point of the whole thing, and the two owners need to see their own split.
+ */
+function Dividends() {
+  const { dividends, addDividend, removeDividend, settings } = useLedger()
+  const [adding, setAdding] = useState(false)
+
+  const total = dividends.reduce((sum, row) => sum + row.amount, 0)
+  const byRecipient = useMemo(() => {
+    const out = new Map<string, number>()
+    for (const payout of dividends) {
+      for (const recipient of payout.recipients) {
+        out.set(recipient.name, (out.get(recipient.name) ?? 0) + recipient.amount)
+      }
+    }
+    return [...out.entries()].sort((a, b) => b[1] - a[1])
+  }, [dividends])
+
+  return (
+    <div className="space-y-4">
+      <SectionHeader
+        title="Money taken out"
+        subtitle="A dividend is profit already earned being paid to the owners. It is not a cost, so it never touches the P&L — it only leaves the bank, which is why it lives here and on the cash flow."
+        right={
+          <Button variant="primary" size="sm" onClick={() => setAdding(true)}>
+            + Record a payout
+          </Button>
+        }
+      />
+
+      {adding ? <DividendForm onDone={() => setAdding(false)} onSave={addDividend} /> : null}
+
+      <StatGrid>
+        <Stat label="Paid out all time" value={money(total, settings.baseCurrency, true)} sub={`${dividends.length} payout${dividends.length === 1 ? '' : 's'}`} />
+        {byRecipient.slice(0, 3).map(([name, amount]) => (
+          <Stat key={name} label={name} value={money(amount, settings.baseCurrency, true)} sub={total > 0 ? `${pct(amount / total, 0)} of payouts` : ''} />
+        ))}
+      </StatGrid>
+
+      {dividends.length === 0 ? (
+        <Card>
+          <p className="text-[12px] leading-relaxed text-ink-2">
+            Nothing recorded yet. Adding payouts here is what turns "the business made money" into "we took this much
+            out and left this much in" — which is the question a second owner actually wants answered.
+          </p>
+        </Card>
+      ) : (
+        <div className="overflow-x-auto rounded-xl border border-line">
+          <table className="w-full min-w-[560px] text-[12px]">
+            <thead className="bg-surface-2 text-ink-2">
+              <tr>
+                {['Released', 'Amount', 'Split', 'Approved by', 'Note', ''].map((header) => (
+                  <th key={header} className="px-3 py-2 text-left font-medium">
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {[...dividends]
+                .sort((a, b) => b.date.localeCompare(a.date))
+                .map((payout) => (
+                  <tr key={payout.id} className="border-t border-line">
+                    <td className="num whitespace-nowrap px-3 py-1.5 text-ink">{shortDate(payout.date)}</td>
+                    <td className="num whitespace-nowrap px-3 py-1.5 font-medium text-ink">
+                      {money(payout.amount, payout.currency, true)}
+                    </td>
+                    <td className="px-3 py-1.5 text-ink-2">
+                      {payout.recipients.length > 0
+                        ? payout.recipients.map((r) => `${r.name} ${money(r.amount, payout.currency, true)}`).join(' · ')
+                        : '—'}
+                    </td>
+                    <td className="px-3 py-1.5 text-ink-2">{payout.approvedBy || '—'}</td>
+                    <td className="px-3 py-1.5 text-ink-3">{payout.note || '—'}</td>
+                    <td className="px-3 py-1.5 text-right">
+                      <Button variant="ghost" size="sm" onClick={() => void removeDividend(payout.id)}>
+                        Remove
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function DividendForm({ onDone, onSave }: { onDone: () => void; onSave: (payout: DividendPayout) => Promise<void> }) {
+  const [date, setDate] = useState(today())
+  const [amount, setAmount] = useState('')
+  const [toDani, setToDani] = useState('')
+  const [toMom, setToMom] = useState('')
+  const [approvedBy, setApprovedBy] = useState('')
+  const [note, setNote] = useState('')
+  const [busy, setBusy] = useState(false)
+
+  const totalValue = Number(amount) || 0
+  const split = (Number(toDani) || 0) + (Number(toMom) || 0)
+  const mismatch = split > 0 && Math.abs(split - totalValue) > 1
+  const valid = totalValue > 0 && !mismatch
+
+  const submit = async () => {
+    if (!valid) return
+    setBusy(true)
+    const recipients = [
+      { name: 'Dani', amount: Number(toDani) || 0 },
+      { name: 'Mom', amount: Number(toMom) || 0 },
+    ].filter((r) => r.amount > 0)
+    await onSave({
+      id: uid('div'),
+      prov: { importId: 'manual', fileName: 'Entered by hand', sheetName: 'Dividends', rowNumber: 0, manual: true },
+      date,
+      amount: totalValue,
+      currency: 'PHP',
+      recipients,
+      approvedBy: approvedBy.trim(),
+      note: note.trim(),
+    })
+    setBusy(false)
+    onDone()
+  }
+
+  return (
+    <Card>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Field label="Release date">
+          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className={inputClass} />
+        </Field>
+        <Field label="Total released (₱)">
+          <TextInput value={amount} onChange={setAmount} type="number" placeholder="0" />
+        </Field>
+        <Field label="To Dani (₱)" hint="Leave both blank if the split is not being tracked.">
+          <TextInput value={toDani} onChange={setToDani} type="number" placeholder="0" />
+        </Field>
+        <Field label="To Mom (₱)">
+          <TextInput value={toMom} onChange={setToMom} type="number" placeholder="0" />
+        </Field>
+        <Field label="Approved by">
+          <TextInput value={approvedBy} onChange={setApprovedBy} placeholder="Optional" />
+        </Field>
+        <Field label="Note">
+          <TextInput value={note} onChange={setNote} placeholder="Optional" />
+        </Field>
+      </div>
+      <div className="mt-3 flex items-center justify-between gap-3 border-t border-line pt-3">
+        <span className="text-[12px] text-ink-2">
+          {mismatch ? (
+            <span className="text-warn">
+              The split adds to {money(split, 'PHP')} but the total says {money(totalValue, 'PHP')}.
+            </span>
+          ) : valid ? (
+            <>Recording {money(totalValue, 'PHP')} out of the business.</>
+          ) : (
+            'Needs an amount'
+          )}
+        </span>
+        <div className="flex gap-2">
+          <Button variant="ghost" size="sm" onClick={onDone}>
+            Cancel
+          </Button>
+          <Button variant="primary" size="sm" disabled={busy || !valid} onClick={() => void submit()}>
+            {busy ? 'Saving…' : 'Record payout'}
+          </Button>
+        </div>
+      </div>
+    </Card>
+  )
+}

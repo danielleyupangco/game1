@@ -6,7 +6,6 @@ import {
   ComposedChart,
   Line,
   LineChart,
-  ReferenceLine,
   Tooltip,
   XAxis,
   YAxis,
@@ -29,11 +28,11 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { ExportButton } from '@/components/ui/ExportButton'
 import { Freshness } from '@/components/ui/Freshness'
 import { ChartFrame, Legend, tooltipProps } from '@/components/charts/Chart'
-import { AXIS, GRID, SERIES, STATUS, TOOLTIP_STYLE } from '@/components/charts/theme'
+import { AXIS, GRID, SERIES, TOOLTIP_STYLE } from '@/components/charts/theme'
 import { useProvenance, provFormats } from '@/components/ui/Provenance'
 import { money, monthLabel, pct, shortDate } from '@/lib/format'
 import { monthName } from '@/lib/dates'
-import { exportTable, MONEY_FMT, PCT_FMT } from '@/lib/export'
+import { exportTable, MONEY_FMT } from '@/lib/export'
 import { ValuationPanel } from '@/pages/airbnb/ValuationPanel'
 import { PricingPanel } from '@/pages/airbnb/PricingPanel'
 import { InsightsPanel } from '@/pages/airbnb/InsightsPanel'
@@ -41,6 +40,8 @@ import { OwnerPanel } from '@/pages/airbnb/OwnerPanel'
 import { CapitalPanel } from '@/pages/airbnb/CapitalPanel'
 import { CostModelPanel } from '@/pages/airbnb/CostModelPanel'
 import { ForecastPanel } from '@/pages/airbnb/ForecastPanel'
+import { StatementPanel } from '@/pages/airbnb/StatementPanel'
+import { CompetitorsPanel } from '@/pages/airbnb/CompetitorsPanel'
 import { GuestsPanel } from '@/pages/airbnb/GuestsPanel'
 
 type View =
@@ -55,6 +56,7 @@ type View =
   | 'capital'
   | 'valuation'
   | 'pricing'
+  | 'market'
 
 export function AirbnbPage() {
   const { bookings, expenses, settings, dcf, freshness } = useLedger()
@@ -109,10 +111,11 @@ export function AirbnbPage() {
             { value: 'insights', label: 'Insights' },
             { value: 'costs', label: 'Costs' },
             { value: 'costmodel', label: 'Cost model' },
-            { value: 'pnl', label: 'P&L' },
+            { value: 'pnl', label: 'Statements' },
             { value: 'capital', label: 'Capital' },
             { value: 'valuation', label: 'Valuation' },
             { value: 'pricing', label: 'Pricing' },
+            { value: 'market', label: 'Competitors' },
           ]}
         />
       </div>
@@ -125,9 +128,10 @@ export function AirbnbPage() {
       {view === 'capital' ? <CapitalPanel /> : null}
       {view === 'insights' ? <InsightsPanel /> : null}
       {view === 'costs' ? <CostView series={series} /> : null}
-      {view === 'pnl' ? <PnlView series={series} /> : null}
+      {view === 'pnl' ? <StatementPanel series={series} /> : null}
       {view === 'valuation' ? <ValuationPanel series={series} /> : null}
       {view === 'pricing' ? <PricingPanel series={series} /> : null}
+      {view === 'market' ? <CompetitorsPanel series={series} /> : null}
     </div>
   )
 }
@@ -577,171 +581,3 @@ function CostList({
 }
 
 // --- P&L -------------------------------------------------------------------
-
-function PnlView({ series }: { series: MonthMetrics[] }) {
-  const { trace } = useProvenance()
-  const [window, setWindow] = useState<'t12' | 'all'>('t12')
-
-  const rows = window === 't12' ? trailing(series, 12) : series
-  const totals = useMemo(() => aggregate(rows), [rows])
-
-  const chartData = rows.map((month) => ({
-    month: month.month,
-    revenue: month.totalRevenue,
-    cost: -month.totalCost,
-    profit: month.netProfit,
-  }))
-
-  return (
-    <div className="space-y-4">
-      <div className="no-print flex flex-wrap items-center justify-between gap-2">
-        <Tabs
-          value={window}
-          onChange={setWindow}
-          options={[
-            { value: 't12', label: 'Trailing 12 months' },
-            { value: 'all', label: `All ${series.length} months` },
-          ]}
-        />
-        <ExportButton
-            run={() =>
-              exportTable(
-              rows,
-              [
-                { header: 'Month', value: (m) => m.month },
-                { header: 'Nights sold', value: (m) => m.nightsSold },
-                { header: 'Available nights', value: (m) => m.availableNights },
-                { header: 'Occupancy', value: (m) => m.occupancy, numFmt: PCT_FMT },
-                { header: 'ADR', value: (m) => m.adr, numFmt: MONEY_FMT },
-                { header: 'RevPAR', value: (m) => m.revpar, numFmt: MONEY_FMT },
-                { header: 'Room revenue', value: (m) => m.revenue, numFmt: MONEY_FMT },
-                { header: 'Add-on revenue kept', value: (m) => m.addOnRevenue, numFmt: MONEY_FMT },
-                { header: 'Total revenue', value: (m) => m.totalRevenue, numFmt: MONEY_FMT },
-                { header: 'Fixed cost', value: (m) => m.fixedCost, numFmt: MONEY_FMT },
-                { header: 'Variable cost', value: (m) => m.variableCost, numFmt: MONEY_FMT },
-                { header: 'Net profit', value: (m) => m.netProfit, numFmt: MONEY_FMT },
-                { header: 'Net margin', value: (m) => m.netMargin, numFmt: PCT_FMT },
-              ],
-              'island-t-pnl',
-              'P&L',
-              ['Revenue recognised over the nights stayed. Amounts in PHP.'],
-              )
-          }
-        />
-      </div>
-
-      <StatGrid>
-        <Stat
-          label="Revenue"
-          value={money(totals.totalRevenue, 'PHP', true)}
-          sub={
-            totals.addOnRevenue > 0
-              ? `${money(totals.revenue, 'PHP', true)} rooms + ${money(totals.addOnRevenue, 'PHP', true)} add-ons`
-              : `${totals.months} months`
-          }
-        />
-        <Stat label="Total cost" value={money(totals.totalCost, 'PHP', true)} sub={`${money(totals.fixedCost, 'PHP', true)} fixed`} />
-        <Stat
-          label="Net profit"
-          value={money(totals.netProfit, 'PHP', true)}
-          tone={totals.netProfit >= 0 ? 'pos' : 'neg'}
-        />
-        <Stat
-          label="Net margin"
-          value={totals.revenue > 0 ? pct(totals.netMargin) : '—'}
-          tone={totals.netMargin >= 0.2 ? 'pos' : totals.netMargin >= 0 ? 'neutral' : 'neg'}
-        />
-      </StatGrid>
-
-      <Card>
-        <ChartFrame
-          title="Monthly profit and loss"
-          caption="Revenue above the line, costs below it, net profit as the line. Months where the line sits under zero are months the island was subsidised."
-          right={<Legend items={[{ label: 'Revenue', color: SERIES[0] }, { label: 'Cost', color: SERIES[1] }, { label: 'Net profit', color: SERIES[2] }]} />}
-          height={260}
-        >
-          <ComposedChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-            <CartesianGrid {...GRID} />
-            <XAxis dataKey="month" {...AXIS} tickFormatter={monthLabel} minTickGap={16} />
-            <YAxis {...AXIS} tickFormatter={(value: number) => money(value, 'PHP', true)} width={56} />
-            <Tooltip
-              {...TOOLTIP_STYLE}
-              {...tooltipProps(
-                (value, name) => [
-                  money(Math.abs(value), 'PHP'),
-                  name === 'revenue' ? 'Revenue' : name === 'cost' ? 'Cost' : 'Net profit',
-                ],
-                (label) => monthLabel(label),
-              )}
-            />
-            <ReferenceLine y={0} stroke={STATUS.neutral} />
-            <Bar dataKey="revenue" name="revenue" fill={SERIES[0]} radius={[4, 4, 0, 0]} maxBarSize={26} />
-            <Bar dataKey="cost" name="cost" fill={SERIES[1]} radius={[0, 0, 4, 4]} maxBarSize={26} />
-            <Line type="monotone" dataKey="profit" name="profit" stroke={SERIES[2]} strokeWidth={2} dot={{ r: 2.5, strokeWidth: 0, fill: SERIES[2] }} />
-          </ComposedChart>
-        </ChartFrame>
-      </Card>
-
-      <Card>
-        <SectionHeader title="Monthly detail" subtitle="Click a month to see the bookings and expense rows behind it." />
-        <DataTable
-          rows={rows}
-          getKey={(m) => m.month}
-          initialSort={{ key: 'month', dir: 'desc' }}
-          onRowClick={(m) =>
-            trace({
-              title: `${monthLabel(m.month)} — ${money(m.revenue, 'PHP')} revenue`,
-              description: `${m.sourceBookings.length} bookings and ${m.sourceExpenses.length} expense rows touch this month.`,
-              rows: [...m.sourceBookings, ...m.sourceExpenses],
-              columns: [
-                { key: 'checkIn', label: 'Check-in', format: provFormats.date },
-                { key: 'date', label: 'Date', format: provFormats.date },
-                { key: 'category', label: 'Category' },
-                { key: 'nights', label: 'Nights' },
-                { key: 'netRevenue', label: 'Revenue', format: provFormats.money },
-                { key: 'amount', label: 'Expense', format: provFormats.money },
-              ],
-            })
-          }
-          columns={[
-            { key: 'month', header: 'Month', render: (m) => <span className="font-medium text-ink">{monthLabel(m.month)}</span>, sortValue: (m) => m.month },
-            { key: 'occ', header: 'Occ.', align: 'right', render: (m) => <span className={m.occupancy < 0.2 ? 'text-warn' : 'text-ink-2'}>{pct(m.occupancy, 0)}</span>, sortValue: (m) => m.occupancy },
-            { key: 'adr', header: 'ADR', align: 'right', hideOnMobile: true, render: (m) => (m.adr > 0 ? money(m.adr, 'PHP') : '—'), sortValue: (m) => m.adr },
-            { key: 'revpar', header: 'RevPAR', align: 'right', hideOnMobile: true, render: (m) => money(m.revpar, 'PHP'), sortValue: (m) => m.revpar },
-            {
-              key: 'revenue',
-              header: 'Revenue',
-              align: 'right',
-              render: (m) => (
-                <div>
-                  <div className="text-ink">{money(m.totalRevenue, 'PHP', true)}</div>
-                  {m.addOnRevenue > 0 ? (
-                    <div className="text-[11px] text-ink-3">incl. {money(m.addOnRevenue, 'PHP', true)} add-ons</div>
-                  ) : null}
-                </div>
-              ),
-              sortValue: (m) => m.totalRevenue,
-            },
-            { key: 'cost', header: 'Cost', align: 'right', hideOnMobile: true, render: (m) => money(m.totalCost, 'PHP', true), sortValue: (m) => m.totalCost },
-            { key: 'profit', header: 'Net', align: 'right', render: (m) => <span className={m.netProfit >= 0 ? 'text-pos' : 'text-neg'}>{money(m.netProfit, 'PHP', true)}</span>, sortValue: (m) => m.netProfit },
-            { key: 'margin', header: 'Margin', align: 'right', hideOnMobile: true, render: (m) => (m.revenue > 0 ? <span className={m.netMargin >= 0 ? 'text-ink-2' : 'text-neg'}>{pct(m.netMargin, 0)}</span> : <span className="text-ink-3">—</span>), sortValue: (m) => m.netMargin },
-          ]}
-          footer={
-            <tr>
-              <td className="px-2.5 py-2 font-medium text-ink">Total</td>
-              <td className="num px-2.5 py-2 text-right text-ink-2">{pct(totals.occupancy, 0)}</td>
-              <td className="hidden sm:table-cell" />
-              <td className="hidden sm:table-cell" />
-              <td className="num px-2.5 py-2 text-right font-medium text-ink">{money(totals.totalRevenue, 'PHP', true)}</td>
-              <td className="num hidden px-2.5 py-2 text-right text-ink-2 sm:table-cell">{money(totals.totalCost, 'PHP', true)}</td>
-              <td className="num px-2.5 py-2 text-right font-medium">
-                <span className={totals.netProfit >= 0 ? 'text-pos' : 'text-neg'}>{money(totals.netProfit, 'PHP', true)}</span>
-              </td>
-              <td className="num hidden px-2.5 py-2 text-right text-ink-2 sm:table-cell">{pct(totals.netMargin, 0)}</td>
-            </tr>
-          }
-        />
-      </Card>
-    </div>
-  )
-}
