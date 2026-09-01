@@ -94,11 +94,5 @@ export async function exportJson(data: unknown, fileName: string): Promise<void>
 }
 
 export const MONEY_FMT = '#,##0'
-export const MONEY_FMT_2 = '#,##0.00'
 export const PCT_FMT = '0.0%'
 
-/** PDF via the browser's own print pipeline — no extra dependency, and it
- *  respects the print stylesheet so navigation and controls drop out. */
-export function printToPdf(): void {
-  window.print()
-}

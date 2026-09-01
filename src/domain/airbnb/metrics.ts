@@ -107,6 +107,22 @@ export function monthlyMetrics(input: MetricsInput): MonthMetrics[] {
     })
   }
 
+  /**
+   * Confirmation codes that still have a real stay behind them.
+   *
+   * When a reservation is altered, Airbnb reverses the original payout and
+   * issues a new one, so the export carries a negative row and a positive row
+   * under the same code and the same dates. The guest still stayed. Netting the
+   * negative row's nights off would delete a stay that happened — Veejay Buena's
+   * two nights in May 2025 disappeared exactly this way — so an adjustment
+   * against a live booking corrects the money and leaves the nights alone.
+   */
+  const stayed = new Set(
+    active
+      .filter((booking) => !isAdjustment(booking) && booking.confirmationCode)
+      .map((booking) => booking.confirmationCode),
+  )
+
   for (const booking of active) {
     const net = toBase(booking.netRevenue, booking.currency, input.usdPhp)
     const gross = toBase(booking.grossRevenue, booking.currency, input.usdPhp)
@@ -117,7 +133,7 @@ export function monthlyMetrics(input: MetricsInput): MonthMetrics[] {
       if (bucket) {
         bucket.revenue += net
         bucket.grossRevenue += gross
-        bucket.nightsSold += booking.nights
+        if (!stayed.has(booking.confirmationCode)) bucket.nightsSold += booking.nights
         bucket.sourceBookings.push(booking)
       }
       continue

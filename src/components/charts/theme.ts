@@ -60,10 +60,3 @@ export const TOOLTIP_STYLE = {
   cursor: { fill: 'rgba(255,255,255,.04)' },
 } as const
 
-/** Interpolates the sequential ramp for a value in [0, 1]. */
-export function sequentialColor(t: number): string {
-  if (!Number.isFinite(t)) return STATUS.neutral
-  const clamped = Math.max(0, Math.min(1, t))
-  const index = Math.round(clamped * (SEQUENTIAL.length - 1))
-  return SEQUENTIAL[index]
-}

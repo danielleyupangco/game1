@@ -1,5 +1,5 @@
 import type { Booking, Expense } from '@/types'
-import { aggregate, isActive, isAdjustment, monthlyMetrics, type MonthMetrics } from '@/domain/airbnb/metrics'
+import { aggregate, isActive, isAdjustment, monthlyMetrics, trailing, type MonthMetrics } from '@/domain/airbnb/metrics'
 import { daysBetween } from '@/lib/dates'
 
 /**
@@ -238,12 +238,16 @@ export type CostShape = {
   contributionPerNight: number
   breakEvenNights: number
   breakEvenOccupancy: number
-  /** nights sold in the most recent complete year */
+  /** nights sold over the trailing twelve months */
   latestNights: number
 }
 
 export function costShape(series: MonthMetrics[], expenses: Expense[], usdPhp: number): CostShape {
-  const recent = series.slice(-12)
+  // The trailing twelve months, not the last twelve rows. The series runs on
+  // past today into next year's reservations, so taking the tail reached into
+  // months that have bookings but no costs yet — which understated fixed costs
+  // by a fifth and made break-even look four nights easier than it is.
+  const recent = trailing(series, 12)
   const totals = aggregate(recent)
   void expenses
   void usdPhp

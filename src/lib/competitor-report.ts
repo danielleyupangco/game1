@@ -435,12 +435,3 @@ export function parseCompetitorReport(
 
   return { report, listings, observations, benchmarks, skipped }
 }
-
-/** A quick check before offering to import — is this one of these reports? */
-export function looksLikeCompetitorReport(html: string): boolean {
-  const head = html.slice(0, 4000).toLowerCase()
-  return (
-    head.includes('competitor') &&
-    (head.includes('airbnb') || head.includes('culion') || head.includes('coron'))
-  )
-}

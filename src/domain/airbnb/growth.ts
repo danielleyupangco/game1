@@ -165,13 +165,20 @@ export function findLevers(bookings: Booking[], addOnMarginRate: number | null):
   }
 
   // --- Repeat guests are the cheapest booking there is ---
+  //
+  // Counted per confirmation code, not per row. An altered reservation appears
+  // twice in the export under one code, and counting rows turned Mathieu
+  // Mercier's single March stay into a returning guest — which doubled the
+  // repeat rate and quietly weakened the case this lever is making.
   const named = stays.filter((stay) => stay.guestName.trim())
-  const byGuest = new Map<string, number>()
+  const byGuest = new Map<string, Set<string>>()
   for (const stay of named) {
     const key = stay.guestName.trim().toLowerCase().replace(/\s+/g, ' ')
-    byGuest.set(key, (byGuest.get(key) ?? 0) + 1)
+    const visits = byGuest.get(key) ?? new Set<string>()
+    visits.add(stay.confirmationCode || `${stay.checkIn}|${stay.checkOut}`)
+    byGuest.set(key, visits)
   }
-  const repeaters = [...byGuest.values()].filter((count) => count > 1).length
+  const repeaters = [...byGuest.values()].filter((visits) => visits.size > 1).length
   const repeatShare = named.length > 0 ? repeaters / byGuest.size : 0
   if (named.length >= 20 && repeatShare < 0.1) {
     levers.push({

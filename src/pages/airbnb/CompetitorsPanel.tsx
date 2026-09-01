@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts'
 import { useLedger } from '@/state/store'
 import { perGuestRate, readMarket, snapshotOf, SEED_LISTINGS, type ListingSnapshot } from '@/domain/airbnb/competitors'
-import { addOnPerGuest, groupByOperator, priceLadder, type Operator } from '@/domain/airbnb/operators'
+import { addOnPerGuest, groupByOperator, priceLadder, rateHistory, type Operator } from '@/domain/airbnb/operators'
 import { buildAddOnStays } from '@/domain/airbnb/addons'
 import { parseCompetitorReport } from '@/lib/competitor-report'
 import { aggregate, trailing } from '@/domain/airbnb/metrics'
@@ -92,19 +92,7 @@ export function CompetitorsPanel({ series }: { series: MonthMetrics[] }) {
     [benchmarks, latestReport],
   )
 
-  const priceHistory = useMemo(() => {
-    const byDate = new Map<string, Record<string, number>>()
-    for (const observation of observations) {
-      const listing = competitors.find((row) => row.id === observation.listingId)
-      if (!listing) continue
-      const row = byDate.get(observation.observedOn) ?? { }
-      row[listing.name || listing.roomId] = observation.nightlyRate
-      byDate.set(observation.observedOn, row)
-    }
-    return [...byDate.entries()]
-      .sort((a, b) => a[0].localeCompare(b[0]))
-      .map(([observedOn, rates]) => ({ observedOn, ...rates }))
-  }, [observations, competitors])
+  const priceHistory = useMemo(() => rateHistory(competitors, observations), [competitors, observations])
 
   const names = useMemo(
     () => [...new Set(observations.map((o) => competitors.find((c) => c.id === o.listingId)?.name || ''))].filter(Boolean),
