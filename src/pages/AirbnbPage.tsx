@@ -61,7 +61,7 @@ type View =
   | 'addons'
 
 export function AirbnbPage() {
-  const { bookings, expenses, settings, dcf, freshness } = useLedger()
+  const { bookings, expenses, capitalSpend, settings, dcf, freshness } = useLedger()
   const [view, setView] = useState<View>('plain')
 
   const series = useMemo(
@@ -69,10 +69,11 @@ export function AirbnbPage() {
       monthlyMetrics({
         bookings,
         expenses,
+        capitalSpend,
         usdPhp: settings.usdPhp,
         availableNightsPerYear: dcf.availableNightsPerYear,
       }),
-    [bookings, expenses, settings.usdPhp, dcf.availableNightsPerYear],
+    [bookings, expenses, capitalSpend, settings.usdPhp, dcf.availableNightsPerYear],
   )
 
   if (bookings.length === 0 && expenses.length === 0) {
@@ -399,11 +400,16 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
 // --- Costs -----------------------------------------------------------------
 
 function CostView({ series }: { series: MonthMetrics[] }) {
-  const { expenses, settings } = useLedger()
+  const { expenses, capitalSpend, settings } = useLedger()
   const { trace } = useProvenance()
 
   const t12 = useMemo(() => aggregate(trailing(series, 12)), [series])
-  const lines = useMemo(() => costBreakdown(expenses, settings.usdPhp), [expenses, settings.usdPhp])
+  // Depreciation comes from the capital ledger here too, so this tab and the
+  // income statement charge the same thing.
+  const lines = useMemo(
+    () => costBreakdown(expenses, settings.usdPhp, capitalSpend),
+    [expenses, capitalSpend, settings.usdPhp],
+  )
 
   if (expenses.length === 0) {
     return (
@@ -543,7 +549,10 @@ function CostList({
           onClick={() =>
             onTrace({
               title: line.category,
-              description: `${line.sources.length} expense row${line.sources.length === 1 ? '' : 's'} in this category.`,
+              description:
+                line.category === 'Depreciation'
+                  ? `Worked out from ${line.sources.length} capital purchase${line.sources.length === 1 ? '' : 's'}, each written off over the years it should last.`
+                  : `${line.sources.length} expense row${line.sources.length === 1 ? '' : 's'} in this category.`,
               rows: line.sources,
               columns: [
                 { key: 'date', label: 'Date', format: provFormats.date },

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildActualCash, buildStatement, expenseMatrix, totalStatement } from '@/domain/airbnb/statement'
+import { buildActualCash, buildStatement, expenseMatrix, summariseDividends, totalStatement } from '@/domain/airbnb/statement'
 import { findLevers } from '@/domain/airbnb/growth'
 import { readMarket, snapshotOf, perGuestRate } from '@/domain/airbnb/competitors'
 import type { Booking, CompetitorListing, CompetitorObservation, DividendPayout, Expense, Provenance } from '@/types'
@@ -84,7 +84,8 @@ describe('cash flow', () => {
       date: '2026-02-10',
       amount: 300000,
       currency: 'PHP',
-      recipients: [{ name: 'Dani', amount: 300000 }],
+      amountUsd: 5000,
+      recipients: [{ name: 'Dani', amount: 300000, amountUsd: 5000 }],
       approvedBy: 'Dani',
       note: '',
     },
@@ -349,5 +350,67 @@ describe('growth levers: the details that were wrong once', () => {
     const domestic = findLevers(stays2, null).find((l) => l.id === 'domestic')!
     expect(domestic.evidence).toContain('Austria 12')
     expect(domestic.evidence).toContain('Australia 12')
+  })
+})
+
+/**
+ * The payouts were agreed in dollars and the notes on the rows recorded them
+ * that way, but only the peso column was ever summed — so the tiles reported a
+ * split neither owner recognised. These pin the dollar totals down.
+ */
+describe('dividends', () => {
+  const payout = (
+    date: string,
+    php: number,
+    split: Record<string, number>,
+  ): DividendPayout => {
+    const totalUsd = Object.values(split).reduce((sum, usd) => sum + usd, 0)
+    return {
+      id: date,
+      prov,
+      date,
+      amount: php,
+      currency: 'PHP',
+      amountUsd: totalUsd,
+      recipients: Object.entries(split)
+        .filter(([, usd]) => usd > 0)
+        .map(([name, usd]) => ({ name, amountUsd: usd, amount: Math.round(php * (usd / totalUsd)) })),
+      approvedBy: 'Dani',
+      note: '',
+    }
+  }
+
+  // The six distributions as the mastersheet's notes record them.
+  const dividends = [
+    payout('2025-01-25', 570000, { Dani: 8000, Mom: 2000 }),
+    payout('2025-03-25', 570000, { Dani: 8000, Mom: 2000 }),
+    payout('2025-08-14', 285000, { Dani: 4000, Mom: 0 }),
+    payout('2025-11-18', 600000, { Dani: 8000, Mom: 2000 }),
+    payout('2026-01-21', 600000, { Dani: 8000, Mom: 2000 }),
+    payout('2026-02-26', 350000, { Dani: 5000, Mom: 0 }),
+  ]
+
+  it('totals to what each of them was actually paid', () => {
+    const summary = summariseDividends(dividends)
+    const dani = summary.byRecipient.find((share) => share.name === 'Dani')!
+    const mom = summary.byRecipient.find((share) => share.name === 'Mom')!
+
+    expect(dani.usd).toBe(41000)
+    expect(mom.usd).toBe(8000)
+    expect(summary.totalUsd).toBe(49000)
+    expect(summary.payouts).toBe(6)
+  })
+
+  it('shares the pesos out on the dollar split, so the two columns reconcile', () => {
+    const summary = summariseDividends(dividends)
+    const recipientPhp = summary.byRecipient.reduce((sum, share) => sum + share.php, 0)
+    expect(recipientPhp).toBe(summary.totalPhp)
+    expect(summary.totalPhp).toBe(2975000)
+    // A payout with one recipient gives them all of it, not a fraction of it.
+    expect(summariseDividends([payout('2025-08-14', 285000, { Dani: 4000 })]).byRecipient[0].php).toBe(285000)
+  })
+
+  it('reports the bigger recipient first', () => {
+    expect(summariseDividends(dividends).byRecipient[0].name).toBe('Dani')
   })
 })

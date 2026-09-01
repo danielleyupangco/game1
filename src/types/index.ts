@@ -238,12 +238,30 @@ export type ForecastAssumptions = {
  * separate for exactly that reason, since folding it into costs is what makes
  * a profitable year look like a loss.
  */
+export type DividendRecipient = {
+  name: string
+  /** peso value of their share, allocated on the USD split below */
+  amount: number
+  /**
+   * What they were actually paid, in dollars.
+   *
+   * The owners agree these distributions in USD and the peso figure is whatever
+   * the transfer converted at on the day, so the dollar amount is the recorded
+   * fact and the peso one is derived from it. Reporting the peso split as the
+   * primary number is what made the running totals disagree with what the two
+   * of them remember receiving.
+   */
+  amountUsd: number
+}
+
 export type DividendPayout = WithProvenance & {
   date: string
   amount: number
   currency: Currency
+  /** the whole release in dollars, which is the currency it was agreed in */
+  amountUsd: number
   /** who received what, so a two-owner business can see its own split */
-  recipients: { name: string; amount: number }[]
+  recipients: DividendRecipient[]
   approvedBy: string
   note: string
 }

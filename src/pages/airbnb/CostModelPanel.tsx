@@ -20,17 +20,18 @@ import type { CostLineItem, CostModel } from '@/types'
  * price. What a guest will pay is set by what else they could book.
  */
 export function CostModelPanel() {
-  const { costModel, saveCostModel, bookings, expenses, settings, dcf } = useLedger()
+  const { costModel, saveCostModel, bookings, expenses, capitalSpend, settings, dcf } = useLedger()
 
   const series = useMemo(
     () =>
       monthlyMetrics({
         bookings,
         expenses,
+        capitalSpend,
         usdPhp: settings.usdPhp,
         availableNightsPerYear: dcf.availableNightsPerYear,
       }),
-    [bookings, expenses, settings.usdPhp, dcf.availableNightsPerYear],
+    [bookings, expenses, capitalSpend, settings.usdPhp, dcf.availableNightsPerYear],
   )
   const actual = useMemo(() => (series.length > 0 ? aggregate(trailing(series, 12)) : null), [series])
 

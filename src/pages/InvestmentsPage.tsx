@@ -123,6 +123,12 @@ export function InvestmentsPage() {
               ? splits.map((split) => `${split.label} ${money(split.value, 'PHP', true)}`).join(' · ')
               : OWNER_BLURBS[owner]}
           </span>
+          {owner === 'all' && splits.some((split) => split.owner === 'business') ? (
+            <span className="text-[11.5px] text-ink-3">
+              Island T's balance is shown here because it is in the same sheet, but it is left out of net worth — it is
+              counted inside what the business is worth instead, so it is never counted twice.
+            </span>
+          ) : null}
         </div>
       ) : null}
 

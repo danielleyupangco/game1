@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLedger } from '@/state/store'
 import { buildPositions, latestSnapshot, totalValue } from '@/domain/investments/portfolio'
-import { cashShare, ownerOfHolding, splitByOwner } from '@/domain/investments/ownership'
+import { businessCash, cashShare, ownerOfHolding, personalHoldings, splitByOwner } from '@/domain/investments/ownership'
 import { aggregate, monthlyMetrics, trailing } from '@/domain/airbnb/metrics'
 import { runDcf } from '@/domain/airbnb/dcf'
 import { HubCanvas } from '@/components/hub/HubCanvas'
@@ -35,7 +35,7 @@ type Satellite = {
  */
 export function HubPage() {
   const ledger = useLedger()
-  const { holdings, snapshots, bookings, expenses, settings, dcf, findings, saveFinding, ready } = ledger
+  const { holdings, snapshots, bookings, expenses, capitalSpend, settings, dcf, findings, saveFinding, ready } = ledger
 
   const [now, setNow] = useState(() => new Date())
   useEffect(() => {
@@ -44,8 +44,14 @@ export function HubPage() {
   }, [])
 
   const snapshot = useMemo(() => latestSnapshot(snapshots), [snapshots])
-  const positions = useMemo(() => buildPositions(holdings, snapshot), [holdings, snapshot])
+  // Business float out of the personal book — see HomePage for why.
+  const personal = useMemo(() => personalHoldings(holdings), [holdings])
+  const positions = useMemo(() => buildPositions(personal, snapshot), [personal, snapshot])
   const liquid = totalValue(positions)
+  const businessFloat = useMemo(
+    () => businessCash(snapshot ? holdings.filter((h) => h.snapshotId === snapshot.id) : [], snapshot?.usdPhp ?? settings.usdPhp),
+    [holdings, snapshot, settings.usdPhp],
+  )
 
 
   const airbnbSeries = useMemo(
@@ -53,15 +59,16 @@ export function HubPage() {
       monthlyMetrics({
         bookings,
         expenses,
+        capitalSpend,
         usdPhp: settings.usdPhp,
         availableNightsPerYear: dcf.availableNightsPerYear,
       }),
-    [bookings, expenses, settings.usdPhp, dcf.availableNightsPerYear],
+    [bookings, expenses, capitalSpend, settings.usdPhp, dcf.availableNightsPerYear],
   )
   const t12 = useMemo(() => (airbnbSeries.length > 0 ? aggregate(trailing(airbnbSeries, 12)) : null), [airbnbSeries])
 
   const hasAirbnb = bookings.length > 0 && expenses.length > 0
-  const dcfResult = useMemo(() => runDcf(dcf), [dcf])
+  const dcfResult = useMemo(() => runDcf(dcf, businessFloat), [dcf, businessFloat])
   const propertyValue = hasAirbnb && Number.isFinite(dcfResult.equityValue) ? dcfResult.equityValue : 0
   const netWorth = liquid + propertyValue + settings.cashOnHand
 

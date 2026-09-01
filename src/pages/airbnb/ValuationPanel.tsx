@@ -11,16 +11,34 @@ import { DataTable } from '@/components/ui/DataTable'
 import { ExportButton } from '@/components/ui/ExportButton'
 import { ChartFrame } from '@/components/charts/Chart'
 import { AXIS, DIVERGING, GRID, SEQUENTIAL, TOOLTIP_STYLE } from '@/components/charts/theme'
+import { businessCash } from '@/domain/investments/ownership'
+import { latestSnapshot } from '@/domain/investments/portfolio'
 import { money, num, pct, signedPct } from '@/lib/format'
 import { exportTable, MONEY_FMT, PCT_FMT } from '@/lib/export'
 import type { DcfAssumptions } from '@/types'
 
 export function ValuationPanel({ series }: { series: MonthMetrics[] }) {
-  const { dcf, saveDcf } = useLedger()
-  const result = useMemo(() => runDcf(dcf), [dcf])
+  const { dcf, saveDcf, holdings, snapshots, settings } = useLedger()
+
+  /**
+   * The money already in the business's bank account.
+   *
+   * Read live off the Island T operating account in the holdings rather than
+   * typed in here, so it cannot go stale. The DCF values the operation; the
+   * float is a separate asset the operation happens to be holding, so it is
+   * added on top. It is left out of personal net worth for exactly this reason
+   * — it is counted here, once.
+   */
+  const snapshot = useMemo(() => latestSnapshot(snapshots), [snapshots])
+  const float = useMemo(
+    () => businessCash(snapshot ? holdings.filter((h) => h.snapshotId === snapshot.id) : [], snapshot?.usdPhp ?? settings.usdPhp),
+    [holdings, snapshot, settings.usdPhp],
+  )
+
+  const result = useMemo(() => runDcf(dcf, float), [dcf, float])
   const actuals = useMemo(() => aggregate(trailing(series, 12)), [series])
 
-  const bars = useMemo(() => tornado(dcf), [dcf])
+  const bars = useMemo(() => tornado(dcf, DEFAULT_TORNADO, float), [dcf, float])
   const grid = useMemo(
     () =>
       sensitivity(
@@ -35,8 +53,9 @@ export function ValuationPanel({ series }: { series: MonthMetrics[] }) {
           Math.min(1, dcf.terminalOccupancy + 0.075),
           Math.min(1, dcf.terminalOccupancy + 0.15),
         ],
+        float,
       ),
-    [dcf],
+    [dcf, float],
   )
 
   const hasActuals = actuals.nightsSold > 0
@@ -66,7 +85,13 @@ export function ValuationPanel({ series }: { series: MonthMetrics[] }) {
         </div>
       ) : (
         <StatGrid>
-          <Stat label="Equity value" value={money(result.equityValue, 'PHP', true)} sub={`Enterprise ${money(result.enterpriseValue, 'PHP', true)} less ${money(dcf.netDebt, 'PHP', true)} net debt`} />
+          <Stat
+            label="Equity value"
+            value={money(result.equityValue, 'PHP', true)}
+            sub={`Enterprise ${money(result.enterpriseValue, 'PHP', true)}${
+              float > 0 ? ` plus ${money(float, 'PHP', true)} in the bank` : ''
+            } less ${money(dcf.netDebt, 'PHP', true)} net debt`}
+          />
           <Stat label="Explicit period" value={money(result.pvExplicit, 'PHP', true)} sub={`PV of years 1–${dcf.projectionYears}`} />
           <Stat label="Terminal value" value={money(result.pvTerminal, 'PHP', true)} sub={`Discounted from year ${dcf.projectionYears}`} />
           <Stat

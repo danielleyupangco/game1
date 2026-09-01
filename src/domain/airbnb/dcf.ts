@@ -30,6 +30,15 @@ export type DcfResult = {
   terminalValue: number
   pvTerminal: number
   enterpriseValue: number
+  /**
+   * Cash the business is sitting on, added to enterprise value.
+   *
+   * The Airbnb takings live in a bank account that the DCF knows nothing about
+   * — it values the operation, not the float. Adding it here is what makes the
+   * balance count exactly once: inside what the business is worth, and nowhere
+   * in personal net worth.
+   */
+  cashInBusiness: number
   equityValue: number
   /** share of value coming from the terminal value — high means the answer rests on assumptions, not observed cashflows */
   terminalShare: number
@@ -45,7 +54,12 @@ function occupancyForYear(assumptions: DcfAssumptions, year: number): number {
   return startOccupancy + (terminalOccupancy - startOccupancy) * progress
 }
 
-export function runDcf(assumptions: DcfAssumptions): DcfResult {
+/**
+ * `cashInBusiness` is passed in rather than stored as an assumption because it
+ * is an observed bank balance, not a judgement: it is read live off the Island T
+ * operating account in the holdings, so it cannot drift out of date.
+ */
+export function runDcf(assumptions: DcfAssumptions, cashInBusiness = 0): DcfResult {
   const invalid = assumptions.terminalGrowth >= assumptions.discountRate
   const years: DcfYear[] = []
 
@@ -97,7 +111,8 @@ export function runDcf(assumptions: DcfAssumptions): DcfResult {
     terminalValue,
     pvTerminal,
     enterpriseValue,
-    equityValue: invalid ? Number.NaN : enterpriseValue - assumptions.netDebt,
+    cashInBusiness,
+    equityValue: invalid ? Number.NaN : enterpriseValue - assumptions.netDebt + cashInBusiness,
     terminalShare: invalid || enterpriseValue === 0 ? Number.NaN : pvTerminal / enterpriseValue,
     invalid,
   }
@@ -119,11 +134,12 @@ export function sensitivity(
   rowValues: number[],
   colKey: keyof DcfAssumptions,
   colValues: number[],
+  cashInBusiness = 0,
 ): SensitivityGrid {
   const values = rowValues.map((rowValue) =>
     colValues.map((colValue) => {
       const scenario = { ...base, [rowKey]: rowValue, [colKey]: colValue } as DcfAssumptions
-      return runDcf(scenario).equityValue
+      return runDcf(scenario, cashInBusiness).equityValue
     }),
   )
   return { rowKey, colKey, rowValues, colValues, values }
@@ -162,16 +178,20 @@ export const DEFAULT_TORNADO: TornadoSpec[] = [
  * Rate-style inputs shift by an absolute delta; peso inputs by ±15%, since a
  * ±0.02 shift on an ADR of ₱25,000 would be meaningless.
  */
-export function tornado(base: DcfAssumptions, specs: TornadoSpec[] = DEFAULT_TORNADO): TornadoBar[] {
-  const baseline = runDcf(base).equityValue
+export function tornado(
+  base: DcfAssumptions,
+  specs: TornadoSpec[] = DEFAULT_TORNADO,
+  cashInBusiness = 0,
+): TornadoBar[] {
+  const baseline = runDcf(base, cashInBusiness).equityValue
 
   const bars = specs.map((spec) => {
     const current = base[spec.key] as number
     const delta = spec.delta > 0 ? spec.delta : Math.abs(current) * 0.15
     const lowInput = current - delta
     const highInput = current + delta
-    const low = runDcf({ ...base, [spec.key]: lowInput }).equityValue
-    const high = runDcf({ ...base, [spec.key]: highInput }).equityValue
+    const low = runDcf({ ...base, [spec.key]: lowInput }, cashInBusiness).equityValue
+    const high = runDcf({ ...base, [spec.key]: highInput }, cashInBusiness).equityValue
     return {
       key: spec.key,
       label: spec.label,

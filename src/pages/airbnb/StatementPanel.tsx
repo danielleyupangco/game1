@@ -1,6 +1,14 @@
 import { useMemo, useState } from 'react'
 import { useLedger } from '@/state/store'
-import { buildActualCash, buildStatement, expenseMatrix, totalStatement, type StatementMonth } from '@/domain/airbnb/statement'
+import {
+  buildActualCash,
+  buildStatement,
+  expenseMatrix,
+  summariseDividends,
+  totalStatement,
+  type StatementMonth,
+} from '@/domain/airbnb/statement'
+import { buildDepreciation } from '@/domain/airbnb/depreciation'
 import type { MonthMetrics } from '@/domain/airbnb/metrics'
 import { Button, Card, Field, SectionHeader, Tabs, TextInput, cx, inputClass } from '@/components/ui/primitives'
 import { Stat, StatGrid } from '@/components/ui/Stat'
@@ -24,7 +32,19 @@ export function StatementPanel({ series }: { series: MonthMetrics[] }) {
   const [view, setView] = useState<View>('income')
   const [year, setYear] = useState<string>('all')
 
-  const full = useMemo(() => buildStatement({ series, expenses }), [series, expenses])
+  /**
+   * Depreciation comes from the capital ledger, not from the sheet's flat
+   * monthly figure — so the generator, the bridge, and every guest comfort
+   * purchase are all carried into the cost of running the place.
+   */
+  const lastMonth = series.length > 0 ? series[series.length - 1].month : undefined
+  const depreciation = useMemo(() => buildDepreciation(capitalSpend, lastMonth), [capitalSpend, lastMonth])
+  const depreciationByMonth = capitalSpend.length > 0 ? depreciation.byMonth : undefined
+
+  const full = useMemo(
+    () => buildStatement({ series, expenses, depreciationByMonth }),
+    [series, expenses, depreciationByMonth],
+  )
 
   const years = useMemo(() => [...new Set(full.map((month) => month.month.slice(0, 4)))].sort(), [full])
   const months = useMemo(
@@ -76,9 +96,9 @@ export function StatementPanel({ series }: { series: MonthMetrics[] }) {
         />
       </div>
 
-      {view === 'income' ? <IncomeStatement months={months} total={total} /> : null}
+      {view === 'income' ? <IncomeStatement months={months} total={total} depreciation={depreciation} /> : null}
       {view === 'cash' ? <CashFlow months={months} cash={cash} /> : null}
-      {view === 'expenses' ? <ExpenseSummary months={months} /> : null}
+      {view === 'expenses' ? <ExpenseSummary months={months} depreciationByMonth={depreciationByMonth} /> : null}
       {view === 'dividends' ? <Dividends /> : null}
     </div>
   )
@@ -157,7 +177,15 @@ function StatementTable({
   )
 }
 
-function IncomeStatement({ months, total }: { months: StatementMonth[]; total: StatementMonth }) {
+function IncomeStatement({
+  months,
+  total,
+  depreciation,
+}: {
+  months: StatementMonth[]
+  total: StatementMonth
+  depreciation: ReturnType<typeof buildDepreciation>
+}) {
   const categories = useMemo(() => {
     const seen = new Set<string>()
     for (const month of months) for (const key of Object.keys(month.byCategory)) seen.add(key)
@@ -224,7 +252,91 @@ function IncomeStatement({ months, total }: { months: StatementMonth[]; total: S
         costs, and they have their own tabs.
       </p>
 
+      <DepreciationDetail depreciation={depreciation} charged={total.depreciation} />
+
     </div>
+  )
+}
+
+/**
+ * What the depreciation line is actually made of.
+ *
+ * Worth showing rather than asserting: the charge used to be a flat monthly
+ * figure with nothing behind it, and every guest comfort purchase — the bed
+ * frame, the sofa cushions, the inflatable pool — was missing from the cost of
+ * running the place entirely. Laying the items out means the number can be
+ * checked against things she can point at on the island.
+ */
+function DepreciationDetail({
+  depreciation,
+  charged,
+}: {
+  depreciation: ReturnType<typeof buildDepreciation>
+  charged: number
+}) {
+  const [open, setOpen] = useState(false)
+  if (depreciation.items.length === 0) return null
+
+  return (
+    <Card>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h4 className="text-[13px] font-semibold text-ink">What the depreciation is</h4>
+          <p className="mt-1 max-w-2xl text-[11.5px] leading-relaxed text-ink-2">
+            {money(charged, 'PHP', true)} charged over these months, worked out from the{' '}
+            {depreciation.items.length} things the business has actually bought — {money(depreciation.totalCost, 'PHP', true)}{' '}
+            of capital spend, guest comfort included — each written off in equal slices over the years it should last.
+            Not a flat figure typed once.
+          </p>
+        </div>
+        <Button variant="ghost" size="sm" onClick={() => setOpen((was) => !was)}>
+          {open ? 'Hide the items' : 'Show the items'}
+        </Button>
+      </div>
+
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <Stat label="Bought, at cost" value={money(depreciation.totalCost, 'PHP', true)} sub={`${depreciation.items.length} items`} />
+        <Stat
+          label="Written off so far"
+          value={money(depreciation.accumulated, 'PHP', true)}
+          sub={depreciation.totalCost > 0 ? `${pct(depreciation.accumulated / depreciation.totalCost, 0)} of cost` : ''}
+        />
+        <Stat
+          label="Still on the books"
+          value={money(depreciation.netBookValue, 'PHP', true)}
+          sub={`running at ${money(depreciation.monthlyRunRate, 'PHP')}/month`}
+        />
+      </div>
+
+      {open ? (
+        <div className="mt-3 overflow-x-auto rounded-xl border border-line">
+          <table className="w-full min-w-[640px] text-[12px]">
+            <thead className="bg-surface-2 text-ink-2">
+              <tr>
+                {['Bought', 'Item', 'Category', 'Cost', 'Life', 'Per month', 'Left on books'].map((header) => (
+                  <th key={header} className="px-3 py-2 text-left font-medium">
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {depreciation.items.map((item) => (
+                <tr key={item.id} className="border-t border-line">
+                  <td className="num whitespace-nowrap px-3 py-1.5 text-ink-2">{shortDate(item.date)}</td>
+                  <td className="px-3 py-1.5 text-ink">{item.item}</td>
+                  <td className="px-3 py-1.5 text-ink-3">{item.category}</td>
+                  <td className="num whitespace-nowrap px-3 py-1.5 text-ink">{money(item.cost, 'PHP', true)}</td>
+                  <td className="num whitespace-nowrap px-3 py-1.5 text-ink-2">{item.lifeYears} yrs</td>
+                  <td className="num whitespace-nowrap px-3 py-1.5 text-ink-2">{money(item.monthlyCharge, 'PHP')}</td>
+                  <td className="num whitespace-nowrap px-3 py-1.5 text-ink-2">{money(item.netBookValue, 'PHP', true)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
+    </Card>
   )
 }
 
@@ -327,10 +439,19 @@ function CashFlow({ months, cash }: { months: StatementMonth[]; cash: ReturnType
   )
 }
 
-function ExpenseSummary({ months }: { months: StatementMonth[] }) {
+function ExpenseSummary({
+  months,
+  depreciationByMonth,
+}: {
+  months: StatementMonth[]
+  depreciationByMonth?: Record<string, number>
+}) {
   const { expenses } = useLedger()
   const keys = months.map((month) => month.month)
-  const rows = useMemo(() => expenseMatrix(expenses, keys), [expenses, keys.join(',')])
+  const rows = useMemo(
+    () => expenseMatrix(expenses, keys, depreciationByMonth),
+    [expenses, keys.join(','), depreciationByMonth],
+  )
   const columnTotal = (month: string) => rows.reduce((sum, row) => sum + (row.byMonth[month] ?? 0), 0)
   const grand = rows.reduce((sum, row) => sum + row.total, 0)
 
@@ -395,22 +516,14 @@ function Dividends() {
   const { dividends, addDividend, removeDividend, settings } = useLedger()
   const [adding, setAdding] = useState(false)
 
-  const total = dividends.reduce((sum, row) => sum + row.amount, 0)
-  const byRecipient = useMemo(() => {
-    const out = new Map<string, number>()
-    for (const payout of dividends) {
-      for (const recipient of payout.recipients) {
-        out.set(recipient.name, (out.get(recipient.name) ?? 0) + recipient.amount)
-      }
-    }
-    return [...out.entries()].sort((a, b) => b[1] - a[1])
-  }, [dividends])
+  const summary = useMemo(() => summariseDividends(dividends), [dividends])
+  const { totalPhp: total, totalUsd, byRecipient } = summary
 
   return (
     <div className="space-y-4">
       <SectionHeader
         title="Money taken out"
-        subtitle="A dividend is profit already earned being paid to the owners. It is not a cost, so it never touches the P&L — it only leaves the bank, which is why it lives here and on the cash flow."
+        subtitle="A dividend is profit already earned being paid to the owners. It is not a cost, so it never touches the P&L — it only leaves the bank, which is why it lives here and on the cash flow. These were agreed in dollars, so the dollar figure is the record and the peso one is what the transfer converted at."
         right={
           <Button variant="primary" size="sm" onClick={() => setAdding(true)}>
             + Record a payout
@@ -421,9 +534,18 @@ function Dividends() {
       {adding ? <DividendForm onDone={() => setAdding(false)} onSave={addDividend} /> : null}
 
       <StatGrid>
-        <Stat label="Paid out all time" value={money(total, settings.baseCurrency, true)} sub={`${dividends.length} payout${dividends.length === 1 ? '' : 's'}`} />
-        {byRecipient.slice(0, 3).map(([name, amount]) => (
-          <Stat key={name} label={name} value={money(amount, settings.baseCurrency, true)} sub={total > 0 ? `${pct(amount / total, 0)} of payouts` : ''} />
+        <Stat
+          label="Paid out all time"
+          value={money(totalUsd, 'USD')}
+          sub={`${money(total, settings.baseCurrency)} · ${dividends.length} payout${dividends.length === 1 ? '' : 's'}`}
+        />
+        {byRecipient.slice(0, 3).map((share) => (
+          <Stat
+            key={share.name}
+            label={share.name}
+            value={money(share.usd, 'USD')}
+            sub={`${money(share.php, settings.baseCurrency)}${totalUsd > 0 ? ` · ${pct(share.usd / totalUsd, 0)} of payouts` : ''}`}
+          />
         ))}
       </StatGrid>
 
@@ -439,7 +561,7 @@ function Dividends() {
           <table className="w-full min-w-[560px] text-[12px]">
             <thead className="bg-surface-2 text-ink-2">
               <tr>
-                {['Released', 'Amount', 'Split', 'Approved by', 'Note', ''].map((header) => (
+                {['Released', 'Amount', 'In pesos', 'Split', 'Approved by', 'Note', ''].map((header) => (
                   <th key={header} className="px-3 py-2 text-left font-medium">
                     {header}
                   </th>
@@ -453,11 +575,14 @@ function Dividends() {
                   <tr key={payout.id} className="border-t border-line">
                     <td className="num whitespace-nowrap px-3 py-1.5 text-ink">{shortDate(payout.date)}</td>
                     <td className="num whitespace-nowrap px-3 py-1.5 font-medium text-ink">
-                      {money(payout.amount, payout.currency, true)}
+                      {payout.amountUsd > 0 ? money(payout.amountUsd, 'USD') : '—'}
+                    </td>
+                    <td className="num whitespace-nowrap px-3 py-1.5 text-ink-2">
+                      {money(payout.amount, payout.currency)}
                     </td>
                     <td className="px-3 py-1.5 text-ink-2">
                       {payout.recipients.length > 0
-                        ? payout.recipients.map((r) => `${r.name} ${money(r.amount, payout.currency, true)}`).join(' · ')
+                        ? payout.recipients.map((r) => `${r.name} ${money(r.amountUsd, 'USD')}`).join(' · ')
                         : '—'}
                     </td>
                     <td className="px-3 py-1.5 text-ink-2">{payout.approvedBy || '—'}</td>
@@ -477,6 +602,14 @@ function Dividends() {
   )
 }
 
+/**
+ * Recording a payout.
+ *
+ * The split is asked for in dollars because that is what the owners agree and
+ * remember; the peso figure is whatever the transfer landed at, and it is
+ * shared out on the dollar ratio rather than typed twice. That way the two
+ * numbers can never drift apart on a row.
+ */
 function DividendForm({ onDone, onSave }: { onDone: () => void; onSave: (payout: DividendPayout) => Promise<void> }) {
   const [date, setDate] = useState(today())
   const [amount, setAmount] = useState('')
@@ -487,23 +620,27 @@ function DividendForm({ onDone, onSave }: { onDone: () => void; onSave: (payout:
   const [busy, setBusy] = useState(false)
 
   const totalValue = Number(amount) || 0
-  const split = (Number(toDani) || 0) + (Number(toMom) || 0)
-  const mismatch = split > 0 && Math.abs(split - totalValue) > 1
-  const valid = totalValue > 0 && !mismatch
+  const daniUsd = Number(toDani) || 0
+  const momUsd = Number(toMom) || 0
+  const usdTotal = daniUsd + momUsd
+  const valid = totalValue > 0 && usdTotal > 0
 
   const submit = async () => {
     if (!valid) return
     setBusy(true)
     const recipients = [
-      { name: 'Dani', amount: Number(toDani) || 0 },
-      { name: 'Mom', amount: Number(toMom) || 0 },
-    ].filter((r) => r.amount > 0)
+      { name: 'Dani', amountUsd: daniUsd },
+      { name: 'Mom', amountUsd: momUsd },
+    ]
+      .filter((r) => r.amountUsd > 0)
+      .map((r) => ({ ...r, amount: Math.round(totalValue * (r.amountUsd / usdTotal)) }))
     await onSave({
       id: uid('div'),
       prov: { importId: 'manual', fileName: 'Entered by hand', sheetName: 'Dividends', rowNumber: 0, manual: true },
       date,
       amount: totalValue,
       currency: 'PHP',
+      amountUsd: usdTotal,
       recipients,
       approvedBy: approvedBy.trim(),
       note: note.trim(),
@@ -521,10 +658,10 @@ function DividendForm({ onDone, onSave }: { onDone: () => void; onSave: (payout:
         <Field label="Total released (₱)">
           <TextInput value={amount} onChange={setAmount} type="number" placeholder="0" />
         </Field>
-        <Field label="To Dani (₱)" hint="Leave both blank if the split is not being tracked.">
+        <Field label="To Dani ($)" hint="The split as it was agreed — the pesos are worked out from it.">
           <TextInput value={toDani} onChange={setToDani} type="number" placeholder="0" />
         </Field>
-        <Field label="To Mom (₱)">
+        <Field label="To Mom ($)">
           <TextInput value={toMom} onChange={setToMom} type="number" placeholder="0" />
         </Field>
         <Field label="Approved by">
@@ -536,14 +673,16 @@ function DividendForm({ onDone, onSave }: { onDone: () => void; onSave: (payout:
       </div>
       <div className="mt-3 flex items-center justify-between gap-3 border-t border-line pt-3">
         <span className="text-[12px] text-ink-2">
-          {mismatch ? (
-            <span className="text-warn">
-              The split adds to {money(split, 'PHP')} but the total says {money(totalValue, 'PHP')}.
-            </span>
-          ) : valid ? (
-            <>Recording {money(totalValue, 'PHP')} out of the business.</>
+          {valid ? (
+            <>
+              Recording {money(usdTotal, 'USD')} ({money(totalValue, 'PHP')}) out of the business — Dani{' '}
+              {money(Math.round(totalValue * (daniUsd / usdTotal)), 'PHP')}, Mom{' '}
+              {money(Math.round(totalValue * (momUsd / usdTotal)), 'PHP')}.
+            </>
+          ) : totalValue > 0 ? (
+            'Needs the dollar split'
           ) : (
-            'Needs an amount'
+            'Needs the peso amount released'
           )}
         </span>
         <div className="flex gap-2">

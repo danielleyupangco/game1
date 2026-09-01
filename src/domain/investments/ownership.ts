@@ -14,17 +14,20 @@ import type { Holding } from '@/types'
  * so it stays right when the next snapshot arrives with new accounts.
  */
 
-export type Owner = 'dani' | 'joint' | 'unassigned'
+export type Owner = 'dani' | 'joint' | 'business' | 'unassigned'
 
 export const OWNER_LABELS: Record<Owner, string> = {
   dani: 'Dani',
   joint: 'Dani & Nicolo',
+  business: 'Island T (business)',
   unassigned: 'Unlabelled',
 }
 
 export const OWNER_BLURBS: Record<Owner, string> = {
   dani: 'Held in Dani’s own name.',
   joint: 'Wedding gifts held jointly with Nicolo — decisions here are shared.',
+  business:
+    'The Island T operating account. It sits in a personal bank but it is the business’s working capital — guest money that still has crew, supplies and the next dividend to pay out of it. It is counted once, inside what the business is worth, and left out of personal net worth so it is not counted twice.',
   unassigned: 'Rows whose account column was blank or generic in the source sheet.',
 }
 
@@ -39,6 +42,23 @@ const JOINT_MARKERS = ['danic', 'da nics', 'nico', 'nics', 'wedding', 'joint', '
 /** Account names that carry no ownership information at all. */
 const GENERIC = ['', 'default', 'n/a', 'na', 'unassigned', 'none', '-']
 
+/**
+ * The business's own money, wherever it happens to be parked.
+ *
+ * The Island T takings sit in a personal BPI account, so the account label says
+ * "Dani" and every total treated it as hers. It is not: it is the float the
+ * business runs on, and it is already inside what the business is worth. Read
+ * off the row's own label rather than the account column, because that is the
+ * part that says "Airbnb" and the part that will still say it after the next
+ * snapshot is imported.
+ */
+const BUSINESS_MARKERS = ['airbnb', 'island t']
+
+export function isBusinessCash(holding: Holding): boolean {
+  const text = `${holding.ticker} ${holding.name} ${holding.account}`.toLowerCase()
+  return BUSINESS_MARKERS.some((marker) => text.includes(marker))
+}
+
 export function ownerOf(account: string): Owner {
   const key = account.trim().toLowerCase()
   if (GENERIC.includes(key)) return 'unassigned'
@@ -47,7 +67,26 @@ export function ownerOf(account: string): Owner {
 }
 
 export function ownerOfHolding(holding: Holding): Owner {
+  // Checked before the account label, which on this row says "Dani".
+  if (isBusinessCash(holding)) return 'business'
   return ownerOf(holding.account)
+}
+
+/**
+ * Everything that is actually the household's, which is what net worth means.
+ *
+ * The business float is excluded here and counted once inside the property's
+ * valuation instead — see `businessCash` below and the DCF's net debt.
+ */
+export function personalHoldings(holdings: Holding[]): Holding[] {
+  return holdings.filter((holding) => !isBusinessCash(holding))
+}
+
+/** The business float, in base currency. */
+export function businessCash(holdings: Holding[], usdPhp: number): number {
+  return holdings
+    .filter(isBusinessCash)
+    .reduce((sum, holding) => sum + holding.value * (holding.currency === 'USD' ? usdPhp : 1), 0)
 }
 
 export type OwnerSplit = {
@@ -74,7 +113,7 @@ export function splitByOwner(holdings: Holding[], usdPhp: number): OwnerSplit[] 
     buckets.set(owner, bucket)
   }
 
-  const order: Owner[] = ['dani', 'joint', 'unassigned']
+  const order: Owner[] = ['dani', 'joint', 'business', 'unassigned']
   return order
     .filter((owner) => buckets.has(owner))
     .map((owner) => {

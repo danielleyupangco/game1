@@ -1,5 +1,6 @@
-import type { Booking, Currency, Expense } from '@/types'
+import type { Booking, CapitalSpend, Currency, Expense } from '@/types'
 import { daysInMonth, monthKey, monthRange, nightsByMonth } from '@/lib/dates'
+import { buildDepreciation } from '@/domain/airbnb/depreciation'
 
 /** Cancelled reservations stay in the data for the record but earn nothing. */
 export function isActive(booking: Booking): boolean {
@@ -56,6 +57,16 @@ export type MetricsInput = {
   usdPhp: number
   /** nights the property can sell in a full month; scaled by month length */
   availableNightsPerYear: number
+  /**
+   * What the business has bought that lasts.
+   *
+   * Supplied so the cost of running the island includes the island wearing
+   * out: the charge is derived from these items rather than taken from the
+   * sheet's flat monthly Depreciation rows, which stood still while the bridge
+   * was rebuilt and left every guest comfort purchase out altogether. When it
+   * is given, those rows are dropped in favour of the derived charge.
+   */
+  capitalSpend?: CapitalSpend[]
 }
 
 /**
@@ -130,13 +141,25 @@ export function monthlyMetrics(input: MetricsInput): MonthMetrics[] {
     if (checkInBucket) checkInBucket.bookings += 1
   }
 
+  const derivedDepreciation =
+    input.capitalSpend && input.capitalSpend.length > 0 ? buildDepreciation(input.capitalSpend).byMonth : null
+
   for (const expense of input.expenses) {
+    if (derivedDepreciation && expense.category === 'Depreciation') continue
     const bucket = byMonth.get(monthKey(expense.date))
     if (!bucket) continue
     const amount = toBase(expense.amount, expense.currency, input.usdPhp)
     if (expense.nature === 'fixed') bucket.fixedCost += amount
     else bucket.variableCost += amount
     bucket.sourceExpenses.push(expense)
+  }
+
+  // Depreciation runs whether or not anyone books, so it is a fixed cost.
+  if (derivedDepreciation) {
+    for (const [month, amount] of Object.entries(derivedDepreciation)) {
+      const bucket = byMonth.get(month)
+      if (bucket) bucket.fixedCost += amount
+    }
   }
 
   for (const bucket of byMonth.values()) {
@@ -280,12 +303,41 @@ export type CostLine = {
   nature: 'fixed' | 'variable'
   amount: number
   share: number
-  sources: Expense[]
+  /**
+   * The rows behind the figure. Depreciation's are capital purchases rather
+   * than expense rows — the charge is what those purchases cost, spread out —
+   * and both carry the same date, amount, vendor and note, so a trace reads
+   * the same either way.
+   */
+  sources: (Expense | CapitalSpend)[]
 }
 
-export function costBreakdown(expenses: Expense[], usdPhp: number): CostLine[] {
-  const buckets = new Map<string, { nature: 'fixed' | 'variable'; amount: number; sources: Expense[] }>()
+/**
+ * Costs by category.
+ *
+ * When `capitalSpend` is given, depreciation is worked out from it and the
+ * sheet's flat Depreciation rows are dropped — the same substitution the income
+ * statement makes, so the two tabs never disagree about what running the island
+ * costs.
+ */
+export function costBreakdown(expenses: Expense[], usdPhp: number, capitalSpend?: CapitalSpend[]): CostLine[] {
+  const schedule = capitalSpend && capitalSpend.length > 0 ? buildDepreciation(capitalSpend) : null
+  const buckets = new Map<string, { nature: 'fixed' | 'variable'; amount: number; sources: (Expense | CapitalSpend)[] }>()
+
+  if (schedule) {
+    // Charged over the window the expenses cover, so the shares compare like
+    // with like rather than counting a twenty-year life against one year of costs.
+    const months = new Set(expenses.map((expense) => monthKey(expense.date)))
+    const charged = Object.entries(schedule.byMonth)
+      .filter(([month]) => months.has(month))
+      .reduce((sum, [, amount]) => sum + amount, 0)
+    if (charged > 0) {
+      buckets.set('Depreciation', { nature: 'fixed', amount: charged, sources: [...capitalSpend!] })
+    }
+  }
+
   for (const expense of expenses) {
+    if (schedule && expense.category === 'Depreciation') continue
     const key = expense.category
     const amount = toBase(expense.amount, expense.currency, usdPhp)
     const bucket = buckets.get(key)

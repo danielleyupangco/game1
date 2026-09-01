@@ -13,6 +13,8 @@ import {
 } from 'recharts'
 import { useLedger } from '@/state/store'
 import { aggregate, monthlyMetrics, trailing } from '@/domain/airbnb/metrics'
+import { businessCash } from '@/domain/investments/ownership'
+import { latestSnapshot } from '@/domain/investments/portfolio'
 import { buildCashForecast, buildForecast } from '@/domain/airbnb/forecast'
 import { Card, Pill, SectionHeader, Tabs } from '@/components/ui/primitives'
 import { AssumptionInput } from '@/components/ui/AssumptionInput'
@@ -32,18 +34,45 @@ import { money, monthLabel, pct } from '@/lib/format'
  * the books this far out.
  */
 export function ForecastPanel() {
-  const { bookings, expenses, settings, dcf, costModel, forecast: assumptions, saveForecast, projects, capitalSpend } =
-    useLedger()
+  const {
+    bookings,
+    expenses,
+    settings,
+    dcf,
+    costModel,
+    forecast: assumptions,
+    saveForecast,
+    projects,
+    capitalSpend,
+    holdings,
+    snapshots,
+  } = useLedger()
+
+  /**
+   * The starting balance, taken from the bank rather than typed in.
+   *
+   * The Island T operating account is already in the holdings, so the runway
+   * should start from it instead of from a number someone has to remember to
+   * update. A figure entered by hand still wins — this is a default, not a
+   * lock.
+   */
+  const snapshot = useMemo(() => latestSnapshot(snapshots), [snapshots])
+  const bankBalance = useMemo(
+    () => businessCash(snapshot ? holdings.filter((h) => h.snapshotId === snapshot.id) : [], snapshot?.usdPhp ?? settings.usdPhp),
+    [holdings, snapshot, settings.usdPhp],
+  )
+  const openingCash = assumptions.openingCash > 0 ? assumptions.openingCash : bankBalance
 
   const series = useMemo(
     () =>
       monthlyMetrics({
         bookings,
         expenses,
+        capitalSpend,
         usdPhp: settings.usdPhp,
         availableNightsPerYear: dcf.availableNightsPerYear,
       }),
-    [bookings, expenses, settings.usdPhp, dcf.availableNightsPerYear],
+    [bookings, expenses, capitalSpend, settings.usdPhp, dcf.availableNightsPerYear],
   )
 
   const forecast = useMemo(
@@ -95,8 +124,8 @@ export function ForecastPanel() {
   )
 
   const cash = useMemo(
-    () => buildCashForecast(forecast, costModel, assumptions.openingCash, addOnPerNight, plannedCapex),
-    [forecast, costModel, assumptions.openingCash, addOnPerNight, plannedCapex],
+    () => buildCashForecast(forecast, costModel, openingCash, addOnPerNight, plannedCapex),
+    [forecast, costModel, openingCash, addOnPerNight, plannedCapex],
   )
 
   if (bookings.length === 0) {
@@ -177,7 +206,7 @@ export function ForecastPanel() {
           value={money(cash.months[cash.months.length - 1]?.closing ?? 0, 'PHP', true)}
           tone={cash.runsOutIn !== null ? 'neg' : 'pos'}
           sub={
-            assumptions.openingCash === 0
+            openingCash === 0
               ? 'Starting balance not set yet'
               : cash.runsOutIn !== null
                 ? `Runs short in ${monthLabel(cash.months[cash.runsOutIn].month)}`
@@ -294,20 +323,29 @@ export function ForecastPanel() {
           title="Cash"
           subtitle="Profit and cash are not the same thing. Capital spend leaves the bank without touching the P&L, which is exactly how a profitable business runs out of money."
         />
-        {assumptions.openingCash === 0 ? (
+        {openingCash === 0 ? (
           <p className="mb-3 rounded-lg border border-warn/25 bg-warn/[0.06] px-3 py-2 text-[12px] leading-relaxed text-ink-2">
             The starting balance is still zero, so this line begins from nothing and will show a shortfall almost
             immediately. Put today's actual business account balance in below and the rest of the picture becomes real.
+          </p>
+        ) : assumptions.openingCash === 0 ? (
+          <p className="mb-3 rounded-lg border border-line bg-surface-2 px-3 py-2 text-[12px] leading-relaxed text-ink-2">
+            Starting from {money(bankBalance, 'PHP', true)} — the Island T operating account as it stands in the
+            holdings, so this stays current on its own. Type a figure below to override it.
           </p>
         ) : null}
         <div className="mb-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <AssumptionInput
             label="Cash in the account now"
-            value={assumptions.openingCash}
+            value={openingCash}
             kind="money"
             step={50000}
             onChange={(next) => void saveForecast({ openingCash: next })}
-            note="The business account balance today."
+            note={
+              assumptions.openingCash === 0 && bankBalance > 0
+                ? 'Linked to the Island T operating account in the holdings. Type over it to use your own figure.'
+                : 'The business account balance today.'
+            }
           />
           <AssumptionInput
             label="Rate growth a year"

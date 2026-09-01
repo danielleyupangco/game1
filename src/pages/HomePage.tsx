@@ -5,6 +5,7 @@ import { useLedger } from '@/state/store'
 import { buildPositions, latestSnapshot, sortedSnapshots, totalValue } from '@/domain/investments/portfolio'
 import { buildPerformance, yearToDateReturn } from '@/domain/investments/performance'
 import { aggregate, monthlyMetrics, trailing, yearToDate } from '@/domain/airbnb/metrics'
+import { businessCash, personalHoldings } from '@/domain/investments/ownership'
 import { runDcf } from '@/domain/airbnb/dcf'
 import { buildActions, type ActionItem } from '@/domain/actions'
 import { Card, Pill, SectionHeader, cx } from '@/components/ui/primitives'
@@ -17,12 +18,23 @@ import { money, monthLabel, num, pct, shortDate, signedPct } from '@/lib/format'
 
 export function HomePage() {
   const ledger = useLedger()
-  const { holdings, snapshots, transactions, bookings, expenses, settings, dcf, freshness, ready } = ledger
+  const { holdings, snapshots, transactions, bookings, expenses, capitalSpend, settings, dcf, freshness, ready } = ledger
   const { trace } = useProvenance()
 
   const snapshot = useMemo(() => latestSnapshot(snapshots), [snapshots])
-  const positions = useMemo(() => buildPositions(holdings, snapshot), [holdings, snapshot])
+  /**
+   * The Island T operating account is in the holdings sheet but it is not hers
+   * to spend — it is the business's float, and it is already counted inside
+   * what the business is worth. So it is taken out here and added back once,
+   * through the valuation.
+   */
+  const personal = useMemo(() => personalHoldings(holdings), [holdings])
+  const positions = useMemo(() => buildPositions(personal, snapshot), [personal, snapshot])
   const liquid = totalValue(positions)
+  const businessFloat = useMemo(
+    () => businessCash(snapshot ? holdings.filter((h) => h.snapshotId === snapshot.id) : [], snapshot?.usdPhp ?? settings.usdPhp),
+    [holdings, snapshot, settings.usdPhp],
+  )
 
   const performance = useMemo(
     () => (snapshots.length >= 2 ? buildPerformance(holdings, snapshots, transactions, settings.usdPhp) : null),
@@ -34,10 +46,11 @@ export function HomePage() {
       monthlyMetrics({
         bookings,
         expenses,
+        capitalSpend,
         usdPhp: settings.usdPhp,
         availableNightsPerYear: dcf.availableNightsPerYear,
       }),
-    [bookings, expenses, settings.usdPhp, dcf.availableNightsPerYear],
+    [bookings, expenses, capitalSpend, settings.usdPhp, dcf.availableNightsPerYear],
   )
   const t12 = useMemo(() => (airbnbSeries.length > 0 ? aggregate(trailing(airbnbSeries, 12)) : null), [airbnbSeries])
   const ytd = useMemo(
@@ -48,7 +61,7 @@ export function HomePage() {
   // The property is only counted at DCF value once there is real data behind
   // the assumptions — otherwise it would be a default number dressed as net worth.
   const hasAirbnbData = bookings.length > 0 && expenses.length > 0
-  const dcfResult = useMemo(() => runDcf(dcf), [dcf])
+  const dcfResult = useMemo(() => runDcf(dcf, businessFloat), [dcf, businessFloat])
   const propertyValue = hasAirbnbData && Number.isFinite(dcfResult.equityValue) ? dcfResult.equityValue : 0
 
   const netWorth = liquid + propertyValue + settings.cashOnHand
@@ -57,7 +70,7 @@ export function HomePage() {
     const ordered = sortedSnapshots(snapshots)
     return ordered.map((snap) => ({
       date: snap.asOf,
-      liquid: totalValue(buildPositions(holdings, snap)),
+      liquid: totalValue(buildPositions(personal, snap)),
     }))
   }, [snapshots, holdings])
 
@@ -184,7 +197,7 @@ export function HomePage() {
           onTrace={() =>
             trace({
               title: 'Net worth',
-              description: `Liquid investments ${money(liquid, 'PHP')} + Island T at DCF equity value ${money(propertyValue, 'PHP')} + cash on hand ${money(settings.cashOnHand, 'PHP')}. Property is only counted once bookings and expenses are both imported.`,
+              description: `Liquid investments ${money(liquid, 'PHP')} + Island T at DCF equity value ${money(propertyValue, 'PHP')} + cash on hand ${money(settings.cashOnHand, 'PHP')}. Property is only counted once bookings and expenses are both imported. The Island T bank balance of ${money(businessFloat, 'PHP')} is inside the property's value and deliberately not in the liquid figure — it is the business's working capital, counted once.`,
               rows: positions.flatMap((p) => p.sources),
               columns: [
                 { key: 'ticker', label: 'Ticker' },

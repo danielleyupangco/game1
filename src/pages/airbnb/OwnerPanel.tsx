@@ -27,10 +27,11 @@ export function OwnerPanel() {
       monthlyMetrics({
         bookings,
         expenses,
+        capitalSpend,
         usdPhp: settings.usdPhp,
         availableNightsPerYear: dcf.availableNightsPerYear,
       }),
-    [bookings, expenses, settings.usdPhp, dcf.availableNightsPerYear],
+    [bookings, expenses, capitalSpend, settings.usdPhp, dcf.availableNightsPerYear],
   )
 
   const t12 = useMemo(() => (series.length > 0 ? aggregate(trailing(series, 12)) : null), [series])

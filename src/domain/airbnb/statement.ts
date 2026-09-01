@@ -16,6 +16,11 @@ export type { MonthMetricsLike }
  * 2. Capital spend and dividends never reach the P&L. Both move cash. One buys
  *    something that lasts; the other distributes money already earned. Folding
  *    either into costs is what makes a good year read as a bad one.
+ * 3. Capital spend does reach the P&L eventually, as depreciation — the annual
+ *    slice of what was bought. That charge is derived from the capital ledger
+ *    (see domain/airbnb/depreciation.ts) rather than taken from the sheet's flat
+ *    monthly figure, and when it is supplied it *replaces* the sheet's
+ *    Depreciation rows rather than stacking on top of them.
  */
 
 /** Operating cost lines, in the order the owner's own summary lists them. */
@@ -75,6 +80,14 @@ export type StatementMonth = {
 export type StatementInput = {
   series: MonthMetricsLike[]
   expenses: Expense[]
+  /**
+   * The depreciation charge per month, derived from what was actually bought.
+   *
+   * When given, it stands in for the Depreciation rows in `expenses`: those are
+   * the sheet's flat estimate of the same thing, and counting both would charge
+   * the island's fit-out twice.
+   */
+  depreciationByMonth?: Record<string, number>
 }
 
 function monthOf(iso: string): string {
@@ -82,8 +95,13 @@ function monthOf(iso: string): string {
 }
 
 export function buildStatement(input: StatementInput): StatementMonth[] {
+  const derived = input.depreciationByMonth
   const byMonth = new Map<string, Record<string, number>>()
   for (const expense of input.expenses) {
+    // The sheet's own Depreciation rows are a flat estimate; when a schedule
+    // built from the capital ledger is available it is the better number, so
+    // the estimate is dropped rather than added to.
+    if (derived && expense.category === 'Depreciation') continue
     const month = monthOf(expense.date)
     const bucket = byMonth.get(month) ?? {}
     bucket[expense.category] = (bucket[expense.category] ?? 0) + expense.amount
@@ -101,6 +119,11 @@ export function buildStatement(input: StatementInput): StatementMonth[] {
       if (COGS_CATEGORIES.has(category)) cogs += amount
       else if (category === 'Depreciation') depreciation += amount
       else opex += amount
+    }
+    if (derived) {
+      depreciation = derived[month.month] ?? 0
+      // Keep the line-by-line statement agreeing with the EBIT line above it.
+      if (depreciation > 0) byCategory.Depreciation = depreciation
     }
 
     // Revenue is the room. Food, boats and tours are the crew's business and
@@ -226,17 +249,73 @@ export function buildActualCash(
   })
 }
 
+export type DividendShare = { name: string; usd: number; php: number }
+
+export type DividendSummary = {
+  payouts: number
+  totalUsd: number
+  totalPhp: number
+  /** what each owner has been paid, most-paid first */
+  byRecipient: DividendShare[]
+}
+
+/**
+ * What each owner has actually been paid.
+ *
+ * The dollar figure leads because that is the currency the distributions were
+ * agreed and remembered in; the peso figure is whatever each transfer converted
+ * at. Summing the peso column and calling it the split is what made the running
+ * totals disagree with what the two of them believed they had received.
+ */
+export function summariseDividends(dividends: DividendPayout[]): DividendSummary {
+  const byName = new Map<string, DividendShare>()
+  for (const payout of dividends) {
+    for (const recipient of payout.recipients) {
+      const share = byName.get(recipient.name) ?? { name: recipient.name, usd: 0, php: 0 }
+      share.usd += recipient.amountUsd ?? 0
+      share.php += recipient.amount
+      byName.set(recipient.name, share)
+    }
+  }
+
+  return {
+    payouts: dividends.length,
+    totalUsd: dividends.reduce((sum, payout) => sum + (payout.amountUsd ?? 0), 0),
+    totalPhp: dividends.reduce((sum, payout) => sum + payout.amount, 0),
+    byRecipient: [...byName.values()].sort((a, b) => b.usd - a.usd || b.php - a.php),
+  }
+}
+
 export type ExpenseCell = { category: string; byMonth: Record<string, number>; total: number }
 
-/** The expense summary: categories down, months across, exactly as she reads it. */
-export function expenseMatrix(expenses: Expense[], months: string[]): ExpenseCell[] {
+/**
+ * The expense summary: categories down, months across, exactly as she reads it.
+ *
+ * `depreciationByMonth` overrides the sheet's Depreciation row for the same
+ * reason `buildStatement` does — so the summary and the income statement are
+ * charging the same figure for the same thing.
+ */
+export function expenseMatrix(
+  expenses: Expense[],
+  months: string[],
+  depreciationByMonth?: Record<string, number>,
+): ExpenseCell[] {
   const rows = new Map<string, Record<string, number>>()
   for (const expense of expenses) {
+    if (depreciationByMonth && expense.category === 'Depreciation') continue
     const month = monthOf(expense.date)
     if (!months.includes(month)) continue
     const row = rows.get(expense.category) ?? {}
     row[month] = (row[month] ?? 0) + expense.amount
     rows.set(expense.category, row)
+  }
+  if (depreciationByMonth) {
+    const row: Record<string, number> = {}
+    for (const month of months) {
+      const amount = depreciationByMonth[month] ?? 0
+      if (amount > 0) row[month] = amount
+    }
+    if (Object.keys(row).length > 0) rows.set('Depreciation', row)
   }
 
   const order = (category: string) => {
