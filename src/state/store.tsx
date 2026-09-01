@@ -85,7 +85,13 @@ type Ctx = LedgerData & {
   addObservation: (observation: CompetitorObservation) => Promise<void>
   /** most recent import timestamp per dataset, for the freshness indicators */
   freshness: Partial<Record<DatasetKey, string>>
+  /** set when this visit pulled in corrected data, so the change can be announced */
+  refreshNote: SeedRefresh | null
+  dismissRefreshNote: () => void
 }
+
+/** What a refresh did, so the viewer is told rather than left guessing. */
+export type SeedRefresh = { at: string; keptManual: number; keptFindingStates: number }
 
 const LedgerContext = createContext<Ctx | null>(null)
 
@@ -115,15 +121,32 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
   const [costModel, setCostModel] = useState<CostModel>(DEFAULT_COST_MODEL)
   const [forecast, setForecast] = useState<ForecastAssumptions>(DEFAULT_FORECAST)
   const [ready, setReady] = useState(false)
+  const [refreshNote, setRefreshNote] = useState<SeedRefresh | null>(null)
 
   const reload = useCallback(async () => {
-    // A build can carry a pre-loaded dataset. Load it once, and only into a
-    // database that has never held anything — never over the top of real work.
+    // A build can carry a pre-loaded dataset, and a later build can carry a
+    // corrected one. The fingerprint is what makes a refresh land: without it
+    // the first visit wins forever, and every correction published afterwards
+    // is invisible to anyone who has already opened the page. Records the
+    // viewer created here are kept — only the imported ones are replaced.
     if (SEED) {
-      const seeded = await db.getKV<boolean>('seedLoaded', false)
-      if (!seeded) {
-        const existing = await db.getAll('imports')
-        if (existing.length === 0) await db.importBackup(SEED)
+      const fingerprint = db.seedFingerprint(SEED)
+      const applied = await db.getKV<string>('seedFingerprint', '')
+      if (applied !== fingerprint) {
+        const hadData = (await db.getAll('imports')).length > 0
+        if (hadData) {
+          const report = await db.mergeSeed(SEED)
+          setRefreshNote({
+            at: new Date().toISOString(),
+            keptManual: report.keptManual,
+            keptFindingStates: report.keptFindingStates,
+          })
+        } else {
+          await db.importBackup(SEED)
+        }
+        await db.setKV('seedFingerprint', fingerprint)
+        // The old one-shot flag is superseded; leaving it would be a second
+        // source of truth about whether the seed has been applied.
         await db.setKV('seedLoaded', true)
       }
     }
@@ -361,6 +384,8 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
     setData((prev) => ({ ...prev, observations: [...prev.observations, observation] }))
   }, [])
 
+  const dismissRefreshNote = useCallback(() => setRefreshNote(null), [])
+
   const freshness = useMemo(() => {
     const out: Partial<Record<DatasetKey, string>> = {}
     for (const batch of data.imports) {
@@ -401,8 +426,10 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       removeCapitalSpend,
       addRecords,
       freshness,
+      refreshNote,
+      dismissRefreshNote,
     }),
-    [data, ready, settings, dcf, pricing, projects, costModel, forecast, reload, saveSettings, saveDcf, savePricing, saveProjects, removeImport, saveFinding, removeFinding, saveCostModel, saveForecast, updateBooking, saveAddOn, addDividend, removeDividend, saveCompetitor, removeCompetitor, addObservation, addCapitalSpend, removeCapitalSpend, addRecords, freshness],
+    [data, ready, settings, dcf, pricing, projects, costModel, forecast, reload, saveSettings, saveDcf, savePricing, saveProjects, removeImport, saveFinding, removeFinding, saveCostModel, saveForecast, updateBooking, saveAddOn, addDividend, removeDividend, saveCompetitor, removeCompetitor, addObservation, addCapitalSpend, removeCapitalSpend, addRecords, freshness, refreshNote, dismissRefreshNote],
   )
 
   return <LedgerContext.Provider value={value}>{children}</LedgerContext.Provider>

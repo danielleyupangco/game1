@@ -5,6 +5,50 @@ import { QuickAdd } from '@/components/entry/QuickAdd'
 import { useLedger } from '@/state/store'
 
 /**
+ * Says so when this visit pulled in corrected data.
+ *
+ * Without it a figure quietly changes between two visits and there is no way to
+ * tell a correction from a bug — which is exactly the confusion that made this
+ * necessary in the first place.
+ */
+function RefreshNotice() {
+  const { refreshNote, dismissRefreshNote } = useLedger()
+  if (!refreshNote) return null
+  return (
+    <div className="no-print mb-4 flex flex-wrap items-start justify-between gap-3 rounded-xl border border-accent/30 bg-accent/[0.06] px-4 py-3">
+      <p className="max-w-3xl text-[12px] leading-relaxed text-ink-2">
+        <span className="font-semibold text-ink">Data refreshed.</span> This copy was carrying an older version of the
+        imported records, so it has been brought up to date — some figures will have moved.
+        {refreshNote.keptManual > 0 ? (
+          <>
+            {' '}
+            The <span className="num text-ink">{refreshNote.keptManual}</span> row
+            {refreshNote.keptManual === 1 ? '' : 's'} you entered by hand
+            {refreshNote.keptFindingStates > 0
+              ? `, and ${refreshNote.keptFindingStates} finding${refreshNote.keptFindingStates === 1 ? '' : 's'} you had started or closed,`
+              : ''}{' '}
+            were kept.
+          </>
+        ) : refreshNote.keptFindingStates > 0 ? (
+          <>
+            {' '}
+            The <span className="num text-ink">{refreshNote.keptFindingStates}</span> finding
+            {refreshNote.keptFindingStates === 1 ? '' : 's'} you had started or closed were kept.
+          </>
+        ) : null}
+      </p>
+      <button
+        type="button"
+        onClick={dismissRefreshNote}
+        className="shrink-0 rounded-lg border border-line bg-surface-2 px-2.5 py-1 text-[12px] text-ink hover:bg-surface-3"
+      >
+        Got it
+      </button>
+    </div>
+  )
+}
+
+/**
  * Two groups, as the hub design intends: where you stand, then what you run.
  * The divider is meaningful — everything after it is a business.
  */
@@ -89,6 +133,7 @@ export function Shell({ children }: { children: ReactNode }) {
       </header>
 
       <main className="mx-auto max-w-[1180px] px-4 pb-24 pt-4 sm:pb-10">
+        <RefreshNotice />
         <div key={location.pathname} className="animate-in">
           {children}
         </div>

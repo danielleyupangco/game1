@@ -271,6 +271,102 @@ export async function exportBackup(): Promise<Backup> {
   }
 }
 
+/**
+ * A content fingerprint for a seed payload.
+ *
+ * Computed from the data rather than stamped at build time, so it cannot drift
+ * out of step with what is actually in the file. FNV-1a is enough: the only
+ * question being asked is "is this the same bytes as last time".
+ */
+export function seedFingerprint(backup: Backup): string {
+  const text = JSON.stringify(backup)
+  let hash = 0x811c9dc5
+  for (let i = 0; i < text.length; i += 1) {
+    hash ^= text.charCodeAt(i)
+    hash = Math.imul(hash, 0x01000193) >>> 0
+  }
+  return `${hash.toString(16)}-${text.length}`
+}
+
+export type SeedMergeReport = {
+  /** rows the viewer typed in that were carried across untouched */
+  keptManual: number
+  /** findings whose Start/Done state was preserved */
+  keptFindingStates: number
+  replaced: number
+}
+
+/**
+ * Brings a refreshed seed in over an existing database without destroying the
+ * viewer's own work.
+ *
+ * The seed owns imported records — they come from files and are replaced
+ * wholesale, because that is what a refresh means. Everything the viewer
+ * created here is theirs and survives: rows typed by hand, competitor
+ * observations, the assumptions on every panel, and which findings they have
+ * started or closed.
+ */
+export async function mergeSeed(backup: Backup): Promise<SeedMergeReport> {
+  const isManual = (row: { prov?: { manual?: boolean } }) => row.prov?.manual === true
+
+  const manual = {
+    bookings: (await getAll('bookings')).filter(isManual),
+    expenses: (await getAll('expenses')).filter(isManual),
+    capitalSpend: (await getAll('capitalSpend')).filter(isManual),
+    dividends: (await getAll('dividends')).filter(isManual),
+    addons: (await getAll('addons')).filter(isManual),
+  }
+  const findingState = new Map((await getAll('findings')).map((finding) => [finding.id, finding.status]))
+
+  // Competitor listings and observations are never seeded — they only exist
+  // because somebody recorded them — so they are left alone entirely.
+  const seededStores: RecordStore[] = [
+    'holdings',
+    'snapshots',
+    'transactions',
+    'benchmark',
+    'bookings',
+    'expenses',
+    'imports',
+    'findings',
+    'capitalSpend',
+    'resolutions',
+    'addons',
+    'dividends',
+  ]
+  for (const store of seededStores) await clearStore(store)
+
+  await putMany('holdings', backup.holdings ?? [])
+  await putMany('snapshots', backup.snapshots ?? [])
+  await putMany('transactions', backup.transactions ?? [])
+  await putMany('benchmark', backup.benchmark ?? [])
+  await putMany('imports', backup.imports ?? [])
+  await putMany('resolutions', backup.resolutions ?? [])
+
+  await putMany('bookings', [...(backup.bookings ?? []), ...manual.bookings])
+  await putMany('expenses', [...(backup.expenses ?? []), ...manual.expenses])
+  await putMany('capitalSpend', [...(backup.capitalSpend ?? []), ...manual.capitalSpend])
+  await putMany('dividends', [...(backup.dividends ?? []), ...manual.dividends])
+  await putMany('addons', [...(backup.addons ?? []), ...manual.addons])
+
+  let keptFindingStates = 0
+  const findings = (backup.findings ?? []).map((finding) => {
+    const status = findingState.get(finding.id)
+    if (status && status !== finding.status) {
+      keptFindingStates += 1
+      return { ...finding, status }
+    }
+    return finding
+  })
+  await putMany('findings', findings)
+
+  return {
+    keptManual: Object.values(manual).reduce((sum, rows) => sum + rows.length, 0),
+    keptFindingStates,
+    replaced: seededStores.length,
+  }
+}
+
 export async function importBackup(backup: Backup): Promise<void> {
   const stores: RecordStore[] = [
     'holdings',
