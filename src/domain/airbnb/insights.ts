@@ -19,13 +19,10 @@ export type YearRow = {
   adr: number
   revpar: number
   roomRevenue: number
-  addOnRevenue: number
-  totalRevenue: number
   cost: number
   profit: number
   margin: number
   bookings: number
-  /** share of add-on money charged that you kept, when both sides are known */
   months: number
 }
 
@@ -42,8 +39,6 @@ export function byYear(series: MonthMetrics[]): YearRow[] {
       adr: totals.adr,
       revpar: totals.revpar,
       roomRevenue: totals.revenue,
-      addOnRevenue: totals.addOnRevenue,
-      totalRevenue: totals.totalRevenue,
       cost: totals.totalCost,
       profit: totals.netProfit,
       margin: totals.netMargin,
@@ -116,7 +111,7 @@ function mixBy(bookings: Booking[], pick: (booking: Booking) => string): MixRow[
     const bucket = buckets.get(key) ?? { bookings: 0, nights: 0, revenue: 0 }
     bucket.bookings += 1
     bucket.nights += booking.nights
-    bucket.revenue += booking.netRevenue + booking.addOnRevenue
+    bucket.revenue += booking.netRevenue
     buckets.set(key, bucket)
   }
   const total = [...buckets.values()].reduce((sum, bucket) => sum + bucket.revenue, 0)
@@ -155,14 +150,14 @@ export function stayShape(bookings: Booking[]): StayShape {
     if (!name) continue
     const bucket = byGuest.get(name) ?? { stays: 0, revenue: 0 }
     bucket.stays += 1
-    bucket.revenue += booking.netRevenue + booking.addOnRevenue
+    bucket.revenue += booking.netRevenue
     byGuest.set(name, bucket)
   }
 
-  const revenue = usable.reduce((sum, booking) => sum + booking.netRevenue + booking.addOnRevenue, 0)
+  const revenue = usable.reduce((sum, booking) => sum + booking.netRevenue, 0)
   const largeParty = usable
     .filter((booking) => booking.guests >= 6)
-    .reduce((sum, booking) => sum + booking.netRevenue + booking.addOnRevenue, 0)
+    .reduce((sum, booking) => sum + booking.netRevenue, 0)
 
   return {
     nights: [...counts.entries()].map(([nights, bookings]) => ({ nights, bookings })).sort((a, b) => a.nights - b.nights),
@@ -190,7 +185,7 @@ export function seasonSplit(series: MonthMetrics[], highSeasonMonths: number[]):
   const isHigh = (month: MonthMetrics) => highSeasonMonths.includes(Number(month.month.slice(5, 7)))
   const high = series.filter(isHigh)
   const low = series.filter((month) => !isHigh(month))
-  const rev = (months: MonthMetrics[]) => months.reduce((sum, month) => sum + month.totalRevenue, 0)
+  const rev = (months: MonthMetrics[]) => months.reduce((sum, month) => sum + month.revenue, 0)
   const avail = (months: MonthMetrics[]) => months.reduce((sum, month) => sum + month.availableNights, 0)
 
   const highRevpar = avail(high) > 0 ? rev(high) / avail(high) : 0
@@ -255,7 +250,10 @@ export function costShape(series: MonthMetrics[], expenses: Expense[], usdPhp: n
 
   const fixedPerYear = totals.fixedCost
   const variablePerNight = totals.nightsSold > 0 ? totals.variableCost / totals.nightsSold : 0
-  const contributionPerNight = totals.adr + (totals.nightsSold > 0 ? totals.addOnRevenue / totals.nightsSold : 0) - variablePerNight
+  // Room revenue only: the crew's food and boats are their business, and the
+  // owner's margin on them is neither reliable nor recorded far enough back to
+  // belong in a break-even.
+  const contributionPerNight = totals.adr - variablePerNight
 
   return {
     fixedPerYear,

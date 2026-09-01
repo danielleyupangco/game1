@@ -42,6 +42,7 @@ import { CostModelPanel } from '@/pages/airbnb/CostModelPanel'
 import { ForecastPanel } from '@/pages/airbnb/ForecastPanel'
 import { StatementPanel } from '@/pages/airbnb/StatementPanel'
 import { CompetitorsPanel } from '@/pages/airbnb/CompetitorsPanel'
+import { AddOnsPanel } from '@/pages/airbnb/AddOnsPanel'
 import { GuestsPanel } from '@/pages/airbnb/GuestsPanel'
 
 type View =
@@ -57,6 +58,7 @@ type View =
   | 'valuation'
   | 'pricing'
   | 'market'
+  | 'addons'
 
 export function AirbnbPage() {
   const { bookings, expenses, settings, dcf, freshness } = useLedger()
@@ -108,6 +110,7 @@ export function AirbnbPage() {
             { value: 'revenue', label: 'Revenue' },
             { value: 'forecast', label: 'Forecast' },
             { value: 'guests', label: 'Guests' },
+            { value: 'addons', label: 'Add-ons' },
             { value: 'insights', label: 'Insights' },
             { value: 'costs', label: 'Costs' },
             { value: 'costmodel', label: 'Cost model' },
@@ -124,6 +127,7 @@ export function AirbnbPage() {
       {view === 'revenue' ? <RevenueView series={series} /> : null}
       {view === 'forecast' ? <ForecastPanel /> : null}
       {view === 'guests' ? <GuestsPanel /> : null}
+      {view === 'addons' ? <AddOnsPanel /> : null}
       {view === 'costmodel' ? <CostModelPanel /> : null}
       {view === 'capital' ? <CapitalPanel /> : null}
       {view === 'insights' ? <InsightsPanel /> : null}
@@ -160,24 +164,18 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
   const monthData = series.map((month) => ({
     month: month.month,
     revenue: month.revenue,
-    addOns: month.addOnRevenue,
     occupancy: month.occupancy * 100,
     adr: month.adr,
     revpar: month.revpar,
   }))
-  const hasAddOns = series.some((month) => month.addOnRevenue > 0)
 
   return (
     <div className="space-y-4">
       <StatGrid>
         <Stat
           label="Revenue (T12M)"
-          value={money(t12.totalRevenue, 'PHP', true)}
-          sub={
-            t12.addOnRevenue > 0
-              ? `${money(t12.revenue, 'PHP', true)} rooms + ${money(t12.addOnRevenue, 'PHP', true)} add-ons · ${t12.bookings} bookings`
-              : `${t12.bookings} bookings · ${t12.nightsSold} nights sold`
-          }
+          value={money(t12.revenue, 'PHP', true)}
+          sub={`${t12.bookings} bookings · ${t12.nightsSold} nights sold`}
           onTrace={() =>
             trace({
               title: 'Trailing-12-month revenue',
@@ -211,16 +209,7 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
       <Card>
         <ChartFrame
           title="Monthly revenue"
-          caption={
-            hasAddOns
-              ? 'Room payout recognised over the nights stayed, with the share of catering, boat and tour revenue you keep stacked on top. A stay spanning month-end reports on both sides rather than spiking one month.'
-              : 'Net payout recognised over the nights stayed, so a stay spanning month-end reports on both sides rather than spiking one month.'
-          }
-          right={
-            hasAddOns ? (
-              <Legend items={[{ label: 'Rooms', color: SERIES[0] }, { label: 'Add-ons kept', color: SERIES[2] }]} />
-            ) : undefined
-          }
+          caption="Room payout recognised over the nights stayed, so a stay spanning month-end reports on both sides rather than spiking one month. Food, boats and tours are the crew's business and are on their own tab."
           height={230}
         >
           <BarChart data={monthData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
@@ -230,14 +219,11 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
             <Tooltip
               {...TOOLTIP_STYLE}
               {...tooltipProps(
-                (value, name) => [money(value, 'PHP'), name === 'addOns' ? 'Add-ons kept' : 'Rooms'],
+                (value) => [money(value, 'PHP'), 'Room revenue'],
                 (label) => monthLabel(label),
               )}
             />
-            <Bar dataKey="revenue" name="revenue" stackId="rev" fill={SERIES[0]} maxBarSize={34} />
-            {hasAddOns ? (
-              <Bar dataKey="addOns" name="addOns" stackId="rev" fill={SERIES[2]} radius={[4, 4, 0, 0]} maxBarSize={34} />
-            ) : null}
+            <Bar dataKey="revenue" name="revenue" fill={SERIES[0]} radius={[4, 4, 0, 0]} maxBarSize={34} />
           </BarChart>
         </ChartFrame>
       </Card>

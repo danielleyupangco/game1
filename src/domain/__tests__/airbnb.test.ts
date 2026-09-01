@@ -422,7 +422,7 @@ describe('refund and cancellation rows', () => {
 })
 
 describe('add-on revenue', () => {
-  it('keeps add-ons out of ADR but in total revenue', () => {
+  it('leaves add-on money out of the room business entirely', () => {
     const series = monthlyMetrics({
       bookings: [booking('2026-03-01', '2026-03-03', 40000, { addOnRevenue: 20000 })],
       expenses: [],
@@ -431,13 +431,16 @@ describe('add-on revenue', () => {
     })
     const march = series[0]
     expect(march.adr).toBeCloseTo(20000)
+    // The booking carries a 20,000 add-on figure. None of it may reach the
+    // room business: food and boats are the crew's trade and have their own
+    // page. The series carries no add-on field at all, which is what makes
+    // that true by construction rather than by discipline.
     expect(march.revenue).toBeCloseTo(40000)
-    expect(march.addOnRevenue).toBeCloseTo(20000)
-    expect(march.totalRevenue).toBeCloseTo(60000)
-    expect(march.totalRevpar).toBeGreaterThan(march.revpar)
+    expect(march.revpar).toBeCloseTo(40000 / march.availableNights)
+    expect(Object.keys(march).filter((key) => /addon|total/i.test(key))).toEqual(['totalCost'])
   })
 
-  it('runs margin off total revenue, not room revenue alone', () => {
+  it('runs profit and margin off room revenue alone', () => {
     const totals = aggregate(
       monthlyMetrics({
         bookings: [booking('2026-03-01', '2026-03-03', 40000, { addOnRevenue: 20000 })],
@@ -446,9 +449,9 @@ describe('add-on revenue', () => {
         availableNightsPerYear: 365,
       }),
     )
-    expect(totals.totalRevenue).toBeCloseTo(60000)
-    expect(totals.netProfit).toBeCloseTo(30000)
-    expect(totals.netMargin).toBeCloseTo(0.5)
+    expect(totals.revenue).toBeCloseTo(40000)
+    expect(totals.netProfit).toBeCloseTo(10000)
+    expect(totals.netMargin).toBeCloseTo(0.25)
   })
 })
 

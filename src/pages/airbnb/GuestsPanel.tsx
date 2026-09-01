@@ -16,7 +16,6 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { QuickAdd } from '@/components/entry/QuickAdd'
 import { useProvenance } from '@/components/ui/Provenance'
 import { money, num, pct, shortDate } from '@/lib/format'
-import type { AddOnQuote } from '@/types'
 import { today } from '@/lib/dates'
 
 type View = 'upcoming' | 'now' | 'past' | 'everyone' | 'repeat'
@@ -30,7 +29,7 @@ type View = 'upcoming' | 'now' | 'past' | 'everyone' | 'repeat'
  * feed the forecast and the cash view straight away.
  */
 export function GuestsPanel() {
-  const { bookings, settings, addons, resolutions } = useLedger()
+  const { bookings, settings } = useLedger()
   const { trace } = useProvenance()
   const [view, setView] = useState<View>('upcoming')
   const [query, setQuery] = useState('')
@@ -57,23 +56,6 @@ export function GuestsPanel() {
   }, [stays, view, query])
 
   const selected = useMemo(() => stays.find((stay) => stay.id === openStay) ?? null, [stays, openStay])
-  // A negative add-on share on an otherwise paid stay means the sheet captured
-  // the crew's side and not the guest's — a missing number, not a real loss.
-  const incomplete = useMemo(
-    () =>
-      stays
-        .filter((stay) => stay.addOnRevenue < 0 && stay.netRevenue > 0)
-        .map((stay) => ({
-          stay,
-          // What actually came through Airbnb for this stay beyond the room. It
-          // is the number the missing figure has to be reconciled against, so
-          // showing it turns a flag into something answerable.
-          collected: resolutions
-            .filter((row) => row.confirmationCode === stay.confirmationCode)
-            .reduce((sum, row) => sum + row.amount, 0),
-        })),
-    [stays, resolutions],
-  )
   /**
    * Stays whose party size, country or review never made it across. The payout
    * export does not carry them, so without a list they simply stay blank and
@@ -131,7 +113,7 @@ export function GuestsPanel() {
           {/* On a phone the money columns scroll out of view, so the figure that
               matters most rides along with the name. */}
           <div className="num mt-0.5 text-[11px] text-ink-2 sm:hidden">
-            {stay.nights} night{stay.nights === 1 ? '' : 's'} · {money(stay.totalValue, stay.currency, true)}
+            {stay.nights} night{stay.nights === 1 ? '' : 's'} · {money(stay.roomValue, stay.currency, true)}
           </div>
         </div>
       ),
@@ -168,34 +150,12 @@ export function GuestsPanel() {
     },
     {
       key: 'room',
-      header: 'Room',
+      header: 'Room revenue',
       align: 'right',
-      hideOnMobile: true,
-      render: (stay) => <span className="num">{money(stay.netRevenue, stay.currency, true)}</span>,
+      render: (stay) => <span className="num font-medium text-ink">{money(stay.netRevenue, stay.currency, true)}</span>,
       sortValue: (stay) => stay.netRevenue,
     },
-    {
-      key: 'addons',
-      header: 'Add-ons',
-      align: 'right',
-      hideOnMobile: true,
-      render: (stay) =>
-        stay.addOnRevenue === 0 ? (
-          <span className="text-ink-3">—</span>
-        ) : (
-          <span className={cx('num', stay.addOnRevenue < 0 ? 'text-neg' : 'text-ink')}>
-            {money(stay.addOnRevenue, stay.currency, true)}
-          </span>
-        ),
-      sortValue: (stay) => stay.addOnRevenue,
-    },
-    {
-      key: 'total',
-      header: 'Total',
-      align: 'right',
-      render: (stay) => <span className="num font-medium text-ink">{money(stay.totalValue, stay.currency, true)}</span>,
-      sortValue: (stay) => stay.totalValue,
-    },
+
     {
       key: 'lead',
       header: 'Booked ahead',
@@ -269,44 +229,6 @@ export function GuestsPanel() {
           hint="Room payout plus add-ons across every stay that has not started. It is not revenue until the guest arrives."
         />
       </StatGrid>
-
-      {incomplete.length > 0 ? (
-        <Card className="border-warn/25 bg-warn/[0.04]">
-          <h3 className="text-[13px] font-semibold text-ink">
-            {incomplete.length} stay{incomplete.length === 1 ? '' : 's'} with an unfinished add-on figure
-          </h3>
-          <p className="mt-1 max-w-3xl text-[12px] leading-relaxed text-ink-2">
-            The old sheet recorded what went to the crew but not what the guest was charged, so your share reads as a
-            negative number and drags the month down with it. It is a gap in the record, not a loss. The Airbnb
-            resolution total below is what the guest actually paid for food and boats, so the difference is the
-            arithmetic — open the stay, check it, and put the real figure in. The P&amp;L, the forecast and the
-            valuation all pick it up.
-          </p>
-          <div className="mt-2.5 space-y-1.5">
-            {incomplete.map(({ stay, collected }) => (
-              <button
-                key={stay.id}
-                type="button"
-                onClick={() => setOpenStay(stay.id)}
-                className="block w-full rounded-md border border-warn/30 bg-warn/10 px-2.5 py-1.5 text-left text-[11.5px] transition-colors hover:bg-warn/20"
-              >
-                <span className="font-medium text-warn">{stay.guestName.trim() || stay.confirmationCode}</span>
-                <span className="ml-2 text-ink-2">
-                  reads as <span className="num">{money(stay.addOnRevenue, stay.currency, true)}</span>
-                  {collected > 0 ? (
-                    <>
-                      {' · '}
-                      <span className="num">{money(collected, stay.currency, true)}</span> actually came through Airbnb,{' '}
-                      <span className="num">{money(collected + stay.addOnRevenue, stay.currency, true)}</span> of it
-                      looks like yours
-                    </>
-                  ) : null}
-                </span>
-              </button>
-            ))}
-          </div>
-        </Card>
-      ) : null}
 
       {needsDetail.length > 0 ? (
         <Card>
@@ -437,27 +359,11 @@ export function GuestsPanel() {
         <StayDrawer
           stay={selected}
           profiles={profiles}
-          quote={addons.find((row) => !row.excluded && matchesStay(row, selected)) ?? null}
-          resolutionTotal={resolutions
-            .filter((row) => row.confirmationCode === selected.confirmationCode)
-            .reduce((sum, row) => sum + row.amount, 0)}
           onClose={() => setOpenStay(null)}
         />
       ) : null}
     </div>
   )
-}
-
-/** The form has no confirmation code, so a quote ties to a stay by name and date. */
-function matchesStay(quote: AddOnQuote, stay: GuestStay): boolean {
-  const key = (name: string) => name.trim().toLowerCase().replace(/\s+/g, ' ')
-  if (key(quote.guestName) !== key(stay.guestName)) return false
-  const apart = Math.abs(
-    Math.round(
-      (new Date(`${quote.checkIn}T00:00:00`).getTime() - new Date(`${stay.checkIn}T00:00:00`).getTime()) / 86400000,
-    ),
-  )
-  return apart <= 2
 }
 
 function whenLabel(stay: GuestStay): string {
@@ -509,7 +415,7 @@ function RepeatList({
             </div>
             <div className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1 text-[12px]">
               <span className="text-ink-2">
-                Lifetime <span className="num font-medium text-ink">{money(profile.totalValue, 'PHP', true)}</span>
+                Lifetime <span className="num font-medium text-ink">{money(profile.roomValue, 'PHP', true)}</span>
               </span>
               <span className="text-ink-2">
                 <span className="num text-ink">{profile.nights}</span> nights
@@ -549,22 +455,16 @@ function RepeatList({
 function StayDrawer({
   stay,
   profiles,
-  quote,
-  resolutionTotal,
   onClose,
 }: {
   stay: GuestStay
   profiles: GuestProfile[]
-  quote: AddOnQuote | null
-  /** everything that moved through Airbnb for this stay beyond the room */
-  resolutionTotal: number
   onClose: () => void
 }) {
   const { updateBooking } = useLedger()
   const [contact, setContact] = useState(stay.contact)
   const [notes, setNotes] = useState(stay.notes)
   const [room, setRoom] = useState(String(stay.netRevenue))
-  const [addOns, setAddOns] = useState(String(stay.addOnRevenue))
   // The payout export carries no party size, country or review — those live in
   // the Airbnb host inbox and only reach the book by being typed in.
   const [guests, setGuests] = useState(stay.guests > 0 ? String(stay.guests) : '')
@@ -575,11 +475,10 @@ function StayDrawer({
 
   const profile = profiles.find((p) => p.stays.some((s) => s.id === stay.id))
   const roomValue = Number(room)
-  const addOnValue = Number(addOns)
   const guestCount = guests.trim() === '' ? 0 : Math.round(Number(guests))
   const numbersValid =
-    Number.isFinite(roomValue) && Number.isFinite(addOnValue) && Number.isFinite(guestCount) && guestCount >= 0
-  const moneyChanged = numbersValid && (roomValue !== stay.netRevenue || addOnValue !== stay.addOnRevenue)
+    Number.isFinite(roomValue) && Number.isFinite(guestCount) && guestCount >= 0
+  const moneyChanged = numbersValid && roomValue !== stay.netRevenue
   const dirty =
     contact !== stay.contact ||
     notes !== stay.notes ||
@@ -591,10 +490,10 @@ function StayDrawer({
 
   const save = async () => {
     if (!numbersValid) return
-    const { segment, leadTime, totalValue, distance, ...booking } = stay
+    const { segment, leadTime, roomValue: _roomValue, distance, ...booking } = stay
     void segment
     void leadTime
-    void totalValue
+    void _roomValue
     void distance
     await updateBooking({
       ...booking,
@@ -608,7 +507,6 @@ function StayDrawer({
       // Gross moves with the payout unless fees were recorded separately, so the
       // two do not silently drift apart.
       grossRevenue: moneyChanged && booking.fees === 0 ? roomValue : booking.grossRevenue,
-      addOnRevenue: addOnValue,
       prov: moneyChanged ? { ...booking.prov, manual: true } : booking.prov,
     })
     setSaved(true)
@@ -715,20 +613,9 @@ function StayDrawer({
           </div>
 
           <div className="rounded-lg border border-line bg-surface-2 p-3">
-            <div className="grid gap-3 sm:grid-cols-2">
-              <Field label="Room payout" hint="What reached you for the accommodation, after platform fees.">
-                <TextInput value={room} onChange={(v) => { setRoom(v); setSaved(false) }} type="number" />
-              </Field>
-              <Field label="Add-ons you kept" hint="Your share of catering, boat and tours — not the guest's total.">
-                <TextInput value={addOns} onChange={(v) => { setAddOns(v); setSaved(false) }} type="number" />
-              </Field>
-            </div>
-            {addOnValue < 0 ? (
-              <p className="mt-2 text-[11.5px] leading-relaxed text-warn">
-                A negative share usually means the sheet captured what went to the crew but not what the guest was
-                charged. Put the amount you actually kept here — zero if you kept nothing.
-              </p>
-            ) : null}
+            <Field label="Room payout" hint="What reached you for the accommodation, after platform fees.">
+              <TextInput value={room} onChange={(v) => { setRoom(v); setSaved(false) }} type="number" />
+            </Field>
             {stay.fees > 0 ? (
               <p className="mt-2 text-[11.5px] text-ink-3">
                 Guest paid {money(stay.grossRevenue, stay.currency, true)}, less{' '}
@@ -736,65 +623,12 @@ function StayDrawer({
               </p>
             ) : null}
             <p className="mt-2.5 border-t border-line pt-2.5 text-[11.5px] text-ink-2">
-              Worth{' '}
-              <span className="num font-medium text-ink">
-                {money(numbersValid ? roomValue + addOnValue : stay.totalValue, stay.currency)}
-              </span>{' '}
-              in total —{' '}
               <span className="num">
                 {money(stay.nights > 0 && numbersValid ? roomValue / stay.nights : 0, stay.currency)}
               </span>{' '}
-              a night on the room.
+              a night on the room. Food, boats and tours for this stay are on the Add-ons tab.
             </p>
           </div>
-
-          {quote ? (
-            <div className="rounded-lg border border-line bg-surface-2 p-3">
-              <h4 className="text-[12px] font-semibold text-ink">Catering, boat and tours</h4>
-              <p className="mt-1 text-[11.5px] leading-relaxed text-ink-2">
-                From the add-on form. Most of what the guest pays here is the island crew's; the margin is the only part
-                the business keeps, and it is the figure carried into the P&amp;L above.
-              </p>
-              <dl className="mt-2.5 grid grid-cols-2 gap-x-4 gap-y-2.5 sm:grid-cols-4">
-                <Detail label="Guest charged" value={money(quote.guestTotal, quote.currency, true)} />
-                <Detail label="Crew cost" value={money(quote.allanCost, quote.currency, true)} />
-                <Detail label="You keep" value={money(quote.margin, quote.currency, true)} />
-                <Detail
-                  label="Margin"
-                  value={quote.guestTotal > 0 ? pct(quote.margin / quote.guestTotal, 1) : '—'}
-                />
-              </dl>
-              <dl className="mt-2.5 grid grid-cols-2 gap-x-4 gap-y-2.5 border-t border-line pt-2.5 sm:grid-cols-4">
-                <Detail label="Paid up front" value={money(quote.downpayment, quote.currency, true)} />
-                <Detail label="Cash on arrival" value={money(quote.cashOnArrival, quote.currency, true)} />
-                <Detail label="Party on form" value={quote.guests > 0 ? `${quote.guests} guests` : '—'} />
-                <Detail label="Form submitted" value={shortDate(quote.submittedAt)} />
-              </dl>
-              {quote.allergies.trim() ? (
-                <p className="mt-2.5 border-t border-line pt-2.5 text-[11.5px] leading-relaxed text-ink-2">
-                  <span className="font-medium text-ink">Dietary:</span> {quote.allergies}
-                </p>
-              ) : null}
-              {quote.snacks.trim() ? (
-                <p className="mt-1.5 text-[11.5px] leading-relaxed text-ink-2">
-                  <span className="font-medium text-ink">Requested:</span> {quote.snacks}
-                </p>
-              ) : null}
-              {quote.pickup.trim() ? (
-                <p className="mt-1.5 text-[11.5px] leading-relaxed text-ink-2">
-                  <span className="font-medium text-ink">Pickup:</span> {quote.pickup}
-                </p>
-              ) : null}
-            </div>
-          ) : null}
-
-          {resolutionTotal !== 0 ? (
-            <p className="text-[11.5px] leading-relaxed text-ink-3">
-              <span className="num text-ink-2">{money(resolutionTotal, 'PHP', true)}</span> also moved through Airbnb for
-              this stay outside the room charge. That is the guest paying for food and boats through the platform, most
-              of which goes to the crew — it is not counted as revenue, and it is how the bank total reconciles.
-            </p>
-          ) : null}
 
           <div className="grid gap-3 sm:grid-cols-2">
             <Field label="Contact" hint="Phone, email or handle — however you reach them.">

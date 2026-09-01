@@ -90,7 +90,7 @@ export function InsightsPanel() {
       <Card>
         <SectionHeader
           title="Year on year"
-          subtitle="Every year on file, on the measures that matter. Revenue is rooms plus the add-on share you keep; margin runs on both."
+          subtitle="Every year on file, on the measures that matter. Revenue is the room, and margin runs on it."
         />
         <DataTable
           rows={years}
@@ -102,9 +102,7 @@ export function InsightsPanel() {
             { key: 'occ', header: 'Occupancy', align: 'right', render: (r) => pct(r.occupancy, 1), sortValue: (r) => r.occupancy },
             { key: 'adr', header: 'ADR', align: 'right', render: (r) => money(r.adr, 'PHP'), sortValue: (r) => r.adr },
             { key: 'revpar', header: 'RevPAR', align: 'right', render: (r) => money(r.revpar, 'PHP'), sortValue: (r) => r.revpar },
-            { key: 'room', header: 'Rooms', align: 'right', hideOnMobile: true, render: (r) => money(r.roomRevenue, 'PHP', true), sortValue: (r) => r.roomRevenue },
-            { key: 'addon', header: 'Add-ons kept', align: 'right', hideOnMobile: true, render: (r) => money(r.addOnRevenue, 'PHP', true), sortValue: (r) => r.addOnRevenue },
-            { key: 'total', header: 'Revenue', align: 'right', render: (r) => money(r.totalRevenue, 'PHP', true), sortValue: (r) => r.totalRevenue },
+            { key: 'room', header: 'Revenue', align: 'right', render: (r) => money(r.roomRevenue, 'PHP', true), sortValue: (r) => r.roomRevenue },
             {
               key: 'profit',
               header: 'Profit',
@@ -114,7 +112,7 @@ export function InsightsPanel() {
               ),
               sortValue: (r) => r.profit,
             },
-            { key: 'margin', header: 'Margin', align: 'right', hideOnMobile: true, render: (r) => (r.totalRevenue > 0 ? pct(r.margin, 0) : '—'), sortValue: (r) => r.margin },
+            { key: 'margin', header: 'Margin', align: 'right', hideOnMobile: true, render: (r) => (r.roomRevenue > 0 ? pct(r.margin, 0) : '—'), sortValue: (r) => r.margin },
           ]}
         />
       </Card>

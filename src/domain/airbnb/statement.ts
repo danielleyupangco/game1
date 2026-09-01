@@ -49,12 +49,7 @@ export type StatementMonth = {
   stays: number
   guestNights: number
 
-  /** what the owner receives for the accommodation */
-  roomRevenue: number
-  /** her margin on food, boats and tours — nil before she began recording it */
-  addOnMargin: number
-  /** the crew's gross on the same, shown as a memo so the scale is visible */
-  addOnGross: number
+  /** room payouts, and nothing else */
   revenue: number
 
   cogs: number
@@ -80,10 +75,6 @@ export type StatementMonth = {
 export type StatementInput = {
   series: MonthMetricsLike[]
   expenses: Expense[]
-  /** month from which the add-on margin counts as the owner's income */
-  addOnIncomeFrom: string
-  /** resolution totals by month: the crew's gross flowing through the platform */
-  addOnGrossByMonth?: Record<string, number>
 }
 
 function monthOf(iso: string): string {
@@ -112,13 +103,9 @@ export function buildStatement(input: StatementInput): StatementMonth[] {
       else opex += amount
     }
 
-    const roomRevenue = month.revenue
-    // Before she began tracking it, the sheets' add-on column is the crew's
-    // gross rather than her income, so it is held out of revenue entirely.
-    const counts = month.month >= input.addOnIncomeFrom
-    const addOnMargin = counts ? month.addOnRevenue : 0
-    const addOnGross = input.addOnGrossByMonth?.[month.month] ?? (counts ? 0 : month.addOnRevenue)
-    const revenue = roomRevenue + addOnMargin
+    // Revenue is the room. Food, boats and tours are the crew's business and
+    // live on their own page; nothing about them reaches this statement.
+    const revenue = month.revenue
 
     const grossProfit = revenue - cogs
     const ebitda = grossProfit - opex
@@ -132,9 +119,6 @@ export function buildStatement(input: StatementInput): StatementMonth[] {
       occupancy: month.occupancy,
       stays: month.bookings,
       guestNights: month.guestNights,
-      roomRevenue,
-      addOnMargin,
-      addOnGross,
       revenue,
       cogs,
       cogsPct: safe(cogs),
@@ -172,8 +156,6 @@ export function totalStatement(months: StatementMonth[]): StatementMonth {
   const ebitda = grossProfit - opex
   const nightsSold = sum((m) => m.nightsSold)
   const availableNights = sum((m) => m.availableNights)
-  const roomRevenue = sum((m) => m.roomRevenue)
-
   return {
     month: months.length > 0 ? `${months[0].month} → ${months[months.length - 1].month}` : '',
     nightsSold,
@@ -181,9 +163,6 @@ export function totalStatement(months: StatementMonth[]): StatementMonth {
     occupancy: availableNights > 0 ? nightsSold / availableNights : 0,
     stays: sum((m) => m.stays),
     guestNights: sum((m) => m.guestNights),
-    roomRevenue,
-    addOnMargin: sum((m) => m.addOnMargin),
-    addOnGross: sum((m) => m.addOnGross),
     revenue,
     cogs,
     cogsPct: safe(cogs),
@@ -197,8 +176,8 @@ export function totalStatement(months: StatementMonth[]): StatementMonth {
     depreciation,
     ebit: ebitda - depreciation,
     ebitPct: safe(ebitda - depreciation),
-    adr: nightsSold > 0 ? roomRevenue / nightsSold : 0,
-    revpar: availableNights > 0 ? roomRevenue / availableNights : 0,
+    adr: nightsSold > 0 ? revenue / nightsSold : 0,
+    revpar: availableNights > 0 ? revenue / availableNights : 0,
   }
 }
 

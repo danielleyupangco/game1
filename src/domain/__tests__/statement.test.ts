@@ -6,10 +6,11 @@ import type { Booking, CompetitorListing, CompetitorObservation, DividendPayout,
 
 const prov: Provenance = { importId: 'i', fileName: 'f.xlsx', sheetName: 'S', rowNumber: 2 }
 
+/** The second argument is an add-on figure the room business must ignore. */
 const month = (m: string, revenue: number, addOn: number) => ({
   month: m,
   revenue,
-  addOnRevenue: addOn,
+  ignoredAddOn: addOn,
   nightsSold: 10,
   availableNights: 30,
   occupancy: 10 / 30,
@@ -40,19 +41,13 @@ describe('income statement', () => {
     expense('2026-01-05', 'Salary', 34000),
     expense('2026-01-05', 'Per night costs', 20000),
   ]
-  const built = buildStatement({ series, expenses, addOnIncomeFrom: '2025-12' })
+  const built = buildStatement({ series, expenses })
 
-  it('counts room revenue always and add-on margin only once it was tracked', () => {
-    expect(built[0].roomRevenue).toBe(200000)
-    // June 2025 predates the tracking date, so the crew's gross is not income.
-    expect(built[0].addOnMargin).toBe(0)
+  it('is the room and nothing but the room', () => {
+    // Both months carry an add-on figure on the booking. Neither may appear.
     expect(built[0].revenue).toBe(200000)
-    expect(built[1].addOnMargin).toBe(50000)
-    expect(built[1].revenue).toBe(290000)
-  })
-
-  it('keeps the untracked add-on figure visible as a memo rather than deleting it', () => {
-    expect(built[0].addOnGross).toBe(90000)
+    expect(built[1].revenue).toBe(240000)
+    expect(Object.keys(built[0]).some((key) => /addon|patong/i.test(key))).toBe(false)
   })
 
   it('splits cost of sales from operating costs from depreciation', () => {
@@ -64,25 +59,24 @@ describe('income statement', () => {
     expect(built[0].ebit).toBe(133250)
   })
 
-  it('moves the whole statement when the tracking date moves', () => {
-    const earlier = buildStatement({ series, expenses, addOnIncomeFrom: '2025-01' })
-    expect(earlier[0].addOnMargin).toBe(90000)
-    expect(earlier[0].revenue).toBe(290000)
-  })
-
   it('adds months into a column without double-counting percentages', () => {
     const total = totalStatement(built)
-    expect(total.revenue).toBe(490000)
-    expect(total.roomRevenue).toBe(440000)
+    expect(total.revenue).toBe(440000)
     expect(total.cogs).toBe(40000)
     expect(total.ebitdaPct).toBeCloseTo(total.ebitda / total.revenue, 10)
     expect(total.byCategory.Salary).toBe(68000)
+  })
+
+  it('rates every margin against room revenue', () => {
+    const total = totalStatement(built)
+    expect(total.grossMargin).toBeCloseTo(total.grossProfit / 440000, 10)
+    expect(total.adr).toBeCloseTo(440000 / total.nightsSold, 10)
   })
 })
 
 describe('cash flow', () => {
   const series = [month('2026-01', 200000, 0), month('2026-02', 200000, 0)]
-  const built = buildStatement({ series, expenses: [expense('2026-01-05', 'Salary', 50000)], addOnIncomeFrom: '2025-12' })
+  const built = buildStatement({ series, expenses: [expense('2026-01-05', 'Salary', 50000)] })
   const dividends: DividendPayout[] = [
     {
       id: 'd1',
@@ -112,11 +106,7 @@ describe('cash flow', () => {
   })
 
   it('leaves depreciation out of cash, since no money moves', () => {
-    const withDep = buildStatement({
-      series,
-      expenses: [expense('2026-01-05', 'Depreciation', 12750)],
-      addOnIncomeFrom: '2025-12',
-    })
+    const withDep = buildStatement({ series, expenses: [expense('2026-01-05', 'Depreciation', 12750)] })
     const cash = buildActualCash(withDep, {}, [], 0)
     expect(cash[0].operatingCosts).toBe(0)
   })

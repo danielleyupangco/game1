@@ -58,7 +58,10 @@ export function ForecastPanel() {
   )
 
   const actual = useMemo(() => (series.length > 0 ? aggregate(trailing(series, 12)) : null), [series])
-  const addOnPerNight = actual && actual.nightsSold > 0 ? actual.addOnRevenue / actual.nightsSold : 0
+  void actual
+  // The forecast projects the room business. Add-ons are the crew's trade and
+  // are forecast nowhere — see the Add-ons tab for what flows through them.
+  const addOnPerNight = 0
 
   // Unspent budget on active projects, treated as cash that will leave the
   // account. Spread evenly over the horizon: nobody knows the real timing, and
@@ -167,7 +170,7 @@ export function ForecastPanel() {
         <Stat
           label="Expected revenue"
           value={money(totalRevenue, 'PHP', true)}
-          sub={`${money(lowRevenue, 'PHP', true)} – ${money(highRevenue, 'PHP', true)} · rooms and add-ons`}
+          sub={`${money(lowRevenue, 'PHP', true)} – ${money(highRevenue, 'PHP', true)} · rooms only`}
         />
         <Stat
           label="Cash at the end"

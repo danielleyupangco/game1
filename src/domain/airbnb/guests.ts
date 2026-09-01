@@ -18,8 +18,8 @@ export type GuestStay = Booking & {
   segment: Segment
   /** days between the reservation being made and arrival; -1 when unknown */
   leadTime: number
-  /** room payout plus your share of add-ons */
-  totalValue: number
+  /** the room payout — what the stay is worth to the room business */
+  roomValue: number
   /** days until arrival (upcoming), days since departure (past), 0 while here */
   distance: number
 }
@@ -29,7 +29,7 @@ export type GuestProfile = {
   name: string
   stays: GuestStay[]
   nights: number
-  totalValue: number
+  roomValue: number
   firstStay: string
   lastStay: string
   countries: string[]
@@ -72,7 +72,7 @@ export function toStays(bookings: Booking[], asOf = today()): GuestStay[] {
         segment,
         leadTime,
         distance,
-        totalValue: booking.netRevenue + booking.addOnRevenue,
+        roomValue: booking.netRevenue,
       }
     })
 }
@@ -102,7 +102,7 @@ export function guestProfiles(stays: GuestStay[]): GuestProfile[] {
       name: sorted[0].guestName.trim() || 'Unnamed booking',
       stays: sorted,
       nights: sorted.reduce((sum, stay) => sum + stay.nights, 0),
-      totalValue: sorted.reduce((sum, stay) => sum + stay.totalValue, 0),
+      roomValue: sorted.reduce((sum, stay) => sum + stay.roomValue, 0),
       firstStay: sorted[0].checkIn,
       lastStay: sorted[sorted.length - 1].checkIn,
       countries: unique(sorted.map((stay) => stay.country)),
@@ -147,10 +147,10 @@ export function summariseGuestBook(stays: GuestStay[], profiles: GuestProfile[])
     here,
     arriving90,
     nextArrival: upcoming[0] ?? null,
-    repeatGuests: [...repeatGuests].sort((a, b) => b.totalValue - a.totalValue),
+    repeatGuests: [...repeatGuests].sort((a, b) => b.roomValue - a.roomValue),
     repeatShare: named.length > 0 ? repeatStays / named.length : 0,
     namedShare: stays.length > 0 ? named.length / stays.length : 0,
-    bookedAhead: upcoming.reduce((sum, stay) => sum + stay.totalValue, 0),
+    bookedAhead: upcoming.reduce((sum, stay) => sum + stay.roomValue, 0),
     averageLeadTime: withLead.length > 0 ? withLead.reduce((s, stay) => s + stay.leadTime, 0) / withLead.length : 0,
     averageParty: withParty.length > 0 ? withParty.reduce((s, stay) => s + stay.guests, 0) / withParty.length : 0,
   }

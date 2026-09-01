@@ -74,8 +74,8 @@ export function OwnerPanel() {
     )
   }
 
-  const kept = t12.totalRevenue - t12.totalCost
-  const keptShare = t12.totalRevenue > 0 ? kept / t12.totalRevenue : 0
+  const kept = t12.revenue - t12.totalCost
+  const keptShare = t12.revenue > 0 ? kept / t12.revenue : 0
   const nightsPerMonth = t12.nightsSold / 12
   const recent = series.slice(-12)
 
@@ -84,7 +84,7 @@ export function OwnerPanel() {
       <Card className="bg-surface/60">
         <p className="text-[15px] leading-relaxed text-ink">
           Over the last twelve months the island earned{' '}
-          <strong className="num font-semibold">{money(t12.totalRevenue, 'PHP')}</strong> from{' '}
+          <strong className="num font-semibold">{money(t12.revenue, 'PHP')}</strong> from{' '}
           <strong className="num font-semibold">{t12.bookings}</strong> stays. Running it cost{' '}
           <strong className="num font-semibold">{money(t12.totalCost, 'PHP')}</strong>, which left{' '}
           <strong className={cx('num font-semibold', kept >= 0 ? 'text-pos' : 'text-neg')}>
@@ -103,8 +103,8 @@ export function OwnerPanel() {
       <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
         <PlainStat
           label="Money coming in"
-          value={money(t12.totalRevenue, 'PHP', true)}
-          detail={`${money(t12.revenue, 'PHP', true)} for the rooms, ${money(t12.addOnRevenue, 'PHP', true)} from food and trips`}
+          value={money(t12.revenue, 'PHP', true)}
+          detail={`${t12.nightsSold} nights sold across ${t12.bookings} stays`}
           tone="pos"
         />
         <PlainStat
@@ -232,7 +232,7 @@ export function OwnerPanel() {
         <dl className="mt-2 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
           {[
             ['Occupancy', 'How full we were. 40% means we sold 40 nights out of every 100 we could have.'],
-            ['ADR', 'The average price of one night, before food and trips.'],
+            ['ADR', 'The average price a guest pays for one night on the island.'],
             ['RevPAR', 'What every available night earned on average — including the empty ones. It falls if we sell fewer nights even at a higher price.'],
             ['Fixed cost', 'Wages, internet, upkeep. Arrives whether or not anyone books.'],
             ['Variable cost', 'Food, fuel, laundry. Only happens when a guest comes.'],

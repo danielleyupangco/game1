@@ -350,18 +350,6 @@ export type Settings = {
   targetsByAssetClass: AllocationTarget[]
   targetsByGeography: AllocationTarget[]
   targetsByCurrency: AllocationTarget[]
-  /**
-   * The month from which the add-on margin is genuinely the owner's.
-   *
-   * Room revenue has always been hers. Food, boats and tours are the island
-   * crew's business; she keeps only a margin on it, and she only began
-   * recording that margin in Y3. Earlier sheets carry an "add ons revenue"
-   * column that is the crew's gross, not her income, so counting it would
-   * overstate what the business earned. Stays before this month keep the
-   * figure on the record but leave it out of income — and because it is a
-   * setting rather than a constant, the judgement is visible and reversible.
-   */
-  addOnIncomeFrom: string
 }
 
 export type DcfAssumptions = {

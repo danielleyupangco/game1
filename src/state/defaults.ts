@@ -24,11 +24,6 @@ export const DEFAULT_SETTINGS: Settings = {
     { key: 'PHP', weight: 0.5 },
     { key: 'USD', weight: 0.5 },
   ],
-  // Y3 — calendar 2026 — is when the owner began recording her own margin on
-  // food and boats, in the mastersheet's "Balance" column and then the form's
-  // "Margin". Before that the sheets carry the crew's gross, which is not her
-  // income, so counting it would roughly double the business on paper.
-  addOnIncomeFrom: '2026-01',
 }
 
 /**

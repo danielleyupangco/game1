@@ -10,7 +10,6 @@ export type { Expense, DividendPayout }
 export type MonthMetricsLike = {
   month: string
   revenue: number
-  addOnRevenue: number
   nightsSold: number
   availableNights: number
   occupancy: number

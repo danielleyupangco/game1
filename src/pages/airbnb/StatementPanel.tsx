@@ -20,21 +20,11 @@ type View = 'income' | 'cash' | 'expenses' | 'dividends'
  * argues with.
  */
 export function StatementPanel({ series }: { series: MonthMetrics[] }) {
-  const { expenses, capitalSpend, dividends, settings, resolutions, saveSettings } = useLedger()
+  const { expenses, capitalSpend, dividends } = useLedger()
   const [view, setView] = useState<View>('income')
   const [year, setYear] = useState<string>('all')
-  const [showAddOnSetting, setShowAddOnSetting] = useState(false)
 
-  const addOnGrossByMonth = useMemo(() => {
-    const out: Record<string, number> = {}
-    for (const row of resolutions) out[row.date.slice(0, 7)] = (out[row.date.slice(0, 7)] ?? 0) + row.amount
-    return out
-  }, [resolutions])
-
-  const full = useMemo(
-    () => buildStatement({ series, expenses, addOnIncomeFrom: settings.addOnIncomeFrom, addOnGrossByMonth }),
-    [series, expenses, settings.addOnIncomeFrom, addOnGrossByMonth],
-  )
+  const full = useMemo(() => buildStatement({ series, expenses }), [series, expenses])
 
   const years = useMemo(() => [...new Set(full.map((month) => month.month.slice(0, 4)))].sort(), [full])
   const months = useMemo(
@@ -61,44 +51,12 @@ export function StatementPanel({ series }: { series: MonthMetrics[] }) {
     )
   }
 
-  const excludedBefore = full
-    .filter((month) => month.month < settings.addOnIncomeFrom)
-    .reduce((sum, month) => sum + month.addOnGross, 0)
-
   return (
     <div className="space-y-4">
       <p className="max-w-3xl text-[12px] leading-relaxed text-ink-2">
-        Revenue is the room, plus your patong on the crew's food, boats and tours. The crew's own takings are their
-        business and appear nowhere in these totals.
-        {excludedBefore > 0 ? (
-          <>
-            {' '}
-            The sheets before {monthLabel(settings.addOnIncomeFrom)} record the crew's gross rather than your margin
-            (<span className="num">{money(excludedBefore, 'PHP', true)}</span> of it), so it is left out.{' '}
-            <button
-              type="button"
-              onClick={() => setShowAddOnSetting((prev) => !prev)}
-              className="text-accent underline-offset-2 hover:underline"
-            >
-              {showAddOnSetting ? 'hide' : 'change the date'}
-            </button>
-          </>
-        ) : null}
+        Revenue here is the room, and only the room. Food, boats and tours are Kuya Allan's business — they have their
+        own tab, where the whole flow is laid out.
       </p>
-      {showAddOnSetting ? (
-        <div className="flex flex-wrap items-center gap-2 rounded-lg border border-line bg-surface-2 px-3 py-2">
-          <span className="text-[11.5px] text-ink-2">Count my add-on margin from</span>
-          <input
-            type="month"
-            value={settings.addOnIncomeFrom}
-            onChange={(event) => void saveSettings({ addOnIncomeFrom: event.target.value })}
-            className={cx(inputClass, 'w-40')}
-          />
-          <span className="text-[11px] text-ink-3">
-            Anything earlier is treated as the crew's, not yours.
-          </span>
-        </div>
-      ) : null}
 
       <div className="flex flex-wrap items-center gap-2">
         <Tabs
@@ -210,14 +168,10 @@ function IncomeStatement({ months, total }: { months: StatementMonth[]; total: S
     <div className="space-y-4">
       <StatGrid>
         <Stat
-          label="Revenue"
+          label="Room revenue"
           value={money(total.revenue, 'PHP', true)}
-          sub={
-            total.addOnMargin > 0
-              ? `${money(total.roomRevenue, 'PHP', true)} rooms + ${money(total.addOnMargin, 'PHP', true)} patong`
-              : `${num(total.nightsSold, 0)} nights sold`
-          }
-          hint="Room payouts plus your margin on the crew's food, boats and tours. The crew's own takings are not counted."
+          sub={`${num(total.nightsSold, 0)} nights sold`}
+          hint="Room payouts only. Food, boats and tours are on the Add-ons tab."
         />
         <Stat
           label="Nights sold"
@@ -245,9 +199,7 @@ function IncomeStatement({ months, total }: { months: StatementMonth[]; total: S
           { label: 'Nights available', value: (m) => m.availableNights, kind: 'count' },
           { label: 'Occupancy', value: (m) => m.occupancy, kind: 'pct' },
           { label: 'Stays', value: (m) => m.stays, kind: 'count' },
-          { label: 'REVENUE', value: (m) => m.revenue, emphasis: 'head' },
-          { label: 'Room revenue', value: (m) => m.roomRevenue, emphasis: 'sub' },
-          { label: 'Patong on add-ons', value: (m) => m.addOnMargin, emphasis: 'sub' },
+          { label: 'ROOM REVENUE', value: (m) => m.revenue, emphasis: 'head' },
           { label: 'Cost of sales', value: (m) => m.cogs, emphasis: 'head' },
           { label: 'as % of revenue', value: (m) => m.cogsPct, kind: 'pct', emphasis: 'sub' },
           { label: 'GROSS PROFIT', value: (m) => m.grossProfit, emphasis: 'total' },
@@ -272,16 +224,6 @@ function IncomeStatement({ months, total }: { months: StatementMonth[]; total: S
         costs, and they have their own tabs.
       </p>
 
-      {total.addOnGross > 0 ? (
-        <p className="text-[11.5px] leading-relaxed text-ink-3">
-          <span className="font-medium text-ink-2">Side note on add-ons.</span> Guests paid about{' '}
-          <span className="num">{money(total.addOnGross, 'PHP', true)}</span> for food, boats and tours over this period.
-          That is the crew's business and none of it is in the figures above — only your{' '}
-          <span className="num">{money(total.addOnMargin, 'PHP', true)}</span> patong is
-          {total.addOnGross > 0 ? <> ({pct(total.addOnMargin / total.addOnGross, 0)} of it)</> : null}. It is here for
-          scale, because the money moving through your account is much larger than the money you keep.
-        </p>
-      ) : null}
     </div>
   )
 }
