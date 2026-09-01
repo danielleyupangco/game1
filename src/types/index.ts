@@ -287,6 +287,75 @@ export type CompetitorListing = {
   /** false once a listing is no longer worth tracking, rather than deleting it */
   active: boolean
   addedAt: string
+  /**
+   * How far it is from the island, as the report groups them: same island,
+   * an hour or two by boat, or a different island entirely. Travel time is
+   * most of what decides whether a listing is really competing for the guest.
+   */
+  proximity?: 'same-island' | 'near' | 'far' | 'unknown'
+  /** the room description as advertised, e.g. "Entire home · 9g · 3BR/7bed/3ba" */
+  layout?: string
+  /** true for the owner's own listing, which anchors every comparison */
+  isMine?: boolean
+}
+
+/**
+ * A whole market report, as one dated document.
+ *
+ * The fortnightly watch arrives as a written report, not a spreadsheet: it
+ * carries a rate table, but also the things a table cannot hold — that five of
+ * the nine tracked listings turn out to be one host, that supply on the island
+ * went from 121 to 125, what the author concluded. Those are the parts that
+ * actually change what to do, so they are stored rather than discarded on the
+ * way to extracting the numbers.
+ *
+ * Each report is kept whole and dated. A run of them is the market's history.
+ */
+export type MarketReport = {
+  id: string
+  /** the day the rates were captured */
+  reportedOn: string
+  /** the stay the rates were quoted for, since a rate without dates means nothing */
+  quotedFor: string
+  nights: number
+  guests: number
+  title: string
+  /** the report's own summary paragraph */
+  bottomLine: string
+  /** "what changed since last time", in the report's words */
+  changes: string[]
+  /** the positioning conclusions */
+  takeaways: string[]
+  /** the longer strategic plays, which persist across reports */
+  playbook: { heading: string; points: string[] }[]
+  /** conditions the report says to act on immediately if they occur */
+  triggers: string[]
+  /** how many homes the report counted in the area, when it says */
+  supplyCount: number | null
+  /** what the previous report counted, so the trend is visible */
+  supplyPrevious: number | null
+  sourceFile: string
+  importedAt: string
+}
+
+/**
+ * What the market charges for the things guests buy on top of the room.
+ *
+ * The island's add-ons are quoted by the crew and marked up; without an outside
+ * price there is no way to tell a fair mark-up from an excessive one, or a
+ * generous one. These are the outside prices.
+ */
+export type AncillaryBenchmark = WithProvenance & {
+  reportId: string
+  observedOn: string
+  item: string
+  /** the bottom and top of the quoted range, equal when a single price */
+  low: number
+  high: number
+  /** 'guest' = per person, 'group' = per boat or vehicle, 'day' = per day */
+  basis: 'guest' | 'group' | 'day' | 'unknown'
+  currency: Currency
+  note: string
 }
 
 export type CompetitorObservation = WithProvenance & {
@@ -309,6 +378,16 @@ export type CompetitorObservation = WithProvenance & {
   nightsBookedNext90: number
   amenities: string[]
   note: string
+  /**
+   * Airbnb's own demand badge on the listing, when the report records one.
+   * Not a number, but the only read anyone gets on how full a rival is:
+   * "usually booked" and "below 60-day average" are opposite signals.
+   */
+  demandSignal?: string
+  /** the report this came from, when it arrived in one */
+  reportId?: string
+  /** the stay the rate was quoted for, so two observations are comparable */
+  quotedNights?: number
 }
 
 export type ExpenseNature = 'fixed' | 'variable'

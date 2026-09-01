@@ -21,6 +21,8 @@ export type AddOnStay = {
   checkIn: string
   checkOut: string
   nights: number
+  /** how many people the add-ons were for, which is what makes a per-head price */
+  guests: number
   /** what the guest was charged for food, boats and tours */
   charged: number
   /** what the island crew quoted for the same */
@@ -98,6 +100,7 @@ export function buildAddOnStays(input: AddOnInput): AddOnStay[] {
       checkIn: quote.checkIn,
       checkOut: quote.checkOut,
       nights: quote.nights || booking?.nights || 0,
+      guests: quote.guests || booking?.guests || 0,
       charged,
       toAllan,
       patong,
@@ -129,6 +132,7 @@ export function buildAddOnStays(input: AddOnInput): AddOnStay[] {
       checkIn: booking.checkIn,
       checkOut: booking.checkOut,
       nights: booking.nights,
+      guests: booking.guests,
       charged: 0,
       toAllan: 0,
       patong: booking.addOnRevenue,

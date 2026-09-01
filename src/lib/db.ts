@@ -1,6 +1,7 @@
 import { openDB, type DBSchema, type IDBPDatabase } from 'idb'
 import type {
   AddOnQuote,
+  AncillaryBenchmark,
   BenchmarkPoint,
   CapitalSpend,
   CompetitorListing,
@@ -15,6 +16,7 @@ import type {
   Expense,
   Holding,
   ImportBatch,
+  MarketReport,
   PricingAssumptions,
   Settings,
   Resolution,
@@ -41,11 +43,13 @@ interface LedgerDB extends DBSchema {
   dividends: { key: string; value: DividendPayout; indexes: { date: string } }
   competitors: { key: string; value: CompetitorListing }
   observations: { key: string; value: CompetitorObservation; indexes: { listingId: string } }
+  reports: { key: string; value: MarketReport; indexes: { reportedOn: string } }
+  benchmarks: { key: string; value: AncillaryBenchmark; indexes: { reportId: string } }
   kv: { key: string; value: unknown }
 }
 
 const DB_NAME = 'ledger'
-const DB_VERSION = 6
+const DB_VERSION = 7
 
 let dbPromise: Promise<IDBPDatabase<LedgerDB>> | null = null
 
@@ -81,6 +85,14 @@ function db() {
           if (!database.objectStoreNames.contains('observations')) {
             const store = database.createObjectStore('observations', { keyPath: 'id' })
             store.createIndex('listingId', 'listingId')
+          }
+          if (!database.objectStoreNames.contains('reports')) {
+            const store = database.createObjectStore('reports', { keyPath: 'id' })
+            store.createIndex('reportedOn', 'reportedOn')
+          }
+          if (!database.objectStoreNames.contains('benchmarks')) {
+            const store = database.createObjectStore('benchmarks', { keyPath: 'id' })
+            store.createIndex('reportId', 'reportId')
           }
           return
         }
@@ -125,6 +137,11 @@ function db() {
         const observations = database.createObjectStore('observations', { keyPath: 'id' })
         observations.createIndex('listingId', 'listingId')
 
+        const reports = database.createObjectStore('reports', { keyPath: 'id' })
+        reports.createIndex('reportedOn', 'reportedOn')
+        const benchmarks = database.createObjectStore('benchmarks', { keyPath: 'id' })
+        benchmarks.createIndex('reportId', 'reportId')
+
         database.createObjectStore('kv')
       },
     })
@@ -147,6 +164,8 @@ type RecordStore =
   | 'dividends'
   | 'competitors'
   | 'observations'
+  | 'reports'
+  | 'benchmarks'
 
 export async function getAll<K extends RecordStore>(store: K): Promise<LedgerDB[K]['value'][]> {
   return (await db()).getAll(store)
@@ -235,6 +254,8 @@ export type Backup = {
   dividends: DividendPayout[]
   competitors: CompetitorListing[]
   observations: CompetitorObservation[]
+  reports: MarketReport[]
+  benchmarks: AncillaryBenchmark[]
   settings: Settings | null
   dcf: DcfAssumptions | null
   pricing: PricingAssumptions | null
@@ -262,6 +283,8 @@ export async function exportBackup(): Promise<Backup> {
     dividends: await getAll('dividends'),
     competitors: await getAll('competitors'),
     observations: await getAll('observations'),
+    reports: await getAll('reports'),
+    benchmarks: await getAll('benchmarks'),
     settings: await getKV<Settings | null>(KV.settings, null),
     dcf: await getKV<DcfAssumptions | null>(KV.dcf, null),
     pricing: await getKV<PricingAssumptions | null>(KV.pricing, null),
@@ -318,8 +341,9 @@ export async function mergeSeed(backup: Backup): Promise<SeedMergeReport> {
   }
   const findingState = new Map((await getAll('findings')).map((finding) => [finding.id, finding.status]))
 
-  // Competitor listings and observations are never seeded — they only exist
-  // because somebody recorded them — so they are left alone entirely.
+  // Competitor listings, observations, market reports and the ancillary
+  // benchmarks in them are never seeded — they only exist because somebody
+  // recorded or imported them — so they are left alone entirely.
   const seededStores: RecordStore[] = [
     'holdings',
     'snapshots',
@@ -383,6 +407,8 @@ export async function importBackup(backup: Backup): Promise<void> {
     'dividends',
     'competitors',
     'observations',
+    'reports',
+    'benchmarks',
   ]
   for (const store of stores) await clearStore(store)
 
@@ -400,6 +426,8 @@ export async function importBackup(backup: Backup): Promise<void> {
   await putMany('dividends', backup.dividends ?? [])
   await putMany('competitors', backup.competitors ?? [])
   await putMany('observations', backup.observations ?? [])
+  await putMany('reports', backup.reports ?? [])
+  await putMany('benchmarks', backup.benchmarks ?? [])
 
   if (backup.settings) await setKV(KV.settings, backup.settings)
   if (backup.dcf) await setKV(KV.dcf, backup.dcf)

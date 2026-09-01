@@ -37,3 +37,36 @@ Airbnb blocks automated access, and Google Sheets is not reachable from the
 build environment either. Anything that would require reading either one live
 is therefore a file drop or a typed entry — which is slower, but means every
 number on screen is traceable to something a person can point at.
+
+## Competitor reports
+
+The fortnightly market watch arrives as an HTML report and is loaded on the
+**Island T → Competitors** tab, not through the spreadsheet importer. Press
+"Load a report", pick the file, and it fills the whole tab in one go.
+
+What the importer looks for, so a future report keeps working:
+
+| Part of the report | How it is found | What it becomes |
+| --- | --- | --- |
+| `<h1>` with "refreshed &lt;date&gt;" | the heading | the report's date — every rate is stamped with it |
+| `.sub` line naming the sampled stay | "a 2-night stay, 4–6 Oct 2026, 2 guests" | the dates the rates were quoted for |
+| `.changed` block | its `<li>` items | "What changed" on the tab and in Insights |
+| `.lede` paragraph | first `<p>` | the bottom line |
+| Heading containing **Pricing** | the table under it | one rate per listing |
+| Heading containing **houseboat** | the table under it | the same, tagged to that host |
+| Heading containing **New listings** | the table under it | new entrants |
+| Heading containing **Ancillary** | the table under it | market add-on prices |
+| Heading containing **What it means** | its paragraphs | the positioning read |
+| Heading containing **Playbook** / **Triggers** | their `<h3>` groups | the longer plays and the act-fast list |
+| "homes 121 → 125" anywhere in the changes | the two numbers | the supply trend |
+
+Columns are matched by header name rather than position, so reordering them is
+safe. Listings are matched to earlier reports by the Airbnb room id in their
+link — that is what makes a rate a trend rather than an isolated number, so
+**keep the `airbnb.com/rooms/<id>` links on the listing names**. A row with no
+link is still imported, matched by name instead.
+
+Anything the parser cannot read is counted and reported on screen rather than
+dropped silently. If a report comes back with rows skipped, the layout has
+drifted and the parser needs teaching — the rules live in
+`src/lib/competitor-report.ts`.

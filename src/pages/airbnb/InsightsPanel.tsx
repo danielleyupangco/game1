@@ -8,7 +8,7 @@ import { DataTable } from '@/components/ui/DataTable'
 import { ChartFrame, Legend, tooltipProps } from '@/components/charts/Chart'
 import { AXIS, GRID, SERIES, STATUS, TOOLTIP_STYLE } from '@/components/charts/theme'
 import { FindingList } from '@/components/ui/FindingList'
-import { money, num, pct, signedPct } from '@/lib/format'
+import { money, num, pct, shortDate, signedPct } from '@/lib/format'
 import { monthName } from '@/lib/dates'
 
 /**
@@ -18,7 +18,12 @@ import { monthName } from '@/lib/dates'
  * signals and the judgements about them sit in one place.
  */
 export function InsightsPanel() {
-  const { bookings, expenses, settings, dcf, pricing, findings } = useLedger()
+  const { bookings, expenses, settings, dcf, pricing, findings, reports } = useLedger()
+
+  const latestReport = useMemo(
+    () => [...reports].sort((a, b) => b.reportedOn.localeCompare(a.reportedOn))[0] ?? null,
+    [reports],
+  )
 
   const insights = useMemo(
     () =>
@@ -333,6 +338,8 @@ export function InsightsPanel() {
         </div>
       </Card>
 
+      <MarketWatch report={latestReport} />
+
       <div>
         <SectionHeader
           title="Written findings"
@@ -345,6 +352,73 @@ export function InsightsPanel() {
         />
         <FindingList findings={islandFindings} />
       </div>
+    </div>
+  )
+}
+
+/**
+ * What the market watch is saying, on the same page as everything else.
+ *
+ * The competitor report is a separate document arriving on its own cadence,
+ * and left on its own tab it becomes something read once and forgotten. The
+ * parts of it that are conclusions rather than prices belong next to the
+ * property's own signals — that is where they get acted on. This fills itself
+ * from whatever the most recent report said, so a new one flows through here
+ * without anyone rewriting anything.
+ */
+function MarketWatch({ report }: { report: import('@/types').MarketReport | null }) {
+  if (!report) return null
+  const lines = [
+    ...report.changes.map((text) => ({ text, kind: 'changed' as const })),
+    ...report.takeaways.map((text) => ({ text, kind: 'means' as const })),
+  ]
+  if (lines.length === 0 && report.triggers.length === 0) return null
+
+  return (
+    <div>
+      <SectionHeader
+        title="From the market watch"
+        subtitle={`The ${shortDate(report.reportedOn)} competitor report, in its own words. Rates and the full report live on the Competitors tab; what is here is the part that changes what to do.`}
+        right={
+          report.supplyCount !== null && report.supplyPrevious !== null ? (
+            <Pill tone={report.supplyCount > report.supplyPrevious ? 'warn' : 'info'}>
+              {report.supplyPrevious} → {report.supplyCount} homes nearby
+            </Pill>
+          ) : null
+        }
+      />
+      <Card>
+        {report.bottomLine ? (
+          <p className="mb-3 max-w-3xl border-l-2 border-accent/40 pl-3 text-[12px] leading-relaxed text-ink-2">
+            {report.bottomLine}
+          </p>
+        ) : null}
+        <ul className="space-y-2">
+          {lines.map((line) => (
+            <li key={line.text} className="flex gap-2 text-[12px] leading-relaxed text-ink-2">
+              <span
+                className={cx(
+                  'mt-[6px] h-1 w-1 shrink-0 rounded-full',
+                  line.kind === 'changed' ? 'bg-accent' : 'bg-ink-3',
+                )}
+              />
+              <span>{line.text}</span>
+            </li>
+          ))}
+        </ul>
+        {report.triggers.length > 0 ? (
+          <div className="mt-3 rounded-lg border border-warn/25 bg-warn/[0.05] px-3 py-2">
+            <p className="text-[11.5px] font-semibold text-warn">Act fast if these happen</p>
+            <ul className="mt-1 space-y-1">
+              {report.triggers.map((line) => (
+                <li key={line} className="text-[11.5px] leading-relaxed text-ink-2">
+                  {line}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+      </Card>
     </div>
   )
 }

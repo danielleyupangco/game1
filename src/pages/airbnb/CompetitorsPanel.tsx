@@ -2,19 +2,22 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts'
 import { useLedger } from '@/state/store'
 import { perGuestRate, readMarket, snapshotOf, SEED_LISTINGS, type ListingSnapshot } from '@/domain/airbnb/competitors'
+import { addOnPerGuest, groupByOperator, priceLadder, type Operator } from '@/domain/airbnb/operators'
+import { buildAddOnStays } from '@/domain/airbnb/addons'
+import { parseCompetitorReport } from '@/lib/competitor-report'
 import { aggregate, trailing } from '@/domain/airbnb/metrics'
 import { findLevers } from '@/domain/airbnb/growth'
 import { buildBrief, type MarketBrief } from '@/domain/airbnb/marketbrief'
 import { describeError, explainError, getSample } from '@/lib/claude'
 import type { MonthMetrics } from '@/domain/airbnb/metrics'
-import { Button, Card, Field, Pill, SectionHeader, TextInput, cx } from '@/components/ui/primitives'
+import { Button, Card, Field, Pill, SectionHeader, Tabs, TextInput, cx } from '@/components/ui/primitives'
 import { Stat, StatGrid } from '@/components/ui/Stat'
 import { ChartFrame, tooltipProps } from '@/components/charts/Chart'
-import { AXIS, GRID, SERIES, STATUS, TOOLTIP_STYLE } from '@/components/charts/theme'
+import { AXIS, GRID, SERIES, TOOLTIP_STYLE } from '@/components/charts/theme'
 import { money, num, pct, shortDate } from '@/lib/format'
 import { uid } from '@/lib/id'
 import { today } from '@/lib/dates'
-import type { CompetitorListing, CompetitorObservation } from '@/types'
+import type { AncillaryBenchmark, CompetitorListing, CompetitorObservation, MarketReport } from '@/types'
 
 /**
  * What everyone else is charging.
@@ -25,14 +28,36 @@ import type { CompetitorListing, CompetitorObservation } from '@/types'
  * scrape of a single moment never could: a price history on the same dates,
  * which is what actually shows whether the market is moving.
  */
+type View = 'brief' | 'operators' | 'rates' | 'addons' | 'watchlist'
+
 export function CompetitorsPanel({ series }: { series: MonthMetrics[] }) {
-  const { competitors, observations, saveCompetitor, removeCompetitor, addObservation, bookings, addons } = useLedger()
+  const {
+    competitors,
+    observations,
+    reports,
+    benchmarks,
+    saveCompetitor,
+    removeCompetitor,
+    addObservation,
+    importReport,
+    removeReport,
+    bookings,
+    addons,
+    resolutions,
+  } = useLedger()
   const [observing, setObserving] = useState<string | null>(null)
   const [addingListing, setAddingListing] = useState(false)
+  const [view, setView] = useState<View>('brief')
   const asOf = today()
 
+  const latestReport = useMemo(
+    () => [...reports].sort((a, b) => b.reportedOn.localeCompare(a.reportedOn))[0] ?? null,
+    [reports],
+  )
+
   // The listings the owner named are seeded once so the tracker is never an
-  // empty page — but they carry no numbers, because nobody has looked yet.
+  // empty page — but they carry no numbers, because nobody has looked yet. A
+  // report supersedes them entirely, so this only ever runs before the first one.
   useEffect(() => {
     if (competitors.length > 0) return
     for (const listing of SEED_LISTINGS) {
@@ -50,8 +75,22 @@ export function CompetitorsPanel({ series }: { series: MonthMetrics[] }) {
   )
 
   const mine = useMemo(() => (series.length > 0 ? aggregate(trailing(series, 12)) : null), [series])
-  const myRate = mine?.adr ?? 0
+  // Your own listing's advertised rate when a report carries it, since that is
+  // what rivals are actually quoted against; the twelve-month average otherwise.
+  const observedMine = snapshots.find((snapshot) => snapshot.listing.isMine)?.latest?.nightlyRate ?? 0
+  const myRate = observedMine > 0 ? observedMine : (mine?.adr ?? 0)
   const market = useMemo(() => readMarket(snapshots, myRate, []), [snapshots, myRate])
+
+  const operators = useMemo(() => groupByOperator(snapshots, myRate), [snapshots, myRate])
+  const ladder = useMemo(() => priceLadder(snapshots), [snapshots])
+  const myAddOns = useMemo(
+    () => addOnPerGuest(buildAddOnStays({ bookings, quotes: addons, resolutions })),
+    [bookings, addons, resolutions],
+  )
+  const latestBenchmarks = useMemo(
+    () => (latestReport ? benchmarks.filter((row) => row.reportId === latestReport.id) : []),
+    [benchmarks, latestReport],
+  )
 
   const priceHistory = useMemo(() => {
     const byDate = new Map<string, Record<string, number>>()
@@ -74,150 +113,188 @@ export function CompetitorsPanel({ series }: { series: MonthMetrics[] }) {
 
   return (
     <div className="space-y-4">
-      <MarketRead series={series} />
+      <ReportBar
+        report={latestReport}
+        reports={reports}
+        known={competitors}
+        onImport={importReport}
+        onRemove={removeReport}
+      />
 
-      <StatGrid>
-        <Stat
-          label="Your rate"
-          value={myRate > 0 ? money(myRate, 'PHP', true) : '—'}
-          sub="Average over the last twelve months"
+      <div className="no-print overflow-x-auto">
+        <Tabs
+          value={view}
+          onChange={setView}
+          options={[
+            { value: 'brief', label: 'The brief' },
+            {
+              value: 'operators',
+              label: `Who you compete with (${operators.filter((o) => !o.isMine && o.listings.length > 1).length || operators.filter((o) => !o.isMine).length})`,
+            },
+            { value: 'rates', label: 'Rates' },
+            { value: 'addons', label: 'Add-on prices' },
+            { value: 'watchlist', label: `Watchlist (${snapshots.length})` },
+          ]}
         />
-        <Stat
-          label="Market median"
-          value={market.medianRate !== null ? money(market.medianRate, 'PHP', true) : 'Not observed yet'}
-          sub={
-            market.lowRate !== null
-              ? `${money(market.lowRate, 'PHP', true)} – ${money(market.highRate ?? 0, 'PHP', true)}`
-              : `${market.tracked} listing${market.tracked === 1 ? '' : 's'} tracked, none priced`
-          }
-        />
-        <Stat
-          label="Where you sit"
-          value={market.yourPercentile !== null ? `${pct(market.yourPercentile, 0)} dearer` : '—'}
-          tone={market.yourPercentile !== null && market.yourPercentile > 0.75 ? 'warn' : 'neutral'}
-          sub={
-            market.yourPercentile !== null
-              ? `than the ${market.observed} listing${market.observed === 1 ? '' : 's'} priced`
-              : 'Record a rate on any listing to see this'
-          }
-          hint="A headline rate on its own is misleading — a private island for eight is not competing with a houseboat for two. The per-guest column in the table is the fairer read."
-        />
-        <Stat
-          label="Needs a look"
-          value={num(market.stale.length, 0)}
-          tone={market.stale.length > 0 ? 'warn' : 'pos'}
-          sub="Not checked in 45 days"
-        />
-      </StatGrid>
-
-      {market.movers.length > 0 ? (
-        <Card>
-          <SectionHeader title="Moved since last look" subtitle="A rate change is the earliest signal you get that the market is repricing." />
-          <div className="space-y-1.5">
-            {market.movers.map((snapshot) => (
-              <div key={snapshot.listing.id} className="flex flex-wrap items-baseline gap-2 text-[12px]">
-                <span className="font-medium text-ink">{snapshot.listing.name || snapshot.listing.roomId}</span>
-                <span className={cx('num', (snapshot.rateChange ?? 0) > 0 ? 'text-pos' : 'text-neg')}>
-                  {(snapshot.rateChange ?? 0) > 0 ? '+' : ''}
-                  {money(snapshot.rateChange ?? 0, 'PHP', true)}
-                </span>
-                <span className="text-ink-3">
-                  {money(snapshot.previous?.nightlyRate ?? 0, 'PHP', true)} →{' '}
-                  {money(snapshot.latest?.nightlyRate ?? 0, 'PHP', true)} between{' '}
-                  {shortDate(snapshot.previous?.observedOn ?? '')} and {shortDate(snapshot.latest?.observedOn ?? '')}
-                </span>
-              </div>
-            ))}
-          </div>
-        </Card>
-      ) : null}
-
-      {priceHistory.length > 1 ? (
-        <Card>
-          <SectionHeader
-            title="Rates over time"
-            subtitle="Only as good as how often you look — but the shape is the point, not the individual dots."
-          />
-          <ChartFrame title="Nightly rate as observed" height={240}>
-            <LineChart data={priceHistory} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-              <CartesianGrid {...GRID} />
-              <XAxis dataKey="observedOn" {...AXIS} tickFormatter={shortDate} minTickGap={20} />
-              <YAxis {...AXIS} width={54} tickFormatter={(v: number) => money(v, 'PHP', true)} />
-              <Tooltip {...TOOLTIP_STYLE} {...tooltipProps((value) => [money(Number(value), 'PHP'), ''], (label) => shortDate(String(label)))} />
-              {names.map((name, index) => (
-                <Line
-                  key={name}
-                  type="monotone"
-                  dataKey={name}
-                  stroke={SERIES[index % SERIES.length]}
-                  strokeWidth={2}
-                  dot={{ r: 2 }}
-                  connectNulls
-                />
-              ))}
-              {myRate > 0 ? (
-                <Line
-                  type="monotone"
-                  dataKey={() => myRate}
-                  name="Island T"
-                  stroke={STATUS.warn}
-                  strokeDasharray="4 3"
-                  strokeWidth={2}
-                  dot={false}
-                />
-              ) : null}
-            </LineChart>
-          </ChartFrame>
-        </Card>
-      ) : null}
-
-      <div>
-        <SectionHeader
-          title="Watchlist"
-          subtitle="Seven starting points are already in — the listings you named, plus Paolyn as a host to watch for new units. Add a rate to any of them and the comparison above comes alive."
-          right={
-            <Button variant="primary" size="sm" onClick={() => setAddingListing(true)}>
-              + Track a listing
-            </Button>
-          }
-        />
-        {addingListing ? (
-          <ListingForm
-            onDone={() => setAddingListing(false)}
-            onSave={(listing) => saveCompetitor(listing)}
-          />
-        ) : null}
-
-        <div className="mt-3 space-y-2">
-          {snapshots.map((snapshot) => (
-            <ListingRow
-              key={snapshot.listing.id}
-              snapshot={snapshot}
-              myRate={myRate}
-              onObserve={() => setObserving(snapshot.listing.id)}
-              onRemove={() => void removeCompetitor(snapshot.listing.id)}
-              onSaveListing={saveCompetitor}
-            />
-          ))}
-        </div>
       </div>
 
-      <GrowthLevers bookings={bookings} addons={addons} />
+      {view === 'brief' ? (
+        <>
+          <ReportBrief report={latestReport} ladder={ladder} myRate={myRate} />
+          <MarketRead series={series} />
+          <GrowthLevers bookings={bookings} addons={addons} />
+        </>
+      ) : null}
 
-      {market.featureGaps.length > 0 ? (
-        <Card>
-          <SectionHeader
-            title="What they offer that you have not recorded"
-            subtitle="Only counts amenities two or more rivals list. It is a prompt to check, not a verdict — you may already have these."
-          />
-          <div className="flex flex-wrap gap-1.5">
-            {market.featureGaps.map((gap) => (
-              <Pill key={gap.amenity} tone="info">
-                {gap.amenity} · {gap.rivals}
-              </Pill>
-            ))}
+      {view === 'operators' ? <Operators operators={operators} myRate={myRate} /> : null}
+
+      {view === 'rates' ? (
+        <>
+          <StatGrid>
+            <Stat
+              label="Your rate"
+              value={myRate > 0 ? money(myRate, 'PHP', true) : '—'}
+              sub={observedMine > 0 ? 'As the latest report saw it advertised' : 'Average over the last twelve months'}
+            />
+            <Stat
+              label="Market median"
+              value={market.medianRate !== null ? money(market.medianRate, 'PHP', true) : 'Not observed yet'}
+              sub={
+                market.lowRate !== null
+                  ? `${money(market.lowRate, 'PHP', true)} – ${money(market.highRate ?? 0, 'PHP', true)}`
+                  : `${market.tracked} listing${market.tracked === 1 ? '' : 's'} tracked, none priced`
+              }
+              hint="A median across a ₱2,550 bungalow and a ₱58,000 houseboat describes a market nobody is in. The ladder below is the honest read."
+            />
+            <Stat
+              label="Where you sit"
+              value={market.yourPercentile !== null ? `${pct(market.yourPercentile, 0)} dearer` : '—'}
+              sub={
+                market.yourPercentile !== null
+                  ? `than the ${market.observed} listing${market.observed === 1 ? '' : 's'} priced`
+                  : 'Record a rate on any listing to see this'
+              }
+            />
+            <Stat
+              label="Moved last report"
+              value={num(market.movers.length, 0)}
+              tone={market.movers.length > 0 ? 'warn' : 'neutral'}
+              sub="Rate changes since the previous look"
+            />
+          </StatGrid>
+
+          <PriceLadderCard ladder={ladder} />
+
+          {market.movers.length > 0 ? (
+            <Card>
+              <SectionHeader
+                title="Moved since last look"
+                subtitle="A rate change is the earliest signal you get that the market is repricing."
+              />
+              <div className="space-y-1.5">
+                {market.movers.map((snapshot) => (
+                  <div key={snapshot.listing.id} className="flex flex-wrap items-baseline gap-2 text-[12px]">
+                    <span className="font-medium text-ink">{snapshot.listing.name || snapshot.listing.roomId}</span>
+                    <span className={cx('num', (snapshot.rateChange ?? 0) > 0 ? 'text-pos' : 'text-neg')}>
+                      {(snapshot.rateChange ?? 0) > 0 ? '+' : ''}
+                      {money(snapshot.rateChange ?? 0, 'PHP', true)}
+                    </span>
+                    <span className="text-ink-3">
+                      {money(snapshot.previous?.nightlyRate ?? 0, 'PHP', true)} →{' '}
+                      {money(snapshot.latest?.nightlyRate ?? 0, 'PHP', true)} between{' '}
+                      {shortDate(snapshot.previous?.observedOn ?? '')} and {shortDate(snapshot.latest?.observedOn ?? '')}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          ) : null}
+
+          {priceHistory.length > 1 ? (
+            <Card>
+              <SectionHeader
+                title="Rates over time"
+                subtitle="One point per report, on the same sampled dates each time — which is what makes the lines comparable at all."
+              />
+              <ChartFrame title="Nightly rate as observed" height={240}>
+                <LineChart data={priceHistory} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+                  <CartesianGrid {...GRID} />
+                  <XAxis dataKey="observedOn" {...AXIS} tickFormatter={shortDate} minTickGap={20} />
+                  <YAxis {...AXIS} width={54} tickFormatter={(v: number) => money(v, 'PHP', true)} />
+                  <Tooltip
+                    {...TOOLTIP_STYLE}
+                    {...tooltipProps((value) => [money(Number(value), 'PHP'), ''], (label) => shortDate(String(label)))}
+                  />
+                  {names.map((name, index) => (
+                    <Line
+                      key={name}
+                      type="monotone"
+                      dataKey={name}
+                      stroke={SERIES[index % SERIES.length]}
+                      strokeWidth={2}
+                      dot={{ r: 2 }}
+                      connectNulls
+                    />
+                  ))}
+                </LineChart>
+              </ChartFrame>
+            </Card>
+          ) : null}
+        </>
+      ) : null}
+
+      {view === 'addons' ? <AncillaryPrices benchmarks={latestBenchmarks} mine={myAddOns} report={latestReport} /> : null}
+
+      {view === 'watchlist' ? (
+        <>
+          <div>
+            <SectionHeader
+              title="Watchlist"
+              subtitle={
+                latestReport
+                  ? `Every listing the reports have named, with the rate each one carried. Add a rate by hand any time you look between reports.`
+                  : 'Seven starting points are already in — the listings you named, plus Paolyn as a host to watch for new units. Load a report or add a rate and the comparison above comes alive.'
+              }
+              right={
+                <Button variant="primary" size="sm" onClick={() => setAddingListing(true)}>
+                  + Track a listing
+                </Button>
+              }
+            />
+            {addingListing ? (
+              <ListingForm onDone={() => setAddingListing(false)} onSave={(listing) => saveCompetitor(listing)} />
+            ) : null}
+
+            <div className="mt-3 space-y-2">
+              {snapshots.map((snapshot) => (
+                <ListingRow
+                  key={snapshot.listing.id}
+                  snapshot={snapshot}
+                  myRate={myRate}
+                  onObserve={() => setObserving(snapshot.listing.id)}
+                  onRemove={() => void removeCompetitor(snapshot.listing.id)}
+                  onSaveListing={saveCompetitor}
+                />
+              ))}
+            </div>
           </div>
-        </Card>
+
+          {market.featureGaps.length > 0 ? (
+            <Card>
+              <SectionHeader
+                title="What they offer that you have not recorded"
+                subtitle="Only counts amenities two or more rivals list. It is a prompt to check, not a verdict — you may already have these."
+              />
+              <div className="flex flex-wrap gap-1.5">
+                {market.featureGaps.map((gap) => (
+                  <Pill key={gap.amenity} tone="info">
+                    {gap.amenity} · {gap.rivals}
+                  </Pill>
+                ))}
+              </div>
+            </Card>
+          ) : null}
+        </>
       ) : null}
 
       {observing ? (
@@ -227,6 +304,566 @@ export function CompetitorsPanel({ series }: { series: MonthMetrics[] }) {
           onSave={addObservation}
         />
       ) : null}
+    </div>
+  )
+}
+
+
+/**
+ * Loading the fortnight's report.
+ *
+ * The report is a written document, so it is dropped in whole rather than
+ * mapped column by column: it carries a rate table but also the reasoning
+ * around it, and the reasoning is half of what makes it worth reading. What
+ * lands in the database is both — rates against listings that keep their
+ * identity between reports, and the report's own words kept intact.
+ */
+function ReportBar({
+  report,
+  reports,
+  known,
+  onImport,
+  onRemove,
+}: {
+  report: MarketReport | null
+  reports: MarketReport[]
+  known: CompetitorListing[]
+  onImport: (parsed: {
+    report: MarketReport
+    listings: CompetitorListing[]
+    observations: CompetitorObservation[]
+    benchmarks: AncillaryBenchmark[]
+  }) => Promise<void>
+  onRemove: (id: string) => Promise<void>
+}) {
+  const [busy, setBusy] = useState(false)
+  const [result, setResult] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  const load = async (file: File) => {
+    setBusy(true)
+    setError(null)
+    setResult(null)
+    try {
+      const html = await file.text()
+      const parsed = parseCompetitorReport(html, file.name, known)
+      if (parsed.observations.length === 0) {
+        setError(
+          'No rate table found in that file. The importer looks for a "Pricing" section with a table of listings — if the report is laid out differently, tell me and I will teach it the new shape.',
+        )
+        return
+      }
+      await onImport(parsed)
+      const fresh = parsed.listings.filter((listing) => !known.some((row) => row.id === listing.id)).length
+      setResult(
+        `${parsed.observations.length} rates, ${parsed.listings.length} listings (${fresh} new to the watchlist)` +
+          `${parsed.benchmarks.length > 0 ? `, ${parsed.benchmarks.length} add-on prices` : ''}` +
+          `${parsed.skipped.length > 0 ? ` · ${parsed.skipped.length} row(s) skipped` : ''}`,
+      )
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : 'That file could not be read.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <Card>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h3 className="text-[13px] font-semibold text-ink">
+            {report ? report.title : 'No competitor report loaded yet'}
+          </h3>
+          <p className="mt-1 max-w-2xl text-[11.5px] leading-relaxed text-ink-2">
+            {report ? (
+              <>
+                Rates captured {shortDate(report.reportedOn)}
+                {report.quotedFor
+                  ? ` for a ${report.nights}-night stay from ${shortDate(report.quotedFor)}, ${report.guests} guests`
+                  : ''}
+                . {reports.length} report{reports.length === 1 ? '' : 's'} on file — each one adds a point to every rate
+                line, which is what turns a price into a trend.
+              </>
+            ) : (
+              <>
+                Drop this fortnight's report in and the whole tab fills: rates against each listing, who hosts what, what
+                the market charges for add-ons, and the report's own conclusions. Load the next one and the rates become
+                a history rather than a snapshot.
+              </>
+            )}
+          </p>
+          {result ? <p className="mt-2 text-[11.5px] text-pos">Loaded — {result}.</p> : null}
+          {error ? <p className="mt-2 text-[11.5px] text-warn">{error}</p> : null}
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          {report ? (
+            <Button variant="ghost" size="sm" onClick={() => void onRemove(report.id)}>
+              Undo this one
+            </Button>
+          ) : null}
+          <label
+            className={cx(
+              'cursor-pointer rounded-lg border border-accent/40 bg-accent/10 px-3 py-1.5 text-[12px] font-medium text-accent',
+              busy && 'pointer-events-none opacity-60',
+            )}
+          >
+            {busy ? 'Reading…' : report ? 'Load a newer report' : 'Load a report'}
+            <input
+              type="file"
+              accept=".html,.htm"
+              className="hidden"
+              onChange={(event) => {
+                const file = event.target.files?.[0]
+                event.target.value = ''
+                if (file) void load(file)
+              }}
+            />
+          </label>
+        </div>
+      </div>
+    </Card>
+  )
+}
+
+/** The report's own argument, kept in its own words. */
+function ReportBrief({
+  report,
+  ladder,
+  myRate,
+}: {
+  report: MarketReport | null
+  ladder: ReturnType<typeof priceLadder>
+  myRate: number
+}) {
+  if (!report) return null
+
+  return (
+    <div className="space-y-4">
+      {report.bottomLine ? (
+        <Card className="border-accent/25 bg-accent/[0.04]">
+          <div className="flex gap-3">
+            <span className="mt-0.5 text-[14px] text-accent">◉</span>
+            <div>
+              <h3 className="text-[13px] font-semibold text-ink">Bottom line, {shortDate(report.reportedOn)}</h3>
+              <p className="mt-1 max-w-3xl text-[12px] leading-relaxed text-ink-2">{report.bottomLine}</p>
+            </div>
+          </div>
+        </Card>
+      ) : null}
+
+      <StatGrid>
+        <Stat
+          label="Your rate"
+          value={myRate > 0 ? money(myRate, 'PHP') : '—'}
+          sub="As the report saw it advertised"
+        />
+        <Stat
+          label="The lane you sit in"
+          value={
+            ladder.belowYou !== null && ladder.aboveYou !== null
+              ? `${money(ladder.belowYou, 'PHP', true)} – ${money(ladder.aboveYou, 'PHP', true)}`
+              : '—'
+          }
+          sub={
+            ladder.gapBelow !== null && ladder.gapAbove !== null
+              ? `${ladder.gapBelow.toFixed(1)}× the rung below, ${ladder.gapAbove.toFixed(1)}× under the one above`
+              : 'Empty until rates are observed'
+          }
+          hint="The gap either side is the point: you are not competing with the homes below or the boats above, which is why a market median says nothing useful about your price."
+        />
+        <Stat
+          label="Homes in the area"
+          value={report.supplyCount !== null ? num(report.supplyCount, 0) : '—'}
+          tone={
+            report.supplyCount !== null && report.supplyPrevious !== null && report.supplyCount > report.supplyPrevious
+              ? 'warn'
+              : 'neutral'
+          }
+          sub={
+            report.supplyPrevious !== null
+              ? `was ${num(report.supplyPrevious, 0)} at the last report`
+              : 'Not counted in this report'
+          }
+        />
+      </StatGrid>
+
+      {report.changes.length > 0 ? (
+        <Card>
+          <SectionHeader
+            title="What changed"
+            subtitle={`Since the report before this one. The report's own words — nothing here is inferred.`}
+          />
+          <ul className="mt-1 space-y-2">
+            {report.changes.map((line) => (
+              <li key={line} className="flex gap-2 text-[12px] leading-relaxed text-ink-2">
+                <span className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-accent" />
+                <span>{line}</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      ) : null}
+
+      {report.takeaways.length > 0 ? (
+        <Card>
+          <SectionHeader title="What it means for the island" subtitle="The report's positioning read." />
+          <ul className="mt-1 space-y-2">
+            {report.takeaways.map((line) => (
+              <li key={line} className="flex gap-2 text-[12px] leading-relaxed text-ink-2">
+                <span className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-ink-3" />
+                <span>{line}</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      ) : null}
+
+      {report.triggers.length > 0 ? (
+        <Card className="border-warn/25 bg-warn/[0.05]">
+          <SectionHeader
+            title="Act fast if these happen"
+            subtitle="Conditions the report says change the picture the moment they occur — worth re-reading each fortnight rather than only when they do."
+          />
+          <ul className="mt-1 space-y-2">
+            {report.triggers.map((line) => (
+              <li key={line} className="flex gap-2 text-[12px] leading-relaxed text-ink-2">
+                <span className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-warn" />
+                <span>{line}</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      ) : null}
+
+      {report.playbook.length > 0 ? (
+        <Card>
+          <SectionHeader
+            title="The longer plays"
+            subtitle="These carry across reports rather than changing fortnightly, which is exactly why they are easy to keep not doing."
+          />
+          <div className="mt-1 space-y-3">
+            {report.playbook.map((group) => (
+              <div key={group.heading}>
+                <h4 className="text-[12px] font-semibold text-ink">{group.heading}</h4>
+                <ul className="mt-1 space-y-1.5">
+                  {group.points.map((line) => (
+                    <li key={line} className="flex gap-2 text-[11.5px] leading-relaxed text-ink-2">
+                      <span className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-ink-3" />
+                      <span>{line}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </Card>
+      ) : null}
+    </div>
+  )
+}
+
+/**
+ * The competition, grouped by who runs it.
+ *
+ * The single most useful thing the September report established was that the
+ * field is smaller than the listing count: five of nine listings are one host.
+ * A dozen rooms run by three people is a different market from a dozen rooms
+ * run by a dozen people, and only the first one can reprice.
+ */
+function Operators({ operators, myRate }: { operators: Operator[]; myRate: number }) {
+  const rivals = operators.filter((operator) => !operator.isMine)
+  if (rivals.length === 0) {
+    return (
+      <Card>
+        <p className="text-[12px] leading-relaxed text-ink-2">
+          Nothing to group yet. Load a report — it records who hosts each listing, and that is what turns a watchlist
+          into a picture of who you are actually up against.
+        </p>
+      </Card>
+    )
+  }
+
+  // The report's central point is that the field is smaller than the listing
+  // count. Ten single listings printed at the same weight as a five-listing
+  // portfolio buries exactly that, so the portfolios get cards and the singles
+  // get a list.
+  const portfolios = operators.filter((operator) => operator.isMine || operator.listings.length > 1)
+  const singles = operators.filter((operator) => !operator.isMine && operator.listings.length === 1)
+
+  return (
+    <div className="space-y-3">
+      <SectionHeader
+        title="Who you actually compete with"
+        subtitle="Grouped by host rather than by listing. A host with one house prices to fill it; a host with a portfolio across every size band prices to move a market — and only the second one is a competitor in any useful sense."
+      />
+      {portfolios.map((operator) => (
+        <Card key={operator.name} className={operator.isMine ? 'border-accent/30 bg-accent/[0.04]' : undefined}>
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <div className="flex items-baseline gap-2">
+              <h4 className="text-[13px] font-semibold text-ink">{operator.name}</h4>
+              {operator.isMine ? <Pill tone="info">You</Pill> : null}
+              {operator.listings.length > 1 ? (
+                <Pill tone="warn">{operator.listings.length} listings</Pill>
+              ) : null}
+            </div>
+            <span className="text-[11.5px] text-ink-3">
+              {operator.reviews > 0 ? `${num(operator.reviews, 0)} reviews` : 'no reviews recorded'}
+              {operator.bestRating > 0 ? ` · best ${operator.bestRating.toFixed(2)}★` : ''}
+            </span>
+          </div>
+
+          <div className="mt-2 grid gap-2 sm:grid-cols-3">
+            <Cell
+              label="Range"
+              value={
+                operator.low !== null && operator.high !== null
+                  ? operator.low === operator.high
+                    ? money(operator.low, 'PHP', true)
+                    : `${money(operator.low, 'PHP', true)} – ${money(operator.high, 'PHP', true)}`
+                  : '—'
+              }
+            />
+            <Cell
+              label="Span"
+              value={operator.span !== null && operator.span > 1 ? `${operator.span.toFixed(1)}× top to bottom` : '—'}
+            />
+            <Cell
+              label={operator.isMine ? 'Your rate' : 'Reaches'}
+              value={
+                operator.isMine
+                  ? money(myRate, 'PHP', true)
+                  : operator.reachOfYourRate !== null
+                    ? `${pct(operator.reachOfYourRate, 0)} of your rate`
+                    : '—'
+              }
+            />
+          </div>
+
+          {operator.movers.length > 0 ? (
+            <p className="mt-2 text-[11.5px] leading-relaxed text-warn">
+              Moved this report:{' '}
+              {operator.movers
+                .map(
+                  (row) =>
+                    `${row.listing.name} ${(row.rateChange ?? 0) > 0 ? '+' : ''}${money(row.rateChange ?? 0, 'PHP', true)}`,
+                )
+                .join(' · ')}
+              . A portfolio operator raising rates has the volume to make it stick — that is the move to watch, not the
+              level.
+            </p>
+          ) : null}
+
+          <div className="mt-2 space-y-1">
+            {operator.listings.map((row) => (
+              <div key={row.listing.id} className="flex flex-wrap items-baseline gap-x-2 text-[11.5px]">
+                <span className="text-ink">{row.listing.name}</span>
+                <span className="num text-ink-2">
+                  {(row.latest?.nightlyRate ?? 0) > 0
+                    ? money(row.latest!.nightlyRate, 'PHP')
+                    : row.latest?.demandSignal
+                      ? `no rate — ${row.latest.demandSignal.toLowerCase()}`
+                      : 'no rate recorded'}
+                </span>
+                <span className="text-ink-3">
+                  {row.listing.layout || ''}
+                  {row.latest?.demandSignal ? ` · ${row.latest.demandSignal}` : ''}
+                </span>
+              </div>
+            ))}
+          </div>
+        </Card>
+      ))}
+
+      {singles.length > 0 ? (
+        <Card>
+          <SectionHeader
+            title={`And ${singles.length} single listing${singles.length === 1 ? '' : 's'}`}
+            subtitle="One listing each, so far as any report has said. Worth watching for the moment one of these becomes two — that is how a portfolio starts, and it is how the report spotted David."
+          />
+          <div className="mt-1 overflow-x-auto rounded-xl border border-line">
+            <table className="w-full min-w-[520px] text-[11.5px]">
+              <thead className="bg-surface-2 text-ink-2">
+                <tr>
+                  {['Listing', 'Host', 'Rate', 'Of your rate', 'Reviews'].map((header) => (
+                    <th key={header} className="px-3 py-2 text-left font-medium">
+                      {header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {singles.map((operator) => {
+                  const row = operator.listings[0]
+                  return (
+                    <tr key={operator.name} className="border-t border-line">
+                      <td className="px-3 py-1.5 text-ink">{row.listing.name}</td>
+                      <td className="px-3 py-1.5 text-ink-3">
+                        {row.listing.host.trim() || 'not named in the report'}
+                      </td>
+                      <td className="num whitespace-nowrap px-3 py-1.5 text-ink-2">
+                        {(row.latest?.nightlyRate ?? 0) > 0
+                          ? money(row.latest!.nightlyRate, 'PHP')
+                          : row.latest?.demandSignal
+                            ? row.latest.demandSignal.toLowerCase()
+                            : '—'}
+                      </td>
+                      <td className="num whitespace-nowrap px-3 py-1.5 text-ink-3">
+                        {operator.reachOfYourRate !== null ? pct(operator.reachOfYourRate, 0) : '—'}
+                      </td>
+                      <td className="num whitespace-nowrap px-3 py-1.5 text-ink-3">
+                        {operator.reviews > 0 ? num(operator.reviews, 0) : '—'}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      ) : null}
+    </div>
+  )
+}
+
+/** Every observed rate in order, so the holes in the market are visible. */
+function PriceLadderCard({ ladder }: { ladder: ReturnType<typeof priceLadder> }) {
+  if (ladder.rungs.length === 0) return null
+  const top = Math.max(...ladder.rungs.map((rung) => rung.rate))
+
+  return (
+    <Card>
+      <SectionHeader
+        title="The ladder"
+        subtitle="Every rate anyone has observed, cheapest first. Where the bars jump is where the market has a hole — and one of those holes is where you sit."
+      />
+      <div className="mt-1 space-y-1">
+        {ladder.rungs.map((rung, index) => (
+          <div key={`${rung.name}-${index}`} className="flex items-center gap-2 text-[11.5px]">
+            <span className={cx('w-40 shrink-0 truncate sm:w-56', rung.isMine ? 'font-semibold text-accent' : 'text-ink-2')}>
+              {rung.name}
+            </span>
+            <span className="h-2 flex-1 overflow-hidden rounded-full bg-surface-2">
+              <span
+                className="block h-full rounded-full"
+                style={{
+                  width: `${top > 0 ? (rung.rate / top) * 100 : 0}%`,
+                  background: rung.isMine ? 'var(--accent)' : 'var(--ink-3)',
+                }}
+              />
+            </span>
+            <span className={cx('num w-20 shrink-0 text-right', rung.isMine ? 'font-semibold text-accent' : 'text-ink-2')}>
+              {money(rung.rate, 'PHP', true)}
+            </span>
+            <span className="num hidden w-24 shrink-0 text-right text-ink-3 sm:block">
+              {rung.maxGuests > 0 ? `${money(rung.rate / rung.maxGuests, 'PHP', true)}/guest` : '—'}
+            </span>
+          </div>
+        ))}
+      </div>
+      {ladder.gapBelow !== null && ladder.gapAbove !== null ? (
+        <p className="mt-3 text-[11.5px] leading-relaxed text-ink-3">
+          You are {ladder.gapBelow.toFixed(1)}× the rung below you and {ladder.gapAbove.toFixed(1)}× below the one above.
+          Both gaps are large, which is the argument for holding the rate: there is nobody to be undercut by and nobody
+          to undercut. The risk in a lane this empty is under-pricing it, not over-pricing it.
+        </p>
+      ) : null}
+    </Card>
+  )
+}
+
+/**
+ * What the market charges for the things guests buy beyond the room.
+ *
+ * Shown next to the island's own add-on economics, but deliberately not divided
+ * into them: the benchmark prices one activity for one person and the island's
+ * figure is a whole stay's worth of food, boats and transfers. Side by side is
+ * useful; a ratio between them would be a number that looks like a finding.
+ */
+function AncillaryPrices({
+  benchmarks,
+  mine,
+  report,
+}: {
+  benchmarks: AncillaryBenchmark[]
+  mine: ReturnType<typeof addOnPerGuest>
+  report: MarketReport | null
+}) {
+  if (benchmarks.length === 0) {
+    return (
+      <Card>
+        <p className="text-[12px] leading-relaxed text-ink-2">
+          No add-on prices recorded yet. The competitor report carries a section on what the market charges for island
+          hopping, boat charters, transfers and meals — load one and it lands here, next to what the island charges.
+        </p>
+      </Card>
+    )
+  }
+
+  const basisLabel: Record<string, string> = {
+    guest: 'per person',
+    group: 'per boat or vehicle',
+    day: 'per day',
+    unknown: '',
+  }
+
+  return (
+    <div className="space-y-4">
+      <SectionHeader
+        title="What the market charges for add-ons"
+        subtitle={`From the ${report ? shortDate(report.reportedOn) : 'latest'} report. Until now there was no outside price to judge Kuya Allan's quotes or the mark-up on them against — an argument about whether a price is fair needs a number from outside the island.`}
+      />
+
+      {mine ? (
+        <StatGrid>
+          <Stat
+            label="You charge, per guest"
+            value={money(mine.chargedPerGuest, 'PHP')}
+            sub={`Across ${mine.stays} stays with both sides recorded · whole stay, all add-ons`}
+          />
+          <Stat label="Goes to Allan, per guest" value={money(mine.toAllanPerGuest, 'PHP')} sub="His quote for the same" />
+          <Stat
+            label="You keep, per guest"
+            value={money(mine.patongPerGuest, 'PHP')}
+            tone="pos"
+            sub={`${pct(mine.marginPct, 0)} of what the guest paid`}
+          />
+        </StatGrid>
+      ) : null}
+
+      <Card>
+        <div className="overflow-x-auto rounded-xl border border-line">
+          <table className="w-full min-w-[560px] text-[12px]">
+            <thead className="bg-surface-2 text-ink-2">
+              <tr>
+                {['What', 'Market rate', 'Basis', 'Notes'].map((header) => (
+                  <th key={header} className="px-3 py-2 text-left font-medium">
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {benchmarks.map((row) => (
+                <tr key={row.id} className="border-t border-line">
+                  <td className="px-3 py-1.5 text-ink">{row.item}</td>
+                  <td className="num whitespace-nowrap px-3 py-1.5 text-ink">
+                    {row.low === row.high
+                      ? money(row.low, row.currency)
+                      : `${money(row.low, row.currency)} – ${money(row.high, row.currency)}`}
+                  </td>
+                  <td className="px-3 py-1.5 text-ink-3">{basisLabel[row.basis] || '—'}</td>
+                  <td className="px-3 py-1.5 text-ink-3">{row.note || '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-3 text-[11.5px] leading-relaxed text-ink-3">
+          These are per activity, per person. The figures above them are everything one guest was charged across a whole
+          stay. They are not the same unit and nothing here divides one by the other — read them side by side and judge
+          for yourself whether the quotes coming back from the island look like the mainland prices plus a boat ride.
+        </p>
+      </Card>
     </div>
   )
 }

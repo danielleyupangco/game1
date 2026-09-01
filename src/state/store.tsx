@@ -22,7 +22,9 @@ import type {
   CompetitorListing,
   CompetitorObservation,
   DatasetKey,
+  AncillaryBenchmark,
   DividendPayout,
+  MarketReport,
   ForecastAssumptions,
   DcfAssumptions,
   Expense,
@@ -35,6 +37,14 @@ import type {
   Snapshot,
   Transaction,
 } from '@/types'
+
+/** What a parsed competitor report hands over, all filed together. */
+export type ReportImport = {
+  report: MarketReport
+  listings: CompetitorListing[]
+  observations: CompetitorObservation[]
+  benchmarks: AncillaryBenchmark[]
+}
 
 export type LedgerData = {
   holdings: Holding[]
@@ -51,6 +61,8 @@ export type LedgerData = {
   dividends: DividendPayout[]
   competitors: CompetitorListing[]
   observations: CompetitorObservation[]
+  reports: MarketReport[]
+  benchmarks: AncillaryBenchmark[]
 }
 
 type Ctx = LedgerData & {
@@ -83,6 +95,9 @@ type Ctx = LedgerData & {
   saveCompetitor: (listing: CompetitorListing) => Promise<void>
   removeCompetitor: (id: string) => Promise<void>
   addObservation: (observation: CompetitorObservation) => Promise<void>
+  /** Files a whole competitor report: its listings, rates, benchmarks and prose. */
+  importReport: (parsed: ReportImport) => Promise<void>
+  removeReport: (id: string) => Promise<void>
   /** most recent import timestamp per dataset, for the freshness indicators */
   freshness: Partial<Record<DatasetKey, string>>
   /** set when this visit pulled in corrected data, so the change can be announced */
@@ -110,6 +125,8 @@ const EMPTY: LedgerData = {
   dividends: [],
   competitors: [],
   observations: [],
+  reports: [],
+  benchmarks: [],
 }
 
 export function LedgerProvider({ children }: { children: ReactNode }) {
@@ -166,6 +183,8 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       dividends,
       competitors,
       observations,
+      reports,
+      benchmarks,
     ] = await Promise.all([
       db.getAll('holdings'),
       db.getAll('snapshots'),
@@ -181,6 +200,8 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       db.getAll('dividends'),
       db.getAll('competitors'),
       db.getAll('observations'),
+      db.getAll('reports'),
+      db.getAll('benchmarks'),
     ])
     setData({
       holdings,
@@ -197,6 +218,8 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       dividends,
       competitors,
       observations,
+      reports,
+      benchmarks,
     })
 
     // Merge stored values over defaults so a schema addition doesn't strand
@@ -384,6 +407,46 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
     setData((prev) => ({ ...prev, observations: [...prev.observations, observation] }))
   }, [])
 
+  /**
+   * Files a whole report in one go.
+   *
+   * Listings are upserted rather than appended — the same room seen in a second
+   * report must land on the same identity, or the rate history breaks into two
+   * unconnected lines. Observations and benchmarks are always new: they are
+   * what that day looked like, and a later report never rewrites an earlier one.
+   */
+  const importReport = useCallback(async (parsed: ReportImport) => {
+    await db.putMany('competitors', parsed.listings)
+    await db.putMany('observations', parsed.observations)
+    await db.putMany('benchmarks', parsed.benchmarks)
+    await db.putOne('reports', parsed.report)
+    setData((prev) => {
+      const listings = new Map(prev.competitors.map((row) => [row.id, row]))
+      for (const listing of parsed.listings) listings.set(listing.id, listing)
+      return {
+        ...prev,
+        competitors: [...listings.values()],
+        observations: [...prev.observations, ...parsed.observations],
+        benchmarks: [...prev.benchmarks, ...parsed.benchmarks],
+        reports: [...prev.reports.filter((row) => row.id !== parsed.report.id), parsed.report],
+      }
+    })
+  }, [])
+
+  const removeReport = useCallback(async (id: string) => {
+    await db.deleteOne('reports', id)
+    const observations = (await db.getAll('observations')).filter((row) => row.reportId === id)
+    const benchmarks = (await db.getAll('benchmarks')).filter((row) => row.reportId === id)
+    for (const row of observations) await db.deleteOne('observations', row.id)
+    for (const row of benchmarks) await db.deleteOne('benchmarks', row.id)
+    setData((prev) => ({
+      ...prev,
+      reports: prev.reports.filter((row) => row.id !== id),
+      observations: prev.observations.filter((row) => row.reportId !== id),
+      benchmarks: prev.benchmarks.filter((row) => row.reportId !== id),
+    }))
+  }, [])
+
   const dismissRefreshNote = useCallback(() => setRefreshNote(null), [])
 
   const freshness = useMemo(() => {
@@ -422,6 +485,8 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       saveCompetitor,
       removeCompetitor,
       addObservation,
+      importReport,
+      removeReport,
       addCapitalSpend,
       removeCapitalSpend,
       addRecords,
@@ -429,7 +494,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       refreshNote,
       dismissRefreshNote,
     }),
-    [data, ready, settings, dcf, pricing, projects, costModel, forecast, reload, saveSettings, saveDcf, savePricing, saveProjects, removeImport, saveFinding, removeFinding, saveCostModel, saveForecast, updateBooking, saveAddOn, addDividend, removeDividend, saveCompetitor, removeCompetitor, addObservation, addCapitalSpend, removeCapitalSpend, addRecords, freshness, refreshNote, dismissRefreshNote],
+    [data, ready, settings, dcf, pricing, projects, costModel, forecast, reload, saveSettings, saveDcf, savePricing, saveProjects, removeImport, saveFinding, removeFinding, saveCostModel, saveForecast, updateBooking, saveAddOn, addDividend, removeDividend, saveCompetitor, removeCompetitor, addObservation, importReport, removeReport, addCapitalSpend, removeCapitalSpend, addRecords, freshness, refreshNote, dismissRefreshNote],
   )
 
   return <LedgerContext.Provider value={value}>{children}</LedgerContext.Provider>
