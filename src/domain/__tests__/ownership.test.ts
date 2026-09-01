@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { cashShare, ownerOf, splitByOwner } from '@/domain/investments/ownership'
+import { cashShare, equityShare, ownerOf, splitByOwner } from '@/domain/investments/ownership'
 import { buildBrief } from '@/domain/airbnb/marketbrief'
 import type { Holding, Provenance } from '@/types'
 
@@ -135,5 +135,74 @@ describe('the brief handed to Claude', () => {
 
   it('tells the model not to recommend what the lead-time data contradicts', () => {
     expect(buildBrief(base)).toContain('Do not recommend last-minute discounting')
+  })
+})
+
+/**
+ * A term deposit is fixed income, not cash — so a pot can read 1% cash while
+ * nearly three quarters of it is parked until a maturity date. This is why the
+ * joint tile asks how much is in the market instead.
+ */
+describe('how much of a pot is actually invested', () => {
+  const row = (assetClass: string, value: number) =>
+    ({
+      id: assetClass + value,
+      prov: { importId: 'i', fileName: 'f', sheetName: 's', rowNumber: 1 },
+      snapshotId: 'snap',
+      ticker: assetClass,
+      name: assetClass,
+      assetClass,
+      geography: 'PH',
+      currency: 'PHP' as const,
+      quantity: 1,
+      costBasis: 0,
+      price: value,
+      value,
+      account: 'DaNics (wedding gifts)',
+    }) as never
+
+  const pot = [row('Fixed Income', 2426216), row('Cash', 30635), row('Equity', 888415)]
+
+  it('does not call a pot invested just because it holds no cash', () => {
+    expect(cashShare(pot, 61.27).share).toBeCloseTo(0.009, 3)
+    expect(equityShare(pot, 61.27).share).toBeCloseTo(0.266, 3)
+  })
+
+  it('converts dollars before comparing', () => {
+    const usd = [{ ...(row('Equity', 100) as object), currency: 'USD' }] as never[]
+    expect(equityShare(usd, 58).equity).toBeCloseTo(5800)
+  })
+
+  it('is zero on an empty pot rather than dividing by nothing', () => {
+    expect(equityShare([], 58).share).toBe(0)
+  })
+})
+
+/**
+ * The sheet carries a cost basis for almost nothing, so a gain measured as
+ * "everything's value minus the few known costs" reports every uncosted holding
+ * as pure profit. Recorded here because it went unnoticed until one time
+ * deposit was entered at its principal and the joint pot claimed +37.9%.
+ */
+describe('unrealised gain across a book that is mostly uncosted', () => {
+  const position = (value: number, costBasis: number) => ({ value, costBasis })
+  const gainOf = (positions: { value: number; costBasis: number }[]) => {
+    const withCost = positions.filter((p) => p.costBasis > 0)
+    const cost = positions.reduce((sum, p) => sum + p.costBasis, 0)
+    const costedValue = withCost.reduce((sum, p) => sum + p.value, 0)
+    return { cost, gain: costedValue - cost }
+  }
+
+  it('ignores the value of positions that have no cost to compare against', () => {
+    // A deposit at its principal, plus Vanguard holdings with no cost recorded.
+    const pot = [position(2426216, 2426216), position(444208, 0), position(444208, 0), position(30635, 0)]
+    expect(gainOf(pot).gain).toBe(0)
+  })
+
+  it('still reports a real gain on the part that is costed', () => {
+    const pot = [position(150, 100), position(999, 0)]
+    const { cost, gain } = gainOf(pot)
+    expect(gain).toBe(50)
+    expect(gain / cost).toBeCloseTo(0.5)
   })
 })

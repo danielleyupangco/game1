@@ -171,8 +171,18 @@ function HoldingsView({ positions }: { positions: PositionView[] }) {
   const { trace } = useProvenance()
   const value = totalValue(positions)
   const cost = totalCost(positions)
-  const gain = value - cost
+  /**
+   * Gain is measured only across the positions that actually carry a cost.
+   *
+   * Most rows in the sheet have no cost basis. Subtracting the cost of the few
+   * that do from the value of everything reported the whole uncosted balance as
+   * profit — the joint pot showed a ₱919K gain the moment one deposit was
+   * recorded at its principal, which was simply the Vanguard holdings counted as
+   * pure upside.
+   */
   const withCost = positions.filter((p) => p.costBasis > 0)
+  const costedValue = withCost.reduce((sum, p) => sum + p.value, 0)
+  const gain = costedValue - cost
 
   return (
     <div className="space-y-4">
@@ -199,13 +209,21 @@ function HoldingsView({ positions }: { positions: PositionView[] }) {
         <Stat
           label="Cost basis"
           value={cost > 0 ? money(cost, 'PHP', true) : '—'}
-          sub={cost > 0 ? `${withCost.length} of ${positions.length} positions have cost data` : 'Not in the imported sheet'}
+          sub={
+            cost > 0
+              ? `${withCost.length} of ${positions.length} positions have cost data`
+              : 'Not in the imported sheet'
+          }
         />
         <Stat
           label="Unrealised gain"
           value={cost > 0 ? money(gain, 'PHP', true) : '—'}
           tone={cost > 0 ? (gain >= 0 ? 'pos' : 'neg') : 'neutral'}
-          sub={cost > 0 ? signedPct(gain / cost) : 'Needs a cost basis column'}
+          sub={
+            cost > 0
+              ? `${signedPct(gain / cost)} · on the ${withCost.length === positions.length ? 'whole book' : `${money(costedValue, 'PHP', true)} that has a cost`}`
+              : 'Needs a cost basis column'
+          }
         />
         <Stat
           label="Largest position"

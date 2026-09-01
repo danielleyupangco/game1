@@ -130,6 +130,25 @@ export function splitByOwner(holdings: Holding[], usdPhp: number): OwnerSplit[] 
 }
 
 /**
+ * How much of a pot is actually in the market.
+ *
+ * The companion to `cashShare`, and the better question once money starts
+ * moving into term deposits: a pot can be 1% cash and still be almost entirely
+ * parked, because a 140-day deposit is fixed income rather than cash and a cash
+ * share alone would call that fully invested.
+ */
+export function equityShare(holdings: Holding[], usdPhp: number): { equity: number; total: number; share: number } {
+  let equity = 0
+  let total = 0
+  for (const holding of holdings) {
+    const value = holding.value * (holding.currency === 'USD' ? usdPhp : 1)
+    total += value
+    if (holding.assetClass === 'Equity') equity += value
+  }
+  return { equity, total, share: total > 0 ? equity / total : 0 }
+}
+
+/**
  * How much of a pot is sitting in cash.
  *
  * Worth its own function because it is the question the joint pot keeps

@@ -2,7 +2,14 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLedger } from '@/state/store'
 import { buildPositions, latestSnapshot, totalValue } from '@/domain/investments/portfolio'
-import { businessCash, cashShare, ownerOfHolding, personalHoldings, splitByOwner } from '@/domain/investments/ownership'
+import {
+  businessCash,
+  cashShare,
+  equityShare,
+  ownerOfHolding,
+  personalHoldings,
+  splitByOwner,
+} from '@/domain/investments/ownership'
 import { aggregate, monthlyMetrics, trailing } from '@/domain/airbnb/metrics'
 import { runDcf } from '@/domain/airbnb/dcf'
 import { HubCanvas } from '@/components/hub/HubCanvas'
@@ -87,8 +94,8 @@ export function HubPage() {
     () => cashShare(snapshotHoldings.filter((h) => ownerOfHolding(h) === 'dani'), snapshot?.usdPhp ?? settings.usdPhp),
     [snapshotHoldings, snapshot, settings.usdPhp],
   )
-  const jointCash = useMemo(
-    () => cashShare(snapshotHoldings.filter((h) => ownerOfHolding(h) === 'joint'), snapshot?.usdPhp ?? settings.usdPhp),
+  const jointEquity = useMemo(
+    () => equityShare(snapshotHoldings.filter((h) => ownerOfHolding(h) === 'joint'), snapshot?.usdPhp ?? settings.usdPhp),
     [snapshotHoldings, snapshot, settings.usdPhp],
   )
 
@@ -158,16 +165,22 @@ export function HubPage() {
           ? [
               { label: 'Value', value: money(jointSplit.value, 'PHP', true) },
               { label: 'Of the book', value: share(jointSplit.value, liquid) },
+              // Cash share was the right question while ₱3.39M sat in a savings
+              // account. It is not any more: the money went into a 140-day
+              // deposit, so "1% in cash" would read as fully invested when
+              // nearly three quarters of the pot is parked until January. How
+              // much is actually in the market is the honest measure, and it is
+              // just as precisely defined.
               {
-                label: 'Still in cash',
-                value: pct(jointCash.share, 0),
-                tone: jointCash.share > 0.3 ? 'warn' : undefined,
+                label: 'In the market',
+                value: pct(jointEquity.share, 0),
+                tone: jointEquity.share < 0.4 ? 'warn' : undefined,
               },
             ]
           : [{ label: 'Holdings', value: '0' }],
       },
     ]
-  }, [bookings.length, t12, hasAirbnb, dcfResult, daniSplit, jointSplit, daniCash, jointCash, liquid])
+  }, [bookings.length, t12, hasAirbnb, dcfResult, daniSplit, jointSplit, daniCash, jointEquity, liquid])
 
   if (!ready) {
     return <p className="py-24 text-center text-[13px] text-ink-3">Waking up…</p>
