@@ -1,5 +1,6 @@
 import { openDB, type DBSchema, type IDBPDatabase } from 'idb'
 import type {
+  AddOnQuote,
   BenchmarkPoint,
   CapitalSpend,
   CostModel,
@@ -13,6 +14,7 @@ import type {
   ImportBatch,
   PricingAssumptions,
   Settings,
+  Resolution,
   Snapshot,
   Transaction,
 } from '@/types'
@@ -31,11 +33,13 @@ interface LedgerDB extends DBSchema {
   imports: { key: string; value: ImportBatch; indexes: { dataset: string } }
   findings: { key: string; value: Finding; indexes: { status: string } }
   capitalSpend: { key: string; value: CapitalSpend; indexes: { projectId: string } }
+  resolutions: { key: string; value: Resolution; indexes: { confirmationCode: string } }
+  addons: { key: string; value: AddOnQuote; indexes: { checkIn: string } }
   kv: { key: string; value: unknown }
 }
 
 const DB_NAME = 'ledger'
-const DB_VERSION = 3
+const DB_VERSION = 4
 
 let dbPromise: Promise<IDBPDatabase<LedgerDB>> | null = null
 
@@ -52,6 +56,14 @@ function db() {
           if (!database.objectStoreNames.contains('capitalSpend')) {
             const store = database.createObjectStore('capitalSpend', { keyPath: 'id' })
             store.createIndex('projectId', 'projectId')
+          }
+          if (!database.objectStoreNames.contains('resolutions')) {
+            const store = database.createObjectStore('resolutions', { keyPath: 'id' })
+            store.createIndex('confirmationCode', 'confirmationCode')
+          }
+          if (!database.objectStoreNames.contains('addons')) {
+            const store = database.createObjectStore('addons', { keyPath: 'id' })
+            store.createIndex('checkIn', 'checkIn')
           }
           return
         }
@@ -83,6 +95,12 @@ function db() {
         const capitalSpend = database.createObjectStore('capitalSpend', { keyPath: 'id' })
         capitalSpend.createIndex('projectId', 'projectId')
 
+        const resolutions = database.createObjectStore('resolutions', { keyPath: 'id' })
+        resolutions.createIndex('confirmationCode', 'confirmationCode')
+
+        const addons = database.createObjectStore('addons', { keyPath: 'id' })
+        addons.createIndex('checkIn', 'checkIn')
+
         database.createObjectStore('kv')
       },
     })
@@ -100,6 +118,8 @@ type RecordStore =
   | 'imports'
   | 'findings'
   | 'capitalSpend'
+  | 'resolutions'
+  | 'addons'
 
 export async function getAll<K extends RecordStore>(store: K): Promise<LedgerDB[K]['value'][]> {
   return (await db()).getAll(store)
@@ -183,6 +203,8 @@ export type Backup = {
   imports: ImportBatch[]
   findings: Finding[]
   capitalSpend: CapitalSpend[]
+  resolutions: Resolution[]
+  addons: AddOnQuote[]
   settings: Settings | null
   dcf: DcfAssumptions | null
   pricing: PricingAssumptions | null
@@ -205,6 +227,8 @@ export async function exportBackup(): Promise<Backup> {
     imports: await getAll('imports'),
     findings: await getAll('findings'),
     capitalSpend: await getAll('capitalSpend'),
+    resolutions: await getAll('resolutions'),
+    addons: await getAll('addons'),
     settings: await getKV<Settings | null>(KV.settings, null),
     dcf: await getKV<DcfAssumptions | null>(KV.dcf, null),
     pricing: await getKV<PricingAssumptions | null>(KV.pricing, null),
@@ -225,6 +249,8 @@ export async function importBackup(backup: Backup): Promise<void> {
     'imports',
     'findings',
     'capitalSpend',
+    'resolutions',
+    'addons',
   ]
   for (const store of stores) await clearStore(store)
 
@@ -237,6 +263,8 @@ export async function importBackup(backup: Backup): Promise<void> {
   await putMany('imports', backup.imports ?? [])
   await putMany('findings', backup.findings ?? [])
   await putMany('capitalSpend', backup.capitalSpend ?? [])
+  await putMany('resolutions', backup.resolutions ?? [])
+  await putMany('addons', backup.addons ?? [])
 
   if (backup.settings) await setKV(KV.settings, backup.settings)
   if (backup.dcf) await setKV(KV.dcf, backup.dcf)

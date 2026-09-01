@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { parseWorkbook, type ParsedWorkbook, type SheetPreview } from '@/lib/workbook'
 import { DATASETS, type FieldSpec } from '@/lib/schema'
+import { looksLikeAirbnbPayout, parseAirbnbPayout, reconcile, type AirbnbParseResult } from '@/lib/airbnb-csv'
+import { looksLikeAddOnForm, matchQuotes, parseAddOnForm, type AddOnParseResult } from '@/lib/addon-form'
 import { autoMap, BUILDERS, missingRequired, type Mapping } from '@/lib/mapping'
 import {
   buildCrosstabExpenses,
@@ -50,6 +52,12 @@ export function ImportWizard({
   const [sectionLabels, setSectionLabels] = useState<string[]>([])
   const [sectionOn, setSectionOn] = useState<boolean[]>([])
   const [progress, setProgress] = useState<string | null>(null)
+  /**
+   * Two files arrive in a fixed shape every time — the Airbnb transaction
+   * export and the guest add-on form — so they are recognised and read whole
+   * rather than mapped column by column.
+   */
+  const [known, setKnown] = useState<'airbnb' | 'addons' | null>(null)
   /** expenses only: months across the top rather than one row per expense */
   const [crosstab, setCrosstab] = useState(false)
   const [labelColumn, setLabelColumn] = useState(0)
@@ -93,6 +101,15 @@ export function ImportWizard({
         setSectionLabels(best.sections.map((section) => section.label))
         setSectionOn(best.sections.map(() => true))
 
+        const recognised = usable.find((candidate) => looksLikeAirbnbPayout(candidate) || looksLikeAddOnForm(candidate))
+        if (recognised) {
+          setSheetName(recognised.name)
+          setKnown(looksLikeAirbnbPayout(recognised) ? 'airbnb' : 'addons')
+          setStep('review')
+          setBusy(false)
+          return
+        }
+
         // A workbook whose sheets are named by date is a history, not a single
         // portfolio. Offer to import the whole thing as dated snapshots.
         // Months across the top rather than one row per record: a management
@@ -132,7 +149,7 @@ export function ImportWizard({
   )
 
   const preview = useMemo(() => {
-    if (!sheet) return null
+    if (!sheet || dataset === 'addons') return null
     const importId = 'preview'
     const build = BUILDERS[dataset]
     return build({
@@ -317,6 +334,102 @@ export function ImportWizard({
     }
   }, [workbook, multiSheets, mapping, dayFirst, sectionLabels, sectionOn, usdPhp, settings.usdPhp, reload, onDone])
 
+  /** Whole-file reads for the two recognised shapes. */
+  const airbnbParse = useMemo<AirbnbParseResult | null>(() => {
+    if (known !== 'airbnb' || !sheet || !workbook) return null
+    return parseAirbnbPayout(sheet, { importId: 'preview', fileName: workbook.fileName, sheetName: sheet.name })
+  }, [known, sheet, workbook])
+
+  const addOnParse = useMemo<AddOnParseResult | null>(() => {
+    if (known !== 'addons' || !sheet || !workbook) return null
+    return parseAddOnForm(sheet, { importId: 'preview', fileName: workbook.fileName, sheetName: sheet.name })
+  }, [known, sheet, workbook])
+
+  /**
+   * Commits a recognised file.
+   *
+   * The Airbnb export writes reservations and resolutions to separate stores so
+   * the crew's money never lands in the revenue line. The add-on form writes
+   * quotes, then pushes each kept margin onto the reservation it belongs to —
+   * that margin is the source of truth, so it replaces whatever the old
+   * spreadsheet had recorded for the same stay.
+   */
+  const commitKnown = useCallback(async () => {
+    if (!sheet || !workbook || !known) return
+    setBusy(true)
+    setError(null)
+    try {
+      const importId = uid('imp')
+      const prov = { importId, fileName: workbook.fileName, sheetName: sheet.name }
+      let rowCount = 0
+      let rejected: { rowNumber: number; reason: string }[] = []
+
+      if (known === 'airbnb') {
+        const result = parseAirbnbPayout(sheet, prov)
+        const existing = await db.getAll('bookings')
+        const seen = new Map(existing.map((booking) => [`${booking.confirmationCode}|${booking.checkIn}`, booking]))
+        // Re-importing an overlapping export must not double the history, so a
+        // stay already on file keeps its id — and with it the country, review
+        // and notes that only ever came from somewhere else.
+        const bookings = result.bookings.map((booking) => {
+          const prior = seen.get(`${booking.confirmationCode}|${booking.checkIn}`)
+          if (!prior) return booking
+          return {
+            ...booking,
+            id: prior.id,
+            guests: prior.guests || booking.guests,
+            country: prior.country,
+            rating: prior.rating,
+            review: prior.review,
+            contact: prior.contact,
+            notes: prior.notes || booking.notes,
+            addOnRevenue: prior.addOnRevenue,
+          }
+        })
+        await db.putMany('bookings', bookings)
+        await db.putMany('resolutions', result.resolutions)
+        rowCount = bookings.length + result.resolutions.length
+        rejected = result.rejected
+      } else {
+        const result = parseAddOnForm(sheet, prov)
+        await db.putMany('addons', result.quotes)
+        const bookings = await db.getAll('bookings')
+        const matches = matchQuotes(result.quotes, bookings)
+        const updates = matches
+          .filter((match) => match.bookingId !== null && !match.quote.excluded)
+          .map((match) => {
+            const booking = bookings.find((row) => row.id === match.bookingId)!
+            return {
+              ...booking,
+              addOnRevenue: match.quote.margin,
+              guests: booking.guests || match.quote.guests,
+            }
+          })
+        if (updates.length > 0) await db.putMany('bookings', updates)
+        rowCount = result.quotes.length
+        rejected = result.rejected
+      }
+
+      const batch: ImportBatch = {
+        id: importId,
+        dataset: known === 'airbnb' ? 'bookings' : 'addons',
+        fileName: workbook.fileName,
+        sheetName: sheet.name,
+        importedAt: new Date().toISOString(),
+        rowCount,
+        mapping: {},
+        rejected,
+      }
+      await db.putOne('imports', batch)
+      await reload()
+      onDone()
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : 'Import failed.')
+    } finally {
+      setBusy(false)
+    }
+  }, [sheet, workbook, known, reload, onDone])
+
   const commit = useCallback(async () => {
     if (!sheet || !workbook || !preview) return
     setBusy(true)
@@ -324,6 +437,7 @@ export function ImportWizard({
     try {
       const importId = uid('imp')
       const snapshotId = dataset === 'holdings' ? uid('snp') : undefined
+      if (dataset === 'addons') return
       const build = BUILDERS[dataset]
       const result = build({
         sheet,
@@ -672,7 +786,85 @@ export function ImportWizard({
         </div>
       ) : null}
 
-      {step === 'review' && !multi && preview && sheet ? (
+      {step === 'review' && known === 'airbnb' && airbnbParse ? (
+        <div className="space-y-3">
+          <div className="rounded-lg border border-info/25 bg-info/[0.04] p-3">
+            <h3 className="text-[12.5px] font-semibold text-ink">Recognised as an Airbnb transaction export</h3>
+            <p className="mt-1 text-[11.5px] leading-relaxed text-ink-2">
+              Four kinds of row, three meanings. Reservations are room revenue. Resolution payouts are the guest paying
+              for catering and boats through the platform — collected, then passed almost entirely to the island crew,
+              so they are kept out of revenue and used to reconcile the bank instead. Payout rows are transfers of money
+              already counted, so they are ignored.
+            </p>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-4">
+            <SummaryTile label="Reservations" value={String(airbnbParse.bookings.length)} tone="pos" />
+            <SummaryTile label="Resolutions" value={String(airbnbParse.resolutions.length)} tone="neutral" />
+            <SummaryTile label="Transfers ignored" value={String(airbnbParse.payoutCount)} tone="neutral" />
+            <SummaryTile
+              label="Rows skipped"
+              value={String(airbnbParse.rejected.length)}
+              tone={airbnbParse.rejected.length > 0 ? 'warn' : 'neutral'}
+            />
+          </div>
+          <ReconcilePanel result={airbnbParse} />
+        </div>
+      ) : null}
+
+      {step === 'review' && known === 'addons' && addOnParse ? (
+        <div className="space-y-3">
+          <div className="rounded-lg border border-info/25 bg-info/[0.04] p-3">
+            <h3 className="text-[12.5px] font-semibold text-ink">Recognised as the guest add-on form</h3>
+            <p className="mt-1 text-[11.5px] leading-relaxed text-ink-2">
+              What the business keeps is the guest total less the island crew's cost — not the whole amount the guest
+              pays. Each kept submission writes that margin onto the matching stay, replacing whatever an older sheet
+              had recorded for it. Test and setup rows are flagged out with a reason and can be put back later.
+            </p>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-3">
+            <SummaryTile
+              label="Real submissions"
+              value={String(addOnParse.quotes.length - addOnParse.excludedCount)}
+              tone="pos"
+            />
+            <SummaryTile label="Flagged as tests" value={String(addOnParse.excludedCount)} tone="neutral" />
+            <SummaryTile
+              label="Margin recorded"
+              value={new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP', maximumFractionDigits: 0 }).format(
+                addOnParse.quotes.filter((q) => !q.excluded).reduce((sum, q) => sum + q.margin, 0),
+              )}
+              tone="neutral"
+            />
+          </div>
+          <div className="overflow-x-auto rounded-lg border border-line">
+            <table className="w-full text-[11.5px]">
+              <thead className="bg-surface-2 text-ink-2">
+                <tr>
+                  {['Guest', 'Arrives', 'Guest pays', 'Crew cost', 'You keep', 'Status'].map((header) => (
+                    <th key={header} className="px-2.5 py-1.5 text-left font-medium">
+                      {header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {addOnParse.quotes.map((quote) => (
+                  <tr key={quote.id} className={cx('border-t border-line', quote.excluded && 'opacity-45')}>
+                    <td className="px-2.5 py-1.5 text-ink">{quote.guestName || '—'}</td>
+                    <td className="num px-2.5 py-1.5 text-ink-2">{quote.checkIn}</td>
+                    <td className="num px-2.5 py-1.5 text-ink-2">{quote.guestTotal.toLocaleString()}</td>
+                    <td className="num px-2.5 py-1.5 text-ink-2">{quote.allanCost.toLocaleString()}</td>
+                    <td className="num px-2.5 py-1.5 font-medium text-ink">{quote.margin.toLocaleString()}</td>
+                    <td className="px-2.5 py-1.5 text-ink-3">{quote.excludedReason || 'counted'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : null}
+
+      {step === 'review' && !known && !multi && preview && sheet ? (
         <div className="space-y-3">
           {sectionPanel}
           <div className="grid gap-2 sm:grid-cols-3">
@@ -713,7 +905,7 @@ export function ImportWizard({
                 {preview.rejected.length} row{preview.rejected.length === 1 ? '' : 's'} will be skipped
               </p>
               <ul className="max-h-32 space-y-0.5 overflow-y-auto text-[11px] text-ink-2">
-                {preview.rejected.slice(0, 40).map((rejection) => (
+                {preview.rejected.slice(0, 40).map((rejection: { rowNumber: number; reason: string }) => (
                   <li key={rejection.rowNumber}>
                     Row {rejection.rowNumber} — {rejection.reason}
                   </li>
@@ -735,6 +927,10 @@ export function ImportWizard({
             if (step === 'review') setStep('map')
             else if (step === 'map') setStep(workbook && workbook.sheets.length > 1 ? 'sheet' : 'file')
             else if (step === 'sheet') setStep('file')
+            if (known) {
+              setKnown(null)
+              setStep('file')
+            }
             else onDone()
           }}
         >
@@ -778,7 +974,23 @@ export function ImportWizard({
               {busy ? (progress ?? 'Importing…') : `Import ${multiSheets.length} snapshots`}
             </Button>
           ) : null}
-          {step === 'review' && !multi && !crosstab ? (
+          {step === 'review' && known === 'airbnb' && airbnbParse ? (
+            <Button variant="primary" disabled={busy} onClick={() => void commitKnown()}>
+              {busy
+                ? 'Importing…'
+                : `Import ${airbnbParse.bookings.length} stays and ${airbnbParse.resolutions.length} resolutions`}
+            </Button>
+          ) : null}
+          {step === 'review' && known === 'addons' && addOnParse ? (
+            <Button variant="primary" disabled={busy} onClick={() => void commitKnown()}>
+              {busy
+                ? 'Importing…'
+                : `Import ${addOnParse.quotes.length - addOnParse.excludedCount} submission${
+                    addOnParse.quotes.length - addOnParse.excludedCount === 1 ? '' : 's'
+                  }`}
+            </Button>
+          ) : null}
+          {step === 'review' && !known && !multi && !crosstab ? (
             <Button variant="primary" disabled={busy || preview?.rows.length === 0} onClick={() => void commit()}>
               {busy ? 'Importing…' : `Import ${preview?.rows.length ?? 0} rows`}
             </Button>
@@ -786,6 +998,52 @@ export function ImportWizard({
         </div>
       </div>
     </Card>
+  )
+}
+
+/**
+ * The check that the export was read correctly: every peso Airbnb transferred
+ * should be a reservation or a resolution. A pending export has no transfers
+ * yet, which is not a mismatch — so it says so rather than showing a scary gap.
+ */
+function ReconcilePanel({ result }: { result: AirbnbParseResult }) {
+  const sums = reconcile(result)
+  const peso = (value: number) =>
+    new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP', maximumFractionDigits: 0 }).format(value)
+  const pending = result.payoutCount === 0
+  const clean = Math.abs(sums.difference) < 1
+
+  return (
+    <div className="rounded-lg border border-line bg-surface-2 p-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h4 className="text-[12px] font-semibold text-ink">Does it tie out?</h4>
+        <Pill tone={pending ? 'info' : clean ? 'pos' : 'warn'}>
+          {pending ? 'nothing paid out yet' : clean ? 'balances exactly' : `off by ${peso(sums.difference)}`}
+        </Pill>
+      </div>
+      <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-[11.5px] sm:grid-cols-4">
+        <Line label="Reservations" value={peso(sums.reservations)} />
+        <Line label="Resolutions" value={peso(sums.resolutions)} />
+        <Line label="Should total" value={peso(sums.expected)} />
+        <Line label="Actually transferred" value={pending ? '—' : peso(sums.paidOut)} />
+      </dl>
+      <p className="mt-2 text-[11px] leading-relaxed text-ink-3">
+        {pending
+          ? 'This is a pending export — the stays have not been paid out yet, so there is nothing to reconcile against.'
+          : clean
+            ? 'Every peso transferred to the bank is accounted for by a reservation or a resolution, which is the check that these rows were read the right way round.'
+            : 'The transfers do not match the rows behind them. That usually means the export covers a different date range than the payouts in it.'}
+      </p>
+    </div>
+  )
+}
+
+function Line({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="text-ink-3">{label}</dt>
+      <dd className="num text-ink">{value}</dd>
+    </div>
   )
 }
 

@@ -29,8 +29,9 @@ export function DataPage() {
       benchmark: data.benchmark.length,
       bookings: data.bookings.length,
       expenses: data.expenses.length,
+      addons: data.addons.length,
     }),
-    [data.holdings, data.transactions, data.benchmark, data.bookings, data.expenses],
+    [data.holdings, data.transactions, data.benchmark, data.bookings, data.expenses, data.addons],
   )
 
   const lastFor = (dataset: DatasetKey): ImportBatch | null =>

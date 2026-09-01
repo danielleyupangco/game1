@@ -16,6 +16,7 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { QuickAdd } from '@/components/entry/QuickAdd'
 import { useProvenance } from '@/components/ui/Provenance'
 import { money, num, pct, shortDate } from '@/lib/format'
+import type { AddOnQuote } from '@/types'
 import { today } from '@/lib/dates'
 
 type View = 'upcoming' | 'now' | 'past' | 'everyone' | 'repeat'
@@ -29,7 +30,7 @@ type View = 'upcoming' | 'now' | 'past' | 'everyone' | 'repeat'
  * feed the forecast and the cash view straight away.
  */
 export function GuestsPanel() {
-  const { bookings, settings } = useLedger()
+  const { bookings, settings, addons, resolutions } = useLedger()
   const { trace } = useProvenance()
   const [view, setView] = useState<View>('upcoming')
   const [query, setQuery] = useState('')
@@ -59,9 +60,42 @@ export function GuestsPanel() {
   // A negative add-on share on an otherwise paid stay means the sheet captured
   // the crew's side and not the guest's — a missing number, not a real loss.
   const incomplete = useMemo(
-    () => stays.filter((stay) => stay.addOnRevenue < 0 && stay.netRevenue > 0),
+    () =>
+      stays
+        .filter((stay) => stay.addOnRevenue < 0 && stay.netRevenue > 0)
+        .map((stay) => ({
+          stay,
+          // What actually came through Airbnb for this stay beyond the room. It
+          // is the number the missing figure has to be reconciled against, so
+          // showing it turns a flag into something answerable.
+          collected: resolutions
+            .filter((row) => row.confirmationCode === stay.confirmationCode)
+            .reduce((sum, row) => sum + row.amount, 0),
+        })),
+    [stays, resolutions],
+  )
+  /**
+   * Stays whose party size, country or review never made it across. The payout
+   * export does not carry them, so without a list they simply stay blank and
+   * quietly weaken every average built on them.
+   */
+  const needsDetail = useMemo(
+    () =>
+      stays
+        .filter((stay) => stay.segment !== 'upcoming')
+        .map((stay) => ({
+          stay,
+          missing: [
+            stay.guests > 0 ? '' : 'party size',
+            stay.country.trim() ? '' : 'country',
+            stay.review.trim() ? '' : 'review',
+          ].filter(Boolean),
+        }))
+        .filter((row) => row.missing.length > 0)
+        .sort((a, b) => a.stay.distance - b.stay.distance),
     [stays],
   )
+
   const repeatKeys = useMemo(
     () => new Set(book.repeatGuests.flatMap((profile) => profile.stays.map((stay) => stay.id))),
     [book.repeatGuests],
@@ -242,22 +276,61 @@ export function GuestsPanel() {
             {incomplete.length} stay{incomplete.length === 1 ? '' : 's'} with an unfinished add-on figure
           </h3>
           <p className="mt-1 max-w-3xl text-[12px] leading-relaxed text-ink-2">
-            The sheet records what went to the crew but not what the guest was charged, so your share reads as a
-            negative number and drags the month down with it. It is a gap in the record, not a loss. Open the stay and
-            put the real figure in — the P&amp;L, the forecast and the valuation all pick it up.
+            The old sheet recorded what went to the crew but not what the guest was charged, so your share reads as a
+            negative number and drags the month down with it. It is a gap in the record, not a loss. The Airbnb
+            resolution total below is what the guest actually paid for food and boats, so the difference is the
+            arithmetic — open the stay, check it, and put the real figure in. The P&amp;L, the forecast and the
+            valuation all pick it up.
           </p>
-          <div className="mt-2.5 flex flex-wrap gap-1.5">
-            {incomplete.map((stay) => (
+          <div className="mt-2.5 space-y-1.5">
+            {incomplete.map(({ stay, collected }) => (
               <button
                 key={stay.id}
                 type="button"
                 onClick={() => setOpenStay(stay.id)}
-                className="rounded-md border border-warn/30 bg-warn/10 px-2 py-0.5 text-[11px] text-warn transition-colors hover:bg-warn/20"
+                className="block w-full rounded-md border border-warn/30 bg-warn/10 px-2.5 py-1.5 text-left text-[11.5px] transition-colors hover:bg-warn/20"
               >
-                {stay.guestName.trim() || stay.confirmationCode} · {money(stay.addOnRevenue, stay.currency, true)}
+                <span className="font-medium text-warn">{stay.guestName.trim() || stay.confirmationCode}</span>
+                <span className="ml-2 text-ink-2">
+                  reads as <span className="num">{money(stay.addOnRevenue, stay.currency, true)}</span>
+                  {collected > 0 ? (
+                    <>
+                      {' · '}
+                      <span className="num">{money(collected, stay.currency, true)}</span> actually came through Airbnb,{' '}
+                      <span className="num">{money(collected + stay.addOnRevenue, stay.currency, true)}</span> of it
+                      looks like yours
+                    </>
+                  ) : null}
+                </span>
               </button>
             ))}
           </div>
+        </Card>
+      ) : null}
+
+      {needsDetail.length > 0 ? (
+        <Card>
+          <SectionHeader
+            title={`${needsDetail.length} stay${needsDetail.length === 1 ? '' : 's'} still missing details`}
+            subtitle="Party size, country and the review only exist in your Airbnb inbox — the payout export does not carry them. Until they are filled in, the averages built on them are thinner than they look. Click one to add what you have."
+          />
+          <div className="flex flex-wrap gap-1.5">
+            {needsDetail.slice(0, 24).map(({ stay, missing }) => (
+              <button
+                key={stay.id}
+                type="button"
+                onClick={() => setOpenStay(stay.id)}
+                className="rounded-md border border-line bg-surface-2 px-2 py-1 text-left text-[11px] transition-colors hover:bg-surface-3"
+                title={`Missing ${missing.join(', ')}`}
+              >
+                <span className="text-ink">{stay.guestName.trim() || stay.confirmationCode}</span>
+                <span className="ml-1.5 text-ink-3">{missing.join(' · ')}</span>
+              </button>
+            ))}
+          </div>
+          {needsDetail.length > 24 ? (
+            <p className="mt-2 text-[11px] text-ink-3">…and {needsDetail.length - 24} more.</p>
+          ) : null}
         </Card>
       ) : null}
 
@@ -360,9 +433,31 @@ export function GuestsPanel() {
         </StatGrid>
       </div>
 
-      {selected ? <StayDrawer stay={selected} profiles={profiles} onClose={() => setOpenStay(null)} /> : null}
+      {selected ? (
+        <StayDrawer
+          stay={selected}
+          profiles={profiles}
+          quote={addons.find((row) => !row.excluded && matchesStay(row, selected)) ?? null}
+          resolutionTotal={resolutions
+            .filter((row) => row.confirmationCode === selected.confirmationCode)
+            .reduce((sum, row) => sum + row.amount, 0)}
+          onClose={() => setOpenStay(null)}
+        />
+      ) : null}
     </div>
   )
+}
+
+/** The form has no confirmation code, so a quote ties to a stay by name and date. */
+function matchesStay(quote: AddOnQuote, stay: GuestStay): boolean {
+  const key = (name: string) => name.trim().toLowerCase().replace(/\s+/g, ' ')
+  if (key(quote.guestName) !== key(stay.guestName)) return false
+  const apart = Math.abs(
+    Math.round(
+      (new Date(`${quote.checkIn}T00:00:00`).getTime() - new Date(`${stay.checkIn}T00:00:00`).getTime()) / 86400000,
+    ),
+  )
+  return apart <= 2
 }
 
 function whenLabel(stay: GuestStay): string {
@@ -454,10 +549,15 @@ function RepeatList({
 function StayDrawer({
   stay,
   profiles,
+  quote,
+  resolutionTotal,
   onClose,
 }: {
   stay: GuestStay
   profiles: GuestProfile[]
+  quote: AddOnQuote | null
+  /** everything that moved through Airbnb for this stay beyond the room */
+  resolutionTotal: number
   onClose: () => void
 }) {
   const { updateBooking } = useLedger()
@@ -465,14 +565,29 @@ function StayDrawer({
   const [notes, setNotes] = useState(stay.notes)
   const [room, setRoom] = useState(String(stay.netRevenue))
   const [addOns, setAddOns] = useState(String(stay.addOnRevenue))
+  // The payout export carries no party size, country or review — those live in
+  // the Airbnb host inbox and only reach the book by being typed in.
+  const [guests, setGuests] = useState(stay.guests > 0 ? String(stay.guests) : '')
+  const [country, setCountry] = useState(stay.country)
+  const [rating, setRating] = useState(stay.rating)
+  const [review, setReview] = useState(stay.review)
   const [saved, setSaved] = useState(false)
 
   const profile = profiles.find((p) => p.stays.some((s) => s.id === stay.id))
   const roomValue = Number(room)
   const addOnValue = Number(addOns)
-  const numbersValid = Number.isFinite(roomValue) && Number.isFinite(addOnValue)
+  const guestCount = guests.trim() === '' ? 0 : Math.round(Number(guests))
+  const numbersValid =
+    Number.isFinite(roomValue) && Number.isFinite(addOnValue) && Number.isFinite(guestCount) && guestCount >= 0
   const moneyChanged = numbersValid && (roomValue !== stay.netRevenue || addOnValue !== stay.addOnRevenue)
-  const dirty = contact !== stay.contact || notes !== stay.notes || moneyChanged
+  const dirty =
+    contact !== stay.contact ||
+    notes !== stay.notes ||
+    moneyChanged ||
+    guestCount !== stay.guests ||
+    country !== stay.country ||
+    rating !== stay.rating ||
+    review !== stay.review
 
   const save = async () => {
     if (!numbersValid) return
@@ -485,6 +600,10 @@ function StayDrawer({
       ...booking,
       contact: contact.trim(),
       notes: notes.trim(),
+      guests: guestCount,
+      country: country.trim(),
+      rating: rating.trim(),
+      review: review.trim(),
       netRevenue: roomValue,
       // Gross moves with the payout unless fees were recorded separately, so the
       // two do not silently drift apart.
@@ -499,7 +618,7 @@ function StayDrawer({
     <div className="no-print fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 sm:items-center">
       <button type="button" aria-label="Close" onClick={onClose} className="fixed inset-0 bg-black/60 backdrop-blur-[2px]" />
       <div className="animate-in relative w-full max-w-xl rounded-xl border border-line bg-bg shadow-2xl">
-        <header className="flex items-start justify-between gap-3 border-b border-line px-4 py-3">
+        <header className="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-line bg-bg px-4 py-3">
           <div className="min-w-0">
             <h2 className="truncate text-[14px] font-semibold text-ink">{stay.guestName.trim() || 'Unnamed booking'}</h2>
             <p className="mt-0.5 text-[11.5px] text-ink-2">
@@ -512,7 +631,7 @@ function StayDrawer({
           </Button>
         </header>
 
-        <div className="space-y-4 px-4 py-4">
+        <div className="space-y-4 px-4 pt-4">
           <div className="flex flex-wrap gap-1.5">
             <Pill tone={stay.segment === 'now' ? 'pos' : stay.segment === 'upcoming' ? 'info' : 'neutral'}>
               {stay.segment === 'now' ? 'Staying now' : stay.segment === 'upcoming' ? 'Upcoming' : 'Past stay'}
@@ -535,13 +654,65 @@ function StayDrawer({
           </div>
 
           <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5 sm:grid-cols-3">
-            <Detail label="Party" value={stay.guests > 0 ? `${stay.guests} guests` : '—'} />
-            <Detail label="From" value={stay.country || '—'} />
             <Detail label="Booked on" value={stay.bookedOn ? shortDate(stay.bookedOn) : '—'} />
             <Detail label="Booked ahead" value={stay.leadTime >= 0 ? `${stay.leadTime} days` : '—'} />
             <Detail label="Confirmation" value={stay.confirmationCode || '—'} />
-            <Detail label="Rating" value={stay.rating || '—'} />
           </dl>
+
+          <div className="rounded-lg border border-line bg-surface-2 p-3">
+            <h4 className="text-[12px] font-semibold text-ink">Straight from Airbnb</h4>
+            <p className="mt-1 text-[11.5px] leading-relaxed text-ink-2">
+              The payout export has the money and the dates but not these three. They come from the reservation and the
+              review in your Airbnb inbox, so this is where they get typed in — once, and they stay.
+            </p>
+            <div className="mt-2.5 grid gap-3 sm:grid-cols-3">
+              <Field label="Party size">
+                <TextInput
+                  value={guests}
+                  onChange={(v) => {
+                    setGuests(v)
+                    setSaved(false)
+                  }}
+                  type="number"
+                  placeholder="Not recorded"
+                />
+              </Field>
+              <Field label="Guest country">
+                <TextInput
+                  value={country}
+                  onChange={(v) => {
+                    setCountry(v)
+                    setSaved(false)
+                  }}
+                  placeholder="Not recorded"
+                />
+              </Field>
+              <Field label="Your rating">
+                <TextInput
+                  value={rating}
+                  onChange={(v) => {
+                    setRating(v)
+                    setSaved(false)
+                  }}
+                  placeholder="A, B…"
+                />
+              </Field>
+            </div>
+            <div className="mt-3">
+              <Field label="What they wrote">
+                <textarea
+                  value={review}
+                  onChange={(event) => {
+                    setReview(event.target.value)
+                    setSaved(false)
+                  }}
+                  rows={3}
+                  placeholder="Paste the review from Airbnb"
+                  className={cx(inputClass, 'resize-y leading-relaxed')}
+                />
+              </Field>
+            </div>
+          </div>
 
           <div className="rounded-lg border border-line bg-surface-2 p-3">
             <div className="grid gap-3 sm:grid-cols-2">
@@ -577,13 +748,52 @@ function StayDrawer({
             </p>
           </div>
 
-          {stay.review ? (
-            <div>
-              <span className="mb-1 block text-[11px] font-medium uppercase tracking-wide text-ink-2">What they said</span>
-              <p className="rounded-lg border border-line bg-surface-2 p-3 text-[12px] leading-relaxed text-ink-2">
-                “{stay.review}”
+          {quote ? (
+            <div className="rounded-lg border border-line bg-surface-2 p-3">
+              <h4 className="text-[12px] font-semibold text-ink">Catering, boat and tours</h4>
+              <p className="mt-1 text-[11.5px] leading-relaxed text-ink-2">
+                From the add-on form. Most of what the guest pays here is the island crew's; the margin is the only part
+                the business keeps, and it is the figure carried into the P&amp;L above.
               </p>
+              <dl className="mt-2.5 grid grid-cols-2 gap-x-4 gap-y-2.5 sm:grid-cols-4">
+                <Detail label="Guest charged" value={money(quote.guestTotal, quote.currency, true)} />
+                <Detail label="Crew cost" value={money(quote.allanCost, quote.currency, true)} />
+                <Detail label="You keep" value={money(quote.margin, quote.currency, true)} />
+                <Detail
+                  label="Margin"
+                  value={quote.guestTotal > 0 ? pct(quote.margin / quote.guestTotal, 1) : '—'}
+                />
+              </dl>
+              <dl className="mt-2.5 grid grid-cols-2 gap-x-4 gap-y-2.5 border-t border-line pt-2.5 sm:grid-cols-4">
+                <Detail label="Paid up front" value={money(quote.downpayment, quote.currency, true)} />
+                <Detail label="Cash on arrival" value={money(quote.cashOnArrival, quote.currency, true)} />
+                <Detail label="Party on form" value={quote.guests > 0 ? `${quote.guests} guests` : '—'} />
+                <Detail label="Form submitted" value={shortDate(quote.submittedAt)} />
+              </dl>
+              {quote.allergies.trim() ? (
+                <p className="mt-2.5 border-t border-line pt-2.5 text-[11.5px] leading-relaxed text-ink-2">
+                  <span className="font-medium text-ink">Dietary:</span> {quote.allergies}
+                </p>
+              ) : null}
+              {quote.snacks.trim() ? (
+                <p className="mt-1.5 text-[11.5px] leading-relaxed text-ink-2">
+                  <span className="font-medium text-ink">Requested:</span> {quote.snacks}
+                </p>
+              ) : null}
+              {quote.pickup.trim() ? (
+                <p className="mt-1.5 text-[11.5px] leading-relaxed text-ink-2">
+                  <span className="font-medium text-ink">Pickup:</span> {quote.pickup}
+                </p>
+              ) : null}
             </div>
+          ) : null}
+
+          {resolutionTotal !== 0 ? (
+            <p className="text-[11.5px] leading-relaxed text-ink-3">
+              <span className="num text-ink-2">{money(resolutionTotal, 'PHP', true)}</span> also moved through Airbnb for
+              this stay outside the room charge. That is the guest paying for food and boats through the platform, most
+              of which goes to the crew — it is not counted as revenue, and it is how the bank total reconciles.
+            </p>
           ) : null}
 
           <div className="grid gap-3 sm:grid-cols-2">
@@ -595,7 +805,9 @@ function StayDrawer({
             </Field>
           </div>
 
-          <div className="flex items-center justify-between gap-3 border-t border-line pt-3">
+          {/* The record is long enough to scroll, so the action stays reachable
+              rather than sitting somewhere below the fold. */}
+          <div className="sticky bottom-0 -mx-4 flex items-center justify-between gap-3 border-t border-line bg-bg px-4 py-3">
             <span className="text-[11.5px] text-ink-3">
               {stay.prov.enteredBy || stay.prov.fileName === 'Entered by hand'
                 ? `Entered by ${stay.prov.enteredBy || 'hand'}`

@@ -8,10 +8,12 @@ import {
   type ReactNode,
 } from 'react'
 import * as db from '@/lib/db'
+import { matchQuotes } from '@/lib/addon-form'
 import { SEED } from '@/seed'
 import { KV } from '@/lib/db'
 import { DEFAULT_COST_MODEL, DEFAULT_DCF, DEFAULT_FORECAST, DEFAULT_PRICING, DEFAULT_SETTINGS } from '@/state/defaults'
 import type {
+  AddOnQuote,
   BenchmarkPoint,
   Booking,
   CapitalProject,
@@ -25,6 +27,7 @@ import type {
   Holding,
   ImportBatch,
   PricingAssumptions,
+  Resolution,
   Settings,
   Snapshot,
   Transaction,
@@ -40,6 +43,8 @@ export type LedgerData = {
   imports: ImportBatch[]
   findings: Finding[]
   capitalSpend: CapitalSpend[]
+  resolutions: Resolution[]
+  addons: AddOnQuote[]
 }
 
 type Ctx = LedgerData & {
@@ -65,6 +70,8 @@ type Ctx = LedgerData & {
   removeCapitalSpend: (id: string) => Promise<void>
   /** append hand-entered rows to a dataset and refresh */
   addRecords: <K extends 'expenses' | 'bookings'>(store: K, rows: LedgerData[K]) => Promise<void>
+  /** flip a form submission between counted and excluded, and re-apply margins */
+  saveAddOn: (quote: AddOnQuote) => Promise<void>
   /** most recent import timestamp per dataset, for the freshness indicators */
   freshness: Partial<Record<DatasetKey, string>>
 }
@@ -81,6 +88,8 @@ const EMPTY: LedgerData = {
   imports: [],
   findings: [],
   capitalSpend: [],
+  resolutions: [],
+  addons: [],
 }
 
 export function LedgerProvider({ children }: { children: ReactNode }) {
@@ -105,19 +114,44 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    const [holdings, snapshots, transactions, benchmark, bookings, expenses, imports, findings, capitalSpend] =
-      await Promise.all([
-        db.getAll('holdings'),
-        db.getAll('snapshots'),
-        db.getAll('transactions'),
-        db.getAll('benchmark'),
-        db.getAll('bookings'),
-        db.getAll('expenses'),
-        db.getAll('imports'),
-        db.getAll('findings'),
-        db.getAll('capitalSpend'),
-      ])
-    setData({ holdings, snapshots, transactions, benchmark, bookings, expenses, imports, findings, capitalSpend })
+    const [
+      holdings,
+      snapshots,
+      transactions,
+      benchmark,
+      bookings,
+      expenses,
+      imports,
+      findings,
+      capitalSpend,
+      resolutions,
+      addons,
+    ] = await Promise.all([
+      db.getAll('holdings'),
+      db.getAll('snapshots'),
+      db.getAll('transactions'),
+      db.getAll('benchmark'),
+      db.getAll('bookings'),
+      db.getAll('expenses'),
+      db.getAll('imports'),
+      db.getAll('findings'),
+      db.getAll('capitalSpend'),
+      db.getAll('resolutions'),
+      db.getAll('addons'),
+    ])
+    setData({
+      holdings,
+      snapshots,
+      transactions,
+      benchmark,
+      bookings,
+      expenses,
+      imports,
+      findings,
+      capitalSpend,
+      resolutions,
+      addons,
+    })
 
     // Merge stored values over defaults so a schema addition doesn't strand
     // an existing database on a missing key.
@@ -241,6 +275,30 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
     [],
   )
 
+  /**
+   * Excluding or restoring a form submission changes what the business earned,
+   * so the matched booking's add-on figure moves with it rather than going
+   * stale until the next import.
+   */
+  const saveAddOn = useCallback(
+    async (quote: AddOnQuote) => {
+      await db.putOne('addons', quote)
+      setData((prev) => {
+        const addons = prev.addons.map((row) => (row.id === quote.id ? quote : row))
+        const match = matchQuotes([quote], prev.bookings)[0]
+        if (!match.bookingId) return { ...prev, addons }
+        const margin = quote.excluded ? 0 : quote.margin
+        const bookings = prev.bookings.map((booking) =>
+          booking.id === match.bookingId ? { ...booking, addOnRevenue: margin } : booking,
+        )
+        const updated = bookings.find((booking) => booking.id === match.bookingId)
+        if (updated) void db.putOne('bookings', updated)
+        return { ...prev, addons, bookings }
+      })
+    },
+    [],
+  )
+
   const freshness = useMemo(() => {
     const out: Partial<Record<DatasetKey, string>> = {}
     for (const batch of data.imports) {
@@ -271,12 +329,13 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       saveCostModel,
       saveForecast,
       updateBooking,
+      saveAddOn,
       addCapitalSpend,
       removeCapitalSpend,
       addRecords,
       freshness,
     }),
-    [data, ready, settings, dcf, pricing, projects, costModel, forecast, reload, saveSettings, saveDcf, savePricing, saveProjects, removeImport, saveFinding, removeFinding, saveCostModel, saveForecast, updateBooking, addCapitalSpend, removeCapitalSpend, addRecords, freshness],
+    [data, ready, settings, dcf, pricing, projects, costModel, forecast, reload, saveSettings, saveDcf, savePricing, saveProjects, removeImport, saveFinding, removeFinding, saveCostModel, saveForecast, updateBooking, saveAddOn, addCapitalSpend, removeCapitalSpend, addRecords, freshness],
   )
 
   return <LedgerContext.Provider value={value}>{children}</LedgerContext.Provider>

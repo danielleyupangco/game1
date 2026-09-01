@@ -146,6 +146,71 @@ export type Booking = WithProvenance & {
 }
 
 /**
+ * Money that moved through Airbnb against a reservation but is not room
+ * revenue: resolution payouts (the guest paying for catering, boat and tours
+ * through the platform) and resolution adjustments (refunds and corrections).
+ *
+ * Deliberately NOT profit. Almost all of a resolution payout is passed straight
+ * to the island crew; what the business keeps is the margin recorded on the
+ * add-on form. Adding resolutions to room revenue would count the crew's money
+ * as earnings, so these are held apart and used to reconcile the bank instead.
+ */
+export type Resolution = WithProvenance & {
+  confirmationCode: string
+  guestName: string
+  date: string
+  checkIn: string
+  checkOut: string
+  amount: number
+  currency: Currency
+  kind: 'payout' | 'adjustment'
+  details: string
+}
+
+/**
+ * One submission of the guest add-on form — the source of truth for catering,
+ * boat and transfer pricing.
+ *
+ * The guest is quoted a total; the island crew quotes their cost; the
+ * difference is what the business actually keeps. Test and setup submissions
+ * are flagged rather than deleted, so the record stays complete and a
+ * misclassification is visible and reversible.
+ */
+export type AddOnQuote = WithProvenance & {
+  submittedAt: string
+  guestName: string
+  email: string
+  checkIn: string
+  checkOut: string
+  nights: number
+  guests: number
+  adults: number
+  kids: number
+  /** what the guest is charged, after the form's own calculation */
+  guestTotal: number
+  /** what the island crew quoted for the same stay */
+  allanCost: number
+  /** guestTotal − allanCost: the only part the business keeps */
+  margin: number
+  /** collected up front through Airbnb */
+  downpayment: number
+  /** the balance the guest hands over in cash on the island */
+  cashOnArrival: number
+  currency: Currency
+  purpose: string
+  allergies: string
+  requests: string
+  snacks: string
+  pickup: string
+  dropoff: string
+  howHeard: string
+  /** a test or setup submission, kept for completeness but out of the numbers */
+  excluded: boolean
+  /** why it was excluded, so the judgement is arguable rather than silent */
+  excludedReason: string
+}
+
+/**
  * Forward-looking assumptions. Kept apart from the DCF: that values the whole
  * business over a decade, this asks what the next twelve months look like.
  */
@@ -188,6 +253,7 @@ export type DatasetKey =
   | 'benchmark'
   | 'bookings'
   | 'expenses'
+  | 'addons'
 
 export type ImportBatch = {
   id: string

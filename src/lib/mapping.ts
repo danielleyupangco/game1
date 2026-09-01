@@ -366,6 +366,9 @@ export function buildExpenses(ctx: BuildContext): BuildResult<Expense> {
   })
 }
 
+/** Datasets read column by column. The add-on form is recognised whole instead. */
+export type MappedDataset = Exclude<import('@/types').DatasetKey, 'addons'>
+
 export const BUILDERS = {
   holdings: buildHoldings,
   transactions: buildTransactions,
