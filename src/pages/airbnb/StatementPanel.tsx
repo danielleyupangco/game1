@@ -23,6 +23,7 @@ export function StatementPanel({ series }: { series: MonthMetrics[] }) {
   const { expenses, capitalSpend, dividends, settings, resolutions, saveSettings } = useLedger()
   const [view, setView] = useState<View>('income')
   const [year, setYear] = useState<string>('all')
+  const [showAddOnSetting, setShowAddOnSetting] = useState(false)
 
   const addOnGrossByMonth = useMemo(() => {
     const out: Record<string, number> = {}
@@ -66,40 +67,38 @@ export function StatementPanel({ series }: { series: MonthMetrics[] }) {
 
   return (
     <div className="space-y-4">
-      <Card className="border-info/25 bg-info/[0.04]">
-        <div className="flex gap-3">
-          <span className="mt-0.5 text-[14px] text-info">◫</span>
-          <div className="min-w-0">
-            <h3 className="text-[13px] font-semibold text-ink">Whose money is whose</h3>
-            <p className="mt-1 max-w-3xl text-[12px] leading-relaxed text-ink-2">
-              The room is yours: every peso a guest pays to sleep on the island is your revenue. Food, boats and tours
-              are Kuya Allan's business — the guest's money passes through you to him, and what you keep is the margin
-              on top. So the statement below shows room revenue as the business, and your add-on margin as a second,
-              smaller line. Adding the whole add-on amount to revenue would show a business roughly twice this size
-              earning the same profit, which is the single easiest way to mislead yourself here.
-            </p>
-            {excludedBefore > 0 ? (
-              <p className="mt-2 max-w-3xl rounded-lg border border-warn/25 bg-warn/[0.06] px-3 py-2 text-[11.5px] leading-relaxed text-ink-2">
-                You began recording your own margin in{' '}
-                <span className="num text-ink">{monthLabel(settings.addOnIncomeFrom)}</span>. Before then the sheets
-                carry an add-on column totalling{' '}
-                <span className="num text-warn">{money(excludedBefore, 'PHP', true)}</span>, which is the crew's gross
-                rather than your income — so it is held out of revenue and shown as a memo instead. If any of that was
-                genuinely yours, move the date back and it comes straight in.
-                <span className="mt-2 flex items-center gap-2">
-                  <span className="text-ink-3">Counting my margin from</span>
-                  <input
-                    type="month"
-                    value={settings.addOnIncomeFrom}
-                    onChange={(event) => void saveSettings({ addOnIncomeFrom: event.target.value })}
-                    className={cx(inputClass, 'w-40')}
-                  />
-                </span>
-              </p>
-            ) : null}
-          </div>
+      <p className="max-w-3xl text-[12px] leading-relaxed text-ink-2">
+        Revenue is the room, plus your patong on the crew's food, boats and tours. The crew's own takings are their
+        business and appear nowhere in these totals.
+        {excludedBefore > 0 ? (
+          <>
+            {' '}
+            The sheets before {monthLabel(settings.addOnIncomeFrom)} record the crew's gross rather than your margin
+            (<span className="num">{money(excludedBefore, 'PHP', true)}</span> of it), so it is left out.{' '}
+            <button
+              type="button"
+              onClick={() => setShowAddOnSetting((prev) => !prev)}
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              {showAddOnSetting ? 'hide' : 'change the date'}
+            </button>
+          </>
+        ) : null}
+      </p>
+      {showAddOnSetting ? (
+        <div className="flex flex-wrap items-center gap-2 rounded-lg border border-line bg-surface-2 px-3 py-2">
+          <span className="text-[11.5px] text-ink-2">Count my add-on margin from</span>
+          <input
+            type="month"
+            value={settings.addOnIncomeFrom}
+            onChange={(event) => void saveSettings({ addOnIncomeFrom: event.target.value })}
+            className={cx(inputClass, 'w-40')}
+          />
+          <span className="text-[11px] text-ink-3">
+            Anything earlier is treated as the crew's, not yours.
+          </span>
         </div>
-      </Card>
+      ) : null}
 
       <div className="flex flex-wrap items-center gap-2">
         <Tabs
@@ -210,11 +209,20 @@ function IncomeStatement({ months, total }: { months: StatementMonth[]; total: S
   return (
     <div className="space-y-4">
       <StatGrid>
-        <Stat label="Room revenue" value={money(total.roomRevenue, 'PHP', true)} sub={`${num(total.nightsSold, 0)} nights sold`} />
         <Stat
-          label="Your add-on margin"
-          value={money(total.addOnMargin, 'PHP', true)}
-          sub={total.addOnGross > 0 ? `on ${money(total.addOnGross, 'PHP', true)} passing through` : 'on food, boats and tours'}
+          label="Revenue"
+          value={money(total.revenue, 'PHP', true)}
+          sub={
+            total.addOnMargin > 0
+              ? `${money(total.roomRevenue, 'PHP', true)} rooms + ${money(total.addOnMargin, 'PHP', true)} patong`
+              : `${num(total.nightsSold, 0)} nights sold`
+          }
+          hint="Room payouts plus your margin on the crew's food, boats and tours. The crew's own takings are not counted."
+        />
+        <Stat
+          label="Nights sold"
+          value={num(total.nightsSold, 0)}
+          sub={`rate ${money(total.adr, 'PHP', true)} · RevPAR ${money(total.revpar, 'PHP', true)}`}
         />
         <Stat
           label="EBITDA"
@@ -239,13 +247,7 @@ function IncomeStatement({ months, total }: { months: StatementMonth[]; total: S
           { label: 'Stays', value: (m) => m.stays, kind: 'count' },
           { label: 'REVENUE', value: (m) => m.revenue, emphasis: 'head' },
           { label: 'Room revenue', value: (m) => m.roomRevenue, emphasis: 'sub' },
-          { label: 'Add-on margin kept', value: (m) => m.addOnMargin, emphasis: 'sub' },
-          {
-            label: 'Add-ons passing through (memo)',
-            value: (m) => m.addOnGross,
-            emphasis: 'sub',
-            hint: 'The crew’s gross on food, boats and tours. Shown for scale — it is not your income and is not in any total.',
-          },
+          { label: 'Patong on add-ons', value: (m) => m.addOnMargin, emphasis: 'sub' },
           { label: 'Cost of sales', value: (m) => m.cogs, emphasis: 'head' },
           { label: 'as % of revenue', value: (m) => m.cogsPct, kind: 'pct', emphasis: 'sub' },
           { label: 'GROSS PROFIT', value: (m) => m.grossProfit, emphasis: 'total' },
@@ -269,6 +271,17 @@ function IncomeStatement({ months, total }: { months: StatementMonth[]; total: S
         which is why EBITDA sits above it. Capital spend and dividends appear nowhere here; both move cash without being
         costs, and they have their own tabs.
       </p>
+
+      {total.addOnGross > 0 ? (
+        <p className="text-[11.5px] leading-relaxed text-ink-3">
+          <span className="font-medium text-ink-2">Side note on add-ons.</span> Guests paid about{' '}
+          <span className="num">{money(total.addOnGross, 'PHP', true)}</span> for food, boats and tours over this period.
+          That is the crew's business and none of it is in the figures above — only your{' '}
+          <span className="num">{money(total.addOnMargin, 'PHP', true)}</span> patong is
+          {total.addOnGross > 0 ? <> ({pct(total.addOnMargin / total.addOnGross, 0)} of it)</> : null}. It is here for
+          scale, because the money moving through your account is much larger than the money you keep.
+        </p>
+      ) : null}
     </div>
   )
 }

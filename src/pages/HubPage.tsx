@@ -2,12 +2,13 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLedger } from '@/state/store'
 import { buildPositions, latestSnapshot, totalValue } from '@/domain/investments/portfolio'
-import { buildPerformance } from '@/domain/investments/performance'
+import { cashShare, ownerOfHolding, splitByOwner } from '@/domain/investments/ownership'
 import { aggregate, monthlyMetrics, trailing } from '@/domain/airbnb/metrics'
 import { runDcf } from '@/domain/airbnb/dcf'
 import { HubCanvas } from '@/components/hub/HubCanvas'
 import { cx } from '@/components/ui/primitives'
-import { money, pct, relativeTime, shortDate, signedPct } from '@/lib/format'
+import { money, pct, shortDate } from '@/lib/format'
+import type { Finding } from '@/types'
 
 type Satellite = {
   id: string
@@ -34,7 +35,7 @@ type Satellite = {
  */
 export function HubPage() {
   const ledger = useLedger()
-  const { holdings, snapshots, transactions, bookings, expenses, settings, dcf, findings, imports, ready } = ledger
+  const { holdings, snapshots, bookings, expenses, settings, dcf, findings, saveFinding, ready } = ledger
 
   const [now, setNow] = useState(() => new Date())
   useEffect(() => {
@@ -46,10 +47,6 @@ export function HubPage() {
   const positions = useMemo(() => buildPositions(holdings, snapshot), [holdings, snapshot])
   const liquid = totalValue(positions)
 
-  const performance = useMemo(
-    () => (snapshots.length >= 2 ? buildPerformance(holdings, snapshots, transactions, settings.usdPhp) : null),
-    [holdings, snapshots, transactions, settings.usdPhp],
-  )
 
   const airbnbSeries = useMemo(
     () =>
@@ -68,185 +65,102 @@ export function HubPage() {
   const propertyValue = hasAirbnb && Number.isFinite(dcfResult.equityValue) ? dcfResult.equityValue : 0
   const netWorth = liquid + propertyValue + settings.cashOnHand
 
+  // The rows behind the latest snapshot, split by whose money it is.
+  const snapshotHoldings = useMemo(
+    () => (snapshot ? holdings.filter((holding) => holding.snapshotId === snapshot.id) : []),
+    [holdings, snapshot],
+  )
+  const splits = useMemo(
+    () => splitByOwner(snapshotHoldings, snapshot?.usdPhp ?? settings.usdPhp),
+    [snapshotHoldings, snapshot, settings.usdPhp],
+  )
+  const daniSplit = splits.find((split) => split.owner === 'dani') ?? null
+  const jointSplit = splits.find((split) => split.owner === 'joint') ?? null
+  const daniCash = useMemo(
+    () => cashShare(snapshotHoldings.filter((h) => ownerOfHolding(h) === 'dani'), snapshot?.usdPhp ?? settings.usdPhp),
+    [snapshotHoldings, snapshot, settings.usdPhp],
+  )
+  const jointCash = useMemo(
+    () => cashShare(snapshotHoldings.filter((h) => ownerOfHolding(h) === 'joint'), snapshot?.usdPhp ?? settings.usdPhp),
+    [snapshotHoldings, snapshot, settings.usdPhp],
+  )
+
   const openFindings = findings.filter((f) => f.status === 'open' || f.status === 'doing')
   const criticalFindings = openFindings.filter((f) => f.severity === 'critical').length
 
-  const byGeography = useMemo(() => {
-    const buckets = new Map<string, number>()
-    for (const position of positions) {
-      const key = position.geography || 'Unspecified'
-      buckets.set(key, (buckets.get(key) ?? 0) + position.value)
-    }
-    return buckets
-  }, [positions])
-
-  const byClass = useMemo(() => {
-    const buckets = new Map<string, number>()
-    for (const position of positions) buckets.set(position.assetClass, (buckets.get(position.assetClass) ?? 0) + position.value)
-    return buckets
-  }, [positions])
-
-  const lastImport = useMemo(
-    () => [...imports].sort((a, b) => (a.importedAt < b.importedAt ? 1 : -1))[0] ?? null,
-    [imports],
-  )
-
+  /**
+   * Three hubs, because there are three things she actually owns and decides
+   * about: the island, her own money, and the money she and Nicolo hold
+   * together. Everything else — allocation, valuation, performance — is a view
+   * inside one of those, not a peer of them.
+   */
   const satellites: Satellite[] = useMemo(() => {
-    const geo = (key: string) => byGeography.get(key) ?? 0
-    const cls = (key: string) => byClass.get(key) ?? 0
-    const withValue = (value: number, of: number) => (of > 0 ? pct(value / of) : '—')
+    const share = (value: number, of: number) => (of > 0 ? pct(value / of) : '—')
     return [
-      {
-        id: 'ph',
-        eyebrow: 'PH EQUITIES',
-        title: 'PH PORTFOLIO',
-        to: '/investments',
-        hue: '#34d399',
-        x: 38,
-        y: 11,
-        empty: holdings.length === 0,
-        lines: [
-          { label: 'Value', value: money(geo('PH'), 'PHP', true) },
-          { label: 'Of portfolio', value: withValue(geo('PH'), liquid) },
-        ],
-      },
-      {
-        id: 'us',
-        eyebrow: 'US & GLOBAL',
-        title: 'OFFSHORE',
-        to: '/investments',
-        hue: '#3987e5',
-        x: 62,
-        y: 11,
-        empty: holdings.length === 0,
-        lines: [
-          { label: 'Value', value: money(geo('US') + geo('Global'), 'PHP', true) },
-          { label: 'Of portfolio', value: withValue(geo('US') + geo('Global'), liquid) },
-        ],
-      },
-      {
-        id: 'cash',
-        eyebrow: 'CASH & DEPOSITS',
-        title: 'DRY POWDER',
-        to: '/investments',
-        hue: '#fbbf24',
-        x: 17,
-        y: 31,
-        empty: holdings.length === 0,
-        lines: [
-          { label: 'Idle', value: money(cls('Cash'), 'PHP', true), tone: cls('Cash') / Math.max(liquid, 1) > 0.25 ? 'warn' : undefined },
-          { label: 'Of portfolio', value: withValue(cls('Cash'), liquid), tone: cls('Cash') / Math.max(liquid, 1) > 0.25 ? 'warn' : undefined },
-        ],
-      },
-      {
-        id: 'bonds',
-        eyebrow: 'FIXED INCOME',
-        title: 'BOND BOOK',
-        to: '/investments',
-        hue: '#9085e9',
-        x: 83,
-        y: 31,
-        empty: holdings.length === 0,
-        lines: [
-          { label: 'Value', value: money(cls('Fixed Income'), 'PHP', true) },
-          { label: 'Of portfolio', value: withValue(cls('Fixed Income'), liquid) },
-        ],
-      },
-      {
-        id: 'performance',
-        eyebrow: performance ? `${snapshots.length} SNAPSHOTS` : 'NEEDS A SECOND SNAPSHOT',
-        title: 'PERFORMANCE',
-        to: '/investments',
-        hue: '#2dd4bf',
-        x: 13,
-        y: 55,
-        empty: !performance,
-        lines: performance
-          ? [
-              {
-                label: performance.contributionsKnown ? 'Since inception' : 'Value change',
-                value: signedPct(performance.sinceInception),
-                tone: performance.contributionsKnown ? (performance.sinceInception >= 0 ? 'pos' : 'neg') : 'warn',
-              },
-              {
-                label: performance.contributionsKnown ? 'Basis' : 'Caveat',
-                value: performance.contributionsKnown ? 'net of flows' : 'incl. deposits',
-                tone: performance.contributionsKnown ? undefined : 'warn',
-              },
-            ]
-          : [{ label: 'Snapshots', value: String(snapshots.length) }],
-      },
       {
         id: 'island',
         eyebrow: 'CULION · PALAWAN',
         title: 'ISLAND T',
         to: '/airbnb',
         hue: '#f472b6',
-        x: 87,
-        y: 55,
+        x: 50,
+        y: 13,
         empty: bookings.length === 0,
         lines: t12
           ? [
-              { label: 'Revenue T12M', value: money(t12.totalRevenue, 'PHP', true) },
+              { label: 'Room revenue T12M', value: money(t12.revenue, 'PHP', true) },
               { label: 'Occupancy', value: pct(t12.occupancy, 0), tone: t12.occupancy < 0.35 ? 'warn' : 'pos' },
-              { label: 'Margin', value: expenses.length > 0 ? pct(t12.netMargin, 0) : '—' },
+              {
+                label: 'Worth',
+                value: hasAirbnb ? money(dcfResult.equityValue, 'PHP', true) : '—',
+              },
             ]
           : [{ label: 'Bookings', value: '0' }],
       },
       {
-        id: 'valuation',
-        eyebrow: 'DCF · EQUITY VALUE',
-        title: 'VALUATION',
-        to: '/airbnb',
-        hue: '#d95926',
-        x: 25,
-        y: 78,
-        empty: !hasAirbnb,
-        lines: hasAirbnb
+        id: 'dani',
+        eyebrow: `${daniSplit?.holdings ?? 0} HOLDINGS`,
+        title: 'DANI INVESTMENTS',
+        to: '/investments?owner=dani',
+        hue: '#34d399',
+        x: 17,
+        y: 66,
+        empty: !daniSplit,
+        lines: daniSplit
           ? [
-              { label: 'Equity value', value: money(dcfResult.equityValue, 'PHP', true) },
+              { label: 'Value', value: money(daniSplit.value, 'PHP', true) },
+              { label: 'Of the book', value: share(daniSplit.value, liquid) },
               {
-                label: 'From terminal',
-                value: pct(dcfResult.terminalShare, 0),
-                tone: dcfResult.terminalShare > 0.7 ? 'warn' : undefined,
+                label: 'In cash',
+                value: pct(daniCash.share, 0),
+                tone: daniCash.share > 0.3 ? 'warn' : undefined,
               },
             ]
-          : [{ label: 'Needs', value: 'bookings + costs' }],
+          : [{ label: 'Holdings', value: '0' }],
       },
       {
-        id: 'analysis',
-        eyebrow: criticalFindings > 0 ? `${criticalFindings} TO ACT ON` : 'FINDINGS',
-        title: 'ANALYSIS',
-        to: '/analysis',
-        hue: criticalFindings > 0 ? '#f87171' : '#60a5fa',
-        x: 75,
-        y: 78,
-        empty: findings.length === 0,
-        lines: [
-          { label: 'Open', value: String(openFindings.length), tone: criticalFindings > 0 ? 'neg' : undefined },
-          { label: 'Closed', value: String(findings.filter((f) => f.status === 'done').length), tone: 'pos' },
-        ],
-      },
-      {
-        id: 'data',
-        eyebrow: 'IMPORTS',
-        title: 'DATA',
-        to: '/data',
-        hue: '#5f6874',
-        x: 50,
-        y: 90,
-        empty: imports.length === 0,
-        lines: [
-          { label: 'Batches', value: String(imports.length) },
-          { label: 'Last', value: lastImport ? relativeTime(lastImport.importedAt) : '—' },
-        ],
+        id: 'joint',
+        eyebrow: 'WEDDING GIFTS',
+        title: 'DANI & NICOLO',
+        to: '/investments?owner=joint',
+        hue: '#9085e9',
+        x: 83,
+        y: 66,
+        empty: !jointSplit,
+        lines: jointSplit
+          ? [
+              { label: 'Value', value: money(jointSplit.value, 'PHP', true) },
+              { label: 'Of the book', value: share(jointSplit.value, liquid) },
+              {
+                label: 'Still in cash',
+                value: pct(jointCash.share, 0),
+                tone: jointCash.share > 0.3 ? 'warn' : undefined,
+              },
+            ]
+          : [{ label: 'Holdings', value: '0' }],
       },
     ]
-  }, [
-    holdings.length, liquid, byGeography, byClass, performance, snapshots.length, bookings.length,
-    expenses.length, t12, hasAirbnb, dcfResult, findings, openFindings.length, criticalFindings,
-    imports, lastImport,
-  ])
+  }, [bookings.length, t12, hasAirbnb, dcfResult, daniSplit, jointSplit, daniCash, jointCash, liquid])
 
   if (!ready) {
     return <p className="py-24 text-center text-[13px] text-ink-3">Waking up…</p>
@@ -263,8 +177,110 @@ export function HubPage() {
         criticalFindings={criticalFindings}
       />
       <Stage satellites={satellites} nothingImported={nothingImported} netWorth={netWorth} snapshot={snapshot?.asOf} />
+      <ActOnAnalysis findings={openFindings} onAdvance={saveFinding} />
     </div>
   )
+}
+
+/**
+ * The findings, as things to do rather than things to read.
+ *
+ * The hub is where she lands, so the open judgements belong here — but only the
+ * ones with a next step attached, and each with the button that moves it on.
+ * A finding nobody can act on from the page it appears on is a note, not a
+ * finding.
+ */
+function ActOnAnalysis({
+  findings,
+  onAdvance,
+}: {
+  findings: Finding[]
+  onAdvance: (finding: Finding) => Promise<void>
+}) {
+  const ranked = [...findings]
+    .filter((finding) => finding.action)
+    .sort((a, b) => b.priority - a.priority || SEVERITY_RANK[a.severity] - SEVERITY_RANK[b.severity])
+    .slice(0, 5)
+
+  if (ranked.length === 0) return null
+
+  return (
+    <div className="rounded-xl border border-line bg-surface p-4 sm:p-5">
+      <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 className="text-[13px] font-semibold uppercase tracking-[0.28em] text-ink">Act on this</h2>
+          <p className="mt-1 text-[12px] text-ink-2">
+            The open findings that carry a next step, most pressing first. Marking one done keeps the list honest.
+          </p>
+        </div>
+        <Link to="/analysis" className="text-[12px] text-accent hover:underline">
+          All findings →
+        </Link>
+      </div>
+
+      <div className="space-y-2">
+        {ranked.map((finding) => (
+          <div
+            key={finding.id}
+            className={cx(
+              'rounded-lg border p-3',
+              finding.severity === 'critical' ? 'border-neg/30 bg-neg/[0.04]' : 'border-line bg-surface-2',
+            )}
+          >
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span
+                    className={cx(
+                      'rounded border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide',
+                      finding.severity === 'critical'
+                        ? 'border-neg/30 bg-neg/10 text-neg'
+                        : finding.severity === 'warning'
+                          ? 'border-warn/30 bg-warn/10 text-warn'
+                          : 'border-line bg-surface-3 text-ink-2',
+                    )}
+                  >
+                    {finding.theme}
+                  </span>
+                  <h3 className="text-[13px] font-semibold text-ink">{finding.title}</h3>
+                </div>
+                <p className="mt-1 max-w-3xl text-[12px] leading-relaxed text-ink-2">{finding.action}</p>
+              </div>
+              <div className="flex shrink-0 gap-1.5">
+                {finding.status === 'open' ? (
+                  <button
+                    type="button"
+                    onClick={() => void onAdvance({ ...finding, status: 'doing' })}
+                    className="rounded-lg border border-line bg-surface-3 px-2.5 py-1 text-[12px] text-ink hover:bg-surface-2"
+                  >
+                    Start
+                  </button>
+                ) : (
+                  <span className="rounded-lg border border-accent/30 bg-accent/10 px-2.5 py-1 text-[12px] text-accent">
+                    In progress
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={() => void onAdvance({ ...finding, status: 'done' })}
+                  className="rounded-lg border border-pos/30 bg-pos/10 px-2.5 py-1 text-[12px] text-pos hover:bg-pos/20"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+const SEVERITY_RANK: Record<Finding['severity'], number> = {
+  critical: 0,
+  warning: 1,
+  info: 2,
+  positive: 3,
 }
 
 function HubHeader({
@@ -368,7 +384,7 @@ function Stage({
       <div
         ref={stageRef}
         className="relative hidden overflow-hidden rounded-2xl border border-line bg-[radial-gradient(ellipse_at_center,rgba(45,212,191,0.07),transparent_62%)] sm:block"
-        style={{ height: 'clamp(560px, 74vh, 760px)' }}
+        style={{ height: 'clamp(420px, 52vh, 560px)' }}
       >
         <svg
           className="pointer-events-none absolute inset-0"
@@ -390,7 +406,7 @@ function Stage({
           ))}
         </svg>
 
-        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[54%] w-[34%] -translate-x-1/2 -translate-y-[78%]">
+        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[58%] w-[36%] -translate-x-1/2 -translate-y-[72%]">
           <HubCanvas className="h-full w-full" />
         </div>
 

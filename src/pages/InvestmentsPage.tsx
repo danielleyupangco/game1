@@ -1,4 +1,12 @@
 import { useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import {
+  OWNER_BLURBS,
+  OWNER_LABELS,
+  ownerOfHolding,
+  splitByOwner,
+  type Owner,
+} from '@/domain/investments/ownership'
 import {
   Bar,
   BarChart,
@@ -51,9 +59,29 @@ type View = 'holdings' | 'performance' | 'allocation' | 'risk' | 'moves'
 export function InvestmentsPage() {
   const { holdings, snapshots, transactions, benchmark, settings, freshness } = useLedger()
   const [view, setView] = useState<View>('holdings')
+  const [params, setParams] = useSearchParams()
+
+  // Two pots in one sheet. The hub links straight to one of them, so the
+  // filter is read from the URL rather than mirrored in state — a shared link
+  // opens on the same pot the sender was looking at.
+  const owner = (params.get('owner') as Owner | null) ?? 'all'
+  const setOwner = (next: Owner | 'all') => {
+    const nextParams = new URLSearchParams(params)
+    if (next === 'all') nextParams.delete('owner')
+    else nextParams.set('owner', next)
+    setParams(nextParams, { replace: true })
+  }
 
   const snapshot = useMemo(() => latestSnapshot(snapshots), [snapshots])
-  const positions = useMemo(() => buildPositions(holdings, snapshot), [holdings, snapshot])
+  const owned = useMemo(
+    () => (owner === 'all' ? holdings : holdings.filter((holding) => ownerOfHolding(holding) === owner)),
+    [holdings, owner],
+  )
+  const positions = useMemo(() => buildPositions(owned, snapshot), [owned, snapshot])
+  const splits = useMemo(
+    () => splitByOwner(snapshot ? holdings.filter((h) => h.snapshotId === snapshot.id) : [], snapshot?.usdPhp ?? settings.usdPhp),
+    [holdings, snapshot, settings.usdPhp],
+  )
 
   if (holdings.length === 0) {
     return (
@@ -71,7 +99,7 @@ export function InvestmentsPage() {
   return (
     <div className="space-y-4">
       <SectionHeader
-        title="Investments"
+        title={owner === 'all' ? 'Investments' : `${OWNER_LABELS[owner]} · investments`}
         subtitle={
           snapshot
             ? `Valued ${shortDate(snapshot.asOf)} · ${snapshot.label} · USD converted at ₱${num(snapshot.usdPhp, 2)}`
@@ -79,6 +107,24 @@ export function InvestmentsPage() {
         }
         right={<Freshness timestamp={freshness.holdings} />}
       />
+
+      {splits.length > 1 ? (
+        <div className="no-print flex flex-wrap items-center gap-2">
+          <Tabs
+            value={owner}
+            onChange={setOwner}
+            options={[
+              { value: 'all' as const, label: 'Everything' },
+              ...splits.map((split) => ({ value: split.owner, label: split.label })),
+            ]}
+          />
+          <span className="text-[11.5px] text-ink-3">
+            {owner === 'all'
+              ? splits.map((split) => `${split.label} ${money(split.value, 'PHP', true)}`).join(' · ')
+              : OWNER_BLURBS[owner]}
+          </span>
+        </div>
+      ) : null}
 
       <div className="no-print overflow-x-auto">
         <Tabs

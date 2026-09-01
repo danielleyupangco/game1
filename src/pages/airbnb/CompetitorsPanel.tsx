@@ -1,9 +1,11 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts'
 import { useLedger } from '@/state/store'
 import { perGuestRate, readMarket, snapshotOf, SEED_LISTINGS, type ListingSnapshot } from '@/domain/airbnb/competitors'
 import { aggregate, trailing } from '@/domain/airbnb/metrics'
 import { findLevers } from '@/domain/airbnb/growth'
+import { buildBrief, type MarketBrief } from '@/domain/airbnb/marketbrief'
+import { describeError, explainError, getSample } from '@/lib/claude'
 import type { MonthMetrics } from '@/domain/airbnb/metrics'
 import { Button, Card, Field, Pill, SectionHeader, TextInput, cx } from '@/components/ui/primitives'
 import { Stat, StatGrid } from '@/components/ui/Stat'
@@ -72,20 +74,7 @@ export function CompetitorsPanel({ series }: { series: MonthMetrics[] }) {
 
   return (
     <div className="space-y-4">
-      <Card className="border-warn/25 bg-warn/[0.04]">
-        <div className="flex gap-3">
-          <span className="mt-0.5 text-[14px] text-warn">◈</span>
-          <div>
-            <h3 className="text-[13px] font-semibold text-ink">Nothing here is scraped</h3>
-            <p className="mt-1 max-w-3xl text-[12px] leading-relaxed text-ink-2">
-              Airbnb blocks automated reading, and the numbers that matter — a live rate for real dates, how full a
-              calendar looks — exist nowhere else. So this page runs on observations: open a listing, note what you see,
-              and it takes under a minute. Do it on the same target dates each time and you get a price history, which
-              is worth more than any single scrape. Every number below is dated and attributed to the day someone looked.
-            </p>
-          </div>
-        </div>
-      </Card>
+      <MarketRead series={series} />
 
       <StatGrid>
         <Stat
@@ -239,6 +228,188 @@ export function CompetitorsPanel({ series }: { series: MonthMetrics[] }) {
         />
       ) : null}
     </div>
+  )
+}
+
+const BRIEF_KEY = 'buddy.marketRead'
+
+/**
+ * The market read, refreshed on demand.
+ *
+ * Pressing refresh hands Claude this property's own numbers — seasonality,
+ * lead times, rate, guest origin, anything observed on rivals — and gets back
+ * a positioning read and a ranked set of moves. Claude cannot browse, so it
+ * never sees a live Airbnb price: anything that needs looking up comes back in
+ * "check these by hand" rather than being invented. The last read is kept so
+ * the page is not blank on arrival, with the date it was produced.
+ */
+function MarketRead({ series }: { series: MonthMetrics[] }) {
+  const { bookings, addons, competitors, observations } = useLedger()
+  const [available, setAvailable] = useState<boolean | null>(null)
+  const [brief, setBrief] = useState<MarketBrief | null>(() => {
+    try {
+      const stored = localStorage.getItem(BRIEF_KEY)
+      return stored ? (JSON.parse(stored) as MarketBrief) : null
+    } catch {
+      return null
+    }
+  })
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [progress, setProgress] = useState('')
+
+  useEffect(() => {
+    let live = true
+    void getSample().then((fn) => {
+      if (live) setAvailable(fn !== null)
+    })
+    return () => {
+      live = false
+    }
+  }, [])
+
+  const refresh = useCallback(async () => {
+    setBusy(true)
+    setError(null)
+    setProgress('Reading your numbers…')
+    try {
+      const sample = await getSample()
+      if (!sample) {
+        setError('This only works on the published dashboard, where the page can ask Claude.')
+        return
+      }
+      const prompt = buildBrief({
+        series,
+        bookings,
+        addons,
+        listings: competitors,
+        observations,
+        asOf: today(),
+      })
+      setProgress('Claude is working through it — this takes up to a minute.')
+      const result = await sample.json<Omit<MarketBrief, 'generatedAt'>>(prompt, { modelTier: 'complex' })
+      const next: MarketBrief = { ...result, generatedAt: new Date().toISOString() }
+      setBrief(next)
+      try {
+        localStorage.setItem(BRIEF_KEY, JSON.stringify(next))
+      } catch {
+        // A viewer with site data blocked simply loses the cache, not the read.
+      }
+    } catch (caught) {
+      setError(explainError(describeError(caught)))
+    } finally {
+      setBusy(false)
+      setProgress('')
+    }
+  }, [series, bookings, addons, competitors, observations])
+
+  return (
+    <Card>
+      <SectionHeader
+        title="The market read"
+        subtitle="Your own numbers, read by Claude as a revenue manager would. It cannot see live Airbnb prices — anything needing a look comes back as something to check, never as a made-up figure."
+        right={
+          available === false ? null : (
+            <Button variant="primary" size="sm" disabled={busy} onClick={() => void refresh()}>
+              {busy ? 'Working…' : brief ? 'Refresh' : 'Run the read'}
+            </Button>
+          )
+        }
+      />
+
+      {available === false ? (
+        <p className="text-[12px] leading-relaxed text-ink-2">
+          The read runs on the published dashboard, where the page is allowed to ask Claude. Open the published link and
+          the button appears. Everything else on this page works here either way.
+        </p>
+      ) : null}
+
+      {busy ? (
+        <p className="text-[12px] text-ink-2">
+          <span className="mr-2 inline-block h-2 w-2 animate-pulse rounded-full bg-accent" />
+          {progress}
+        </p>
+      ) : null}
+
+      {error ? <p className="text-[12px] leading-relaxed text-warn">{error}</p> : null}
+
+      {brief && !busy ? (
+        <div className="space-y-4">
+          <p className="text-[11px] text-ink-3">Read produced {shortDate(brief.generatedAt.slice(0, 10))}</p>
+
+          <div>
+            <h3 className="text-[12px] font-semibold uppercase tracking-wide text-ink-2">Where you sit</h3>
+            <p className="mt-1 max-w-3xl text-[12.5px] leading-relaxed text-ink">{brief.positioning}</p>
+          </div>
+
+          {brief.moves?.length ? (
+            <div>
+              <h3 className="mb-2 text-[12px] font-semibold uppercase tracking-wide text-ink-2">
+                What to do, biggest first
+              </h3>
+              <div className="space-y-2">
+                {brief.moves.map((move) => (
+                  <div key={move.title} className="rounded-lg border border-line bg-surface-2 p-3">
+                    <div className="flex flex-wrap items-baseline justify-between gap-2">
+                      <h4 className="text-[13px] font-semibold text-ink">{move.title}</h4>
+                      <div className="flex items-center gap-1.5">
+                        {move.nightsUpside > 0 ? <Pill tone="accent">~{move.nightsUpside} nights a year</Pill> : null}
+                        <Pill tone={move.effort === 'low' ? 'pos' : move.effort === 'high' ? 'warn' : 'neutral'}>
+                          {move.effort} effort
+                        </Pill>
+                      </div>
+                    </div>
+                    <p className="mt-1.5 max-w-3xl text-[12px] leading-relaxed text-ink">{move.action}</p>
+                    <p className="mt-1.5 max-w-3xl text-[12px] leading-relaxed text-ink-2">{move.why}</p>
+                    {move.timing ? (
+                      <p className="mt-1.5 text-[11.5px] leading-relaxed text-ink-3">Timing: {move.timing}</p>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {brief.threats?.length ? (
+            <div>
+              <h3 className="mb-2 text-[12px] font-semibold uppercase tracking-wide text-ink-2">What to watch</h3>
+              <div className="space-y-1.5">
+                {brief.threats.map((threat) => (
+                  <div key={threat.title} className="text-[12px] leading-relaxed">
+                    <span className="font-medium text-ink">{threat.title}</span>
+                    <span className="text-ink-2"> — {threat.detail}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {brief.toVerify?.length ? (
+            <div className="rounded-lg border border-warn/25 bg-warn/[0.04] p-3">
+              <h3 className="text-[12px] font-semibold text-ink">Check these on Airbnb yourself</h3>
+              <p className="mt-1 text-[11.5px] leading-relaxed text-ink-2">
+                Nobody can know these without looking. Record what you find on the watchlist below and the next read gets
+                sharper.
+              </p>
+              <ul className="mt-2 space-y-1">
+                {brief.toVerify.map((item) => (
+                  <li key={item} className="text-[12px] leading-relaxed text-ink-2">
+                    · {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {!brief && !busy && available !== false ? (
+        <p className="text-[12px] leading-relaxed text-ink-2">
+          Nothing read yet. Press the button and Claude works through your seasonality, lead times, rate, guest origin
+          and anything you have recorded on rivals, then comes back with where you sit and what to do about it.
+        </p>
+      ) : null}
+    </Card>
   )
 }
 
