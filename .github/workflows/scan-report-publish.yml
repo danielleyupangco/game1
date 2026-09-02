@@ -5,14 +5,25 @@ name: Publish Scan Report
 # report file into a GitHub issue. The issue is opened by github-actions[bot]
 # (not the repo owner), so GitHub emails the owner the full report.
 
+# Restricted to the default branch: a report pushed to a feature branch and then
+# merged used to fire this twice within seconds, and the dedup search below raced
+# itself into publishing duplicate issues. Concurrency serialises runs so the
+# dedup check actually sees the issue a previous run created.
+
 on:
   push:
+    branches:
+      - claude/general-session-4ZGAm
     paths:
       - 'reports/**.md'
 
 permissions:
   contents: read
   issues: write
+
+concurrency:
+  group: publish-scan-report
+  cancel-in-progress: false
 
 jobs:
   publish:
