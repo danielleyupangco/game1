@@ -193,3 +193,68 @@ governs long-run value and everything past year two — keep the 15% kill criter
 Free Sale and Zone IVb stability data, take it. If none can, the real question
 becomes whether to pay the US premium or have no registration at all — and that
 is a question the RFQ replies will answer within three weeks.
+
+---
+
+## 6. Refinements from the category mind map — 2 Sep 2026
+
+Three changes, all drawn from cross-referencing the mind map against published
+benchmarks. None changes the plan's direction; all three change how it is run.
+
+### Sell quarterly, not monthly
+
+Pet subscription churn benchmarks: **monthly plans churn 18–22% a year, quarterly
+11–16%, annual 6–9%**, and operators report that lengthening the billing cadence
+cuts churn *without* raising acquisition cost. A 60-count jar is a 30–60 day
+supply, so a quarterly box of three is the natural unit anyway.
+
+**Launch quarterly-default, with monthly as the opt-out.** This is free retention.
+
+### Lead with the registration, not the guarantee
+
+The mind map's sharpest line about supplements is *needs clinical validation for
+consumer trust · snake-oil · no trust.* That is the category's structural problem,
+and BAI registration is the scarce asset that answers it.
+
+So the registration is not a compliance cost to be minimised — it is the primary
+brand claim. **"BAI-registered," the GMP facility, and the tropical stability data
+belong on the front of the pack and in the first line of every listing.** No Shopee
+competitor can say it. That is more durable differentiation than the 30-day
+guarantee, which anyone can copy. Keep the guarantee; lead with the registration.
+
+### A correction to the retention assumption, and what it changes
+
+The model originally assumed 0.78 monthly retention of the repeat base — which
+compounds to roughly 5% surviving a year. Published benchmarks put subscription pet
+brands at **60%+ retention past month 12**. That original figure was wrong by an
+order of magnitude and it made the business look far worse than it is.
+
+Corrected to 0.990 per month (quarterly billing):
+
+| | Old assumption | Corrected |
+|---|---|---|
+| 24-month EBITDA (China lane, base) | ₱3.6M | **₱6.7M** |
+| Payback (China lane, base) | month 15 | **month 13** |
+| Payback (US lane, base) | beyond 24 months | **month 21** |
+| Repeat as share of month-24 volume | — | **72%** |
+
+Two consequences worth carrying forward.
+
+**The US lane is back in contention.** It was failing the payback screen entirely;
+it now clears at month 21. Its wholesale margin is still thin at ~29%, so China
+remains the better cash outcome — but do not discard the US quotes on payback
+grounds any more. The Certificate of Free Sale advantage now has a viable business
+attached to it.
+
+**And a refinement to what was said on 17 August.** That report claimed repeat rate
+does not decide payback and landed cost dominates. With retention corrected, repeat
+conversion swings 24-month EBITDA **2.4×** — ₱3.3M at 10% conversion against ₱8.1M
+at 45% — while moving payback only from month 16 to 13. The accurate framing is:
+**landed cost decides when you get your money back; repeat rate decides how much
+the business earns and what it is worth when you sell it.** By month 24, repeat
+customers are 72% of volume. This is a retention business by year two.
+
+That also matters for exit. Pet sector EBITDA multiples average ~14.5×, and
+supplements command a premium specifically where there is repeat purchase, strong
+contribution margin, and defensible claims — the three things this SKU is built
+around.

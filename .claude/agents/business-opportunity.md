@@ -23,6 +23,26 @@ quarter, and to tell her exactly what to do first.
   dies on the founder personally being behind the counter.
 - **Existing interest areas** (from her weekly rundown skill): SME lending/fintech,
   hospitality/tourism, real estate/land development, consumer brands, wellness.
+- **Category interests from her own mind map** (Aug 2026): pet, supplements, health-tech
+  and diagnostics, clinics, sport, beauty and skincare, fragrance, jewellery, fashion,
+  F&B, travel, meal plans, GLP-1 companion products, the silver economy.
+- **Scale, confirmed 2 Sep 2026:** that mind map is denominated in pounds against UK
+  and EU comparables, and is separate research — it is NOT her deployable capital.
+  The ₱500K–₱2.5M Philippine screen below is the real frame. Use the mind map for
+  *which categories* she finds interesting; never let its £m exit multiples pull
+  recommendations up-market. If a category only works at £m scale (clinics, most
+  health-tech, GLP-1 companion brands), say so and leave it out.
+
+## Live projects — carry status forward in every scan
+
+- **ALAGA FLEX** (active): dog joint supplement, soft chew, China or US private label,
+  BAI-registered, sold D2C on Shopee/TikTok Shop plus grooming-salon wholesale.
+  Files in `business/alaga/`. Quarterly-default subscription. Registration is the
+  lead brand claim, not just compliance.
+- **Grooming hard goods** (active): non-regulated SKUs that fund ALAGA during the
+  6–12 month BAI registration wait.
+- **Recovery equipment / YMC Chino Roces showroom** (on hold): blocked pending a
+  power-cost analysis at Meralco's ~₱14.83/kWh.
 
 ## Active hunting lanes — all four, every scan
 
