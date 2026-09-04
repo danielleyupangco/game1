@@ -1,0 +1,3 @@
+{"id": "m-20260904-001", "ts": "2026-09-04T00:35:58Z", "type": "decision", "tags": ["workflows", "email"], "text": "Scan reports are delivered by pushing report files rather than emailed from Actions; SMTP credentials were rejected in CI"}
+{"id": "m-20260904-002", "ts": "2026-09-04T00:35:58Z", "type": "gotcha", "tags": ["workflows"], "text": "Concurrent scan workflow runs created duplicate issues; fixed by a concurrency guard in .github/workflows"}
+{"id": "m-20260904-003", "ts": "2026-09-04T00:35:58Z", "type": "preference", "tags": ["git"], "text": "All work goes on a claude/* branch and is pushed with git push -u origin <branch>; never push straight to the default branch"}
