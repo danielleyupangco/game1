@@ -1,0 +1,507 @@
+<title>ALAGA FLEX Operating Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --paper:#F5F7F3;
+  --surface:#FFFFFF;
+  --surface-sunk:#ECEFE9;
+  --ink:#15201B;
+  --ink-soft:#4A574F;
+  --ink-faint:#7A857D;
+  --forest:#1E4A38;
+  --forest-tint:#DCE7E0;
+  --ochre:#B5791F;
+  --ochre-tint:#F5EAD5;
+  --danger:#9B2C2C;
+  --danger-tint:#F6E3E1;
+  --rule:#D5DBD3;
+  --rule-strong:#B4BEB6;
+  --shadow:0 1px 2px rgba(21,32,27,.06);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#101613;
+    --surface:#18211C;
+    --surface-sunk:#131A16;
+    --ink:#E8EDE7;
+    --ink-soft:#A9B4AC;
+    --ink-faint:#7B867E;
+    --forest:#7FC2A2;
+    --forest-tint:#1E3229;
+    --ochre:#D9A752;
+    --ochre-tint:#2C2418;
+    --danger:#E58B84;
+    --danger-tint:#2E1B1A;
+    --rule:#2A342E;
+    --rule-strong:#3C4941;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101613;
+  --surface:#18211C;
+  --surface-sunk:#131A16;
+  --ink:#E8EDE7;
+  --ink-soft:#A9B4AC;
+  --ink-faint:#7B867E;
+  --forest:#7FC2A2;
+  --forest-tint:#1E3229;
+  --ochre:#D9A752;
+  --ochre-tint:#2C2418;
+  --danger:#E58B84;
+  --danger-tint:#2E1B1A;
+  --rule:#2A342E;
+  --rule-strong:#3C4941;
+  --shadow:0 1px 2px rgba(0,0,0,.4);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px 96px}
+h1,h2,h3{font-family:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;text-wrap:balance;margin:0}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- masthead ---------- */
+.masthead{padding:64px 0 40px;border-bottom:2px solid var(--ink)}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ochre);font-weight:600;margin-bottom:20px;
+}
+.masthead h1{font-size:clamp(38px,6.5vw,62px);line-height:1.02;font-weight:800;letter-spacing:-.025em}
+.masthead h1 .light{color:var(--forest)}
+.standfirst{
+  margin-top:20px;max-width:60ch;font-size:19px;line-height:1.55;color:var(--ink-soft);
+}
+.facts{
+  display:flex;flex-wrap:wrap;gap:0;margin-top:36px;
+  border:1px solid var(--rule);border-radius:3px;overflow:hidden;background:var(--surface);
+}
+.fact{
+  flex:1 1 160px;padding:16px 18px;border-right:1px solid var(--rule);
+}
+.fact:last-child{border-right:none}
+.fact dt{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-faint);margin:0 0 6px;
+}
+.fact dd{margin:0;font-size:21px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.fact dd small{font-size:13px;font-weight:400;color:var(--ink-soft);letter-spacing:0}
+
+/* ---------- sections ---------- */
+section{padding-top:56px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+.sec-num{
+  font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--ochre);
+  letter-spacing:.08em;
+}
+.sec-head h2{font-size:29px;font-weight:700;letter-spacing:-.02em}
+.sec-intro{max-width:66ch;color:var(--ink-soft);margin:0 0 26px}
+p{margin:0 0 16px;max-width:68ch}
+strong{font-weight:600}
+
+/* ---------- flow ---------- */
+.flow{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:8px;
+}
+.flow-step{
+  background:var(--surface);border:1px solid var(--rule);border-top:3px solid var(--forest);
+  border-radius:3px;padding:16px 16px 18px;
+}
+.flow-step .k{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-faint);display:block;margin-bottom:8px;
+}
+.flow-step h3{font-size:16px;font-weight:600;margin-bottom:6px}
+.flow-step p{font-size:14px;color:var(--ink-soft);margin:0;line-height:1.5}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:0 0 10px;border:1px solid var(--rule);border-radius:3px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:14.5px}
+th,td{padding:11px 16px;text-align:left;border-bottom:1px solid var(--rule)}
+thead th{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink-faint);font-weight:600;background:var(--surface-sunk);
+}
+tbody tr:last-child td{border-bottom:none}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.total td{font-weight:600;background:var(--forest-tint);border-top:1px solid var(--rule-strong)}
+.caption{font-size:12.5px;color:var(--ink-faint);margin:8px 0 0;max-width:68ch}
+
+/* ---------- stage / gate spine ---------- */
+.stage{
+  display:grid;grid-template-columns:88px 1fr;gap:0;
+  border:1px solid var(--rule);border-radius:3px;background:var(--surface);
+  margin-bottom:14px;overflow:hidden;
+}
+.stage-rail{
+  background:var(--forest);color:#F5F7F3;padding:18px 12px;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;
+}
+:root[data-theme="dark"] .stage-rail,
+:root:not([data-theme="light"]) .stage-rail{color:#101613}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .stage-rail{color:#F5F7F3}}
+.stage-rail .sn{font-family:"IBM Plex Mono",monospace;font-size:23px;font-weight:600;line-height:1}
+.stage-rail .sw{
+  font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.09em;
+  text-transform:uppercase;opacity:.85;text-align:center;line-height:1.35;
+}
+.stage-body{padding:18px 20px 20px}
+.stage-body h3{font-size:18px;font-weight:700;letter-spacing:-.01em;margin-bottom:4px}
+.stage-cost{
+  font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ochre);font-weight:600;
+  margin-bottom:12px;font-variant-numeric:tabular-nums;
+}
+.task{
+  display:flex;gap:10px;padding:7px 0;border-bottom:1px dotted var(--rule);
+  font-size:14.5px;align-items:baseline;
+}
+.task:last-of-type{border-bottom:none}
+.task .who{
+  font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-faint);flex:0 0 62px;padding-top:3px;
+}
+.gate{
+  margin-top:14px;background:var(--ochre-tint);border-left:3px solid var(--ochre);
+  padding:12px 16px;border-radius:0 3px 3px 0;
+}
+.gate .gl{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ochre);font-weight:600;display:block;margin-bottom:5px;
+}
+.gate p{margin:0;font-size:14px;line-height:1.5;max-width:none}
+
+/* ---------- kill ---------- */
+.kill{background:var(--danger-tint);border:1px solid var(--danger);border-radius:3px;padding:20px 24px}
+.kill h3{font-size:17px;font-weight:700;color:var(--danger);margin-bottom:12px}
+.kill ul{margin:0;padding-left:20px}
+.kill li{margin-bottom:8px;font-size:14.5px;line-height:1.5}
+.kill li:last-child{margin-bottom:0}
+
+/* ---------- rhythm ---------- */
+.rhythm{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+.rh{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:16px 18px}
+.rh .cadence{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--forest);font-weight:600;margin-bottom:9px;
+}
+.rh ul{margin:0;padding-left:17px;font-size:14px;color:var(--ink-soft);line-height:1.55}
+.rh li{margin-bottom:5px}
+
+/* ---------- milestones ---------- */
+.miles{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:0;
+  border:1px solid var(--rule);border-radius:3px;overflow:hidden;background:var(--surface)}
+.mile{padding:18px 20px;border-right:1px solid var(--rule)}
+.mile:last-child{border-right:none}
+.mile .when{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ochre);margin-bottom:10px;
+}
+.mile ul{margin:0;padding-left:16px;font-size:14px;line-height:1.55;color:var(--ink-soft)}
+.mile li{margin-bottom:6px}
+
+.note{
+  border-left:3px solid var(--rule-strong);padding:4px 0 4px 16px;color:var(--ink-soft);
+  font-size:14.5px;max-width:66ch;margin:0 0 16px;
+}
+footer{
+  margin-top:64px;padding-top:22px;border-top:1px solid var(--rule);
+  font-size:12.5px;color:var(--ink-faint);max-width:76ch;
+}
+@media (max-width:620px){
+  .wrap{padding:0 18px 64px}
+  .stage{grid-template-columns:1fr}
+  .stage-rail{flex-direction:row;justify-content:flex-start;gap:12px;padding:10px 16px}
+  .task{flex-direction:column;gap:2px}
+  .task .who{padding-top:0}
+}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <div class="eyebrow">Operating plan · SKU #1 · Metro Manila</div>
+  <h1>ALAGA FLEX<br><span class="light">Joint supplement for dogs</span></h1>
+  <p class="standfirst">
+    One product, imported under private label, registered with the Bureau of Animal
+    Industry, and sold on a quarterly subscription. Built to be run by a hired manager
+    with a weekly review — and staged so the first real commitment is ₱222,000, not ₱1 million.
+  </p>
+  <dl class="facts">
+    <div class="fact"><dt>Landed cost / jar</dt><dd>₱297</dd></div>
+    <div class="fact"><dt>Retail price</dt><dd>₱1,450</dd></div>
+    <div class="fact"><dt>Gross margin</dt><dd>77<small>% direct</small></dd></div>
+    <div class="fact"><dt>Capital, staged</dt><dd>₱1.05<small>M over 12 mo</small></dd></div>
+    <div class="fact"><dt>Payback</dt><dd>Mo 13<small> base case</small></dd></div>
+  </dl>
+</header>
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2>The business model</h2></div>
+  <p class="sec-intro">
+    Buy a proven formulation from a certified contract manufacturer, put a Philippine
+    brand and a government registration on it, and sell it to owners who reorder every
+    quarter. The margin comes from the import gap; the defensibility comes from the
+    registration; the value comes from the reorder.
+  </p>
+
+  <div class="flow">
+    <div class="flow-step">
+      <span class="k">Source</span>
+      <h3>Private label, not manufacture</h3>
+      <p>A GMP-certified factory makes the chews to a standard formulation. No plant, no R&amp;D, no staff beyond a manager.</p>
+    </div>
+    <div class="flow-step">
+      <span class="k">Defend</span>
+      <h3>BAI registration</h3>
+      <p>The dossier — free-sale certificate, GMP, tropical stability data — takes 6–12 months and real money. That barrier is the moat.</p>
+    </div>
+    <div class="flow-step">
+      <span class="k">Sell</span>
+      <h3>Direct + salon wholesale</h3>
+      <p>70% through Shopee, TikTok Shop and Instagram. 30% wholesale to grooming salons, which are the real pet-health touchpoint here.</p>
+    </div>
+    <div class="flow-step">
+      <span class="k">Keep</span>
+      <h3>Quarterly subscription</h3>
+      <p>Billed every three months, not monthly. Same product, materially lower churn, no extra acquisition cost.</p>
+    </div>
+  </div>
+
+  <p class="note">
+    <strong>Why joint, and why dogs.</strong> Mobility change is visible to the owner within
+    two to four weeks. A product whose effect the customer can see does its own marketing —
+    and it is the only honest way to earn a reorder in a category buyers distrust.
+  </p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>Unit economics</h2></div>
+  <p class="sec-intro">
+    Per 60-count jar, China supplier lane, at ₱61.79 to the dollar. Every figure below is a
+    placeholder sized from category norms until supplier quotes replace it.
+  </p>
+  <div class="tw">
+    <table>
+      <thead>
+        <tr><th>Line</th><th class="n">Direct</th><th class="n">Wholesale</th><th>Note</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Price to customer</td><td class="n">₱1,450</td><td class="n">₱800</td><td>VAT-inclusive</td></tr>
+        <tr><td>Net of VAT</td><td class="n">₱1,295</td><td class="n">₱714</td><td>VAT-registered, input credit</td></tr>
+        <tr><td>Landed cost</td><td class="n">−₱297</td><td class="n">−₱297</td><td>FOB + freight + duty + brokerage</td></tr>
+        <tr><td>Platform fees</td><td class="n">−₱168</td><td class="n">—</td><td>13% marketplace + payment</td></tr>
+        <tr><td>Acquisition</td><td class="n">−₱194</td><td class="n">—</td><td>15% affiliate and live-selling</td></tr>
+        <tr class="total"><td>Contribution per jar</td><td class="n">₱636</td><td class="n">₱417</td><td>77% / 58% gross margin</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="caption">
+    A customer who reorders quarterly for two years buys eight jars — roughly ₱5,000 of
+    contribution against a one-time acquisition cost of ₱194. That ratio, not the first sale,
+    is the business.
+  </p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>Capital, staged behind gates</h2></div>
+  <p class="sec-intro">
+    The plan is feasible because it is staged. Each block of money is released only when the
+    previous stage has proven something specific. If a gate fails, you stop having spent that
+    stage — not the whole budget.
+  </p>
+
+  <div class="stage">
+    <div class="stage-rail"><span class="sn">01</span><span class="sw">Weeks<br>1–6</span></div>
+    <div class="stage-body">
+      <h3>Foundations and supplier search</h3>
+      <div class="stage-cost">₱222,000 committed · cumulative ₱222,000</div>
+      <div class="task"><span class="who">You</span><span>IPOPHL trademark search on ALAGA, Classes 5 and 31. File if clear (~₱12,000). If blocked, switch to ALAGAVET before any artwork spend.</span></div>
+      <div class="task"><span class="who">You</span><span>Register the business: DTI name, BIR, Makati LGU permit (~₱50,000).</span></div>
+      <div class="task"><span class="who">You</span><span>Send the RFQ to all eleven shortlisted suppliers. Score every reply against the three starred criteria.</span></div>
+      <div class="task"><span class="who">You</span><span>Engage a BAI regulatory consultant and get a written quote and timeline. Do this in week 1 — it is the longest pole in the plan (~₱100,000 first tranche).</span></div>
+      <div class="task"><span class="who">Supplier</span><span>Samples from the top three suppliers (~₱60,000 including courier).</span></div>
+      <div class="gate">
+        <span class="gl">Gate 1 — proceed only if all three hold</span>
+        <p>At least two suppliers can produce a Certificate of Free Sale, a GMP certificate, and Zone IVb stability data. The BAI consultant quotes ≤₱500,000 and ≤12 months. Samples survive two weeks in an un-airconditioned room without softening, sweating oil or moulding.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-rail"><span class="sn">02</span><span class="sw">Weeks<br>6–12</span></div>
+    <div class="stage-body">
+      <h3>Cash engine: grooming line</h3>
+      <div class="stage-cost">₱180,000 committed · cumulative ₱402,000</div>
+      <div class="task"><span class="who">You</span><span>Order the first grooming hard-goods run — brushes, deshedding tools, nail clippers, shampoo bars. No registration required, so this sells immediately (~₱120,000).</span></div>
+      <div class="task"><span class="who">You</span><span>Commission brand identity and packaging system (~₱60,000). Design once, apply to both lines.</span></div>
+      <div class="task"><span class="who">Manager</span><span>Open and build the Shopee and TikTok Shop storefronts. Secure the Instagram handle.</span></div>
+      <div class="task"><span class="who">Manager</span><span>Recruit affiliate live-sellers in the pet niche. Begin building the customer list ALAGA Flex will launch into.</span></div>
+      <div class="gate">
+        <span class="gl">Gate 2 — proceed only if</span>
+        <p>The grooming line sells 150+ units in its first eight weeks at 50%+ gross margin, and the storefronts are converting. This proves the channel works before you commit inventory capital to the registered product.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-rail"><span class="sn">03</span><span class="sw">Months<br>3–9</span></div>
+    <div class="stage-body">
+      <h3>Registration and first order</h3>
+      <div class="stage-cost">₱400,000 committed · cumulative ₱802,000</div>
+      <div class="task"><span class="who">Consultant</span><span>File the BAI dossier: SPSIC, Certificate of Free Sale, GMP certificate, full formulation, Zone IVb stability data, toxicology (~₱200,000 balance).</span></div>
+      <div class="task"><span class="who">You</span><span>Select the supplier on total score, not lowest price. Negotiate Philippine exclusivity or priority pricing against an annual volume commitment.</span></div>
+      <div class="task"><span class="who">You</span><span>Packaging artwork against the chosen pack format (~₱40,000). Registration number, GMP facility and stability claim go on the front of pack.</span></div>
+      <div class="task"><span class="who">You</span><span>Place the first purchase order deposit at MOQ (~₱160,000).</span></div>
+      <div class="task"><span class="who">Manager</span><span>Sign 5–8 grooming salons for the wholesale pilot. Not vet clinics — at one vet per 10,000 owners, there are too few to scale through.</span></div>
+      <div class="gate">
+        <span class="gl">Gate 3 — proceed only if</span>
+        <p>The BAI dossier is accepted for filing without a material deficiency notice. Do not pay the purchase order balance before this. A rejected dossier with paid-for inventory sitting in a warehouse is the worst outcome in this plan.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-rail"><span class="sn">04</span><span class="sw">Months<br>9–12</span></div>
+    <div class="stage-body">
+      <h3>Launch</h3>
+      <div class="stage-cost">₱250,000 committed · cumulative ₱1,052,000</div>
+      <div class="task"><span class="who">You</span><span>Pay the purchase order balance, freight, duty and clearance (~₱250,000).</span></div>
+      <div class="task"><span class="who">Manager</span><span>Launch on Shopee and TikTok Shop into the grooming customer list. Quarterly subscription is the default option; monthly is the opt-out.</span></div>
+      <div class="task"><span class="who">Manager</span><span>Seed the salon wholesale accounts with display stock and a staff-education one-pager.</span></div>
+      <div class="task"><span class="who">You</span><span>Begin the SKU #2 dossier — skin and itch — only once SKU #1 has three months of clean repeat data.</span></div>
+      <div class="gate">
+        <span class="gl">Gate 4 — month 4 after launch</span>
+        <p>Cohort repeat conversion is 15% or better and returns are under 8%. Below either line, stop reordering and diagnose: formulation, palatability, or price. Do not spend your way through a retention problem.</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="caption">
+    Staged total is ₱1,052,000 including the grooming line and trademark. The financial model
+    carries ₱920,000 for ALAGA Flex alone. Both sit inside the ₱500K–₱2.5M screen.
+  </p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><h2>How you run it in four hours a month</h2></div>
+  <p class="sec-intro">
+    The whole point of this structure is that a hired manager operates it. Your job is the
+    weekly number review and the quarterly decisions — nothing daily.
+  </p>
+  <div class="rhythm">
+    <div class="rh">
+      <div class="cadence">Manager · daily</div>
+      <ul>
+        <li>Orders, dispatch, customer messages</li>
+        <li>Content and affiliate coordination</li>
+        <li>Stock counts and reorder flags</li>
+      </ul>
+    </div>
+    <div class="rh">
+      <div class="cadence">You · weekly, 45 min</div>
+      <ul>
+        <li>Units sold, new versus repeat</li>
+        <li>Cohort repeat conversion</li>
+        <li>Returns and refund rate</li>
+        <li>Acquisition cost per customer</li>
+        <li>Weeks of stock cover</li>
+        <li>Wholesale accounts active</li>
+      </ul>
+    </div>
+    <div class="rh">
+      <div class="cadence">You · monthly</div>
+      <ul>
+        <li>Supplier and freight review</li>
+        <li>Wholesale account health</li>
+        <li>Peso rate against landed cost</li>
+      </ul>
+    </div>
+    <div class="rh">
+      <div class="cadence">You · quarterly</div>
+      <ul>
+        <li>Reorder quantity decision</li>
+        <li>Price review</li>
+        <li>Next-SKU gate</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><h2>What good looks like</h2></div>
+  <div class="miles">
+    <div class="mile">
+      <div class="when">Month 6</div>
+      <ul>
+        <li>Grooming line trading and covering the manager's salary</li>
+        <li>BAI dossier filed</li>
+        <li>Supplier locked with priority pricing</li>
+        <li>1,000+ customer emails or handles collected</li>
+      </ul>
+    </div>
+    <div class="mile">
+      <div class="when">Month 12</div>
+      <ul>
+        <li>Registration granted, ALAGA Flex launched</li>
+        <li>5–8 salon wholesale accounts trading</li>
+        <li>Quarterly subscription live</li>
+        <li>Repeat conversion tracking above 15%</li>
+      </ul>
+    </div>
+    <div class="mile">
+      <div class="when">Month 24</div>
+      <ul>
+        <li>Capital returned around month 13</li>
+        <li>Repeat customers roughly 72% of volume</li>
+        <li>SKU #2 in registration</li>
+        <li>A business that runs without you in it</li>
+      </ul>
+    </div>
+  </div>
+  <p class="caption">
+    Base case in the model puts 24-month revenue near ₱17.6M and EBITDA near ₱6.7M. Treat that
+    as directional only: it is before tax, before paying yourself, and it holds fixed costs flat
+    while volume grows tenfold. Real overhead rises with scale.
+  </p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">06</span><h2>Kill criteria</h2></div>
+  <p class="sec-intro">
+    Agreed in advance, so the decision is made once — now — rather than argued with yourself
+    later when money is already committed.
+  </p>
+  <div class="kill">
+    <h3>Stop or renegotiate if any of these is true</h3>
+    <ul>
+      <li><strong>Landed cost exceeds ₱600 per jar.</strong> The margin structure that makes this work stops working.</li>
+      <li><strong>Cohort repeat conversion is below 15% at month 4.</strong> Without the reorder there is no business, only a series of expensive first sales.</li>
+      <li><strong>Returns or spoilage exceed 8%.</strong> Soft chews failing in tropical humidity — a formulation or packaging problem, not a marketing one.</li>
+      <li><strong>BAI registration quotes above ₱500,000 per SKU or beyond 12 months.</strong> The moat costs more than the territory is worth.</li>
+      <li><strong>No supplier can produce a Certificate of Free Sale and Zone IVb stability data at an MOQ under ₱300,000.</strong> Without the dossier there is no legal product.</li>
+      <li><strong>The peso passes ₱67 and holds.</strong> Not fatal — margin only falls to about 75% — but reprice deliberately rather than absorbing it.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  Prices, MOQs, registration costs and timelines are estimates sized from published category
+  norms and market research, not supplier quotes — the RFQ exists to replace them with real
+  figures. Financial projections are directional and depend on assumptions documented in the
+  accompanying model. This is planning analysis, not licensed financial or regulatory advice;
+  verify landed costs with a customs broker and registration requirements with a BAI consultant
+  before committing capital. Compiled September 2026.
+</footer>
+
+</div>
