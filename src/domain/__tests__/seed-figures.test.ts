@@ -151,18 +151,33 @@ describe.skipIf(!seed)('the findings still say what the data says', () => {
       expectFigure((classValue('Fixed Income') / ownTotal) * 100, evidence(findings, 'equity-low', 'Fixed income'), 0.02)
     })
 
+    /**
+     * The invariant rather than the balance. What the float is worth changes
+     * every time money moves, which is not drift and should not need a test
+     * edited; what must never change is that it is counted once — outside the
+     * personal total and inside the whole book.
+     */
     it('keeps the business float out of the personal total', () => {
-      expect(Math.round(businessCash(rows, snapshot.usdPhp))).toBe(2285107)
-      expect(Math.round(ownTotal + businessCash(rows, snapshot.usdPhp))).toBe(
-        Math.round(totalValue(buildPositions(rows, snapshot))),
+      const float = businessCash(rows, snapshot.usdPhp)
+      const whole = totalValue(buildPositions(rows, snapshot))
+      expect(float).toBeGreaterThan(0)
+      expect(Math.round(ownTotal + float)).toBe(Math.round(whole))
+      expect(ownTotal).toBeLessThan(whole)
+      // And it is the labelled rows doing it, not an accident of some other rule.
+      const labelled = rows.filter((h) => /airbnb|island t/i.test(`${h.ticker} ${h.name} ${h.account}`))
+      expect(labelled.length).toBeGreaterThan(0)
+      expect(Math.round(labelled.reduce((sum, h) => sum + h.value * (h.currency === 'USD' ? snapshot.usdPhp : 1), 0))).toBe(
+        Math.round(float),
       )
     })
 
     it('quotes XMLIBF at the value it actually has, and only because it moved smoothly', () => {
       const drift = positionDrift('XMLIBF (Income Builder)', data.holdings, data.snapshots)!
       expect(drift.smooth, 'XMLIBF must be step-free for the finding to call its change a gain').toBe(true)
-      expectFigure(Math.round(drift.first.value), evidence(findings, 'xmlibf', 'Aug 2025'))
-      expectFigure(Math.round(drift.last.value), evidence(findings, 'xmlibf', 'Aug 2026'))
+      // Labelled by what they mean rather than by month, so a refresh does not
+      // break the test for the one reason that is not a real drift.
+      expectFigure(Math.round(drift.first.value), evidence(findings, 'xmlibf', 'Value a year ago'))
+      expectFigure(Math.round(drift.last.value), evidence(findings, 'xmlibf', 'Value now'))
       expectFigure(drift.totalChange * 100, evidence(findings, 'xmlibf', 'Change'), 0.05)
     })
 
