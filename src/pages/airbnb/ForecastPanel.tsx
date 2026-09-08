@@ -23,7 +23,7 @@ import { DataTable } from '@/components/ui/DataTable'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ChartFrame, Legend, tooltipProps } from '@/components/charts/Chart'
 import { AXIS, GRID, SERIES, STATUS, TOOLTIP_STYLE } from '@/components/charts/theme'
-import { money, monthLabel, pct } from '@/lib/format'
+import { money, monthLabel, num, pct } from '@/lib/format'
 
 /**
  * What the next twelve months look like.
@@ -459,10 +459,10 @@ export function ForecastPanel() {
             <XAxis
               dataKey="daysOut"
               {...AXIS}
-              tickFormatter={(value: number) => (value === 0 ? 'start' : `${value}d`)}
+              tickFormatter={(value: number) => (value === 0 ? 'start' : `${num(value, 0)}d`)}
               reversed
             />
-            <YAxis {...AXIS} width={38} tickFormatter={(value: number) => `${value}%`} domain={[0, 100]} />
+            <YAxis {...AXIS} width={38} tickFormatter={(value: number) => pct(value / 100, 0)} domain={[0, 100]} />
             <Tooltip
               {...TOOLTIP_STYLE}
               {...tooltipProps(

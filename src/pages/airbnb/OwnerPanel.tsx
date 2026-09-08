@@ -8,7 +8,7 @@ import { Card, cx } from '@/components/ui/primitives'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ChartFrame, tooltipProps } from '@/components/charts/Chart'
 import { AXIS, GRID, SERIES, STATUS, TOOLTIP_STYLE } from '@/components/charts/theme'
-import { money, monthLabel } from '@/lib/format'
+import { maskNumbers, money, monthLabel } from '@/lib/format'
 import { monthKey, today } from '@/lib/dates'
 
 /**
@@ -214,10 +214,10 @@ export function OwnerPanel() {
           <div className="mt-2 space-y-2.5">
             {urgent.slice(0, 3).map((finding) => (
               <div key={finding.id}>
-                <div className="text-[13px] font-medium text-ink">{finding.title}</div>
-                <p className="mt-0.5 text-[12px] leading-relaxed text-ink-2">{finding.body[0]}</p>
+                <div className="text-[13px] font-medium text-ink">{maskNumbers(finding.title)}</div>
+                <p className="mt-0.5 text-[12px] leading-relaxed text-ink-2">{maskNumbers(finding.body[0])}</p>
                 {finding.action ? (
-                  <p className="mt-1 text-[12px] leading-relaxed text-accent">→ {finding.action}</p>
+                  <p className="mt-1 text-[12px] leading-relaxed text-accent">→ {maskNumbers(finding.action)}</p>
                 ) : null}
               </div>
             ))}

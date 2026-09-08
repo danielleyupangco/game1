@@ -239,7 +239,7 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
             <LineChart data={monthData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
               <CartesianGrid {...GRID} />
               <XAxis dataKey="month" {...AXIS} tickFormatter={monthLabel} minTickGap={20} />
-              <YAxis {...AXIS} tickFormatter={(value: number) => `${value.toFixed(0)}%`} width={40} domain={[0, 100]} />
+              <YAxis {...AXIS} tickFormatter={(value: number) => pct(value / 100, 0)} width={40} domain={[0, 100]} />
               <Tooltip
                 {...TOOLTIP_STYLE}
                 {...tooltipProps((value) => [`${value.toFixed(1)}%`, 'Occupancy'], (label) => monthLabel(label))}

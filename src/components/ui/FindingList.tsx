@@ -4,6 +4,7 @@ import { useLedger } from '@/state/store'
 import { Card, Pill, cx } from '@/components/ui/primitives'
 import { relativeTime } from '@/lib/format'
 import type { Finding, FindingSeverity, FindingStatus } from '@/types'
+import { maskNumbers } from '@/lib/format'
 
 const SEVERITY_TONE: Record<FindingSeverity, 'neg' | 'warn' | 'info' | 'pos'> = {
   critical: 'neg',
@@ -109,9 +110,9 @@ function FindingCard({
         </span>
         <div className="min-w-0 flex-1">
           <h3 className={cx('text-[13.5px] font-semibold leading-snug text-ink', closed && 'line-through')}>
-            {finding.title}
+            {maskNumbers(finding.title)}
           </h3>
-          <p className="mt-1 line-clamp-2 text-[12px] leading-relaxed text-ink-2">{finding.body[0]}</p>
+          <p className="mt-1 line-clamp-2 text-[12px] leading-relaxed text-ink-2">{maskNumbers(finding.body[0])}</p>
         </div>
         <span className="shrink-0 text-[11px] text-ink-3">{open ? '▾' : '▸'}</span>
       </button>
@@ -120,7 +121,7 @@ function FindingCard({
         <div className="border-t border-line px-4 py-3">
           {finding.body.slice(1).map((paragraph, index) => (
             <p key={index} className="mb-2 text-[12.5px] leading-relaxed text-ink-2">
-              {paragraph}
+              {maskNumbers(paragraph)}
             </p>
           ))}
 
@@ -130,8 +131,8 @@ function FindingCard({
                 <tbody>
                   {finding.evidence.map((row) => (
                     <tr key={row.label} className="border-b border-line-soft last:border-0">
-                      <td className="px-2.5 py-1.5 text-ink-2">{row.label}</td>
-                      <td className="num px-2.5 py-1.5 text-right font-medium text-ink">{row.value}</td>
+                      <td className="px-2.5 py-1.5 text-ink-2">{maskNumbers(row.label)}</td>
+                      <td className="num px-2.5 py-1.5 text-right font-medium text-ink">{maskNumbers(row.value)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -142,7 +143,7 @@ function FindingCard({
           {finding.action ? (
             <div className="mb-3 rounded-lg border border-accent/30 bg-accent/[0.07] px-3 py-2">
               <span className="text-[10px] font-semibold uppercase tracking-widest text-accent">Next step</span>
-              <p className="mt-1 text-[12.5px] leading-relaxed text-ink">{finding.action}</p>
+              <p className="mt-1 text-[12.5px] leading-relaxed text-ink">{maskNumbers(finding.action)}</p>
             </div>
           ) : null}
 

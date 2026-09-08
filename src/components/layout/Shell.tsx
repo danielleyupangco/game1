@@ -3,6 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 import { cx } from '@/components/ui/primitives'
 import { QuickAdd } from '@/components/entry/QuickAdd'
 import { useLedger } from '@/state/store'
+import { usePrivacy } from '@/state/privacy'
 
 /**
  * Says so when this visit pulled in corrected data.
@@ -11,6 +12,60 @@ import { useLedger } from '@/state/store'
  * tell a correction from a bug — which is exactly the confusion that made this
  * necessary in the first place.
  */
+/** A standing reminder, so masked figures are never mistaken for real ones. */
+function PrivacyBanner() {
+  const { hidden, toggle } = usePrivacy()
+  if (!hidden) return null
+  return (
+    <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-warn/30 bg-warn/[0.07] px-3 py-2">
+      <p className="text-[12px] leading-relaxed text-ink-2">
+        <span className="font-semibold text-warn">Figures are hidden.</span> Every amount, percentage and count on the
+        page is masked — the structure, the charts and the written analysis are all still here. Nothing has changed in
+        your data.
+      </p>
+      <button
+        type="button"
+        onClick={toggle}
+        className="shrink-0 rounded-lg border border-warn/40 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-warn transition-colors hover:bg-warn/15"
+      >
+        Show figures
+      </button>
+    </div>
+  )
+}
+
+/**
+ * The demo-mode switch.
+ *
+ * Deliberately loud when it is on. The failure mode that matters is not
+ * forgetting to turn it on — you notice that immediately — it is leaving it on
+ * and quietly reading masked figures yourself, so the button changes colour and
+ * the page carries a banner until it is turned off again.
+ */
+function PrivacyToggle() {
+  const { hidden, toggle } = usePrivacy()
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      aria-pressed={hidden}
+      title={
+        hidden
+          ? 'Figures are hidden. Click to show them again.'
+          : 'Hide every figure so you can show someone how this works'
+      }
+      className={cx(
+        'rounded-lg border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] transition-colors',
+        hidden
+          ? 'border-warn/50 bg-warn/20 text-warn hover:bg-warn/30'
+          : 'border-line bg-surface-2 text-ink-2 hover:text-ink',
+      )}
+    >
+      {hidden ? 'Figures hidden' : 'Hide figures'}
+    </button>
+  )
+}
+
 function RefreshNotice() {
   const { refreshNote, dismissRefreshNote } = useLedger()
   if (!refreshNote) return null
@@ -63,6 +118,7 @@ const NAV = [
 ]
 
 export function Shell({ children }: { children: ReactNode }) {
+  const { hidden } = usePrivacy()
   const { ready } = useLedger()
   const location = useLocation()
   const [clock, setClock] = useState(() => new Date())
@@ -114,28 +170,42 @@ export function Shell({ children }: { children: ReactNode }) {
             ))}
           </nav>
 
-          <button
-            type="button"
-            onClick={() => setAdding(true)}
-            title="Record a cost, a booking or something you bought"
-            className="ml-auto rounded-lg border border-accent/40 bg-accent/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-accent transition-colors hover:bg-accent/25"
-          >
-            + Add
-          </button>
+          {/* One right-hand group, so adding the toggle does not wrap the row. */}
+          <div className="ml-auto flex items-center gap-2">
+            <PrivacyToggle />
 
-          <div className="num text-[11px] tracking-wide text-ink-3">
-            {clock.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
-            <span className="ml-1.5 text-ink-3/70">
-              {clock.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-            </span>
+            <button
+              type="button"
+              onClick={() => setAdding(true)}
+              title="Record a cost, a booking or something you bought"
+              className="rounded-lg border border-accent/40 bg-accent/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-accent transition-colors hover:bg-accent/25"
+            >
+              + Add
+            </button>
+
+            <div className="num hidden text-[11px] tracking-wide text-ink-3 sm:block">
+              {clock.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+              <span className="ml-1.5 text-ink-3/70">
+                {clock.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+              </span>
+            </div>
           </div>
         </div>
       </header>
 
       <main className="mx-auto max-w-[1180px] px-4 pb-24 pt-4 sm:pb-10">
+        <PrivacyBanner />
+        {/*
+          Remounting the whole page on toggle, rather than threading the flag
+          into every memo below it. Half the figures on this dashboard are
+          formatted inside a useMemo whose dependencies are the data, not the
+          display setting — so without this the tiles keep their cached strings
+          and a net worth stays on screen after the switch says it is hidden.
+          Losing which tab you were on is a fair price for that being airtight.
+        */}
+        <div key={hidden ? 'figures-hidden' : 'figures-shown'}>{children}</div>
         <RefreshNotice />
         <div key={location.pathname} className="animate-in">
-          {children}
         </div>
       </main>
 

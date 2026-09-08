@@ -14,7 +14,7 @@ import { Button, Card, Field, Pill, SectionHeader, Tabs, TextInput, cx } from '@
 import { Stat, StatGrid } from '@/components/ui/Stat'
 import { ChartFrame, tooltipProps } from '@/components/charts/Chart'
 import { AXIS, GRID, SERIES, TOOLTIP_STYLE } from '@/components/charts/theme'
-import { money, num, pct, shortDate } from '@/lib/format'
+import { maskNumbers, money, num, pct, shortDate } from '@/lib/format'
 import { uid } from '@/lib/id'
 import { today } from '@/lib/dates'
 import type { AncillaryBenchmark, CompetitorListing, CompetitorObservation, MarketReport } from '@/types'
@@ -433,7 +433,7 @@ function ReportBrief({
             <span className="mt-0.5 text-[14px] text-accent">◉</span>
             <div>
               <h3 className="text-[13px] font-semibold text-ink">Bottom line, {shortDate(report.reportedOn)}</h3>
-              <p className="mt-1 max-w-3xl text-[12px] leading-relaxed text-ink-2">{report.bottomLine}</p>
+              <p className="mt-1 max-w-3xl text-[12px] leading-relaxed text-ink-2">{maskNumbers(report.bottomLine)}</p>
             </div>
           </div>
         </Card>
@@ -485,7 +485,7 @@ function ReportBrief({
             {report.changes.map((line) => (
               <li key={line} className="flex gap-2 text-[12px] leading-relaxed text-ink-2">
                 <span className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-accent" />
-                <span>{line}</span>
+                <span>{maskNumbers(line)}</span>
               </li>
             ))}
           </ul>
@@ -499,7 +499,7 @@ function ReportBrief({
             {report.takeaways.map((line) => (
               <li key={line} className="flex gap-2 text-[12px] leading-relaxed text-ink-2">
                 <span className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-ink-3" />
-                <span>{line}</span>
+                <span>{maskNumbers(line)}</span>
               </li>
             ))}
           </ul>
@@ -516,7 +516,7 @@ function ReportBrief({
             {report.triggers.map((line) => (
               <li key={line} className="flex gap-2 text-[12px] leading-relaxed text-ink-2">
                 <span className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-warn" />
-                <span>{line}</span>
+                <span>{maskNumbers(line)}</span>
               </li>
             ))}
           </ul>
@@ -537,7 +537,7 @@ function ReportBrief({
                   {group.points.map((line) => (
                     <li key={line} className="flex gap-2 text-[11.5px] leading-relaxed text-ink-2">
                       <span className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-ink-3" />
-                      <span>{line}</span>
+                      <span>{maskNumbers(line)}</span>
                     </li>
                   ))}
                 </ul>
@@ -1066,14 +1066,14 @@ function GrowthLevers({ bookings, addons }: { bookings: import('@/types').Bookin
         {levers.map((lever) => (
           <Card key={lever.id} className={cx(lever.tone === 'warn' && 'border-warn/25 bg-warn/[0.03]')}>
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h3 className="text-[13px] font-semibold text-ink">{lever.title}</h3>
+              <h3 className="text-[13px] font-semibold text-ink">{maskNumbers(lever.title)}</h3>
               {lever.nightsAtStake > 0 ? (
-                <Pill tone={lever.tone === 'warn' ? 'warn' : 'info'}>~{lever.nightsAtStake} nights a year</Pill>
+                <Pill tone={lever.tone === 'warn' ? 'warn' : 'info'}>~{num(lever.nightsAtStake, 0)} nights a year</Pill>
               ) : null}
             </div>
-            <p className="mt-1.5 max-w-3xl text-[12px] leading-relaxed text-ink-2">{lever.finding}</p>
-            <p className="mt-1.5 max-w-3xl text-[12px] leading-relaxed text-ink">{lever.action}</p>
-            <p className="num mt-2 border-t border-line pt-2 text-[10.5px] leading-relaxed text-ink-3">{lever.evidence}</p>
+            <p className="mt-1.5 max-w-3xl text-[12px] leading-relaxed text-ink-2">{maskNumbers(lever.finding)}</p>
+            <p className="mt-1.5 max-w-3xl text-[12px] leading-relaxed text-ink">{maskNumbers(lever.action)}</p>
+            <p className="num mt-2 border-t border-line pt-2 text-[10.5px] leading-relaxed text-ink-3">{maskNumbers(lever.evidence)}</p>
           </Card>
         ))}
       </div>

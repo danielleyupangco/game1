@@ -8,7 +8,7 @@ import { DataTable } from '@/components/ui/DataTable'
 import { ChartFrame, Legend, tooltipProps } from '@/components/charts/Chart'
 import { AXIS, GRID, SERIES, STATUS, TOOLTIP_STYLE } from '@/components/charts/theme'
 import { FindingList } from '@/components/ui/FindingList'
-import { money, num, pct, shortDate, signedPct } from '@/lib/format'
+import { maskNumbers, money, num, pct, shortDate, signedPct } from '@/lib/format'
 import { monthName } from '@/lib/dates'
 
 /**
@@ -402,7 +402,7 @@ function MarketWatch({ report }: { report: import('@/types').MarketReport | null
                   line.kind === 'changed' ? 'bg-accent' : 'bg-ink-3',
                 )}
               />
-              <span>{line.text}</span>
+              <span>{maskNumbers(line.text)}</span>
             </li>
           ))}
         </ul>
@@ -412,7 +412,7 @@ function MarketWatch({ report }: { report: import('@/types').MarketReport | null
             <ul className="mt-1 space-y-1">
               {report.triggers.map((line) => (
                 <li key={line} className="text-[11.5px] leading-relaxed text-ink-2">
-                  {line}
+                  {maskNumbers(line)}
                 </li>
               ))}
             </ul>

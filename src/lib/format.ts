@@ -2,10 +2,49 @@ import type { Currency } from '@/types'
 
 const SYMBOL: Record<Currency, string> = { PHP: '₱', USD: '$' }
 
+/**
+ * Demo mode: every figure hidden, the structure left intact.
+ *
+ * Kept as a module flag rather than passed through a hook because these
+ * formatters are pure functions called from a hundred render paths, and
+ * threading a prop through all of them would guarantee one gets missed — which
+ * on this feature means a number on screen in front of someone who should not
+ * see it. `PrivacyProvider` sets it during its own render, before any child
+ * renders, so a toggle takes effect on the same paint.
+ *
+ * The symbol survives the mask: "₱•••" still reads as money, which is the
+ * point — the shape of the dashboard is what is being shown.
+ */
+let hidden = false
+
+export function setPrivateMode(on: boolean): void {
+  hidden = on
+}
+
+export function isPrivateMode(): boolean {
+  return hidden
+}
+
+const MASK = '•••'
+
+/**
+ * Blanks the digits in free prose, which the formatters never see.
+ *
+ * The written findings argue in sentences — "nights fell from 177 to 132" —
+ * so masking only the formatted tiles would leave the whole analysis readable.
+ * Four-digit years are kept, because a finding that loses its dates stops being
+ * followable and a year discloses nothing.
+ */
+export function maskNumbers<T extends string | null | undefined>(text: T): T {
+  if (!hidden || !text) return text
+  return text.replace(/\d[\d,.]*/g, (match) => (/^(19|20)\d{2}$/.test(match) ? match : MASK)) as T
+}
+
 /** Compact money for tiles: ₱13.1M, $482K. Falls back to full digits under 1000. */
 export function money(value: number, currency: Currency = 'PHP', compact = false): string {
   if (!Number.isFinite(value)) return '—'
   const sym = SYMBOL[currency]
+  if (hidden) return `${sym}${MASK}`
   const abs = Math.abs(value)
   const sign = value < 0 ? '-' : ''
   if (compact && abs >= 1000) {
@@ -30,23 +69,27 @@ export function money(value: number, currency: Currency = 'PHP', compact = false
 
 export function pct(fraction: number, digits = 1): string {
   if (!Number.isFinite(fraction)) return '—'
+  if (hidden) return `${MASK}%`
   return `${(fraction * 100).toFixed(digits)}%`
 }
 
 /** Percentage-point delta, always signed — for "vs target" style readouts. */
 export function pp(fraction: number, digits = 1): string {
   if (!Number.isFinite(fraction)) return '—'
+  if (hidden) return `${MASK} pp`
   const v = fraction * 100
   return `${v >= 0 ? '+' : ''}${v.toFixed(digits)} pp`
 }
 
 export function signedPct(fraction: number, digits = 1): string {
   if (!Number.isFinite(fraction)) return '—'
+  if (hidden) return `${MASK}%`
   return `${fraction >= 0 ? '+' : ''}${(fraction * 100).toFixed(digits)}%`
 }
 
 export function num(value: number, digits = 2): string {
   if (!Number.isFinite(value)) return '—'
+  if (hidden) return MASK
   return value.toLocaleString('en-US', {
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,

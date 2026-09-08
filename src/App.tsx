@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { Shell } from '@/components/layout/Shell'
+import { PrivacyProvider } from '@/state/privacy'
 import { HubPage } from '@/pages/HubPage'
 
 // The hub loads eagerly — it's the page you open on a phone. The rest split out.
@@ -13,7 +14,8 @@ const SettingsPage = lazy(() => import('@/pages/SettingsPage').then((m) => ({ de
 
 export default function App() {
   return (
-    <Shell>
+    <PrivacyProvider>
+      <Shell>
       <Suspense fallback={<p className="py-16 text-center text-[13px] text-ink-3">Loading…</p>}>
         <Routes>
           <Route path="/" element={<HubPage />} />
@@ -26,6 +28,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
-    </Shell>
+      </Shell>
+    </PrivacyProvider>
   )
 }

@@ -257,7 +257,7 @@ export function CostModelPanel() {
           >
             <LineChart data={curve} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
               <CartesianGrid {...GRID} />
-              <XAxis dataKey="occupancy" {...AXIS} tickFormatter={(value: number) => `${value}%`} />
+              <XAxis dataKey="occupancy" {...AXIS} tickFormatter={(value: number) => pct(value / 100, 0)} />
               <YAxis
                 {...AXIS}
                 width={56}

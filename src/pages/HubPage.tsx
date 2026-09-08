@@ -14,7 +14,7 @@ import { aggregate, monthlyMetrics, trailing } from '@/domain/airbnb/metrics'
 import { runDcf } from '@/domain/airbnb/dcf'
 import { HubCanvas } from '@/components/hub/HubCanvas'
 import { cx } from '@/components/ui/primitives'
-import { money, pct, shortDate } from '@/lib/format'
+import { maskNumbers, money, pct, shortDate } from '@/lib/format'
 import type { Finding } from '@/types'
 
 type Satellite = {
@@ -262,9 +262,9 @@ function ActOnAnalysis({
                   >
                     {finding.theme}
                   </span>
-                  <h3 className="text-[13px] font-semibold text-ink">{finding.title}</h3>
+                  <h3 className="text-[13px] font-semibold text-ink">{maskNumbers(finding.title)}</h3>
                 </div>
-                <p className="mt-1 max-w-3xl text-[12px] leading-relaxed text-ink-2">{finding.action}</p>
+                <p className="mt-1 max-w-3xl text-[12px] leading-relaxed text-ink-2">{maskNumbers(finding.action)}</p>
               </div>
               <div className="flex shrink-0 gap-1.5">
                 {finding.status === 'open' ? (

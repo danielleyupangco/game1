@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
 import type { Provenance } from '@/types'
 import { Button } from '@/components/ui/primitives'
-import { shortDate } from '@/lib/format'
+import { maskNumbers, num, shortDate } from '@/lib/format'
 
 /**
  * Data provenance.
@@ -27,12 +27,18 @@ type Ctx = { trace: (request: TraceRequest) => void }
 
 const ProvenanceContext = createContext<Ctx | null>(null)
 
+/**
+ * The trace drawer shows raw source rows, which is the one place the ledger is
+ * displayed unprocessed — so it has to respect demo mode too, both for the
+ * numbers and for the text around them, which carries account numbers and
+ * amounts in its notes.
+ */
 function defaultFormat(value: unknown): string {
   if (value === null || value === undefined) return '—'
   if (typeof value === 'number') {
-    return value.toLocaleString('en-US', { maximumFractionDigits: 2 })
+    return num(value, Number.isInteger(value) ? 0 : 2)
   }
-  return String(value)
+  return maskNumbers(String(value))
 }
 
 export function ProvenanceProvider({ children }: { children: ReactNode }) {
@@ -160,6 +166,5 @@ function ProvenanceDrawer({ request, onClose }: { request: TraceRequest; onClose
 
 export const provFormats = {
   date: (value: unknown) => (typeof value === 'string' ? shortDate(value) : '—'),
-  money: (value: unknown) =>
-    typeof value === 'number' ? value.toLocaleString('en-US', { maximumFractionDigits: 0 }) : '—',
+  money: (value: unknown) => (typeof value === 'number' ? num(value, 0) : '—'),
 }

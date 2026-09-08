@@ -302,7 +302,7 @@ function CurveDetail({ suggestion }: { suggestion: MonthSuggestion }) {
         <ChartFrame title="" height={220}>
           <LineChart data={data} margin={{ top: 8, right: 12, left: 0, bottom: 4 }}>
             <CartesianGrid {...GRID} />
-            <XAxis dataKey="change" {...AXIS} tickFormatter={(value: number) => `${value > 0 ? '+' : ''}${value.toFixed(0)}%`} />
+            <XAxis dataKey="change" {...AXIS} tickFormatter={(value: number) => signedPct(value / 100, 0)} />
             <YAxis {...AXIS} tickFormatter={(value: number) => money(value, 'PHP', true)} width={52} domain={['auto', 'auto']} />
             <Tooltip
               {...TOOLTIP_STYLE}

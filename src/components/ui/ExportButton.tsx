@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/primitives'
 import { SaveDeclined, saveMode, type SaveMode } from '@/lib/save'
+import { usePrivacy } from '@/state/privacy'
 
 /**
  * An export control that says what it will actually produce.
@@ -10,6 +11,7 @@ import { SaveDeclined, saveMode, type SaveMode } from '@/lib/save'
  * rather than promising xlsx everywhere and quietly delivering csv.
  */
 export function ExportButton({ run, label = 'Export' }: { run: () => Promise<void>; label?: string }) {
+  const { hidden } = usePrivacy()
   const [mode, setMode] = useState<SaveMode | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -24,13 +26,23 @@ export function ExportButton({ run, label = 'Export' }: { run: () => Promise<voi
     }
   }, [])
 
+  // An export writes the real ledger to a file, which is exactly what demo mode
+  // exists to prevent — and the button is the one control a visitor might press
+  // themselves. It stays visible, so the capability is still part of the tour,
+  // and refuses to run.
   return (
     <div className="no-print flex items-center gap-2">
       {error ? <span className="text-[11px] text-neg">{error}</span> : null}
       <Button
         size="sm"
-        disabled={busy}
-        title={mode === 'hosted' ? 'Saved as CSV — this page cannot hand over xlsx' : undefined}
+        disabled={busy || hidden}
+        title={
+          hidden
+            ? 'Turn figures back on to export — an export would write the real numbers to a file'
+            : mode === 'hosted'
+              ? 'Saved as CSV — this page cannot hand over xlsx'
+              : undefined
+        }
         onClick={() => {
           setBusy(true)
           setError(null)
@@ -43,7 +55,7 @@ export function ExportButton({ run, label = 'Export' }: { run: () => Promise<voi
             .finally(() => setBusy(false))
         }}
       >
-        {busy ? 'Preparing…' : mode === 'hosted' ? `${label} csv` : `${label} xlsx`}
+        {hidden ? `${label} — off` : busy ? 'Preparing…' : mode === 'hosted' ? `${label} csv` : `${label} xlsx`}
       </Button>
     </div>
   )

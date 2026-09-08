@@ -51,7 +51,7 @@ import { Freshness } from '@/components/ui/Freshness'
 import { ChartFrame, Legend, tooltipProps } from '@/components/charts/Chart'
 import { AXIS, GRID, SERIES, STATUS, TOOLTIP_STYLE } from '@/components/charts/theme'
 import { useProvenance } from '@/components/ui/Provenance'
-import { money, num, pct, pp, shortDate, signedPct } from '@/lib/format'
+import { maskNumbers, money, num, pct, pp, shortDate, signedPct } from '@/lib/format'
 import { exportTable, MONEY_FMT, PCT_FMT } from '@/lib/export'
 
 type View = 'holdings' | 'performance' | 'allocation' | 'risk' | 'moves'
@@ -228,7 +228,7 @@ function HoldingsView({ positions }: { positions: PositionView[] }) {
         <Stat
           label="Largest position"
           value={positions[0] ? pct(positions[0].weight) : '—'}
-          sub={positions[0]?.ticker}
+          sub={maskNumbers(positions[0]?.ticker)}
           tone={positions[0] && positions[0].weight > 0.25 ? 'warn' : 'neutral'}
         />
       </StatGrid>
@@ -270,7 +270,7 @@ function HoldingsView({ positions }: { positions: PositionView[] }) {
           initialSort={{ key: 'value', dir: 'desc' }}
           onRowClick={(p) =>
             trace({
-              title: `${p.ticker} — ${p.name}`,
+              title: maskNumbers(`${p.ticker} — ${p.name}`),
               description: `${p.sources.length} source row${p.sources.length === 1 ? '' : 's'} roll${p.sources.length === 1 ? 's' : ''} into this position.`,
               rows: p.sources,
               columns: [
@@ -290,8 +290,8 @@ function HoldingsView({ positions }: { positions: PositionView[] }) {
               header: 'Position',
               render: (p) => (
                 <div className="max-w-[180px]">
-                  <div className="font-medium text-ink">{p.ticker}</div>
-                  <div className="truncate text-[11px] text-ink-3">{p.name}</div>
+                  <div className="font-medium text-ink">{maskNumbers(p.ticker)}</div>
+                  <div className="truncate text-[11px] text-ink-3">{maskNumbers(p.name)}</div>
                 </div>
               ),
               sortValue: (p) => p.ticker,
@@ -531,7 +531,7 @@ function PerformanceView({
           <LineChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid {...GRID} />
             <XAxis dataKey="date" {...AXIS} tickFormatter={(value: string) => value.slice(2, 7)} minTickGap={24} />
-            <YAxis {...AXIS} tickFormatter={(value: number) => value.toFixed(2)} width={44} domain={['auto', 'auto']} />
+            <YAxis {...AXIS} tickFormatter={(value: number) => num(value, 2)} width={44} domain={['auto', 'auto']} />
             <Tooltip
               {...TOOLTIP_STYLE}
               {...tooltipProps(
@@ -685,7 +685,7 @@ function AllocationView({ positions }: { positions: PositionView[] }) {
         >
           <BarChart data={chartData} layout="vertical" margin={{ top: 4, right: 40, left: 4, bottom: 4 }} barCategoryGap={10}>
             <CartesianGrid {...GRID} horizontal={false} vertical />
-            <XAxis type="number" {...AXIS} tickFormatter={(value: number) => `${value.toFixed(0)}%`} />
+            <XAxis type="number" {...AXIS} tickFormatter={(value: number) => pct(value / 100, 0)} />
             <YAxis type="category" dataKey="key" {...AXIS} width={110} />
             <Tooltip
               {...TOOLTIP_STYLE}
@@ -818,7 +818,7 @@ function RiskViewPanel({
           label="Top 5 concentration"
           value={pct(risk.top5Weight)}
           tone={risk.top5Weight > 0.6 ? 'warn' : 'neutral'}
-          sub={top5.map((p) => p.ticker).join(', ')}
+          sub={maskNumbers(top5.map((p) => p.ticker).join(', '))}
         />
         <Stat
           label="Effective positions"
@@ -854,11 +854,11 @@ function RiskViewPanel({
           caption="Position weights, largest first. The 25% line is where a single name starts driving portfolio outcomes more than your allocation does."
           height={Math.max(180, Math.min(positions.length, 12) * 30)}
         >
-          <BarChart data={positions.slice(0, 12).map((p) => ({ ticker: p.ticker, weight: p.weight * 100 }))} layout="vertical" margin={{ top: 4, right: 40, left: 4, bottom: 4 }}>
+          <BarChart data={positions.slice(0, 12).map((p) => ({ ticker: maskNumbers(p.ticker), weight: p.weight * 100 }))} layout="vertical" margin={{ top: 4, right: 40, left: 4, bottom: 4 }}>
             <CartesianGrid {...GRID} horizontal={false} vertical />
-            <XAxis type="number" {...AXIS} tickFormatter={(value: number) => `${value.toFixed(0)}%`} />
-            <YAxis type="category" dataKey="ticker" {...AXIS} width={70} />
-            <Tooltip {...TOOLTIP_STYLE} {...tooltipProps((value) => [`${value.toFixed(1)}%`, 'Weight'])} />
+            <XAxis type="number" {...AXIS} tickFormatter={(value: number) => pct(value / 100, 0)} />
+            <YAxis type="category" dataKey="ticker" {...AXIS} width={70} tickFormatter={(v: string) => maskNumbers(v)} />
+            <Tooltip {...TOOLTIP_STYLE} {...tooltipProps((value) => [pct(Number(value) / 100, 1), 'Weight'])} />
             <ReferenceLine x={25} stroke={STATUS.warn} strokeDasharray="4 3" />
             <Bar dataKey="weight" radius={[0, 4, 4, 0]} barSize={14}>
               {positions.slice(0, 12).map((p) => (
@@ -879,7 +879,7 @@ function RiskViewPanel({
             <LineChart data={drawdowns.map((d) => ({ date: d.date, drawdown: d.drawdown * 100 }))} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
               <CartesianGrid {...GRID} />
               <XAxis dataKey="date" {...AXIS} tickFormatter={(value: string) => value.slice(2, 7)} minTickGap={24} />
-              <YAxis {...AXIS} tickFormatter={(value: number) => `${value.toFixed(0)}%`} width={44} />
+              <YAxis {...AXIS} tickFormatter={(value: number) => pct(value / 100, 0)} width={44} />
               <Tooltip
                 {...TOOLTIP_STYLE}
                 {...tooltipProps(
@@ -988,8 +988,8 @@ function MoveCard({ move, rank }: { move: Move; rank: number }) {
           <div className="flex flex-wrap items-center gap-2">
             <Pill tone={move.kind === 'buy' ? 'info' : 'warn'}>{move.kind === 'buy' ? 'Buy' : 'Trim'}</Pill>
             <span className="text-[13px] font-medium text-ink">
-              {move.ticker ?? move.bucket}
-              {move.ticker && move.bucket !== move.ticker ? <span className="text-ink-3"> · {move.bucket}</span> : null}
+              {maskNumbers(move.ticker ?? move.bucket)}
+              {move.ticker && move.bucket !== move.ticker ? <span className="text-ink-3"> · {maskNumbers(move.bucket)}</span> : null}
             </span>
           </div>
           <div className="num mt-0.5 text-[12px] text-ink-2">{money(move.amount, 'PHP', true)}</div>
@@ -1007,7 +1007,7 @@ function MoveCard({ move, rank }: { move: Move; rank: number }) {
             {move.rationale.map((line) => (
               <li key={line} className="flex gap-2 text-[12px] leading-relaxed text-ink-2">
                 <span className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-ink-3" />
-                {line}
+                {maskNumbers(line)}
               </li>
             ))}
           </ul>
