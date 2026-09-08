@@ -8,7 +8,7 @@ import { useLedger } from '@/state/store'
 import { exportBackup, importBackup, wipeEverything, type Backup } from '@/lib/db'
 import { exportJson } from '@/lib/export'
 import { SaveDeclined } from '@/lib/save'
-import { relativeTime, shortDate } from '@/lib/format'
+import { num, relativeTime, shortDate } from '@/lib/format'
 import type { DatasetKey, ImportBatch } from '@/types'
 
 export function DataPage() {
@@ -84,7 +84,7 @@ export function DataPage() {
                       </span>
                     </div>
                     <Pill tone={counts[spec.key] > 0 ? 'pos' : 'neutral'}>
-                      {counts[spec.key].toLocaleString()} rows
+                      {num(counts[spec.key], 0)} rows
                     </Pill>
                   </div>
                   <p className="mt-2 flex-1 text-[11px] leading-relaxed text-ink-2">{spec.blurb}</p>
@@ -134,9 +134,9 @@ export function DataPage() {
                   align: 'right',
                   render: (batch) => (
                     <span>
-                      {batch.rowCount}
+                      {num(batch.rowCount, 0)}
                       {batch.rejected.length > 0 ? (
-                        <span className="ml-1 text-warn">+{batch.rejected.length} skipped</span>
+                        <span className="ml-1 text-warn">+{num(batch.rejected.length, 0)} skipped</span>
                       ) : null}
                     </span>
                   ),
@@ -263,7 +263,7 @@ function MappingPeek({ batch }: { batch: ImportBatch }) {
         onClick={() => setOpen((prev) => !prev)}
         className={cx('text-[11px] transition-colors', open ? 'text-accent' : 'text-ink-3 hover:text-ink')}
       >
-        {entries.length} columns {open ? '▾' : '▸'}
+        {num(entries.length, 0)} columns {open ? '▾' : '▸'}
       </button>
       {open ? (
         <div className="absolute right-0 top-5 z-20 w-64 rounded-lg border border-line bg-surface-2 p-2 shadow-xl">

@@ -105,15 +105,15 @@ function ProvenanceDrawer({ request, onClose }: { request: TraceRequest; onClose
           ) : (
             <>
               <p className="mb-3 text-[12px] text-ink-2">
-                {request.rows.length} source row{request.rows.length === 1 ? '' : 's'} across{' '}
-                {byFile.length} sheet{byFile.length === 1 ? '' : 's'}.
+                {num(request.rows.length, 0)} source row{request.rows.length === 1 ? '' : 's'} across{' '}
+                {num(byFile.length, 0)} sheet{byFile.length === 1 ? '' : 's'}.
               </p>
               {byFile.map(([file, rows]) => (
                 <section key={file} className="mb-4">
                   <h3 className="mb-1.5 flex items-center gap-2 text-[12px] font-medium text-ink">
                     <span className="truncate">{file}</span>
                     <span className="shrink-0 rounded bg-surface-2 px-1.5 py-0.5 text-[10px] text-ink-3">
-                      {rows.length} row{rows.length === 1 ? '' : 's'}
+                      {num(rows.length, 0)} row{rows.length === 1 ? '' : 's'}
                     </span>
                   </h3>
                   <div className="overflow-x-auto rounded-lg border border-line">

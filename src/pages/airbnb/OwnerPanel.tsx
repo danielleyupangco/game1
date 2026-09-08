@@ -8,7 +8,7 @@ import { Card, cx } from '@/components/ui/primitives'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ChartFrame, tooltipProps } from '@/components/charts/Chart'
 import { AXIS, GRID, SERIES, STATUS, TOOLTIP_STYLE } from '@/components/charts/theme'
-import { maskNumbers, money, monthLabel } from '@/lib/format'
+import { maskNumbers, money, monthLabel, num } from '@/lib/format'
 import { monthKey, today } from '@/lib/dates'
 
 /**
@@ -86,7 +86,7 @@ export function OwnerPanel() {
         <p className="text-[15px] leading-relaxed text-ink">
           Over the last twelve months the island earned{' '}
           <strong className="num font-semibold">{money(t12.revenue, 'PHP')}</strong> from{' '}
-          <strong className="num font-semibold">{t12.bookings}</strong> stays. Running it cost{' '}
+          <strong className="num font-semibold">{num(t12.bookings, 0)}</strong> stays. Running it cost{' '}
           <strong className="num font-semibold">{money(t12.totalCost, 'PHP')}</strong>, which left{' '}
           <strong className={cx('num font-semibold', kept >= 0 ? 'text-pos' : 'text-neg')}>
             {money(kept, 'PHP')}
@@ -95,9 +95,9 @@ export function OwnerPanel() {
         </p>
         <p className="mt-2.5 text-[13px] leading-relaxed text-ink-2">
           Put another way: for every ₱100 a guest paid,{' '}
-          <span className="num text-ink">₱{Math.round(keptShare * 100)}</span> stayed in the business and{' '}
-          <span className="num text-ink">₱{Math.round((1 - keptShare) * 100)}</span> went on wages, food, fuel and
-          upkeep. Guests stayed about {Math.round(nightsPerMonth)} nights a month on average.
+          <span className="num text-ink">₱{num(Math.round(keptShare * 100), 0)}</span> stayed in the business and{' '}
+          <span className="num text-ink">₱{num(Math.round((1 - keptShare) * 100), 0)}</span> went on wages, food, fuel and
+          upkeep. Guests stayed about {num(Math.round(nightsPerMonth), 0)} nights a month on average.
         </p>
       </Card>
 
@@ -105,7 +105,7 @@ export function OwnerPanel() {
         <PlainStat
           label="Money coming in"
           value={money(t12.revenue, 'PHP', true)}
-          detail={`${t12.nightsSold} nights sold across ${t12.bookings} stays`}
+          detail={`${num(t12.nightsSold, 0)} nights sold across ${num(t12.bookings, 0)} stays`}
           tone="pos"
         />
         <PlainStat
@@ -117,7 +117,7 @@ export function OwnerPanel() {
         <PlainStat
           label="What's left"
           value={money(kept, 'PHP', true)}
-          detail={`${Math.round(keptShare * 100)} pesos of every 100 taken`}
+          detail={`${num(Math.round(keptShare * 100), 0)} pesos of every 100 taken`}
           tone={kept >= 0 ? 'pos' : 'neg'}
         />
         <PlainStat
@@ -130,11 +130,11 @@ export function OwnerPanel() {
       <Card>
         <h3 className="text-[14px] font-semibold text-ink">How full the island was</h3>
         <p className="mt-1 text-[12.5px] leading-relaxed text-ink-2">
-          There are {costModel.availableNightsPerYear} nights we could sell in a year. We sold{' '}
-          <span className="num text-ink">{t12.nightsSold}</span> of them — about{' '}
-          <span className="num text-ink">{Math.round(t12.occupancy * 100)} out of every 100</span>. We need roughly{' '}
+          There are {num(costModel.availableNightsPerYear, 0)} nights we could sell in a year. We sold{' '}
+          <span className="num text-ink">{num(t12.nightsSold, 0)}</span> of them — about{' '}
+          <span className="num text-ink">{num(Math.round(t12.occupancy * 100), 0)} out of every 100</span>. We need roughly{' '}
           <span className="num text-ink">
-            {Math.ceil(costs.fixedPerYear / Math.max(1, t12.adr - costs.variablePerNight))}
+            {num(Math.ceil(costs.fixedPerYear / Math.max(1, t12.adr - costs.variablePerNight)), 0)}
           </span>{' '}
           nights a year just to cover the bills that arrive whether anyone comes or not.
         </p>
@@ -179,12 +179,12 @@ export function OwnerPanel() {
         ) : (
           <>
             <p className="mt-1 text-[12.5px] leading-relaxed text-ink-2">
-              <span className="num text-ink">{ahead.count}</span> stays are booked, worth{' '}
+              <span className="num text-ink">{num(ahead.count, 0)}</span> stays are booked, worth{' '}
               <span className="num text-ink">{money(ahead.money, 'PHP')}</span> across{' '}
-              <span className="num text-ink">{ahead.nights}</span> nights. Against fixed costs of{' '}
+              <span className="num text-ink">{num(ahead.nights, 0)}</span> nights. Against fixed costs of{' '}
               <span className="num text-ink">{money(costs.fixedPerMonth, 'PHP')}</span> a month, that covers about{' '}
               <span className="num text-ink">
-                {(ahead.money / Math.max(1, costs.fixedPerMonth)).toFixed(1)}
+                {num(ahead.money / Math.max(1, costs.fixedPerMonth), 1)}
               </span>{' '}
               months of bills.
             </p>
@@ -199,7 +199,7 @@ export function OwnerPanel() {
                     />
                   </div>
                   <span className="num w-32 shrink-0 text-right text-[11.5px] text-ink-2">
-                    {row.nights} nights · {money(row.money, 'PHP', true)}
+                    {num(row.nights, 0)} nights · {money(row.money, 'PHP', true)}
                   </span>
                 </div>
               ))}

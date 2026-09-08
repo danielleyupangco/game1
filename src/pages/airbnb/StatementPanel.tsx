@@ -86,7 +86,7 @@ export function StatementPanel({ series }: { series: MonthMetrics[] }) {
             { value: 'income', label: 'Income statement' },
             { value: 'cash', label: 'Cash flow' },
             { value: 'expenses', label: 'Expense summary' },
-            { value: 'dividends', label: `Dividends (${dividends.length})` },
+            { value: 'dividends', label: `Dividends (${num(dividends.length, 0)})` },
           ]}
         />
         <Tabs
@@ -284,7 +284,7 @@ function DepreciationDetail({
           <h4 className="text-[13px] font-semibold text-ink">What the depreciation is</h4>
           <p className="mt-1 max-w-2xl text-[11.5px] leading-relaxed text-ink-2">
             {money(charged, 'PHP', true)} charged over these months, worked out from the{' '}
-            {depreciation.items.length} things the business has actually bought — {money(depreciation.totalCost, 'PHP', true)}{' '}
+            {num(depreciation.items.length, 0)} things the business has actually bought — {money(depreciation.totalCost, 'PHP', true)}{' '}
             of capital spend, guest comfort included — each written off in equal slices over the years it should last.
             Not a flat figure typed once.
           </p>
@@ -295,7 +295,7 @@ function DepreciationDetail({
       </div>
 
       <div className="mt-3 grid gap-3 sm:grid-cols-3">
-        <Stat label="Bought, at cost" value={money(depreciation.totalCost, 'PHP', true)} sub={`${depreciation.items.length} items`} />
+        <Stat label="Bought, at cost" value={money(depreciation.totalCost, 'PHP', true)} sub={`${num(depreciation.items.length, 0)} items`} />
         <Stat
           label="Written off so far"
           value={money(depreciation.accumulated, 'PHP', true)}

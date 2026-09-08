@@ -14,22 +14,24 @@ import { usePrivacy } from '@/state/privacy'
  */
 /** A standing reminder, so masked figures are never mistaken for real ones. */
 function PrivacyBanner() {
-  const { hidden, toggle } = usePrivacy()
+  const { hidden, toggle, locked } = usePrivacy()
   if (!hidden) return null
   return (
     <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-warn/30 bg-warn/[0.07] px-3 py-2">
       <p className="text-[12px] leading-relaxed text-ink-2">
         <span className="font-semibold text-warn">Figures are hidden.</span> Every amount, percentage and count on the
-        page is masked — the structure, the charts and the written analysis are all still here. Nothing has changed in
-        your data.
+        page is masked — the structure, the charts and the written analysis are all still here.{' '}
+        {locked ? 'This copy is a demo: there is no switch to turn them back on.' : 'Nothing has changed in your data.'}
       </p>
-      <button
-        type="button"
-        onClick={toggle}
-        className="shrink-0 rounded-lg border border-warn/40 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-warn transition-colors hover:bg-warn/15"
-      >
-        Show figures
-      </button>
+      {locked ? null : (
+        <button
+          type="button"
+          onClick={toggle}
+          className="shrink-0 rounded-lg border border-warn/40 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-warn transition-colors hover:bg-warn/15"
+        >
+          Show figures
+        </button>
+      )}
     </div>
   )
 }
@@ -43,7 +45,19 @@ function PrivacyBanner() {
  * the page carries a banner until it is turned off again.
  */
 function PrivacyToggle() {
-  const { hidden, toggle } = usePrivacy()
+  const { hidden, toggle, locked } = usePrivacy()
+  // A demo build says what it is and offers nothing to press. Rendering a
+  // disabled button instead would still read as "there is a way back".
+  if (locked) {
+    return (
+      <span
+        title="This is a demo copy. Every figure is masked and cannot be shown."
+        className="rounded-lg border border-warn/50 bg-warn/20 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-warn"
+      >
+        Demo copy
+      </span>
+    )
+  }
   return (
     <button
       type="button"

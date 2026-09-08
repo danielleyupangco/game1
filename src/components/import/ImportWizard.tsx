@@ -13,6 +13,7 @@ import {
   type PeriodColumn,
 } from '@/lib/crosstab'
 import * as db from '@/lib/db'
+import { maskName, maskNumbers, num } from '@/lib/format'
 import { uid } from '@/lib/id'
 import { today } from '@/lib/dates'
 import { useLedger } from '@/state/store'
@@ -283,7 +284,7 @@ export function ImportWizard({
       let imported = 0
 
       for (const { sheet: target, asOf: sheetAsOf } of multiSheets) {
-        setProgress(`${target.name} (${imported + 1} of ${multiSheets.length})`)
+        setProgress(`${target.name} (${num(imported + 1, 0)} of ${num(multiSheets.length, 0)})`)
         const importId = uid('imp')
         const snapshotId = uid('snp')
         // Mapping is by header name, so a sheet with an extra or reordered
@@ -539,7 +540,7 @@ export function ImportWizard({
       <div className="rounded-lg border border-line bg-surface-2 p-3">
         <p className="mb-2 text-[12px] leading-relaxed text-ink-2">
           <span className="font-medium text-ink">
-            {sheet.sections.length} separate tables in this sheet.
+            {num(sheet.sections.length, 0)} separate tables in this sheet.
           </span>{' '}
           Name each one and it becomes the account on those rows, so you can see the split. Untick anything you don't
           want imported.
@@ -631,7 +632,7 @@ export function ImportWizard({
       {step === 'sheet' && workbook ? (
         <div className="space-y-2">
           <p className="text-[12px] text-ink-2">
-            {workbook.fileName} has {workbook.sheets.length} sheets. Pick the one holding your{' '}
+            {workbook.fileName} has {num(workbook.sheets.length, 0)} sheets. Pick the one holding your{' '}
             {spec.label.toLowerCase()}.
           </p>
           <div className="grid gap-2 sm:grid-cols-2">
@@ -672,7 +673,7 @@ export function ImportWizard({
                     </Pill>
                   </div>
                   <div className="mt-1 truncate text-[11px] text-ink-3">
-                    {candidate.rows.length} rows · {candidate.headers.slice(0, 4).join(', ')}
+                    {num(candidate.rows.length, 0)} rows · {candidate.headers.slice(0, 4).join(', ')}
                     {candidate.headers.length > 4 ? '…' : ''}
                   </div>
                 </button>
@@ -728,13 +729,13 @@ export function ImportWizard({
       {step === 'review' && crosstab && crossPreview && sheet ? (
         <div className="space-y-3">
           <div className="grid gap-2 sm:grid-cols-3">
-            <SummaryTile label="Records" value={String(crossPreview.rows.length)} tone="pos" />
+            <SummaryTile label="Records" value={num(crossPreview.rows.length, 0)} tone="pos" />
             <SummaryTile
               label="Categories"
-              value={String(crossPreview.labels.length - excludedRows.length)}
+              value={num(crossPreview.labels.length - excludedRows.length, 0)}
               tone="neutral"
             />
-            <SummaryTile label="Periods" value={String(periods.length)} tone="neutral" />
+            <SummaryTile label="Periods" value={num(periods.length, 0)} tone="neutral" />
           </div>
           <p className="text-[12px] leading-relaxed text-ink-2">
             Each populated cell becomes one expense, dated to the end of its column's month and tagged with its row
@@ -748,7 +749,7 @@ export function ImportWizard({
         <div className="space-y-3">
           <div className="rounded-lg border border-accent/30 bg-accent/[0.06] px-3 py-2.5 text-[12px] leading-relaxed text-ink-2">
             <span className="font-semibold text-accent">
-              {multiSheets.length} dated sheets found.
+              {num(multiSheets.length, 0)} dated sheets found.
             </span>{' '}
             Each becomes its own snapshot, so importing this one file gives you a full history rather than a single
             point — which is what makes returns, drawdown and drift-over-time computable. Dates come from the sheet
@@ -786,9 +787,9 @@ export function ImportWizard({
                     />
                     <span className="min-w-0 flex-1 truncate text-[12px] text-ink">{candidate.name}</span>
                     <span className="num text-[11px] text-ink-3">
-                      {built.rows.length} rows
+                      {num(built.rows.length, 0)} rows
                       {built.rejected.length > 0 ? (
-                        <span className="ml-1 text-warn">+{built.rejected.length} skipped</span>
+                        <span className="ml-1 text-warn">+{num(built.rejected.length, 0)} skipped</span>
                       ) : null}
                     </span>
                     <input
@@ -839,12 +840,12 @@ export function ImportWizard({
             </p>
           </div>
           <div className="grid gap-2 sm:grid-cols-4">
-            <SummaryTile label="Reservations" value={String(airbnbParse.bookings.length)} tone="pos" />
-            <SummaryTile label="Resolutions" value={String(airbnbParse.resolutions.length)} tone="neutral" />
-            <SummaryTile label="Transfers ignored" value={String(airbnbParse.payoutCount)} tone="neutral" />
+            <SummaryTile label="Reservations" value={num(airbnbParse.bookings.length, 0)} tone="pos" />
+            <SummaryTile label="Resolutions" value={num(airbnbParse.resolutions.length, 0)} tone="neutral" />
+            <SummaryTile label="Transfers ignored" value={num(airbnbParse.payoutCount, 0)} tone="neutral" />
             <SummaryTile
               label="Rows skipped"
-              value={String(airbnbParse.rejected.length)}
+              value={num(airbnbParse.rejected.length, 0)}
               tone={airbnbParse.rejected.length > 0 ? 'warn' : 'neutral'}
             />
           </div>
@@ -864,16 +865,16 @@ export function ImportWizard({
             </p>
           </div>
           <div className="grid gap-2 sm:grid-cols-4">
-            <SummaryTile label="Stays updated" value={String(metricsParse.details.length)} tone="pos" />
-            <SummaryTile label="Add-on records" value={String(metricsParse.quotes.length)} tone="pos" />
+            <SummaryTile label="Stays updated" value={num(metricsParse.details.length, 0)} tone="pos" />
+            <SummaryTile label="Add-on records" value={num(metricsParse.quotes.length, 0)} tone="pos" />
             <SummaryTile
               label="Reviews found"
-              value={String(metricsParse.details.filter((detail) => detail.review.trim()).length)}
+              value={num(metricsParse.details.filter((detail) => detail.review.trim()).length, 0)}
               tone="neutral"
             />
             <SummaryTile
               label="Rows that do not add up"
-              value={String(metricsParse.inconsistent.length)}
+              value={num(metricsParse.inconsistent.length, 0)}
               tone={metricsParse.inconsistent.length > 0 ? 'warn' : 'neutral'}
             />
           </div>
@@ -884,7 +885,7 @@ export function ImportWizard({
               {metricsParse.inconsistent
                 .map(
                   (row) =>
-                    `${row.code} (says ${Math.round(row.recorded).toLocaleString()}, computes ${Math.round(row.expected).toLocaleString()})`,
+                    maskNumbers(`${row.code} (says ${Math.round(row.recorded).toLocaleString()}, computes ${Math.round(row.expected).toLocaleString()})`),
                 )
                 .join(', ')}
               .
@@ -892,7 +893,7 @@ export function ImportWizard({
           ) : (
             <div className="rounded-lg border border-line bg-surface-2 p-3 text-[11.5px] leading-relaxed text-ink-2">
               Every row adds up: requested less To Allan equals the Balance recorded, across all{' '}
-              {metricsParse.quotes.length} stays with add-ons. Your patong on them is{' '}
+              {num(metricsParse.quotes.length, 0)} stays with add-ons. Your patong on them is{' '}
               <span className="num text-ink">
                 {new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP', maximumFractionDigits: 0 }).format(
                   metricsParse.quotes.reduce((sum, quote) => sum + quote.margin, 0),
@@ -917,10 +918,10 @@ export function ImportWizard({
           <div className="grid gap-2 sm:grid-cols-3">
             <SummaryTile
               label="Real submissions"
-              value={String(addOnParse.quotes.length - addOnParse.excludedCount)}
+              value={num(addOnParse.quotes.length - addOnParse.excludedCount, 0)}
               tone="pos"
             />
-            <SummaryTile label="Flagged as tests" value={String(addOnParse.excludedCount)} tone="neutral" />
+            <SummaryTile label="Flagged as tests" value={num(addOnParse.excludedCount, 0)} tone="neutral" />
             <SummaryTile
               label="Margin recorded"
               value={new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP', maximumFractionDigits: 0 }).format(
@@ -943,11 +944,11 @@ export function ImportWizard({
               <tbody>
                 {addOnParse.quotes.map((quote) => (
                   <tr key={quote.id} className={cx('border-t border-line', quote.excluded && 'opacity-45')}>
-                    <td className="px-2.5 py-1.5 text-ink">{quote.guestName || '—'}</td>
+                    <td className="px-2.5 py-1.5 text-ink">{maskName(quote.guestName) || '—'}</td>
                     <td className="num px-2.5 py-1.5 text-ink-2">{quote.checkIn}</td>
-                    <td className="num px-2.5 py-1.5 text-ink-2">{quote.guestTotal.toLocaleString()}</td>
-                    <td className="num px-2.5 py-1.5 text-ink-2">{quote.allanCost.toLocaleString()}</td>
-                    <td className="num px-2.5 py-1.5 font-medium text-ink">{quote.margin.toLocaleString()}</td>
+                    <td className="num px-2.5 py-1.5 text-ink-2">{maskNumbers(quote.guestTotal.toLocaleString())}</td>
+                    <td className="num px-2.5 py-1.5 text-ink-2">{maskNumbers(quote.allanCost.toLocaleString())}</td>
+                    <td className="num px-2.5 py-1.5 font-medium text-ink">{maskNumbers(quote.margin.toLocaleString())}</td>
                     <td className="px-2.5 py-1.5 text-ink-3">{quote.excludedReason || 'counted'}</td>
                   </tr>
                 ))}
@@ -961,13 +962,13 @@ export function ImportWizard({
         <div className="space-y-3">
           {sectionPanel}
           <div className="grid gap-2 sm:grid-cols-3">
-            <SummaryTile label="Rows ready" value={String(preview.rows.length)} tone="pos" />
+            <SummaryTile label="Rows ready" value={num(preview.rows.length, 0)} tone="pos" />
             <SummaryTile
               label="Rows rejected"
-              value={String(preview.rejected.length)}
+              value={num(preview.rejected.length, 0)}
               tone={preview.rejected.length > 0 ? 'warn' : 'neutral'}
             />
-            <SummaryTile label="Source" value={`${sheet.name} · ${sheet.rows.length} rows`} tone="neutral" />
+            <SummaryTile label="Source" value={`${sheet.name} · ${num(sheet.rows.length, 0)} rows`} tone="neutral" />
           </div>
 
           {dataset === 'holdings' && snapshots.some((snapshot) => snapshot.asOf === asOf) ? (
@@ -995,7 +996,7 @@ export function ImportWizard({
           {preview.rejected.length > 0 ? (
             <div className="rounded-lg border border-warn/25 bg-warn/5 p-3">
               <p className="mb-1.5 text-[12px] font-medium text-warn">
-                {preview.rejected.length} row{preview.rejected.length === 1 ? '' : 's'} will be skipped
+                {num(preview.rejected.length, 0)} row{preview.rejected.length === 1 ? '' : 's'} will be skipped
               </p>
               <ul className="max-h-32 space-y-0.5 overflow-y-auto text-[11px] text-ink-2">
                 {preview.rejected.slice(0, 40).map((rejection: { rowNumber: number; reason: string }) => (
@@ -1045,7 +1046,7 @@ export function ImportWizard({
               {crosstab
                 ? `Preview ${crossPreview?.rows.length ?? 0} records`
                 : multi
-                  ? `Preview ${multiSheets.length} snapshots`
+                  ? `Preview ${num(multiSheets.length, 0)} snapshots`
                   : `Preview ${preview?.rows.length ?? 0} rows`}
             </Button>
           ) : null}
@@ -1064,19 +1065,19 @@ export function ImportWizard({
               disabled={busy || multiSheets.length === 0}
               onClick={() => void commitMulti()}
             >
-              {busy ? (progress ?? 'Importing…') : `Import ${multiSheets.length} snapshots`}
+              {busy ? (progress ?? 'Importing…') : `Import ${num(multiSheets.length, 0)} snapshots`}
             </Button>
           ) : null}
           {step === 'review' && known === 'airbnb' && airbnbParse ? (
             <Button variant="primary" disabled={busy} onClick={() => void commitKnown()}>
               {busy
                 ? 'Importing…'
-                : `Import ${airbnbParse.bookings.length} stays and ${airbnbParse.resolutions.length} resolutions`}
+                : `Import ${num(airbnbParse.bookings.length, 0)} stays and ${num(airbnbParse.resolutions.length, 0)} resolutions`}
             </Button>
           ) : null}
           {step === 'review' && known === 'metrics' && metricsParse ? (
             <Button variant="primary" disabled={busy} onClick={() => void commitKnown()}>
-              {busy ? 'Importing…' : `Update ${metricsParse.details.length} stays`}
+              {busy ? 'Importing…' : `Update ${num(metricsParse.details.length, 0)} stays`}
             </Button>
           ) : null}
           {step === 'review' && known === 'addons' && addOnParse ? (
@@ -1217,7 +1218,7 @@ function MappingStep({
     <div className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-[12px] text-ink-2">
-          Matched {Object.keys(mapping).length} of {fields.length} fields automatically. Correct anything that's wrong —
+          Matched {num(Object.keys(mapping).length, 0)} of {num(fields.length, 0)} fields automatically. Correct anything that's wrong —
           your mapping is saved with the import.
         </p>
         {hasDates ? (
@@ -1391,7 +1392,7 @@ function CrosstabStep({
       <div className="grid gap-3 sm:grid-cols-2">
         <Field label="Category column" hint="The column holding the name of each cost line.">
           <Select
-            value={String(labelColumn)}
+            value={num(labelColumn, 0)}
             onChange={(value) => setLabelColumn(Number(value))}
             options={sheet.headers.map((header, index) => ({ value: String(index), label: header }))}
           />
@@ -1411,12 +1412,12 @@ function CrosstabStep({
 
       <div>
         <p className="mb-1.5 text-[11px] uppercase tracking-wide text-ink-3">
-          {periods.length - excludedPeriods.length} of {periods.length} period column
+          {num(periods.length - excludedPeriods.length, 0)} of {num(periods.length, 0)} period column
           {periods.length === 1 ? '' : 's'} will be imported
         </p>
         {clashing.length > 0 ? (
           <div className="mb-2 rounded-lg border border-warn/30 bg-warn/5 px-3 py-2 text-[11.5px] leading-relaxed text-warn">
-            {clashing.length} month{clashing.length === 1 ? ' is' : 's are'} already covered by an earlier expense
+            {num(clashing.length, 0)} month{clashing.length === 1 ? ' is' : 's are'} already covered by an earlier expense
             import — a fiscal-year sheet overlaps the calendar years either side of it. Those columns are unticked, so
             the shared months aren't counted twice. Tick one back only if you meant to replace what's there.
           </div>

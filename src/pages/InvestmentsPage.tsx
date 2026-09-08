@@ -190,7 +190,7 @@ function HoldingsView({ positions }: { positions: PositionView[] }) {
         <Stat
           label="Portfolio value"
           value={money(value, 'PHP', true)}
-          sub={`${positions.length} positions`}
+          sub={`${num(positions.length, 0)} positions`}
           onTrace={() =>
             trace({
               title: 'Portfolio value',
@@ -211,7 +211,7 @@ function HoldingsView({ positions }: { positions: PositionView[] }) {
           value={cost > 0 ? money(cost, 'PHP', true) : '—'}
           sub={
             cost > 0
-              ? `${withCost.length} of ${positions.length} positions have cost data`
+              ? `${num(withCost.length, 0)} of ${num(positions.length, 0)} positions have cost data`
               : 'Not in the imported sheet'
           }
         />
@@ -271,7 +271,7 @@ function HoldingsView({ positions }: { positions: PositionView[] }) {
           onRowClick={(p) =>
             trace({
               title: maskNumbers(`${p.ticker} — ${p.name}`),
-              description: `${p.sources.length} source row${p.sources.length === 1 ? '' : 's'} roll${p.sources.length === 1 ? 's' : ''} into this position.`,
+              description: `${num(p.sources.length, 0)} source row${p.sources.length === 1 ? '' : 's'} roll${p.sources.length === 1 ? 's' : ''} into this position.`,
               rows: p.sources,
               columns: [
                 { key: 'ticker', label: 'Ticker' },
@@ -421,8 +421,8 @@ function PerformanceView({
     return (
       <div className="space-y-4">
         <StatGrid cols={2}>
-          <Stat label="Portfolio value" value={money(totalValue(positions), 'PHP', true)} sub={`${positions.length} positions`} />
-          <Stat label="Snapshots on file" value={String(snapshots.length)} sub="Two or more are needed for a return" />
+          <Stat label="Portfolio value" value={money(totalValue(positions), 'PHP', true)} sub={`${num(positions.length, 0)} positions`} />
+          <Stat label="Snapshots on file" value={num(snapshots.length, 0)} sub="Two or more are needed for a return" />
         </StatGrid>
         <EmptyState
           title="One snapshot isn't a return"
@@ -653,7 +653,7 @@ function AllocationView({ positions }: { positions: PositionView[] }) {
             ? 'no targets set'
             : offTarget.length === 0
               ? 'all buckets within band'
-              : `${offTarget.length} off target`}
+              : `${num(offTarget.length, 0)} off target`}
         </Pill>
       </div>
 
@@ -690,7 +690,7 @@ function AllocationView({ positions }: { positions: PositionView[] }) {
             <Tooltip
               {...TOOLTIP_STYLE}
               {...tooltipProps((value, name) => [
-                Number.isFinite(value) ? `${value.toFixed(1)}%` : '—',
+                Number.isFinite(value) ? `${num(value, 1)}%` : '—',
                 name === 'actual' ? 'Actual' : 'Target',
               ])}
             />
@@ -733,7 +733,7 @@ function AllocationView({ positions }: { positions: PositionView[] }) {
             const inBucket = positions.filter((p) => String(p[dimension] || 'Unspecified') === row.key)
             trace({
               title: `${row.key} — ${pct(row.actual)} of portfolio`,
-              description: `${inBucket.length} position${inBucket.length === 1 ? '' : 's'} make up this bucket.`,
+              description: `${num(inBucket.length, 0)} position${inBucket.length === 1 ? '' : 's'} make up this bucket.`,
               rows: inBucket.flatMap((p) => p.sources),
               columns: [
                 { key: 'ticker', label: 'Ticker' },
@@ -823,13 +823,13 @@ function RiskViewPanel({
         <Stat
           label="Effective positions"
           value={num(risk.effectivePositions, 1)}
-          sub={`${risk.positionCount} actual — the gap is how lopsided the weights are`}
+          sub={`${num(risk.positionCount, 0)} actual — the gap is how lopsided the weights are`}
           hint="1 / Herfindahl index. If ten positions behave like three, the other seven are rounding error."
         />
         <Stat
           label="Volatility (annualised)"
           value={Number.isFinite(vol) ? pct(vol) : '—'}
-          sub={Number.isFinite(vol) ? `From ${series.periods.length} snapshot periods` : 'Needs 3+ snapshots'}
+          sub={Number.isFinite(vol) ? `From ${num(series.periods.length, 0)} snapshot periods` : 'Needs 3+ snapshots'}
           tone="neutral"
         />
         <Stat
@@ -842,7 +842,7 @@ function RiskViewPanel({
 
       {snapshots.length < 3 ? (
         <div className="rounded-lg border border-line bg-surface-2 px-3 py-2 text-[12px] leading-relaxed text-ink-2">
-          Volatility and drawdown are computed from the gaps between snapshots. With {snapshots.length} snapshot
+          Volatility and drawdown are computed from the gaps between snapshots. With {num(snapshots.length, 0)} snapshot
           {snapshots.length === 1 ? '' : 's'} on file there isn't enough history for a meaningful number — they fill in
           as you import more. Monthly snapshots give a usable read after about a year.
         </div>
@@ -883,7 +883,7 @@ function RiskViewPanel({
               <Tooltip
                 {...TOOLTIP_STYLE}
                 {...tooltipProps(
-                  (value) => [`${value.toFixed(1)}%`, 'Drawdown'],
+                  (value) => [`${num(value, 1)}%`, 'Drawdown'],
                   (label) => shortDate(label),
                 )}
               />
@@ -950,7 +950,7 @@ function MovesView({ positions }: { positions: PositionView[] }) {
 
       <StatGrid cols={3}>
         <Stat label="Total drift" value={pct(totalDrift)} tone={totalDrift > settings.driftBandPct ? 'warn' : 'pos'} sub="Half the sum of absolute bucket drifts" />
-        <Stat label="Moves suggested" value={String(moves.length)} sub={moves.length === 0 ? 'Everything within band' : 'Ranked by score'} />
+        <Stat label="Moves suggested" value={num(moves.length, 0)} sub={moves.length === 0 ? 'Everything within band' : 'Ranked by score'} />
         <Stat label="Transaction cost assumed" value={pct(TRANSACTION_COST_RATE, 2)} sub="PH stock transaction tax on gross proceeds" />
       </StatGrid>
 
@@ -995,7 +995,7 @@ function MoveCard({ move, rank }: { move: Move; rank: number }) {
           <div className="num mt-0.5 text-[12px] text-ink-2">{money(move.amount, 'PHP', true)}</div>
         </div>
         <div className="shrink-0 text-right">
-          <div className="num text-[15px] font-semibold text-ink">{move.score.toFixed(2)}</div>
+          <div className="num text-[15px] font-semibold text-ink">{num(move.score, 2)}</div>
           <div className="text-[10px] uppercase tracking-wide text-ink-3">score</div>
         </div>
         <span className="shrink-0 text-[11px] text-ink-3">{open ? '▾' : '▸'}</span>
@@ -1020,7 +1020,7 @@ function MoveCard({ move, rank }: { move: Move; rank: number }) {
                     <span className="text-[10px] uppercase tracking-wide text-ink-3">{component.label}</span>
                     <span className="text-[10px] text-ink-3">×{component.weight}</span>
                   </div>
-                  <div className="num mt-1 text-[14px] font-semibold text-ink">{raw.toFixed(2)}</div>
+                  <div className="num mt-1 text-[14px] font-semibold text-ink">{num(raw, 2)}</div>
                   <div className="mt-1 h-1 overflow-hidden rounded-full bg-surface-3">
                     <div className="h-full rounded-full bg-accent/60" style={{ width: `${raw * 100}%` }} />
                   </div>

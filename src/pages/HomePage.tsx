@@ -14,7 +14,7 @@ import { Freshness } from '@/components/ui/Freshness'
 import { ChartFrame, tooltipProps } from '@/components/charts/Chart'
 import { AXIS, GRID, SERIES, TOOLTIP_STYLE } from '@/components/charts/theme'
 import { useProvenance } from '@/components/ui/Provenance'
-import { money, monthLabel, num, pct, shortDate, signedPct } from '@/lib/format'
+import { maskNumbers, money, monthLabel, num, pct, shortDate, signedPct } from '@/lib/format'
 
 export function HomePage() {
   const ledger = useLedger()
@@ -167,12 +167,12 @@ export function HomePage() {
           <span className="text-[14px] text-accent">✦</span>
           <div className="min-w-0 flex-1">
             <div className="text-[13px] font-semibold text-ink">
-              {openFindings.length} written finding{openFindings.length === 1 ? '' : 's'} outstanding
+              {num(openFindings.length, 0)} written finding{openFindings.length === 1 ? '' : 's'} outstanding
               {criticalFindings > 0 ? (
-                <span className="ml-1.5 font-normal text-neg">· {criticalFindings} to act on now</span>
+                <span className="ml-1.5 font-normal text-neg">· {num(criticalFindings, 0)} to act on now</span>
               ) : null}
             </div>
-            <p className="mt-0.5 truncate text-[12px] text-ink-2">{openFindings[0].title}</p>
+            <p className="mt-0.5 truncate text-[12px] text-ink-2">{maskNumbers(openFindings[0].title)}</p>
           </div>
           <span className="shrink-0 text-[11px] text-accent">Open analysis →</span>
         </Link>
@@ -210,7 +210,7 @@ export function HomePage() {
         <Stat
           label="Liquid investments"
           value={holdings.length > 0 ? money(liquid, 'PHP', true) : '—'}
-          sub={holdings.length > 0 ? `${positions.length} positions` : 'No holdings imported'}
+          sub={holdings.length > 0 ? `${num(positions.length, 0)} positions` : 'No holdings imported'}
         />
         <Stat
           label="Island T (DCF)"
@@ -364,7 +364,7 @@ export function HomePage() {
               label="Nights to cover fixed"
               value={
                 t12.adr - t12.variableCostPerNight > 0
-                  ? `${Math.ceil(t12.fixedCost / 4 / (t12.adr - t12.variableCostPerNight))} / qtr`
+                  ? `${num(Math.ceil(t12.fixedCost / 4 / (t12.adr - t12.variableCostPerNight)), 0)} / qtr`
                   : '—'
               }
             />
@@ -383,7 +383,7 @@ function AlertStrip({ actions }: { actions: ActionItem[] }) {
     <div className="space-y-2">
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-[11px] font-semibold uppercase tracking-widest text-ink-3">Needs your attention</h2>
-        {rest.length > 0 ? <span className="text-[11px] text-ink-3">+{rest.length} more below</span> : null}
+        {rest.length > 0 ? <span className="text-[11px] text-ink-3">+{num(rest.length, 0)} more below</span> : null}
       </div>
 
       <div className="grid gap-2 lg:grid-cols-3">

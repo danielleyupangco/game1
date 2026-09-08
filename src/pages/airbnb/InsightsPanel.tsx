@@ -8,7 +8,7 @@ import { DataTable } from '@/components/ui/DataTable'
 import { ChartFrame, Legend, tooltipProps } from '@/components/charts/Chart'
 import { AXIS, GRID, SERIES, STATUS, TOOLTIP_STYLE } from '@/components/charts/theme'
 import { FindingList } from '@/components/ui/FindingList'
-import { maskNumbers, money, num, pct, shortDate, signedPct } from '@/lib/format'
+import { maskName, maskNumbers, money, num, pct, shortDate, signedPct } from '@/lib/format'
 import { monthName } from '@/lib/dates'
 
 /**
@@ -52,7 +52,7 @@ export function InsightsPanel() {
         <StatGrid>
           <Stat
             label={`Nights ${latest.year} vs ${prior.year}`}
-            value={`${latest.nights} vs ${prior.nights}`}
+            value={`${num(latest.nights, 0)} vs ${num(prior.nights, 0)}`}
             tone={latest.nights >= prior.nights ? 'pos' : 'neg'}
             sub={signedPct(prior.nights > 0 ? latest.nights / prior.nights - 1 : Number.NaN)}
           />
@@ -70,10 +70,10 @@ export function InsightsPanel() {
           />
           <Stat
             label="Break-even"
-            value={Number.isFinite(costs.breakEvenNights) ? `${Math.ceil(costs.breakEvenNights)} nights` : '—'}
+            value={Number.isFinite(costs.breakEvenNights) ? `${num(Math.ceil(costs.breakEvenNights), 0)} nights` : '—'}
             sub={
               Number.isFinite(costs.breakEvenOccupancy)
-                ? `${pct(costs.breakEvenOccupancy, 0)} occupancy · you sold ${costs.latestNights}`
+                ? `${pct(costs.breakEvenOccupancy, 0)} occupancy · you sold ${num(costs.latestNights, 0)}`
                 : 'Needs cost data'
             }
             tone={costs.latestNights > costs.breakEvenNights ? 'pos' : 'warn'}
@@ -103,7 +103,7 @@ export function InsightsPanel() {
           pageSize={0}
           columns={[
             { key: 'year', header: 'Year', render: (r) => <span className="font-medium text-ink">{r.year}</span>, sortValue: (r) => r.year },
-            { key: 'nights', header: 'Nights', align: 'right', render: (r) => String(r.nights), sortValue: (r) => r.nights },
+            { key: 'nights', header: 'Nights', align: 'right', render: (r) => num(r.nights, 0), sortValue: (r) => r.nights },
             { key: 'occ', header: 'Occupancy', align: 'right', render: (r) => pct(r.occupancy, 1), sortValue: (r) => r.occupancy },
             { key: 'adr', header: 'ADR', align: 'right', render: (r) => money(r.adr, 'PHP'), sortValue: (r) => r.adr },
             { key: 'revpar', header: 'RevPAR', align: 'right', render: (r) => money(r.revpar, 'PHP'), sortValue: (r) => r.revpar },
@@ -152,7 +152,7 @@ export function InsightsPanel() {
               <Tooltip
                 {...TOOLTIP_STYLE}
                 {...tooltipProps((value, name) => [
-                  `${value} nights`,
+                  `${num(Number(value), 0)} nights`,
                   name === 'lastYear' ? pace.priorYear : pace.year,
                 ])}
               />
@@ -170,16 +170,16 @@ export function InsightsPanel() {
               const ahead = pace.rows.filter((row) => row.delta > 0)
               const worst = [...behind].sort((a, b) => a.delta - b.delta)[0]
               return [
-                { label: 'Months behind', value: String(behind.length), tone: behind.length > 6 ? 'neg' : 'warn' },
-                { label: 'Months ahead', value: String(ahead.length), tone: 'pos' },
+                { label: 'Months behind', value: num(behind.length, 0), tone: behind.length > 6 ? 'neg' : 'warn' },
+                { label: 'Months ahead', value: num(ahead.length, 0), tone: 'pos' },
                 {
                   label: 'Biggest shortfall',
-                  value: worst ? `${monthName(Number(worst.month))} ${worst.delta}` : '—',
+                  value: worst ? `${monthName(Number(worst.month))} ${num(worst.delta, 0)}` : '—',
                   tone: 'neg',
                 },
                 {
                   label: 'Net nights',
-                  value: String(pace.rows.reduce((sum, row) => sum + row.delta, 0)),
+                  value: num(pace.rows.reduce((sum, row) => sum + row.delta, 0), 0),
                   tone: pace.rows.reduce((sum, row) => sum + row.delta, 0) >= 0 ? 'pos' : 'neg',
                 },
               ].map((tile) => (
@@ -211,7 +211,7 @@ export function InsightsPanel() {
           ) : (
             <>
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                <MiniStat label="Median lead" value={`${Math.round(lead.median)} days`} />
+                <MiniStat label="Median lead" value={`${num(lead.median, 0)} days`} />
                 <MiniStat label="Within 2 weeks" value={pct(lead.lastMinuteShare, 0)} />
                 <MiniStat label="Over 90 days" value={pct(lead.farOutShare, 0)} />
               </div>
@@ -226,7 +226,7 @@ export function InsightsPanel() {
                       />
                     </div>
                     <span className="num w-24 shrink-0 text-right text-[11px] text-ink-3">
-                      {Math.round(row.median)}d · n={row.sample}
+                      {num(row.median, 0)}d · n={num(row.sample, 0)}
                     </span>
                   </div>
                 ))}
@@ -243,7 +243,7 @@ export function InsightsPanel() {
           <div className="grid grid-cols-2 gap-2">
             <MiniStat label="High-season RevPAR" value={money(season.highRevpar, 'PHP')} tone="pos" />
             <MiniStat label="Low-season RevPAR" value={money(season.lowRevpar, 'PHP')} />
-            <MiniStat label="High-season nights" value={String(season.highNights)} />
+            <MiniStat label="High-season nights" value={num(season.highNights, 0)} />
             <MiniStat
               label="A high night is worth"
               value={Number.isFinite(season.ratio) ? `${num(season.ratio, 1)}×` : '—'}
@@ -275,7 +275,7 @@ export function InsightsPanel() {
                     <div className="h-full rounded-full bg-accent/60" style={{ width: `${row.share * 100}%` }} />
                   </div>
                   <span className="num w-24 shrink-0 text-right text-[11px] text-ink-3">
-                    {row.bookings} · {pct(row.share, 0)}
+                    {num(row.bookings, 0)} · {pct(row.share, 0)}
                   </span>
                 </div>
               ))}
@@ -292,12 +292,12 @@ export function InsightsPanel() {
             <MiniStat label="Median nights" value={Number.isFinite(stays.medianNights) ? num(stays.medianNights, 1) : '—'} />
             <MiniStat label="Median party" value={Number.isFinite(stays.medianParty) ? num(stays.medianParty, 0) : '—'} />
             <MiniStat label="Revenue from 6+ guests" value={pct(stays.largePartyShare, 0)} tone={stays.largePartyShare > 0.5 ? 'pos' : 'neutral'} />
-            <MiniStat label="Repeat guests" value={String(stays.repeatGuests.length)} tone={stays.repeatGuests.length > 0 ? 'pos' : 'neutral'} />
+            <MiniStat label="Repeat guests" value={num(stays.repeatGuests.length, 0)} tone={stays.repeatGuests.length > 0 ? 'pos' : 'neutral'} />
           </div>
           {stays.nights.length > 0 ? (
             <ChartFrame title="" height={140}>
               <BarChart
-                data={stays.nights.map((row) => ({ label: `${row.nights}n`, bookings: row.bookings }))}
+                data={stays.nights.map((row) => ({ label: `${num(row.nights, 0)}n`, bookings: row.bookings }))}
                 margin={{ top: 12, right: 4, left: 0, bottom: 0 }}
               >
                 <CartesianGrid {...GRID} />
@@ -313,7 +313,7 @@ export function InsightsPanel() {
             <p className="mt-2 text-[11.5px] leading-relaxed text-ink-2">
               Returning:{' '}
               <span className="text-ink">
-                {stays.repeatGuests.slice(0, 4).map((guest) => `${guest.name} (${guest.stays})`).join(', ')}
+                {stays.repeatGuests.slice(0, 4).map((guest) => `${maskName(guest.name)} (${num(guest.stays, 0)})`).join(', ')}
               </span>
               . At this size a repeat guest is worth more than a rate rise.
             </p>
@@ -332,7 +332,7 @@ export function InsightsPanel() {
           <MiniStat label="Contribution / night" value={money(costs.contributionPerNight, 'PHP')} tone="pos" />
           <MiniStat
             label="Break-even"
-            value={Number.isFinite(costs.breakEvenNights) ? `${Math.ceil(costs.breakEvenNights)} nights` : '—'}
+            value={Number.isFinite(costs.breakEvenNights) ? `${num(Math.ceil(costs.breakEvenNights), 0)} nights` : '—'}
             tone="warn"
           />
         </div>
@@ -346,7 +346,7 @@ export function InsightsPanel() {
           subtitle="Judgements about this property, each with its evidence and one next step. Work them through here or on the Analysis tab — it's the same list."
           right={
             <Pill tone={islandFindings.some((f) => f.status === 'open' && f.severity === 'critical') ? 'neg' : 'warn'}>
-              {islandFindings.filter((f) => f.status === 'open' || f.status === 'doing').length} open
+              {num(islandFindings.filter((f) => f.status === 'open' || f.status === 'doing').length, 0)} open
             </Pill>
           }
         />
@@ -382,7 +382,7 @@ function MarketWatch({ report }: { report: import('@/types').MarketReport | null
         right={
           report.supplyCount !== null && report.supplyPrevious !== null ? (
             <Pill tone={report.supplyCount > report.supplyPrevious ? 'warn' : 'info'}>
-              {report.supplyPrevious} → {report.supplyCount} homes nearby
+              {num(report.supplyPrevious, 0)} → {num(report.supplyCount, 0)} homes nearby
             </Pill>
           ) : null
         }

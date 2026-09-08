@@ -30,7 +30,7 @@ import { Freshness } from '@/components/ui/Freshness'
 import { ChartFrame, Legend, tooltipProps } from '@/components/charts/Chart'
 import { AXIS, GRID, SERIES, TOOLTIP_STYLE } from '@/components/charts/theme'
 import { useProvenance, provFormats } from '@/components/ui/Provenance'
-import { money, monthLabel, pct, shortDate } from '@/lib/format'
+import { maskName, money, monthLabel, num, pct, shortDate } from '@/lib/format'
 import { monthName } from '@/lib/dates'
 import { exportTable, MONEY_FMT } from '@/lib/export'
 import { ValuationPanel } from '@/pages/airbnb/ValuationPanel'
@@ -176,7 +176,7 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
         <Stat
           label="Revenue (T12M)"
           value={money(t12.revenue, 'PHP', true)}
-          sub={`${t12.bookings} bookings · ${t12.nightsSold} nights sold`}
+          sub={`${num(t12.bookings, 0)} bookings · ${num(t12.nightsSold, 0)} nights sold`}
           onTrace={() =>
             trace({
               title: 'Trailing-12-month revenue',
@@ -197,7 +197,7 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
         <Stat
           label="Occupancy"
           value={pct(t12.occupancy)}
-          sub={`${t12.nightsSold} of ${t12.availableNights} available nights`}
+          sub={`${num(t12.nightsSold, 0)} of ${num(t12.availableNights, 0)} available nights`}
           tone={t12.occupancy < 0.3 ? 'warn' : 'neutral'}
         />
         <Stat
@@ -242,7 +242,7 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
               <YAxis {...AXIS} tickFormatter={(value: number) => pct(value / 100, 0)} width={40} domain={[0, 100]} />
               <Tooltip
                 {...TOOLTIP_STYLE}
-                {...tooltipProps((value) => [`${value.toFixed(1)}%`, 'Occupancy'], (label) => monthLabel(label))}
+                {...tooltipProps((value) => [`${num(value, 1)}%`, 'Occupancy'], (label) => monthLabel(label))}
               />
               <Line type="monotone" dataKey="occupancy" stroke={SERIES[2]} strokeWidth={2} dot={{ r: 2.5, strokeWidth: 0, fill: SERIES[2] }} />
             </LineChart>
@@ -271,7 +271,7 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
               <Tooltip
                 {...TOOLTIP_STYLE}
                 {...tooltipProps((value, name) =>
-                  name === 'occupancy' ? [`${value.toFixed(0)}%`, 'Occupancy'] : [money(value, 'PHP'), 'RevPAR'],
+                  name === 'occupancy' ? [`${num(value, 0)}%`, 'Occupancy'] : [money(value, 'PHP'), 'RevPAR'],
                 )}
               />
               <Bar dataKey="revpar" name="revpar" fill={SERIES[0]} radius={[4, 4, 0, 0]} maxBarSize={22} />
@@ -283,7 +283,7 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
               <div key={point.monthIndex} className="text-center" title={`${point.years} year(s) of data`}>
                 <div className="text-[9px] text-ink-3">{monthName(point.monthIndex)}</div>
                 <div className={cx('num text-[10px]', point.years === 0 ? 'text-ink-3' : 'text-ink-2')}>
-                  {point.years === 0 ? '—' : `${(point.occupancy * 100).toFixed(0)}%`}
+                  {point.years === 0 ? '—' : `${num(point.occupancy * 100, 0)}%`}
                 </div>
               </div>
             ))}
@@ -300,8 +300,8 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
             initialSort={{ key: 'revenue', dir: 'desc' }}
             columns={[
               { key: 'channel', header: 'Channel', render: (row) => <span className="font-medium text-ink">{row.channel}</span>, sortValue: (row) => row.channel },
-              { key: 'bookings', header: 'Bookings', align: 'right', render: (row) => String(row.bookings), sortValue: (row) => row.bookings },
-              { key: 'nights', header: 'Nights', align: 'right', hideOnMobile: true, render: (row) => String(row.nights), sortValue: (row) => row.nights },
+              { key: 'bookings', header: 'Bookings', align: 'right', render: (row) => num(row.bookings, 0), sortValue: (row) => row.bookings },
+              { key: 'nights', header: 'Nights', align: 'right', hideOnMobile: true, render: (row) => num(row.nights, 0), sortValue: (row) => row.nights },
               { key: 'adr', header: 'ADR', align: 'right', render: (row) => money(row.adr, 'PHP'), sortValue: (row) => row.adr },
               { key: 'revenue', header: 'Revenue', align: 'right', render: (row) => money(row.revenue, 'PHP', true), sortValue: (row) => row.revenue },
               { key: 'share', header: 'Share', align: 'right', render: (row) => pct(row.share), sortValue: (row) => row.share },
@@ -321,7 +321,7 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
                   bookings,
                   [
                     { header: 'Code', value: (b) => b.confirmationCode },
-                    { header: 'Guest', value: (b) => b.guestName },
+                    { header: 'Guest', value: (b) => maskName(b.guestName) },
                     { header: 'Channel', value: (b) => b.channel },
                     { header: 'Check-in', value: (b) => b.checkIn },
                     { header: 'Check-out', value: (b) => b.checkOut },
@@ -349,11 +349,11 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
           initialSort={{ key: 'checkIn', dir: 'desc' }}
           onRowClick={(b) =>
             trace({
-              title: `${b.confirmationCode} — ${b.nights} nights`,
+              title: `${b.confirmationCode} — ${num(b.nights, 0)} nights`,
               description: `Imported from ${b.prov.fileName}, sheet "${b.prov.sheetName}", row ${b.prov.rowNumber}.`,
               rows: [b],
               columns: [
-                { key: 'guestName', label: 'Guest' },
+                { key: 'guestName', label: 'Guest', format: (value) => maskName(String(value ?? '')) },
                 { key: 'checkIn', label: 'In', format: provFormats.date },
                 { key: 'checkOut', label: 'Out', format: provFormats.date },
                 { key: 'nights', label: 'Nights' },
@@ -370,12 +370,12 @@ function RevenueView({ series }: { series: MonthMetrics[] }) {
               render: (b) => (
                 <div>
                   <div className={cx('text-ink', !isActive(b) && 'line-through opacity-50')}>{shortDate(b.checkIn)}</div>
-                  <div className="text-[11px] text-ink-3">{b.nights} nights · {b.guests} guests</div>
+                  <div className="text-[11px] text-ink-3">{num(b.nights, 0)} nights · {num(b.guests, 0)} guests</div>
                 </div>
               ),
               sortValue: (b) => b.checkIn,
             },
-            { key: 'guest', header: 'Guest', hideOnMobile: true, render: (b) => <span className="text-ink-2">{b.guestName || '—'}</span>, sortValue: (b) => b.guestName },
+            { key: 'guest', header: 'Guest', hideOnMobile: true, render: (b) => <span className="text-ink-2">{maskName(b.guestName) || '—'}</span>, sortValue: (b) => maskName(b.guestName) },
             { key: 'channel', header: 'Channel', hideOnMobile: true, render: (b) => <Pill>{b.channel}</Pill>, sortValue: (b) => b.channel },
             { key: 'adr', header: 'ADR', align: 'right', hideOnMobile: true, render: (b) => money(b.netRevenue / Math.max(1, b.nights), b.currency), sortValue: (b) => b.netRevenue / Math.max(1, b.nights) },
             {
@@ -450,7 +450,7 @@ function CostView({ series }: { series: MonthMetrics[] }) {
         <Stat
           label="Cost per booking"
           value={t12.bookings > 0 ? money(t12.costPerBooking, 'PHP') : '—'}
-          sub={t12.bookings > 0 ? `${t12.bookings} bookings in the window` : 'Needs booking data'}
+          sub={t12.bookings > 0 ? `${num(t12.bookings, 0)} bookings in the window` : 'Needs booking data'}
         />
         <Stat
           label="Cost per available night"
@@ -472,7 +472,7 @@ function CostView({ series }: { series: MonthMetrics[] }) {
         {money(t12.fixedCost, 'PHP', true)} a year — so the property needs{' '}
         <span className="num text-ink">
           {t12.adr - t12.variableCostPerNight > 0
-            ? Math.ceil(t12.fixedCost / (t12.adr - t12.variableCostPerNight))
+            ? num(Math.ceil(t12.fixedCost / (t12.adr - t12.variableCostPerNight)), 0)
             : '∞'}
         </span>{' '}
         nights a year to break even
@@ -551,8 +551,8 @@ function CostList({
               title: line.category,
               description:
                 line.category === 'Depreciation'
-                  ? `Worked out from ${line.sources.length} capital purchase${line.sources.length === 1 ? '' : 's'}, each written off over the years it should last.`
-                  : `${line.sources.length} expense row${line.sources.length === 1 ? '' : 's'} in this category.`,
+                  ? `Worked out from ${num(line.sources.length, 0)} capital purchase${line.sources.length === 1 ? '' : 's'}, each written off over the years it should last.`
+                  : `${num(line.sources.length, 0)} expense row${line.sources.length === 1 ? '' : 's'} in this category.`,
               rows: line.sources,
               columns: [
                 { key: 'date', label: 'Date', format: provFormats.date },

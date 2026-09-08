@@ -117,11 +117,11 @@ export function CompetitorsPanel({ series }: { series: MonthMetrics[] }) {
             { value: 'brief', label: 'The brief' },
             {
               value: 'operators',
-              label: `Who you compete with (${operators.filter((o) => !o.isMine && o.listings.length > 1).length || operators.filter((o) => !o.isMine).length})`,
+              label: `Who you compete with (${num(operators.filter((o) => !o.isMine && o.listings.length > 1).length || operators.filter((o) => !o.isMine).length, 0)})`,
             },
             { value: 'rates', label: 'Rates' },
             { value: 'addons', label: 'Add-on prices' },
-            { value: 'watchlist', label: `Watchlist (${snapshots.length})` },
+            { value: 'watchlist', label: `Watchlist (${num(snapshots.length, 0)})` },
           ]}
         />
       </div>
@@ -344,9 +344,9 @@ function ReportBar({
       await onImport(parsed)
       const fresh = parsed.listings.filter((listing) => !known.some((row) => row.id === listing.id)).length
       setResult(
-        `${parsed.observations.length} rates, ${parsed.listings.length} listings (${fresh} new to the watchlist)` +
-          `${parsed.benchmarks.length > 0 ? `, ${parsed.benchmarks.length} add-on prices` : ''}` +
-          `${parsed.skipped.length > 0 ? ` · ${parsed.skipped.length} row(s) skipped` : ''}`,
+        `${num(parsed.observations.length, 0)} rates, ${num(parsed.listings.length, 0)} listings (${num(fresh, 0)} new to the watchlist)` +
+          `${parsed.benchmarks.length > 0 ? `, ${num(parsed.benchmarks.length, 0)} add-on prices` : ''}` +
+          `${parsed.skipped.length > 0 ? ` · ${num(parsed.skipped.length, 0)} row(s) skipped` : ''}`,
       )
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'That file could not be read.')
@@ -367,9 +367,9 @@ function ReportBar({
               <>
                 Rates captured {shortDate(report.reportedOn)}
                 {report.quotedFor
-                  ? ` for a ${report.nights}-night stay from ${shortDate(report.quotedFor)}, ${report.guests} guests`
+                  ? ` for a ${num(report.nights, 0)}-night stay from ${shortDate(report.quotedFor)}, ${num(report.guests, 0)} guests`
                   : ''}
-                . {reports.length} report{reports.length === 1 ? '' : 's'} on file — each one adds a point to every rate
+                . {num(reports.length, 0)} report{reports.length === 1 ? '' : 's'} on file — each one adds a point to every rate
                 line, which is what turns a price into a trend.
               </>
             ) : (
@@ -454,7 +454,7 @@ function ReportBrief({
           }
           sub={
             ladder.gapBelow !== null && ladder.gapAbove !== null
-              ? `${ladder.gapBelow.toFixed(1)}× the rung below, ${ladder.gapAbove.toFixed(1)}× under the one above`
+              ? `${num(ladder.gapBelow, 1)}× the rung below, ${num(ladder.gapAbove, 1)}× under the one above`
               : 'Empty until rates are observed'
           }
           hint="The gap either side is the point: you are not competing with the homes below or the boats above, which is why a market median says nothing useful about your price."
@@ -591,12 +591,12 @@ function Operators({ operators, myRate }: { operators: Operator[]; myRate: numbe
               <h4 className="text-[13px] font-semibold text-ink">{operator.name}</h4>
               {operator.isMine ? <Pill tone="info">You</Pill> : null}
               {operator.listings.length > 1 ? (
-                <Pill tone="warn">{operator.listings.length} listings</Pill>
+                <Pill tone="warn">{num(operator.listings.length, 0)} listings</Pill>
               ) : null}
             </div>
             <span className="text-[11.5px] text-ink-3">
               {operator.reviews > 0 ? `${num(operator.reviews, 0)} reviews` : 'no reviews recorded'}
-              {operator.bestRating > 0 ? ` · best ${operator.bestRating.toFixed(2)}★` : ''}
+              {operator.bestRating > 0 ? ` · best ${num(operator.bestRating, 2)}★` : ''}
             </span>
           </div>
 
@@ -613,7 +613,7 @@ function Operators({ operators, myRate }: { operators: Operator[]; myRate: numbe
             />
             <Cell
               label="Span"
-              value={operator.span !== null && operator.span > 1 ? `${operator.span.toFixed(1)}× top to bottom` : '—'}
+              value={operator.span !== null && operator.span > 1 ? `${num(operator.span, 1)}× top to bottom` : '—'}
             />
             <Cell
               label={operator.isMine ? 'Your rate' : 'Reaches'}
@@ -665,7 +665,7 @@ function Operators({ operators, myRate }: { operators: Operator[]; myRate: numbe
       {singles.length > 0 ? (
         <Card>
           <SectionHeader
-            title={`And ${singles.length} single listing${singles.length === 1 ? '' : 's'}`}
+            title={`And ${num(singles.length, 0)} single listing${singles.length === 1 ? '' : 's'}`}
             subtitle="One listing each, so far as any report has said. Worth watching for the moment one of these becomes two — that is how a portfolio starts, and it is how the report spotted David."
           />
           <div className="mt-1 overflow-x-auto rounded-xl border border-line">
@@ -750,7 +750,7 @@ function PriceLadderCard({ ladder }: { ladder: ReturnType<typeof priceLadder> })
       </div>
       {ladder.gapBelow !== null && ladder.gapAbove !== null ? (
         <p className="mt-3 text-[11.5px] leading-relaxed text-ink-3">
-          You are {ladder.gapBelow.toFixed(1)}× the rung below you and {ladder.gapAbove.toFixed(1)}× below the one above.
+          You are {num(ladder.gapBelow, 1)}× the rung below you and {num(ladder.gapAbove, 1)}× below the one above.
           Both gaps are large, which is the argument for holding the rate: there is nobody to be undercut by and nobody
           to undercut. The risk in a lane this empty is under-pricing it, not over-pricing it.
         </p>

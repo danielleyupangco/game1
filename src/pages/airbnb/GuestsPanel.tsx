@@ -15,7 +15,7 @@ import { DataTable, type Column } from '@/components/ui/DataTable'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { QuickAdd } from '@/components/entry/QuickAdd'
 import { useProvenance } from '@/components/ui/Provenance'
-import { money, num, pct, shortDate } from '@/lib/format'
+import { maskName, money, num, pct, shortDate } from '@/lib/format'
 import { today } from '@/lib/dates'
 
 type View = 'upcoming' | 'now' | 'past' | 'everyone' | 'repeat'
@@ -100,7 +100,7 @@ export function GuestsPanel() {
       render: (stay) => (
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="truncate font-medium text-ink">{stay.guestName.trim() || '—'}</span>
+            <span className="truncate font-medium text-ink">{maskName(stay.guestName.trim()) || '—'}</span>
             {repeatKeys.has(stay.id) ? (
               <Pill tone="accent" title="This guest has stayed with you before">
                 repeat
@@ -113,11 +113,11 @@ export function GuestsPanel() {
           {/* On a phone the money columns scroll out of view, so the figure that
               matters most rides along with the name. */}
           <div className="num mt-0.5 text-[11px] text-ink-2 sm:hidden">
-            {stay.nights} night{stay.nights === 1 ? '' : 's'} · {money(stay.roomValue, stay.currency, true)}
+            {num(stay.nights, 0)} night{stay.nights === 1 ? '' : 's'} · {money(stay.roomValue, stay.currency, true)}
           </div>
         </div>
       ),
-      sortValue: (stay) => stay.guestName.toLowerCase(),
+      sortValue: (stay) => maskName(stay.guestName).toLowerCase(),
     },
     {
       key: 'dates',
@@ -137,7 +137,7 @@ export function GuestsPanel() {
       header: 'Nights',
       align: 'right',
       hideOnMobile: true,
-      render: (stay) => <span className="num">{stay.nights}</span>,
+      render: (stay) => <span className="num">{num(stay.nights, 0)}</span>,
       sortValue: (stay) => stay.nights,
     },
     {
@@ -145,7 +145,7 @@ export function GuestsPanel() {
       header: 'Party',
       align: 'right',
       hideOnMobile: true,
-      render: (stay) => <span className="num">{stay.guests || '—'}</span>,
+      render: (stay) => <span className="num">{stay.guests > 0 ? num(stay.guests, 0) : '—'}</span>,
       sortValue: (stay) => stay.guests,
     },
     {
@@ -161,7 +161,7 @@ export function GuestsPanel() {
       header: 'Booked ahead',
       align: 'right',
       hideOnMobile: true,
-      render: (stay) => (stay.leadTime >= 0 ? <span className="num">{stay.leadTime}d</span> : <span className="text-ink-3">—</span>),
+      render: (stay) => (stay.leadTime >= 0 ? <span className="num">{num(stay.leadTime, 0)}d</span> : <span className="text-ink-3">—</span>),
       sortValue: (stay) => stay.leadTime,
     },
   ]
@@ -197,7 +197,7 @@ export function GuestsPanel() {
               description: 'Every booking that has already checked out. Refund and correction rows are excluded.',
               rows: stays.filter((stay) => stay.segment === 'past'),
               columns: [
-                { key: 'guestName', label: 'Guest' },
+                { key: 'guestName', label: 'Guest', format: (value) => maskName(String(value ?? '')) },
                 { key: 'checkIn', label: 'Check-in' },
                 { key: 'nights', label: 'Nights' },
                 { key: 'netRevenue', label: 'Room' },
@@ -207,7 +207,7 @@ export function GuestsPanel() {
         />
         <Stat
           label="On the island now"
-          value={book.here.length > 0 ? `${book.here.length} booking${book.here.length === 1 ? '' : 's'}` : 'Empty'}
+          value={book.here.length > 0 ? `${num(book.here.length, 0)} booking${book.here.length === 1 ? '' : 's'}` : 'Empty'}
           tone={book.here.length > 0 ? 'pos' : 'neutral'}
           sub={
             book.here.length > 0
@@ -233,7 +233,7 @@ export function GuestsPanel() {
       {needsDetail.length > 0 ? (
         <Card>
           <SectionHeader
-            title={`${needsDetail.length} stay${needsDetail.length === 1 ? '' : 's'} still missing details`}
+            title={`${num(needsDetail.length, 0)} stay${needsDetail.length === 1 ? '' : 's'} still missing details`}
             subtitle="Party size, country and the review only exist in your Airbnb inbox — the payout export does not carry them. Until they are filled in, the averages built on them are thinner than they look. Click one to add what you have."
           />
           <div className="flex flex-wrap gap-1.5">
@@ -245,7 +245,7 @@ export function GuestsPanel() {
                 className="rounded-md border border-line bg-surface-2 px-2 py-1 text-left text-[11px] transition-colors hover:bg-surface-3"
                 title={`Missing ${missing.join(', ')}`}
               >
-                <span className="text-ink">{stay.guestName.trim() || stay.confirmationCode}</span>
+                <span className="text-ink">{maskName(stay.guestName.trim()) || stay.confirmationCode}</span>
                 <span className="ml-1.5 text-ink-3">{missing.join(' · ')}</span>
               </button>
             ))}
@@ -283,11 +283,11 @@ export function GuestsPanel() {
             value={view}
             onChange={setView}
             options={[
-              { value: 'upcoming', label: `Upcoming (${stays.filter((s) => s.segment === 'upcoming').length})` },
-              { value: 'now', label: `Here now (${book.here.length})` },
-              { value: 'past', label: `Past (${book.hosted})` },
+              { value: 'upcoming', label: `Upcoming (${num(stays.filter((s) => s.segment === 'upcoming').length, 0)})` },
+              { value: 'now', label: `Here now (${num(book.here.length, 0)})` },
+              { value: 'past', label: `Past (${num(book.hosted, 0)})` },
               { value: 'everyone', label: 'Everyone' },
-              { value: 'repeat', label: `Repeat (${book.repeatGuests.length})` },
+              { value: 'repeat', label: `Repeat (${num(book.repeatGuests.length, 0)})` },
             ]}
           />
           {view !== 'repeat' ? (
@@ -343,7 +343,7 @@ export function GuestsPanel() {
           <Stat
             label="Repeat rate"
             value={pct(book.repeatShare, 0)}
-            sub={`${book.repeatGuests.length} guest${book.repeatGuests.length === 1 ? '' : 's'} came back`}
+            sub={`${num(book.repeatGuests.length, 0)} guest${book.repeatGuests.length === 1 ? '' : 's'} came back`}
             tone={book.repeatShare > 0.15 ? 'pos' : 'neutral'}
             hint="Share of named stays that came from someone who had stayed before. Only names can be matched, so treat it as a floor."
           />
@@ -406,19 +406,19 @@ function RepeatList({
           <Card key={profile.key}>
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <h3 className="truncate text-[13px] font-semibold text-ink">{profile.name}</h3>
+                <h3 className="truncate text-[13px] font-semibold text-ink">{maskName(profile.name)}</h3>
                 <p className="mt-0.5 text-[11px] text-ink-3">
                   {profile.countries.join(', ') || 'Country not recorded'} · {profile.channels.join(', ')}
                 </p>
               </div>
-              <Pill tone="accent">{profile.stays.length} stays</Pill>
+              <Pill tone="accent">{num(profile.stays.length, 0)} stays</Pill>
             </div>
             <div className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1 text-[12px]">
               <span className="text-ink-2">
                 Lifetime <span className="num font-medium text-ink">{money(profile.roomValue, 'PHP', true)}</span>
               </span>
               <span className="text-ink-2">
-                <span className="num text-ink">{profile.nights}</span> nights
+                <span className="num text-ink">{num(profile.nights, 0)}</span> nights
               </span>
               <span className="text-ink-2">
                 Last <span className="num text-ink">{shortDate(profile.lastStay)}</span>
@@ -518,9 +518,9 @@ function StayDrawer({
       <div className="animate-in relative w-full max-w-xl rounded-xl border border-line bg-bg shadow-2xl">
         <header className="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-line bg-bg px-4 py-3">
           <div className="min-w-0">
-            <h2 className="truncate text-[14px] font-semibold text-ink">{stay.guestName.trim() || 'Unnamed booking'}</h2>
+            <h2 className="truncate text-[14px] font-semibold text-ink">{maskName(stay.guestName.trim()) || 'Unnamed booking'}</h2>
             <p className="mt-0.5 text-[11.5px] text-ink-2">
-              {shortDate(stay.checkIn)} → {shortDate(stay.checkOut)} · {stay.nights} night
+              {shortDate(stay.checkIn)} → {shortDate(stay.checkOut)} · {num(stay.nights, 0)} night
               {stay.nights === 1 ? '' : 's'} · {whenLabel(stay)}
             </p>
           </div>
@@ -536,7 +536,7 @@ function StayDrawer({
             </Pill>
             {stay.channel ? <Pill>{stay.channel}</Pill> : null}
             {stay.status ? <Pill>{stay.status}</Pill> : null}
-            {profile && profile.repeat ? <Pill tone="accent">{profile.stays.length} stays with you</Pill> : null}
+            {profile && profile.repeat ? <Pill tone="accent">{num(profile.stays.length, 0)} stays with you</Pill> : null}
             {stay.prov.manual ? (
               <Pill
                 tone="warn"
@@ -553,7 +553,7 @@ function StayDrawer({
 
           <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5 sm:grid-cols-3">
             <Detail label="Booked on" value={stay.bookedOn ? shortDate(stay.bookedOn) : '—'} />
-            <Detail label="Booked ahead" value={stay.leadTime >= 0 ? `${stay.leadTime} days` : '—'} />
+            <Detail label="Booked ahead" value={stay.leadTime >= 0 ? `${num(stay.leadTime, 0)} days` : '—'} />
             <Detail label="Confirmation" value={stay.confirmationCode || '—'} />
           </dl>
 

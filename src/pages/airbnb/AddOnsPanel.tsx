@@ -8,7 +8,7 @@ import { DataTable, type Column } from '@/components/ui/DataTable'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ChartFrame, Legend, tooltipProps } from '@/components/charts/Chart'
 import { AXIS, GRID, SERIES, TOOLTIP_STYLE } from '@/components/charts/theme'
-import { money, monthLabel, num, pct, shortDate } from '@/lib/format'
+import { maskName, money, monthLabel, num, pct, shortDate } from '@/lib/format'
 
 /**
  * Food, boats and tours — the whole of it, in one place.
@@ -52,7 +52,7 @@ export function AddOnsPanel() {
       render: (row) => (
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="truncate font-medium text-ink">{row.guestName}</span>
+            <span className="truncate font-medium text-ink">{maskName(row.guestName)}</span>
             {row.source === 'sheet' ? (
               <Pill tone="warn" title="From the old spreadsheet, which recorded one number without saying whose it was — not counted in any total">
                 unverified
@@ -60,7 +60,7 @@ export function AddOnsPanel() {
             ) : null}
           </div>
           <div className="mt-0.5 text-[11px] text-ink-3">
-            {shortDate(row.checkIn)} · {row.nights} night{row.nights === 1 ? '' : 's'}
+            {shortDate(row.checkIn)} · {num(row.nights, 0)} night{row.nights === 1 ? '' : 's'}
           </div>
         </div>
       ),
@@ -196,7 +196,7 @@ export function AddOnsPanel() {
       {summary.incomplete.length > 0 ? (
         <Card className="border-warn/25 bg-warn/[0.04]">
           <SectionHeader
-            title={`${summary.incomplete.length} stay${summary.incomplete.length === 1 ? '' : 's'} with a figure that cannot be trusted`}
+            title={`${num(summary.incomplete.length, 0)} stay${summary.incomplete.length === 1 ? '' : 's'} with a figure that cannot be trusted`}
             subtitle="Either one side of the trade was never recorded, or the patong came out negative — which usually means the sheet captured Allan's cost but not what the guest was charged. The Airbnb column is what actually moved, so the difference is the arithmetic."
           />
           <div className="space-y-1.5">
@@ -207,7 +207,7 @@ export function AddOnsPanel() {
                 onClick={() => setFixing(row.id)}
                 className="block w-full rounded-md border border-warn/30 bg-warn/10 px-2.5 py-1.5 text-left text-[11.5px] transition-colors hover:bg-warn/20"
               >
-                <span className="font-medium text-warn">{row.guestName}</span>
+                <span className="font-medium text-warn">{maskName(row.guestName)}</span>
                 <span className="ml-2 text-ink-2">
                   patong reads <span className="num">{money(row.patong, row.currency, true)}</span>
                   {row.throughAirbnb > 0 ? (
@@ -256,7 +256,7 @@ export function AddOnsPanel() {
             title="Stay by stay"
             subtitle={
               summary.unverifiedStays > 0
-                ? `${summary.unverifiedStays} of these came from the old spreadsheet, which recorded one number without saying whose it was — so the guest and crew columns are blank and the figure is not in any total above. Rows from the form have all three.`
+                ? `${num(summary.unverifiedStays, 0)} of these came from the old spreadsheet, which recorded one number without saying whose it was — so the guest and crew columns are blank and the figure is not in any total above. Rows from the form have all three.`
                 : 'Every row from a guest form submission, so all three numbers are known.'
             }
           />
@@ -273,14 +273,14 @@ export function AddOnsPanel() {
       {excluded.length > 0 ? (
         <Card>
           <SectionHeader
-            title={`${excluded.length} submission${excluded.length === 1 ? '' : 's'} flagged as tests`}
+            title={`${num(excluded.length, 0)} submission${excluded.length === 1 ? '' : 's'} flagged as tests`}
             subtitle="Kept rather than deleted, so a wrong call is visible and reversible. Restore one and its margin lands on the matching stay."
           />
           <div className="space-y-1.5">
             {excluded.map((quote) => (
               <div key={quote.id} className="flex flex-wrap items-center justify-between gap-2 text-[11.5px]">
                 <span className="text-ink-2">
-                  <span className="text-ink">{quote.guestName || '(no name)'}</span> · {shortDate(quote.checkIn)} ·{' '}
+                  <span className="text-ink">{maskName(quote.guestName) || '(no name)'}</span> · {shortDate(quote.checkIn)} ·{' '}
                   {money(quote.guestTotal, quote.currency, true)}
                   <span className="ml-1.5 text-ink-3">— {quote.excludedReason}</span>
                 </span>
@@ -361,9 +361,9 @@ function FixPatong({
     <div className="no-print fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 sm:items-center">
       <button type="button" aria-label="Close" onClick={onClose} className="fixed inset-0 bg-black/60 backdrop-blur-[2px]" />
       <div className="animate-in relative w-full max-w-md rounded-xl border border-line bg-bg p-4 shadow-2xl">
-        <h2 className="text-[14px] font-semibold text-ink">{row.guestName}</h2>
+        <h2 className="text-[14px] font-semibold text-ink">{maskName(row.guestName)}</h2>
         <p className="mt-0.5 text-[11.5px] text-ink-2">
-          {shortDate(row.checkIn)} · {row.nights} night{row.nights === 1 ? '' : 's'}
+          {shortDate(row.checkIn)} · {num(row.nights, 0)} night{row.nights === 1 ? '' : 's'}
         </p>
 
         {row.throughAirbnb > 0 ? (

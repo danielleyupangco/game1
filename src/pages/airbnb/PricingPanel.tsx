@@ -78,8 +78,8 @@ export function PricingPanel({ series }: { series: MonthMetrics[] }) {
           tone={headline.annualUplift > 0 ? 'pos' : 'neutral'}
           sub={`${signedPct(headline.annualUpliftPct)} if every suggestion were adopted`}
         />
-        <Stat label="Raise" value={String(headline.raiseCount)} sub="months where a higher rate wins" />
-        <Stat label="Cut" value={String(headline.cutCount)} sub="months where filling nights wins" />
+        <Stat label="Raise" value={num(headline.raiseCount, 0)} sub="months where a higher rate wins" />
+        <Stat label="Cut" value={num(headline.cutCount, 0)} sub="months where filling nights wins" />
         <Stat
           label="Biggest single move"
           value={headline.strongest ? `${headline.strongest.label} ${signedPct(headline.strongest.rateChange, 0)}` : '—'}
@@ -205,7 +205,7 @@ export function PricingPanel({ series }: { series: MonthMetrics[] }) {
                 <div className="flex items-center gap-1">
                   <Pill tone={suggestion.season === 'high' ? 'accent' : 'neutral'}>{suggestion.season}</Pill>
                   <Pill tone={suggestion.confidence === 'high' ? 'pos' : suggestion.confidence === 'medium' ? 'warn' : 'neg'}>
-                    {suggestion.observations === 0 ? 'no data' : `${suggestion.observations}y`}
+                    {suggestion.observations === 0 ? 'no data' : `${num(suggestion.observations, 0)}y`}
                   </Pill>
                 </div>
               </div>
@@ -268,9 +268,9 @@ export function PricingPanel({ series }: { series: MonthMetrics[] }) {
                   />
                 </div>
                 <div className="mt-1 text-[10.5px] text-ink-2">{day.label}</div>
-                <div className="num text-[10px] text-ink-3">{day.nights}</div>
+                <div className="num text-[10px] text-ink-3">{num(day.nights, 0)}</div>
                 {day.suggestedUplift > 0 ? (
-                  <div className="num text-[10px] text-pos">+{(day.suggestedUplift * 100).toFixed(0)}%</div>
+                  <div className="num text-[10px] text-pos">+{num(day.suggestedUplift * 100, 0)}%</div>
                 ) : null}
               </div>
             )
@@ -308,7 +308,7 @@ function CurveDetail({ suggestion }: { suggestion: MonthSuggestion }) {
               {...TOOLTIP_STYLE}
               {...tooltipProps(
                 (value) => [money(value, 'PHP'), 'RevPAR'],
-                (label) => `Rate ${Number(label) > 0 ? '+' : ''}${Number(label).toFixed(0)}%`,
+                (label) => `Rate ${Number(label) > 0 ? '+' : ''}${num(Number(label), 0)}%`,
               )}
             />
             <ReferenceLine x={0} stroke={STATUS.neutral} strokeDasharray="3 3" />

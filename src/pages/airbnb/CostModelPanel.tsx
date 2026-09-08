@@ -111,11 +111,11 @@ export function CostModelPanel() {
         />
         <Stat
           label="Nights to break even"
-          value={Number.isFinite(breakEvenNights) ? `${Math.ceil(breakEvenNights)}` : '—'}
+          value={Number.isFinite(breakEvenNights) ? `${num(Math.ceil(breakEvenNights), 0)}` : '—'}
           tone={actual && actual.nightsSold > breakEvenNights ? 'pos' : 'warn'}
           sub={
             Number.isFinite(breakEvenNights)
-              ? `${pct(breakEvenNights / costModel.availableNightsPerYear, 0)} full${actual ? ` · you sold ${actual.nightsSold}` : ''}`
+              ? `${pct(breakEvenNights / costModel.availableNightsPerYear, 0)} full${actual ? ` · you sold ${num(actual.nightsSold, 0)}` : ''}`
               : 'Rate is below variable cost'
           }
         />
@@ -236,7 +236,7 @@ export function CostModelPanel() {
                         <span className="ml-1.5 num text-[10.5px] text-ink-2">{pct(scenario.occupancy, 0)}</span>
                       ) : null}
                     </td>
-                    <td className="num px-2.5 py-2 text-right text-ink-2">{scenario.nights}</td>
+                    <td className="num px-2.5 py-2 text-right text-ink-2">{num(scenario.nights, 0)}</td>
                     <td className="num px-2.5 py-2 text-right text-ink-2">{money(scenario.fixedPerNight, 'PHP')}</td>
                     <td className="num px-2.5 py-2 text-right text-ink">{money(scenario.breakEvenRate, 'PHP')}</td>
                     <td className="num px-2.5 py-2 text-right font-medium text-warn">

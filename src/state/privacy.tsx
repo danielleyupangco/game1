@@ -16,15 +16,28 @@ import { setPrivateMode } from '@/lib/format'
  * The choice is remembered per browser, so leaving it on and handing over a
  * laptop does what you expect. It is deliberately not stored with the data —
  * this is about who is looking at the screen, not about the ledger.
+ *
+ * A build made with `DEMO=1` goes further: it starts masked and has no switch
+ * at all. That is the copy you hand to someone else, where the risk is not
+ * forgetting to turn masking on but the other person turning it off.
  */
 
 const KEY = 'buddy.privateMode'
 
-type Privacy = { hidden: boolean; toggle: () => void }
+/** A demo build cannot be unmasked. Fixed at build time, not a setting. */
+export const LOCKED = __DEMO__
 
-const Ctx = createContext<Privacy>({ hidden: false, toggle: () => {} })
+type Privacy = {
+  hidden: boolean
+  toggle: () => void
+  /** True when this copy is a demo build, so the UI offers no way back. */
+  locked: boolean
+}
+
+const Ctx = createContext<Privacy>({ hidden: LOCKED, toggle: () => {}, locked: LOCKED })
 
 function readStored(): boolean {
+  if (LOCKED) return true
   try {
     return localStorage.getItem(KEY) === 'on'
   } catch {
@@ -39,9 +52,10 @@ export function PrivacyProvider({ children }: { children: ReactNode }) {
   // Set during render rather than in an effect: the formatters read this flag
   // while the children below are rendering, so an effect would leave one paint
   // showing the real figures.
-  setPrivateMode(hidden)
+  setPrivateMode(LOCKED || hidden)
 
   const toggle = useCallback(() => {
+    if (LOCKED) return
     setHidden((was) => {
       const next = !was
       setPrivateMode(next)
@@ -54,7 +68,7 @@ export function PrivacyProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
-  const value = useMemo(() => ({ hidden, toggle }), [hidden, toggle])
+  const value = useMemo(() => ({ hidden: LOCKED || hidden, toggle, locked: LOCKED }), [hidden, toggle])
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>
 }
 

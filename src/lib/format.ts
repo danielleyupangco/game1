@@ -40,6 +40,31 @@ export function maskNumbers<T extends string | null | undefined>(text: T): T {
   return text.replace(/\d[\d,.]*/g, (match) => (/^(19|20)\d{2}$/.test(match) ? match : MASK)) as T
 }
 
+/**
+ * Replaces a person's name with a stable alias while figures are hidden.
+ *
+ * Masking the numbers is not enough to hand the screen to someone. The guest
+ * tables name real people who booked a stay, and those names are not yours to
+ * show — so in demo mode they become "Guest 1", "Guest 2" and so on.
+ *
+ * Stable rather than blank: the same person keeps the same alias everywhere in
+ * a session, so the repeat-guest rows, the add-on rows and the stay list still
+ * line up and the structure being demonstrated still makes sense.
+ */
+const aliases = new Map<string, string>()
+
+export function maskName<T extends string | null | undefined>(name: T): T {
+  if (!hidden || !name) return name
+  const key = name.trim().toLowerCase()
+  if (!key) return name
+  let alias = aliases.get(key)
+  if (!alias) {
+    alias = `Guest ${aliases.size + 1}`
+    aliases.set(key, alias)
+  }
+  return alias as T
+}
+
 /** Compact money for tiles: ₱13.1M, $482K. Falls back to full digits under 1000. */
 export function money(value: number, currency: Currency = 'PHP', compact = false): string {
   if (!Number.isFinite(value)) return '—'

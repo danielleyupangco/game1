@@ -166,7 +166,7 @@ export function ForecastPanel() {
               {Number.isFinite(forecast.curve.medianLead) ? (
                 <>
                   half-sold about{' '}
-                  <span className="num text-ink">{Math.round(forecast.curve.medianLead)} days</span> before arrival
+                  <span className="num text-ink">{num(forecast.curve.medianLead, 0)} days</span> before arrival
                 </>
               ) : (
                 'sold well in advance'
@@ -179,7 +179,7 @@ export function ForecastPanel() {
 
       {forecast.thin ? (
         <div className="rounded-lg border border-warn/30 bg-warn/5 px-3 py-2.5 text-[12px] leading-relaxed text-warn">
-          The booking curve rests on {forecast.curve.sample} past reservations. That is enough to see the shape but not
+          The booking curve rests on {num(forecast.curve.sample, 0)} past reservations. That is enough to see the shape but not
           enough to be precise — treat the range as the answer and the middle number as a guess within it.
         </div>
       ) : null}
@@ -187,14 +187,14 @@ export function ForecastPanel() {
       <StatGrid>
         <Stat
           label="Already booked"
-          value={`${forecast.totals.booked} nights`}
+          value={`${num(forecast.totals.booked, 0)} nights`}
           sub={`${pct(forecast.totals.booked / Math.max(1, capacity), 0)} of the next ${forecast.months.length} months`}
         />
         <Stat
           label="Expected to sell"
-          value={`${Math.round(forecast.totals.expected)} nights`}
+          value={`${num(forecast.totals.expected, 0)} nights`}
           tone={forecast.totals.expected > forecast.totals.booked ? 'pos' : 'neutral'}
-          sub={`between ${Math.round(forecast.totals.low)} and ${Math.round(forecast.totals.high)}`}
+          sub={`between ${num(forecast.totals.low, 0)} and ${num(forecast.totals.high, 0)}`}
         />
         <Stat
           label="Expected revenue"
@@ -243,7 +243,7 @@ export function ForecastPanel() {
               {...TOOLTIP_STYLE}
               {...tooltipProps(
                 (value, name) => [
-                  `${Math.round(value)} nights`,
+                  `${num(value, 0)} nights`,
                   name === 'booked' ? 'Already booked' : name === 'pickup' ? 'Expected pickup' : 'Cautious case',
                 ],
                 (label) => monthLabel(label),
@@ -267,7 +267,7 @@ export function ForecastPanel() {
           pageSize={0}
           columns={[
             { key: 'month', header: 'Month', render: (r) => <span className="font-medium text-ink">{monthLabel(r.month)}</span>, sortValue: (r) => r.month },
-            { key: 'booked', header: 'Booked', align: 'right', render: (r) => String(r.booked), sortValue: (r) => r.booked },
+            { key: 'booked', header: 'Booked', align: 'right', render: (r) => num(r.booked, 0), sortValue: (r) => r.booked },
             {
               key: 'share',
               header: 'Typically booked by now',
@@ -288,9 +288,9 @@ export function ForecastPanel() {
               align: 'right',
               render: (r) => (
                 <span className="text-ink">
-                  {Math.round(r.expected)}
+                  {num(r.expected, 0)}
                   <span className="ml-1 text-[11px] text-ink-3">
-                    ({Math.round(r.low)}–{Math.round(r.high)})
+                    ({num(r.low, 0)}–{num(r.high, 0)})
                   </span>
                 </span>
               ),
@@ -310,7 +310,7 @@ export function ForecastPanel() {
                   <Pill tone="warn">no history</Pill>
                 ) : (
                   <span className="text-[11px] text-ink-3">
-                    {r.history} past year{r.history === 1 ? '' : 's'}
+                    {num(r.history, 0)} past year{r.history === 1 ? '' : 's'}
                   </span>
                 ),
             },
@@ -466,7 +466,7 @@ export function ForecastPanel() {
             <Tooltip
               {...TOOLTIP_STYLE}
               {...tooltipProps(
-                (value) => [`${Math.round(value)}% on the books`, 'Typically'],
+                (value) => [`${num(value, 0)}% on the books`, 'Typically'],
                 (label) => (Number(label) === 0 ? 'month start' : `${label} days before`),
               )}
             />
@@ -474,8 +474,8 @@ export function ForecastPanel() {
           </ComposedChart>
         </ChartFrame>
         <p className="mt-2 text-[11.5px] leading-relaxed text-ink-2">
-          Read it right to left. Built from {forecast.curve.sample} past reservations across{' '}
-          {new Set(bookings.map((b) => b.checkIn.slice(0, 7))).size} months. A month sitting well below this line for
+          Read it right to left. Built from {num(forecast.curve.sample, 0)} past reservations across{' '}
+          {num(new Set(bookings.map((b) => b.checkIn.slice(0, 7))).size, 0)} months. A month sitting well below this line for
           its horizon is behind — and that is visible months before it shows up in revenue.
         </p>
       </Card>

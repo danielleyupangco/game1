@@ -3,6 +3,7 @@ import { useLedger } from '@/state/store'
 import { Card, Pill, SectionHeader, Tabs } from '@/components/ui/primitives'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { FindingList } from '@/components/ui/FindingList'
+import { num } from '@/lib/format'
 
 /**
  * The written analysis, kept as data rather than prose in a chat window.
@@ -56,9 +57,9 @@ export function AnalysisPage() {
         subtitle="Written findings, each carrying its own evidence and one next step. Distinct from the Home alerts, which are rules that recompute on every visit — these are judgements you can work through and close off."
         right={
           <div className="flex items-center gap-1.5">
-            {counts.critical > 0 ? <Pill tone="neg">{counts.critical} to act on</Pill> : null}
-            <Pill tone={counts.open > 0 ? 'warn' : 'pos'}>{counts.open} open</Pill>
-            {counts.done > 0 ? <Pill tone="pos">{counts.done} done</Pill> : null}
+            {counts.critical > 0 ? <Pill tone="neg">{num(counts.critical, 0)} to act on</Pill> : null}
+            <Pill tone={counts.open > 0 ? 'warn' : 'pos'}>{num(counts.open, 0)} open</Pill>
+            {counts.done > 0 ? <Pill tone="pos">{num(counts.done, 0)} done</Pill> : null}
           </div>
         }
       />
@@ -68,8 +69,8 @@ export function AnalysisPage() {
           value={filter}
           onChange={setFilter}
           options={[
-            { value: 'live', label: `Outstanding (${counts.open + counts.doing})` },
-            { value: 'all', label: `Everything (${findings.length})` },
+            { value: 'live', label: `Outstanding (${num(counts.open + counts.doing, 0)})` },
+            { value: 'all', label: `Everything (${num(findings.length, 0)})` },
           ]}
         />
         <Tabs
@@ -77,8 +78,8 @@ export function AnalysisPage() {
           onChange={setScope}
           options={[
             { value: 'all', label: 'Both' },
-            { value: 'investments', label: `Portfolio (${counts.investments})` },
-            { value: 'airbnb', label: `Island T (${counts.airbnb})` },
+            { value: 'investments', label: `Portfolio (${num(counts.investments, 0)})` },
+            { value: 'airbnb', label: `Island T (${num(counts.airbnb, 0)})` },
           ]}
         />
       </div>

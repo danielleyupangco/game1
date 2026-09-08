@@ -14,7 +14,7 @@ import { aggregate, monthlyMetrics, trailing } from '@/domain/airbnb/metrics'
 import { runDcf } from '@/domain/airbnb/dcf'
 import { HubCanvas } from '@/components/hub/HubCanvas'
 import { cx } from '@/components/ui/primitives'
-import { maskNumbers, money, pct, shortDate } from '@/lib/format'
+import { maskNumbers, money, num, pct, shortDate } from '@/lib/format'
 import type { Finding } from '@/types'
 
 type Satellite = {
@@ -133,7 +133,7 @@ export function HubPage() {
       },
       {
         id: 'dani',
-        eyebrow: `${daniSplit?.holdings ?? 0} HOLDINGS`,
+        eyebrow: `${num(daniSplit?.holdings ?? 0, 0)} HOLDINGS`,
         title: 'DANI INVESTMENTS',
         to: '/investments?owner=dani',
         hue: '#34d399',
@@ -321,7 +321,7 @@ function HubHeader({
         <p className="mt-1 text-[12px] text-ink-2">
           {nothingImported ? 'Nothing imported yet' : `Everything, at ${money(netWorth, 'PHP', true)}`}
           {criticalFindings > 0 ? (
-            <span className="text-neg"> · {criticalFindings} needing action</span>
+            <span className="text-neg"> · {num(criticalFindings, 0)} needing action</span>
           ) : null}
         </p>
       </div>

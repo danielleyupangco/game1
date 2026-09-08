@@ -68,7 +68,7 @@ export function CapitalPanel() {
         <Stat
           label="Spent all time"
           value={money(totalSpent, 'PHP', true)}
-          sub={`${capitalSpend.length} item${capitalSpend.length === 1 ? '' : 's'}`}
+          sub={`${num(capitalSpend.length, 0)} item${capitalSpend.length === 1 ? '' : 's'}`}
           onTrace={() =>
             trace({
               title: 'Capital spend',
@@ -87,7 +87,7 @@ export function CapitalPanel() {
         <Stat
           label="Budgeted across projects"
           value={money(totalBudget, 'PHP', true)}
-          sub={`${projects.length} project${projects.length === 1 ? '' : 's'}`}
+          sub={`${num(projects.length, 0)} project${projects.length === 1 ? '' : 's'}`}
         />
         <Stat
           label="Still to spend"
@@ -239,7 +239,7 @@ function ProjectCard({
             value={budgeted ? money(Math.abs(progress.remaining), 'PHP', true) : '—'}
             tone={budgeted ? (progress.over ? 'neg' : progress.remaining > 0 ? 'pos' : 'neutral') : 'neutral'}
           />
-          <Cell2 label="Items" value={String(spend.length)} />
+          <Cell2 label="Items" value={num(spend.length, 0)} />
         </div>
 
         {!budgeted ? (

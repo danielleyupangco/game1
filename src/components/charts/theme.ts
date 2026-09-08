@@ -6,6 +6,8 @@
  * separate and are never reused as "series 3".
  */
 
+import { maskNumbers } from '@/lib/format'
+
 export const SERIES = ['#3987e5', '#d95926', '#199e70', '#c98500', '#d55181'] as const
 
 export const STATUS = {
@@ -33,11 +35,21 @@ export const DIVERGING = {
   high: '#e66767',
 } as const
 
+/**
+ * Shared axis styling, plus the default tick label.
+ *
+ * The default matters more than it looks: an axis with no `tickFormatter`
+ * prints the raw value, so while figures are hidden a chart's own scale still
+ * spells out the numbers the tiles are masking — a revenue axis reading
+ * "0 · 500,000 · 1,000,000" gives away everything. Spread `AXIS` first and any
+ * explicit `tickFormatter` still wins, so this only fills the gap.
+ */
 export const AXIS = {
   stroke: '#262b34',
   tick: { fill: '#5f6874', fontSize: 11 },
   tickLine: false,
   axisLine: false,
+  tickFormatter: (value: unknown) => maskNumbers(String(value ?? '')),
 } as const
 
 export const GRID = {

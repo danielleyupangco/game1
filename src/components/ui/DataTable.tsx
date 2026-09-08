@@ -1,4 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react'
+import { num } from '@/lib/format'
 import { cx } from '@/components/ui/primitives'
 
 export type Column<T> = {
@@ -128,8 +129,8 @@ export function DataTable<T>({
         className="no-print mt-2 w-full rounded-lg border border-line bg-surface-2 py-1.5 text-[12px] font-medium text-ink-2 transition-colors hover:bg-surface-3 hover:text-ink"
       >
         {expanded
-          ? `Show first ${pageSize} of ${sorted.length}`
-          : `Show all ${sorted.length} rows`}
+          ? `Show first ${num(pageSize, 0)} of ${num(sorted.length, 0)}`
+          : `Show all ${num(sorted.length, 0)} rows`}
       </button>
     ) : null}
     </>
