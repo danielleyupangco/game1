@@ -1545,3 +1545,101 @@ something more outgoing.
 > anything. It is here because it is a nice thing to wonder about while you wait,
 > and because the term classifications at the top genuinely matter when a
 > delivery date is being chosen.
+
+---
+
+## 14. Birth plan — caesarean or vaginal
+
+Nothing here needs deciding before about 20 weeks, and most of it settles at 36.
+It is written down now so the thinking happens without pressure, and so the
+questions exist before anyone is in a room asking for an answer.
+
+### The thing most people get wrong
+
+**This is usually not a free choice, and planning one does not guarantee it.** A
+substantial minority of first-time mothers who plan a vaginal birth end up with a
+caesarean anyway — position, progress, fetal distress. Some findings decide it
+outright.
+
+So the useful question is not *which do I pick*. It is:
+
+1. **What is the default plan?**
+2. **What would change it, and who decides in the room?**
+
+The second matters more, because the worst statistical outcome is neither planned
+route — it is an **emergency caesarean after a long labour**, which carries more
+risk than a planned section or a spontaneous vaginal birth. Much of good planning
+is simply not arriving there by drift.
+
+### The comparison, honestly
+
+| | Planned vaginal | Planned caesarean |
+| --- | --- | --- |
+| Recovery | Days to about 2 weeks | About 6 weeks. It is major abdominal surgery |
+| Hospital stay | 1–2 days | 3–4 days |
+| Mother's risks | Perineal tearing, pelvic floor injury, incontinence | Infection, haemorrhage, blood clots, more pain, harder early breastfeeding |
+| Baby | Lung fluid cleared by the squeeze; microbiome seeded on the way through | More respiratory trouble, markedly so before 39 weeks |
+| Predictability | None | A date and a time |
+| Cost at Makati Med | ~₱120,000–250,000 | ~₱200,000–400,000 |
+| Future pregnancies | Unaffected | The decisive difference — see below |
+
+### The three factors that weigh heaviest here
+
+**1. Dani is 27, and this is her first.** Each caesarean raises the risk of
+placenta previa and placenta accreta spectrum in later pregnancies — accreta
+being the complication that can cost a uterus. ACOG states that caesarean on
+maternal request **is not recommended for anyone planning several children**. If
+two or three are wanted, that argues strongly for planning vaginal this time. If
+this is likely the only pregnancy, the calculus genuinely shifts.
+
+**2. Know the base rate at the hospital.** Caesarean rates at many Philippine
+private hospitals run **above 25%**, against the WHO position that population
+benefit plateaus around 10–15%. That is context, not an accusation. **Ask Dra.
+Villafria what her own rate is and what her threshold is.** A good obstetrician
+answers that without defensiveness, and the answer is informative either way.
+
+**3. What the guidance actually says.** Absent a maternal or fetal indication,
+ACOG: *"a plan for vaginal delivery is safe and appropriate and should be
+recommended."* They equally honour a request for caesarean after proper
+counselling. There is a default, and there is a real choice.
+
+### What will probably decide it, and when it is known
+
+| Finding | When |
+| --- | --- |
+| Placenta previa | Anomaly scan, ~18–22 weeks |
+| Baby's position (breech) | Not settled until ~36 weeks |
+| Blood pressure or growth problems | Third trimester |
+| Size, and how labour actually progresses | On the day |
+
+### Questions for Dra. Villafria — ask at around 28 weeks
+
+- [ ] What is your caesarean rate, and what is your threshold for calling one?
+- [ ] Do you support a vaginal birth if that is what I want?
+- [ ] What is your approach if labour is slow — how long before you intervene?
+- [ ] What is your policy on induction, and at what point would you raise it?
+- [ ] If a section becomes necessary, who decides, and will I be part of that conversation?
+- [ ] Can Nico be in theatre for a caesarean? At what point does he come in?
+- [ ] What pain relief is available in labour at Makati Med, and is an epidural always available?
+- [ ] If I have a caesarean this time, what does that mean for a next pregnancy?
+- [ ] What would make you recommend a planned section rather than waiting?
+
+**How she answers the first and the fifth tells you most of what you need.**
+
+### The decision timeline
+
+| When | What happens |
+| --- | --- |
+| Now – 20 weeks | Nothing to decide. Read this once and set it down. |
+| ~20 weeks | Anomaly scan rules placenta previa in or out. |
+| ~28 weeks | Ask the questions above. Agree a default plan. |
+| ~36 weeks | Position known. The plan is settled here. |
+| If elective | **Timed at 39 weeks or later** — see the caesarean windows in section 13. |
+
+### One note for later
+
+If this birth is a caesarean, a vaginal birth next time — VBAC — is often still
+possible, and is worth asking about rather than assuming. It is not automatically
+closed off.
+
+*Sources: [ACOG Committee Opinion 761 — Cesarean Delivery on Maternal Request](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2019/01/cesarean-delivery-on-maternal-request); [WHO Statement on Caesarean Section Rates](https://www.who.int/publications/i/item/WHO-RHR-15.02); [ACOG — Avoidance of Nonmedically Indicated Early-Term Deliveries](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2019/02/avoidance-of-nonmedically-indicated-early-term-deliveries-and-associated-neonatal-morbidities). Verified 2026-09-18. Confidence: high on the guidance; medium on the Philippine private-hospital rate, which is from secondary reporting; costs as per section 9 and low confidence.*

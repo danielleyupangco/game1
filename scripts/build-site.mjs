@@ -91,6 +91,7 @@ const prose = {
 
   actions: renderSection('medical', 'Action steps'),
   birthday: renderSection('pregnancy', '13. Birth day — dates and signs'),
+  birthplan: renderSection('pregnancy', '14. Birth plan — caesarean or vaginal'),
 };
 
 const data = JSON.stringify({ edd: EDD, weeks: weekData, foods, caffeine, calendar })
@@ -116,7 +117,7 @@ const TABS = [
   ['prayers', 'Prayers'],
   ['nico', 'Nico'],
   ['checkups', 'Check-ups'],
-  ['birthday', 'Birth day'],
+  ['birth', 'Birth'],
   ['calendar', 'Calendar'],
 ];
 
@@ -314,6 +315,9 @@ details.films summary{cursor:pointer;font-weight:700;font-size:.9rem;color:var(-
 details.films img{display:block;width:100%;height:auto;margin-top:.8rem;border-radius:10px}
 .prose li.task{list-style:none;margin-left:-1.25rem;display:flex;gap:.55rem;align-items:flex-start}
 .prose li.task input{margin-top:.45rem;flex:none;accent-color:var(--blush-deep)}
+.stage{margin-top:1rem;border-top:1px solid var(--line);padding-top:.9rem}
+.stage h3{font-size:1rem;margin-bottom:.2rem}
+.stage p{margin:.2rem 0 .6rem;font-size:.9rem;color:var(--fg-mute)}
 .bd-summary{display:flex;flex-wrap:wrap;gap:.75rem;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1rem 1.15rem;box-shadow:var(--shadow);margin-bottom:1rem}
 .bd-summary div{flex:1 1 130px}
 .bd-summary dt{font-size:.66rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--fg-mute)}
@@ -391,6 +395,7 @@ ${TABS.map(([id, label], n) => `<button class="tab" role="tab" id="tab-${id}" da
       <span class="deadline" id="scan-deadline"></span>
     </div>
     <div class="prose actions-body">${prose.actions}</div>
+    <div id="stage-prompt"></div>
   </section>
 
   <div id="rails"></div>
@@ -467,13 +472,20 @@ ${panel('checkups', 'Check-ups', `
   </details>`,
   `<p class="lede">Every appointment and result, newest first. A measurement only means something next to the one before it &mdash; which is the whole reason for keeping this.</p>`)}
 
-${panel('birthday', 'Birth day', `
+${panel('birth', 'Birth', `
+  <div class="sub" role="tablist">
+    <button class="subtab" role="tab" data-sub="b-plan" aria-selected="true">The plan</button>
+    <button class="subtab" role="tab" data-sub="b-date" aria-selected="false">The date &amp; signs</button>
+  </div>
+  <div class="prose subview" id="b-plan">${prose.birthplan}</div>
+  <div class="subview" id="b-date" hidden>
   <div id="bd-summary" class="bd-summary"></div>
   <div id="bd-detail"></div>
   <div class="bd-legend" id="bd-legend"></div>
   <div id="bd-cal"></div>
-  <div class="prose">${prose.birthday}</div>`,
-  `<p class="lede">Every date the cub could arrive, classified the way the hospital classifies it &mdash; and what each one would make them. Tap any day.</p>`)}
+  <div class="prose">${prose.birthday}</div>
+  </div>`,
+  `<p class="lede">How the birth happens, and when. Neither needs deciding yet &mdash; the plan settles around 36 weeks.</p>`)}
 
 ${panel('calendar', 'Calendar', `<div class="cal" id="callist"></div><div class="prose">${prose.milestones}</div>`,
   `<p class="lede">The liturgical year against gestational age. Moveable feasts were computed, not recalled &mdash; Easter 2027 is 28 March, which lands at 32w2d.</p>`)}
@@ -632,6 +644,49 @@ $('#view-food').insertAdjacentHTML('beforeend',
   '<h3 style="font-family:var(--display);font-size:1.25rem;margin:2.5rem 0 .3rem">Caffeine</h3>' +
   '<p class="lede">The daily limit is 200mg. Each bar is measured against it &mdash; two cups of barako put her over before lunch.</p>' +
   '<div class="tw" style="padding:.3rem .6rem">' + caf + '</div>');
+
+/* ---- stage-gated prompts ----------------------------------------------- */
+/* Things that are not worth showing yet. Gated on the live week so they appear
+   on their own, rather than sitting in the list for eight months being ignored. */
+const STAGE_PROMPTS = [
+  {
+    from: 26,
+    until: 37,
+    title: 'Time to ask the birth-plan questions',
+    body: 'You are past 26 weeks. The questions for Dra. Villafria are on the Birth tab &mdash; her caesarean rate, her threshold, and who decides in the room. Ask them before 30 weeks so the plan is agreed calmly.',
+    view: 'birth',
+    cta: 'Open the questions',
+  },
+  {
+    from: 18,
+    until: 23,
+    title: 'The anomaly scan settles one big question',
+    body: 'This scan rules placenta previa in or out, which is the first thing that can decide the mode of birth. Worth asking about specifically.',
+    view: 'birth',
+    cta: 'Why it matters',
+  },
+  {
+    from: 34,
+    until: 43,
+    title: 'The birth plan settles about now',
+    body: 'Position is known from around 36 weeks. If a planned caesarean is the answer and it is elective, it is timed at 39 weeks or later.',
+    view: 'birth',
+    cta: 'See the dates',
+  },
+];
+
+(() => {
+  // Windows overlap by design — at 34-36 weeks both the questions prompt and
+  // the settles-now prompt apply. The later stage is the more useful one, so
+  // pick the highest start week that matches rather than the first listed.
+  const prompt = STAGE_PROMPTS
+    .filter((p) => now.weeks >= p.from && now.weeks < p.until)
+    .sort((a, b) => b.from - a.from)[0];
+  if (!prompt) return;
+  $('#stage-prompt').innerHTML =
+    '<div class="stage"><h3>' + prompt.title + '</h3><p>' + prompt.body + '</p>' +
+    '<button class="subtab" type="button" data-view="' + prompt.view + '">' + prompt.cta + '</button></div>';
+})();
 
 /* ---- birth day --------------------------------------------------------- */
 /* Sun-sign boundaries drift up to a day a year, so these are the computed
