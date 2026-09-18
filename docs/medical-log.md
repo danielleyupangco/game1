@@ -13,6 +13,54 @@ height, and every scan.
 
 ---
 
+## Action steps
+
+Everything outstanding from the tests so far, in the order it needs doing.
+Rendered on the home screen, because a dated to-do buried three taps deep is a
+to-do that does not happen.
+
+### Do now
+
+- [ ] **Book the repeat scan.** Window is **28 Sept – 5 Oct**. Aim late in it —
+      at 7w3d a heartbeat and a crown-rump length should both be measurable, and
+      that is the scan that settles both the dating and the subchorionic
+      hemorrhage. *From the 18 Sept scan.*
+- [ ] **Folic acid, 400–600mcg daily, starting today.** The neural tube closes
+      around week 6, which is this week. Nothing else here is as time-critical.
+
+### Ask Dra. Villafria
+
+- [ ] **The bleed and activity.** Specifically: the November walk, and whether
+      pelvic rest applies. Evidence does not support routine restriction for a
+      small SCH, but this is her call. *From the 18 Sept scan.*
+- [ ] **Progesterone support** — asked openly, not expectantly. Evidence is
+      mixed: one SCH study found dydrogesterone protective, while broader
+      guidance does not recommend routine use.
+- [ ] **The due date.** The chart says 21 May from a 28-day cycle. If the real
+      cycle runs 29–30 days it may be a day or two later. The CRL scan resolves it.
+- [ ] **The Pap inflammation note.** Common and non-specific beside a normal
+      result, but worth raising once. *From the 4–5 Sept Pap.*
+
+### Chase from the lab
+
+- [ ] **Blood type and Rh.** Standard booking work, missing from the 18 Sept
+      batch. Needed for the 28-week anti-D dose and for delivery — **not urgent
+      because of the bleed**, since current guidance does not recommend RhIg
+      under 12 weeks.
+- [ ] **The CBC** (Lab 26596440). Released the same morning but not in the batch.
+      This is the haemoglobin and platelet baseline, and anemia is common in
+      Philippine pregnancies.
+- [ ] **Whether HIV screening was included.** Standard in the Philippine prenatal
+      panel; not among the reports received.
+
+### Already settled — no action
+
+Rubella immune. Hepatitis B immune and not infected. Hepatitis C negative.
+Syphilis screen negative. HbA1c normal. Urine clean, no protein. Pap normal.
+Blood pressure 120/70.
+
+---
+
 ## 18 September 2026 — First OB scan · 5w0d
 
 **Makati Medical Center**, Department of Obstetrics and Gynecology, Section of

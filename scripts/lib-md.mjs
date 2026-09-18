@@ -139,7 +139,7 @@ export function mdToHtml(md) {
         const task = /^\[([ xX])\]\s+(.*)$/.exec(t);
         if (!task) return `<li>${inline(t)}</li>`;
         const done = task[1].toLowerCase() === 'x';
-        return `<li class="task"><input type="checkbox" disabled${done ? ' checked' : ''}> ${inline(task[2])}</li>`;
+        return `<li class="task"><input type="checkbox" disabled${done ? ' checked' : ''}><span>${inline(task[2])}</span></li>`;
       };
       out.push(`<${tag}>${items.map(renderItem).join('')}</${tag}>`);
       continue;

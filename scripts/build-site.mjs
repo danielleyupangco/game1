@@ -88,6 +88,8 @@ const prose = {
   prayerNico: renderSection('prayer', '9. Prayers for Nico'),
   prayerAfter: renderSection('prayer', '10. After the birth'),
   prayerGrief: renderSection('prayer', '11. If the news is not good'),
+
+  actions: renderSection('medical', 'Action steps'),
 };
 
 const data = JSON.stringify({ edd: EDD, weeks: weekData, foods, caffeine, calendar })
@@ -290,6 +292,17 @@ details.grief[open] summary{margin-bottom:.5rem}
 .subtab{border:1px solid var(--line);background:var(--surface);color:var(--fg-mute);border-radius:999px;padding:.35rem .75rem;font-family:var(--body);font-weight:700;font-size:.78rem;cursor:pointer}
 .subtab[aria-selected="true"]{background:var(--surface-2);color:var(--fg);border-color:var(--fg-mute)}
 
+.actions{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--butter-deep);border-radius:20px;padding:1.1rem 1.25rem;margin-bottom:1.5rem;box-shadow:var(--shadow)}
+.actions-h{display:flex;flex-wrap:wrap;gap:.5rem .7rem;align-items:center;margin-bottom:.35rem}
+.actions-h h2{font-size:1.2rem}
+.deadline{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--butter-deep);background:var(--butter);padding:.25rem .55rem;border-radius:999px}
+.deadline.past{color:var(--avoid-fg);background:var(--avoid-bg)}
+.actions-body h3{font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--fg-mute);margin:1.1rem 0 .3rem;font-family:var(--body)}
+.actions-body > p:first-child{font-size:.88rem;color:var(--fg-mute);margin-top:.2rem}
+.actions-body ul{margin:.3rem 0;padding-left:1.2rem}
+.actions-body li.task{margin:.45rem 0}
+.actions-body hr{display:none}
+.installtip{margin-top:1.5rem;padding:.75rem 1rem;border:1px dashed var(--line);border-radius:14px;font-size:.85rem;color:var(--fg-mute);text-align:center}
 .firstlook{margin:0 0 1.5rem;background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
 .firstlook img{display:block;width:100%;height:auto}
 .firstlook figcaption{padding:.9rem 1.1rem;font-size:.9rem;color:var(--fg-mute);border-top:1px solid var(--line)}
@@ -334,11 +347,20 @@ ${TABS.map(([id, label], n) => `<button class="tab" role="tab" id="tab-${id}" da
     </div>
     <div class="hero-right">
       <div class="hero-count" id="now-count">&nbsp;</div>
-      <div class="hero-meta">until 23 May 2027</div>
+      <div class="hero-meta">until ${new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(EDD + 'T00:00:00Z'))}</div>
     </div>
   </div>
+  <section class="actions" aria-labelledby="actions-h">
+    <div class="actions-h">
+      <h2 id="actions-h">What needs doing</h2>
+      <span class="deadline" id="scan-deadline"></span>
+    </div>
+    <div class="prose actions-body">${prose.actions}</div>
+  </section>
+
   <div id="rails"></div>
   <div id="weekcard"></div>
+  <p class="installtip">On iPhone: <b>Share &rarr; Add to Home Screen</b> puts this one tap away, and the week updates itself each morning.</p>
 </section>
 
 ${panel('food', 'Food', `<div id="foodlist" class="foods"></div>`,
@@ -460,6 +482,19 @@ $('#now-meta').textContent = now.daysToGo < 0
   ? Math.abs(now.daysToGo) + ' days past the due date'
   : 'Trimester ' + (now.weeks >= 28 ? 3 : now.weeks >= 14 ? 2 : 1);
 $('#now-count').textContent = now.daysToGo >= 0 ? now.daysToGo + ' days' : '\\u2014';
+
+/* ---- scan deadline ----------------------------------------------------- */
+/* The repeat-scan window from the 18 Sept report. Counted live so the card
+   nags accurately instead of going stale the day after it is built. */
+const SCAN_WINDOW_CLOSES = '2026-10-05';
+(() => {
+  const left = Math.round((civil(SCAN_WINDOW_CLOSES) - todayManila()) / MS);
+  const el = $('#scan-deadline');
+  if (left > 1) el.textContent = 'Scan window closes in ' + left + ' days';
+  else if (left === 1) el.textContent = 'Scan window closes tomorrow';
+  else if (left === 0) el.textContent = 'Scan window closes today';
+  else { el.textContent = 'Scan window closed'; el.classList.add('past'); }
+})();
 
 /* ---- week rails -------------------------------------------------------- */
 const rails = $('#rails');
