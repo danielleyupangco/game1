@@ -16,8 +16,18 @@ export const DOCS = {
   medical: readFileSync(new URL('../docs/medical-log.md', import.meta.url), 'utf8'),
 };
 
-/** The clinic EDC from the 18 Sept 2026 Makati Med scan report. */
-export const EDD = '2027-05-21';
+/**
+ * The due date the app runs on: 19 May 2027, as printed on the 18 Sept 2026
+ * scan film ("EDD 05/19/2027") and derived from the mean sac diameter.
+ *
+ * Dani's own paperwork carries two dates. The report header gives EDC 21 May,
+ * derived from LMP 14 Aug on a 28-day cycle; the film gives 19 May from the sac
+ * measurement. They differ by two days. The app follows the scan because that
+ * is where Dani is being told she is — 5w2d on 18 September, not 5w0d.
+ *
+ * The crown-rump-length scan supersedes both. Change this constant when it does.
+ */
+export const EDD = '2027-05-19';
 
 /**
  * Check-up entries, newest first. Each is a `## <date> — <title>` section in

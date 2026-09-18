@@ -19,23 +19,35 @@ import {
 } from '@/lib/civil-date';
 
 /**
- * Dani's dating inputs, as issued by Makati Medical Center on 18 Sept 2026:
- * LMP 14 Aug 2026 on a 28-day cycle, giving an EDC of 21 May 2027. The app
- * follows the chart rather than a derivation of its own.
+ * Dani's dating. Her 18 Sept 2026 paperwork carries two due dates two days
+ * apart: the report header gives EDC 21 May from LMP 14 Aug on a 28-day cycle,
+ * and the scan film prints EDD 05/19/2027 from the mean sac diameter. The app
+ * follows the film, which is why 18 September reads 5w2d and not 5w0d.
  */
 const LMP = '2026-08-14';
 const CYCLE_DAYS = 28;
-const EDD = '2027-05-21';
+const CHART_EDC = '2027-05-21';
+const EDD = '2027-05-19';
 
 describe('gestationOn', () => {
-  it('reads Week 5, Day 0 on 2026-09-18 — matching the scan report AOG', () => {
-    // The Makati Med report of that date states AOG 5 weeks 0 days. The app
-    // must agree with the chart, so this is the case that pins it.
+  it('reads Week 5, Day 2 on 2026-09-18 — matching the scan impression', () => {
+    // The Makati Med report of that date reads "5 weeks 2 days by mean sac
+    // diameter". That is the dating Dani is given, so it is the case that pins
+    // the app.
     const result = gestationOn({ edd: EDD, on: '2026-09-18' });
-    expect(result.label).toBe('Week 5, Day 0');
+    expect(result.label).toBe('Week 5, Day 2');
     expect(result.weeks).toBe(5);
-    expect(result.days).toBe(0);
-    expect(result.daysToGo).toBe(245);
+    expect(result.days).toBe(2);
+    expect(result.daysToGo).toBe(243);
+  });
+
+  it('is exactly two days ahead of the chart header dating', () => {
+    // The report header states AOG 5w0d by LMP. Both appear on her paperwork;
+    // the gap is two days and well inside the ACOG redating threshold.
+    const byChart = gestationOn({ edd: CHART_EDC, on: '2026-09-18' });
+    expect(byChart.label).toBe('Week 5, Day 0');
+    expect(gestationOn({ edd: EDD, on: '2026-09-18' }).totalDays - byChart.totalDays).toBe(2);
+    expect(shouldRedateFromScan(2, 5)).toBe(false);
   });
 
   it('needs no offset now that the EDD is derived from a real LMP', () => {
@@ -44,7 +56,7 @@ describe('gestationOn', () => {
     expect(DEFAULT_DATING_OFFSET_DAYS).toBe(0);
     const explicitZero = gestationOn({ edd: EDD, on: '2026-09-18', datingOffsetDays: 0 });
     expect(explicitZero.label).toBe(gestationOn({ edd: EDD, on: '2026-09-18' }).label);
-    expect(explicitZero.totalDays).toBe(FULL_TERM_DAYS - 245);
+    expect(explicitZero.totalDays).toBe(FULL_TERM_DAYS - 243);
   });
 
   it('advances exactly one day per calendar day', () => {
@@ -56,9 +68,9 @@ describe('gestationOn', () => {
   });
 
   it('rolls Day 6 over to the next week rather than showing Day 7', () => {
-    const sixth = gestationOn({ edd: EDD, on: '2026-09-17' });
+    const sixth = gestationOn({ edd: EDD, on: '2026-09-15' });
     expect(sixth.label).toBe('Week 4, Day 6');
-    expect(gestationOn({ edd: EDD, on: '2026-09-18' }).label).toBe('Week 5, Day 0');
+    expect(gestationOn({ edd: EDD, on: '2026-09-16' }).label).toBe('Week 5, Day 0');
   });
 
   it('never reports a day outside 0-6 across the whole pregnancy', () => {
@@ -78,7 +90,7 @@ describe('gestationOn', () => {
   });
 
   it('keeps counting past the due date instead of stopping at 40 weeks', () => {
-    const overdue = gestationOn({ edd: EDD, on: '2027-05-28', datingOffsetDays: 0 });
+    const overdue = gestationOn({ edd: EDD, on: '2027-05-26', datingOffsetDays: 0 });
     expect(overdue.label).toBe('Week 41, Day 0');
     expect(overdue.daysToGo).toBe(-7);
     expect(overdue.isPastDue).toBe(true);
@@ -144,7 +156,7 @@ describe('dating derivations', () => {
   });
 
   it('round-trips through eddFromGestation', () => {
-    expect(eddFromGestation('2026-09-18', 5, 0)).toBe(EDD);
+    expect(eddFromGestation('2026-09-18', 5, 2)).toBe(EDD);
   });
 });
 
@@ -167,17 +179,13 @@ describe('isCivilDate', () => {
 });
 
 describe('eddFromLmp', () => {
-  it('reproduces the clinic EDC from the LMP on the report', () => {
-    expect(eddFromLmp(LMP, 28)).toBe('2027-05-21');
+  it('reproduces the chart header EDC from the LMP on the report', () => {
+    expect(eddFromLmp(LMP, CYCLE_DAYS)).toBe(CHART_EDC);
   });
 
   it('moves the due date later for a longer cycle, because ovulation is later', () => {
     expect(eddFromLmp(LMP, 29)).toBe('2027-05-22');
     expect(eddFromLmp(LMP, 30)).toBe('2027-05-23');
-  });
-
-  it('derives the EDD the app actually uses from her midpoint cycle', () => {
-    expect(eddFromLmp(LMP, CYCLE_DAYS)).toBe(EDD);
   });
 
   it('defaults to the 28-day assumption when no cycle length is given', () => {

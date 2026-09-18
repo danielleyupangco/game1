@@ -4,7 +4,7 @@ Source content for the app. Everything here is written to be converted into
 structured seed data (`weeks`, `foods`, `stretch_routines`, `shops`,
 `red_flags`, expense bands), not rendered as prose.
 
-**Compiled 18 September 2026.** Dani's EDC is 21 May 2027 (Makati Med, 18 Sept 2026); care is with
+**Compiled 18 September 2026.** Dani's EDD is 19 May 2027 (Makati Med scan film, 18 Sept 2026); care is with
 Dra. Fe Villafria at Makati Medical Center.
 
 > **This is general information, not medical advice.** Every clinical item
@@ -53,7 +53,8 @@ offset is gone — it was a fudge standing in for information we now have.
 | First day of last period | **2026-08-14** | Makati Med scan report, 18 Sept 2026 |
 | Cycle length | **28–30 days**, average | Dani (Dani recalled LMP as the 15th; the chart says the 14th) |
 | Early scan | **5w2d on 2026-09-18**, by mean sac diameter | Makati Med, Dr. Quevedo |
-| **Clinic EDC** | **2027-05-21** | Makati Med scan report |
+| **EDD in use** | **2027-05-19** | Makati Med scan film, by mean sac diameter |
+| Chart EDC (alternative) | 2027-05-21 | Report header, from LMP on a 28-day cycle |
 
 ### What each method gives
 
@@ -63,10 +64,10 @@ difference.
 
 | Method | EDD | Implied conception |
 | --- | --- | --- |
-| **Chart: LMP 14 Aug + 280, 28-day cycle** | **2027-05-21** | **2026-08-28** |
+| **Mean sac diameter, 5w2d — in use** | **2027-05-19** | **2026-08-26** |
+| Chart header: LMP 14 Aug + 280, 28-day cycle | 2027-05-21 | 2026-08-28 |
 | Recalled LMP 15 Aug, 28-day cycle | 2027-05-22 | 2026-08-29 |
 | Recalled LMP 15 Aug, 29-day cycle | 2027-05-23 | 2026-08-30 |
-| Mean sac diameter, 5w2d | 2027-05-19 | 2026-08-26 |
 
 ### The corroboration
 
@@ -80,11 +81,17 @@ this early is agreement, not conflict.
 
 ### Which dating wins, and why
 
-**LMP dating stands. The app uses 2027-05-21 — the clinic's EDC.**
+**The app uses 2027-05-19 — the scan's own date.**
 
-The app should never disagree with her medical record, and 21 May is the date on
-the chart, the date Dra. Villafria's team issued, and the date every appointment
-will be booked against.
+Her paperwork carries both: the report header says EDC 21 May from LMP dating,
+and the scan film prints EDD 05/19/2027 from the sac measurement. Two days
+apart. The app follows the film, because that is the dating Dani is being given
+and the reason she reads 5w2d rather than 5w0d on 18 September.
+
+Worth holding lightly. The two-day gap sits well inside the ACOG threshold, so
+neither is "wrong", and **the crown-rump-length scan settles it properly**.
+Nothing irreversible — flights, leave dates, a booked section — should be fixed
+before then.
 
 ACOG Committee Opinion 700 sets when a scan should replace LMP dating: at
 8w6d or earlier, only when the two disagree by **more than 5 days**. On the
@@ -108,8 +115,8 @@ an offset.
 
 ### Where the pregnancy stands
 
-On **18 September 2026**, with an EDD of 2027-05-21: **Week 5, Day 0**, with 245
-days to go — matching the AOG on the scan report.
+On **18 September 2026**, with an EDD of 2027-05-19: **Week 5, Day 2**, with 243
+days to go — matching the impression on the scan report.
 
 The app computes this as `280 − (EDD − today)` on Manila calendar dates, plus a
 per-pregnancy `dating_offset_days` that is **now zero**. The offset stays in the
@@ -124,25 +131,42 @@ standard-dating column: the EDD did not move.
 
 | Milestone | Gestational age | Date |
 | --- | --- | --- |
-| Implied LMP | 0w0d | 2026-08-14 |
-| Implied conception | 2w0d | 2026-08-28 |
-| **Repeat scan — confirms viability** | **6w3d – 7w3d** | **2026-09-28 – 2026-10-05** |
-| Dating scan window (CRL measurable) | 7w0d – 9w0d | 2026-10-02 – 2026-10-16 |
-| NIPT available from | 10w0d | 2026-10-23 |
-| NT scan window | 11w0d – 13w6d | 2026-10-30 – 2026-11-19 |
-| End of first trimester | 13w6d | 2026-11-19 |
-| Anomaly scan window | 18w0d – 22w0d | 2026-12-18 – 2027-01-15 |
-| OGTT window | 24w0d – 28w0d | 2027-01-29 – 2027-02-26 |
-| Tdap window | 27w0d – 36w0d | 2027-02-19 – 2027-04-23 |
-| Third trimester begins | 28w0d | 2027-02-26 |
-| RSV vaccine window opens | 32w0d | 2027-03-26 |
-| GBS swab window | 35w0d – 37w0d | 2027-04-16 – 2027-04-30 |
-| Hospital bag packed by | 35w0d | 2027-04-16 |
-| Term | 37w0d | 2027-04-30 |
-| **EDD** | **40w0d** | **2027-05-21** |
+| Implied LMP | 0w0d | 2026-08-12 |
+| Implied conception | 2w0d | 2026-08-26 |
+| **Repeat scan — confirms viability** | **6w3d – 7w3d** | **2026-09-26 – 2026-10-03** |
+| Dating scan window (CRL measurable) | 7w0d – 9w0d | 2026-09-30 – 2026-10-14 |
+| NIPT available from | 10w0d | 2026-10-21 |
+| NT scan window | 11w0d – 13w6d | 2026-10-28 – 2026-11-17 |
+| End of first trimester | 13w6d | 2026-11-17 |
+| Anomaly scan window | 18w0d – 22w0d | 2026-12-16 – 2027-01-13 |
+| OGTT window | 24w0d – 28w0d | 2027-01-27 – 2027-02-24 |
+| Tdap window | 27w0d – 36w0d | 2027-02-17 – 2027-04-21 |
+| Third trimester begins | 28w0d | 2027-02-24 |
+| RSV vaccine window opens | 32w0d | 2027-03-24 |
+| GBS swab window | 35w0d – 37w0d | 2027-04-14 – 2027-04-28 |
+| Hospital bag packed by | 35w0d | 2027-04-14 |
+| Term | 37w0d | 2027-04-28 |
+| **EDD** | **40w0d** | **2027-05-19** |
 
-40 weeks now lands exactly on the due date, which is what an estimated due date
-means and what the offset was previously breaking.
+### If a caesarean is planned
+
+| Week | Window | Note |
+| --- | --- | --- |
+| 37 — early term | 2027-04-28 – 2027-05-04 | Only with a medical indication |
+| **38 — early term** | **2027-05-05 – 2027-05-11** | Only with a medical indication |
+| **39 — full term** | **2027-05-12 – 2027-05-18** | ACOG's recommended window for a planned section without an indication |
+
+ACOG recommends timing an elective caesarean at **39w0d or later**, because
+neonatal respiratory problems, temperature and glucose instability and NICU
+admission are all measurably higher before then. That guidance reverses when
+there is a medical or obstetric indication — deferring to 39 weeks is then
+explicitly *not* recommended. So the question to settle first is whether a
+section would be indicated or elective, not which date.
+
+*Source: [ACOG — Avoidance of Nonmedically Indicated Early-Term Deliveries](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2019/02/avoidance-of-nonmedically-indicated-early-term-deliveries-and-associated-neonatal-morbidities); [ACOG — Medically Indicated Late-Preterm and Early-Term Deliveries](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2021/07/medically-indicated-late-preterm-and-early-term-deliveries). Verified 2026-09-18.*
+
+40 weeks lands exactly on the due date, which is what an estimated due date
+means.
 
 ---
 
@@ -226,7 +250,7 @@ milestone appears varies by a week either way between sources.*
 - *Tests:* Bloods at the first visit: blood type, CBC, hepatitis B, syphilis, HIV, urinalysis.
 - *Nutrition:* Small, frequent meals beat three large ones. Dry crackers before getting up can help.
 - *Stretch:* Morning routine, trimester one — slow, short, no core work.
-- *Filipino life:* The repeat scan falls in this window. Vietnam was planned for around now and has been cancelled.
+- *Filipino life:* The repeat scan falls just before this week. Vietnam was planned for around now and has been cancelled.
 
 **Week 8 — raspberry / one small kalamansi to a grape**
 - *Baby:* Now officially a fetus. Fingers and toes are separating. It moves, though you cannot feel it.
@@ -910,15 +934,15 @@ still the first trimester, late November is comfortably the second.
 
 ## 8. Travel
 
-Weeks below are on the dating in section 1 (LMP 14 Aug 2026, EDC 21 May 2027, as
-issued by Makati Med on 18 September).
+Weeks below are on the dating in section 1 (EDD 19 May 2027, from the
+18 September scan).
 
 | Trip | Dates | Week at start | Risk | Zika |
 | --- | --- | --- | --- | --- |
 | ~~Vietnam~~ | ~~early Oct 2026~~ | ~~7w3d~~ | **cancelled** | — |
-| Korea | 5–9 Dec 2026 | 16w1d – 16w5d | low | no |
-| India | Jan 2027 | ~22w0d | high | yes — present |
-| Mexico | Mar 2027 | ~30w3d | **avoid** | yes — present |
+| Korea | 5–9 Dec 2026 | 16w3d – 17w0d | low | no |
+| India | Jan 2027 | ~22w2d | high | yes — present |
+| Mexico | Mar 2027 | ~30w5d | **avoid** | yes — present |
 
 ### The rule that applies to every trip
 
@@ -946,7 +970,7 @@ separate reasons, any one of which was a good argument.
 Kept here rather than deleted so the itinerary history stays intact. **Korea is
 now the next trip.**
 
-### Korea — 5–9 December 2026, week 16
+### Korea — 5–9 December 2026, weeks 16–17
 
 **The best-timed trip, and now the next one.** Second trimester, past the nausea, well
 before any airline restriction, and a low-risk destination with excellent
@@ -980,7 +1004,7 @@ The trip needing the most preparation.
   choosing a different region helps more.
 - Confirm hospital access at the destination before departure.
 
-### Mexico — March 2027, ~week 30 — **defer or cancel**
+### Mexico — March 2027, ~week 31 — **defer or cancel**
 
 > **This is the trip to reconsider.** Not as a matter of caution, but because
 > several separate factors compound.
@@ -990,7 +1014,7 @@ The trip needing the most preparation.
 2. **Week 30, and long-haul.** Manila to Mexico is among the longest routings
    in the world — typically 20–30 hours with connections. At 30 weeks that is a
    serious DVT exposure and a long way from Dra. Villafria.
-3. **Airline cutoffs are close.** By the end of March she is at ~32w3d, inside
+3. **Airline cutoffs are close.** By the end of March she is at ~33w0d, inside
    the range where most carriers require medical clearance. If anything delays
    the return, the restrictions tighten fast.
 4. **Distance from care.** At 30+ weeks, preterm labour is a real possibility,

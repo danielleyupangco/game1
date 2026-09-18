@@ -36,8 +36,10 @@ to-do that does not happen.
 - [ ] **Progesterone support** — asked openly, not expectantly. Evidence is
       mixed: one SCH study found dydrogesterone protective, while broader
       guidance does not recommend routine use.
-- [ ] **The due date.** The chart says 21 May from a 28-day cycle. If the real
-      cycle runs 29–30 days it may be a day or two later. The CRL scan resolves it.
+- [ ] **The due date — which one is she working to?** The scan film says
+      **19 May**, the report header says **21 May**. The app uses 19 May. Two
+      days apart, and it moves any planned section date with it. The CRL scan
+      resolves it, so confirm before booking anything around the birth.
 - [ ] **The Pap inflammation note.** Common and non-specific beside a normal
       result, but worth raising once. *From the 4–5 Sept Pap.*
 
@@ -199,10 +201,16 @@ disagree by **more than 5 days**. It does not here, so LMP dating stands — and
 those thresholds are written for crown-rump length anyway, which this scan could
 not measure. A mean sac diameter is not a recommended dating measurement.
 
-**The app now uses 2027-05-21, the chart date**, because the app should never
-disagree with her medical record. If her cycle really does run 29–30 days rather
-than 28, the true date may be one to three days later, and **the CRL scan is what
-settles it properly.**
+**The app uses 2027-05-19 — the date printed on the scan film.**
+
+Her paperwork carries both. The report header gives EDC 21 May from LMP dating;
+the film prints EDD 05/19/2027 from the sac. The app follows the film, because
+that is the dating Dani has been given and the reason she is 5w2d on
+18 September rather than 5w0d.
+
+The two-day gap sits well inside the redating threshold either way, so neither
+date is wrong. **The CRL scan settles it properly** — and until it does, nothing
+irreversible should be booked against either.
 
 ### Actions
 
@@ -213,7 +221,8 @@ settles it properly.**
       marathon walk and the flight.
 - [ ] Ask whether she wants progesterone support, which some clinicians use with
       an early SCH.
-- [ ] Confirm whether the EDD should be 21 May or adjusted for a 29–30 day cycle.
+- [ ] Confirm which due date she is working to — the film's 19 May or the
+      header's 21 May.
 - [ ] Start or confirm folic acid, if not already.
 
 ### The Vietnam conflict, resolved

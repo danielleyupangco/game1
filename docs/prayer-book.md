@@ -706,33 +706,33 @@ Flores de Mayo at 36 weeks and over.** There is no better month to be waiting.
 ## 8. The liturgical year, mapped to this pregnancy
 
 `kind: season`. Gestational ages are on **standard dating** (see the pregnancy
-guide). These are unchanged by the September 2026 dating update: the EDD moved to 21 May 2027, the
-clinic EDC issued at the 18 September scan.
-Moveable feasts were computed, not recalled: **Easter 2027 is 28 March**, which falls at 32w2d.
+guide). These are unchanged by the September 2026 dating update: the EDD is 19 May 2027, from the
+18 September scan film.
+Moveable feasts were computed, not recalled: **Easter 2027 is 28 March**, which falls at 32w4d.
 
 | Date | Week | Feast | Why it lands well |
 | --- | --- | --- | --- |
-| 2026-08-31 | 2w3d | **St Raymond Nonnatus** | Patron of childbirth — and inside the conception window they recall |
-| 2026-09-08 | 3w4d | Nativity of Mary | Mary's own birthday, in the first weeks |
-| 2026-10-07 | 7w5d | Our Lady of the Rosary | Begin the Joyful Mysteries |
-| 2026-10-16 | 9w0d | **St Gerard Majella** | Patron of expectant mothers. End the novena here |
-| 2026-11-01 | 11w2d | All Saints / Undas | Family graves, and the generations this child joins |
-| 2026-12-08 | 16w4d | **Immaculate Conception** | Holy day of obligation in PH — *note: this falls during the Korea trip (5–9 Dec)* |
-| 2026-12-16 – 24 | 17w5d – 18w6d | **Simbang Gabi** | Nine dawn Masses. Second trimester — the best window for it |
-| 2026-12-25 | 19w0d | **Christmas — the Nativity** | Her first Christmas pregnant. A birth is the whole feast |
-| 2026-12-28 | 19w3d | Holy Innocents | For children lost, and mothers grieving |
-| 2027-01-01 | 20w0d | Mary, Mother of God | The year the baby arrives begins |
-| 2027-01-17 | 22w2d | **Santo Niño** | The Christ Child, weeks before the anomaly scan results settle |
-| 2027-02-02 | 24w4d | Presentation of the Lord | A baby brought to the temple — and the viability milestone week |
-| 2027-02-10 | 25w5d | Ash Wednesday | **Lent begins.** Pregnant and nursing women are *not* bound to fast |
-| 2027-03-19 | 31w0d | St Joseph | Nico's feast. A father who took on a child not by his own plan |
-| 2027-03-25 | 31w6d | **The Annunciation** | Nine months before Christmas. The day Mary said yes |
-| 2027-03-26 | 32w0d | Good Friday | |
-| 2027-03-28 | 32w2d | **Easter Sunday** | 32w2d — the RSV window opens two days earlier that same week |
-| 2027-05-01 | 37w1d | **Flores de Mayo begins** | Her whole final month is the month of Mary |
-| 2027-05-16 | 39w2d | Pentecost | Full term |
-| **2027-05-21** | **40w0d** | **EDD** | |
-| 2027-05-31 | 41w3d | **The Visitation** | Two pregnant women meeting. If the baby is late, this is the feast she waits through |
+| 2026-08-31 | 2w5d | **St Raymond Nonnatus** | Patron of childbirth — and inside the conception window they recall |
+| 2026-09-08 | 3w6d | Nativity of Mary | Mary's own birthday, in the first weeks |
+| 2026-10-07 | 8w0d | Our Lady of the Rosary | Begin the Joyful Mysteries |
+| 2026-10-16 | 9w2d | **St Gerard Majella** | Patron of expectant mothers. End the novena here |
+| 2026-11-01 | 11w4d | All Saints / Undas | Family graves, and the generations this child joins |
+| 2026-12-08 | 16w6d | **Immaculate Conception** | Holy day of obligation in PH — *note: this falls during the Korea trip (5–9 Dec)* |
+| 2026-12-16 – 24 | 18w0d – 19w1d | **Simbang Gabi** | Nine dawn Masses. Second trimester — the best window for it |
+| 2026-12-25 | 19w2d | **Christmas — the Nativity** | Her first Christmas pregnant. A birth is the whole feast |
+| 2026-12-28 | 19w5d | Holy Innocents | For children lost, and mothers grieving |
+| 2027-01-01 | 20w2d | Mary, Mother of God | The year the baby arrives begins |
+| 2027-01-17 | 22w4d | **Santo Niño** | The Christ Child, weeks before the anomaly scan results settle |
+| 2027-02-02 | 24w6d | Presentation of the Lord | A baby brought to the temple — and the viability milestone week |
+| 2027-02-10 | 26w0d | Ash Wednesday | **Lent begins.** Pregnant and nursing women are *not* bound to fast |
+| 2027-03-19 | 31w2d | St Joseph | Nico's feast. A father who took on a child not by his own plan |
+| 2027-03-25 | 32w1d | **The Annunciation** | Nine months before Christmas. The day Mary said yes |
+| 2027-03-26 | 32w2d | Good Friday | |
+| 2027-03-28 | 32w4d | **Easter Sunday** | The RSV window opens the same week |
+| 2027-05-01 | 37w3d | **Flores de Mayo begins** | Her whole final month is the month of Mary |
+| 2027-05-16 | 39w4d | Pentecost | Full term |
+| **2027-05-19** | **40w0d** | **EDD** | |
+| 2027-05-31 | 41w5d | **The Visitation** | Two pregnant women meeting. If the baby is late, this is the feast she waits through |
 
 **On Lent.** Ash Wednesday falls at 25 weeks. Canon law does not bind pregnant
 or nursing women to the fast, and Dani should not attempt it. If she wants a
