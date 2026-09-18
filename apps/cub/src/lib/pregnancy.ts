@@ -16,8 +16,8 @@ export const REFERENCE_CYCLE_LENGTH_DAYS = 28;
  *
  * This is now zero, and the history is worth keeping: it briefly carried a +2
  * fudge to force a particular week reading before the dating inputs were known.
- * With an LMP of 2026-08-15 and a 28–30 day cycle, the EDD is derived properly
- * by {@link eddFromLmp} and no offset is needed.
+ * The 18 Sept 2026 Makati Med scan supplied them — LMP 2026-08-14, EDC
+ * 2027-05-21 — so the EDD comes from the chart and no offset is needed.
  *
  * It stays in the model, stored per-pregnancy as `dating_offset_days`, because
  * it is the correct place to apply a clinic redating that does not come with a

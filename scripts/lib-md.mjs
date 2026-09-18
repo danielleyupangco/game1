@@ -132,7 +132,16 @@ export function mdToHtml(md) {
         i += 1;
       }
       const tag = ordered ? 'ol' : 'ul';
-      out.push(`<${tag}>${items.map((t) => `<li>${inline(t)}</li>`).join('')}</${tag}>`);
+      // Task-list items render as real checkboxes. They are disabled: this page
+      // is a read-only build of the documents, so a tick here would be lost on
+      // the next rebuild and imply persistence the page does not have.
+      const renderItem = (t) => {
+        const task = /^\[([ xX])\]\s+(.*)$/.exec(t);
+        if (!task) return `<li>${inline(t)}</li>`;
+        const done = task[1].toLowerCase() === 'x';
+        return `<li class="task"><input type="checkbox" disabled${done ? ' checked' : ''}> ${inline(task[2])}</li>`;
+      };
+      out.push(`<${tag}>${items.map(renderItem).join('')}</${tag}>`);
       continue;
     }
 

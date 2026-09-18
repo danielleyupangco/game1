@@ -13,9 +13,34 @@ export const DOCS = {
   pregnancy: readFileSync(new URL('../docs/pregnancy-guide.md', import.meta.url), 'utf8'),
   nico: readFileSync(new URL('../docs/nico-dad-guide.md', import.meta.url), 'utf8'),
   prayer: readFileSync(new URL('../docs/prayer-book.md', import.meta.url), 'utf8'),
+  medical: readFileSync(new URL('../docs/medical-log.md', import.meta.url), 'utf8'),
 };
 
-export const EDD = '2027-05-23';
+/** The clinic EDC from the 18 Sept 2026 Makati Med scan report. */
+export const EDD = '2027-05-21';
+
+/**
+ * Check-up entries, newest first. Each is a `## <date> — <title>` section in
+ * the medical log; the template block at the end of that file is skipped.
+ */
+export function extractCheckups() {
+  const entries = [];
+  const parts = DOCS.medical.split(/^## /m).slice(1);
+
+  for (const part of parts) {
+    const newline = part.indexOf('\n');
+    const heading = part.slice(0, newline).trim();
+    const date = /^(\d{4}-\d{2}-\d{2})|^(\d{1,2} \w+ \d{4})/.exec(heading);
+    if (!date) continue; // the template block
+    entries.push({
+      heading: inline(heading),
+      html: mdToHtml(part.slice(newline + 1).trim()),
+    });
+  }
+
+  if (!entries.length) throw new Error('No check-up entries extracted');
+  return entries;
+}
 
 /** Weeks 4-40, with the six fields each entry carries. */
 export function extractWeeks() {

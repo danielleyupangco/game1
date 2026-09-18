@@ -6,9 +6,10 @@
  * from a URL. Re-run after editing any guide.
  */
 
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import {
   EDD,
+  extractCheckups,
   extractCaffeine,
   extractCalendar,
   extractFoods,
@@ -22,6 +23,19 @@ const prayers = extractWeeklyPrayers();
 const foods = extractFoods();
 const caffeine = extractCaffeine();
 const calendar = extractCalendar();
+const checkups = extractCheckups();
+
+/**
+ * Scan images are inlined as data URIs rather than referenced as files, so the
+ * page stays a single artefact that opens offline from disk. Both were
+ * downscaled first; together they are under a megabyte.
+ */
+const image = (name) =>
+  'data:image/jpeg;base64,' +
+  readFileSync(new URL(`../docs/assets/${name}`, import.meta.url)).toString('base64');
+
+const SCAN_SAC = image('scan-2026-09-18-sac.jpg');
+const SCAN_FILMS = image('scan-2026-09-18-films.jpg');
 
 /** Attach each feast to the week it falls in, so the week view can show it. */
 const feastsByWeek = new Map();
@@ -98,6 +112,7 @@ const TABS = [
   ['money', 'Money'],
   ['prayers', 'Prayers'],
   ['nico', 'Nico'],
+  ['checkups', 'Check-ups'],
   ['calendar', 'Calendar'],
 ];
 
@@ -275,6 +290,15 @@ details.grief[open] summary{margin-bottom:.5rem}
 .subtab{border:1px solid var(--line);background:var(--surface);color:var(--fg-mute);border-radius:999px;padding:.35rem .75rem;font-family:var(--body);font-weight:700;font-size:.78rem;cursor:pointer}
 .subtab[aria-selected="true"]{background:var(--surface-2);color:var(--fg);border-color:var(--fg-mute)}
 
+.firstlook{margin:0 0 1.5rem;background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+.firstlook img{display:block;width:100%;height:auto}
+.firstlook figcaption{padding:.9rem 1.1rem;font-size:.9rem;color:var(--fg-mute);border-top:1px solid var(--line)}
+.firstlook figcaption b{color:var(--fg);font-family:var(--display);font-weight:600}
+details.films{margin-top:1.5rem;border:1px solid var(--line);border-radius:16px;padding:.8rem 1rem;background:var(--surface)}
+details.films summary{cursor:pointer;font-weight:700;font-size:.9rem;color:var(--fg-mute)}
+details.films img{display:block;width:100%;height:auto;margin-top:.8rem;border-radius:10px}
+.prose li.task{list-style:none;margin-left:-1.25rem;display:flex;gap:.55rem;align-items:flex-start}
+.prose li.task input{margin-top:.45rem;flex:none;accent-color:var(--blush-deep)}
 .cal{display:grid;gap:.4rem}
 .calrow{display:grid;grid-template-columns:96px 62px 1fr;gap:.8rem;align-items:baseline;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.6rem .85rem}
 .calrow .d{font-variant-numeric:tabular-nums;font-size:.82rem;color:var(--fg-mute)}
@@ -371,8 +395,23 @@ ${panel('nico', 'For Nico', `
   <div class="prose subview" id="n-life" hidden>${prose.nicoWellbeing}${prose.nicoDontSay}${prose.nicoLolas}</div>
   <div class="prose subview" id="n-bag" hidden>${prose.nicoBag}</div>`)}
 
+${panel('checkups', 'Check-ups', `
+  <figure class="firstlook">
+    <img src="${SCAN_SAC}" alt="First ultrasound, 18 September 2026: the gestational sac, with the yolk sac visible inside it." loading="eager">
+    <figcaption>
+      <b>18 September 2026 &middot; 5 weeks 0 days.</b>
+      The first picture of the cub &mdash; the gestational sac, 6.1mm across, with
+      the yolk sac visible inside it. Makati Medical Center.
+    </figcaption>
+  </figure>
+  <div class="prose">${checkups.map((c) => `<h3>${c.heading}</h3>${c.html}`).join('')}</div>
+  <details class="films"><summary>All six scan films</summary>
+    <img src="${SCAN_FILMS}" alt="The full contact sheet of six ultrasound films from the 18 September 2026 scan." loading="lazy">
+  </details>`,
+  `<p class="lede">Every appointment and result, newest first. A measurement only means something next to the one before it &mdash; which is the whole reason for keeping this.</p>`)}
+
 ${panel('calendar', 'Calendar', `<div class="cal" id="callist"></div><div class="prose">${prose.milestones}</div>`,
-  `<p class="lede">The liturgical year against gestational age. Moveable feasts were computed, not recalled &mdash; Easter 2027 is 28 March, which lands at exactly 32 weeks.</p>`)}
+  `<p class="lede">The liturgical year against gestational age. Moveable feasts were computed, not recalled &mdash; Easter 2027 is 28 March, which lands at 32w2d.</p>`)}
 
 ${panel('flags', 'When to call', `<div class="prose">${prose.redFlags}</div>`)}
 ${panel('about', 'Dating &amp; sources', `<div class="prose">${prose.dating}${prose.tests}${prose.nutrients}${prose.sources}</div>`)}

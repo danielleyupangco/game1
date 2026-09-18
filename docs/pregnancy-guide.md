@@ -4,7 +4,7 @@ Source content for the app. Everything here is written to be converted into
 structured seed data (`weeks`, `foods`, `stretch_routines`, `shops`,
 `red_flags`, expense bands), not rendered as prose.
 
-**Compiled 18 September 2026.** Dani's EDD is 23 May 2027; care is with
+**Compiled 18 September 2026.** Dani's EDC is 21 May 2027 (Makati Med, 18 Sept 2026); care is with
 Dra. Fe Villafria at Makati Medical Center.
 
 > **This is general information, not medical advice.** Every clinical item
@@ -50,9 +50,10 @@ offset is gone — it was a fudge standing in for information we now have.
 
 | Field | Value | Source |
 | --- | --- | --- |
-| First day of last period | **2026-08-15** | Dani |
-| Cycle length | **28–30 days**, average | Dani |
-| Early scan | **5w2d on 2026-09-18**, by gestational sac | Clinic |
+| First day of last period | **2026-08-14** | Makati Med scan report, 18 Sept 2026 |
+| Cycle length | **28–30 days**, average | Dani (Dani recalled LMP as the 15th; the chart says the 14th) |
+| Early scan | **5w2d on 2026-09-18**, by mean sac diameter | Makati Med, Dr. Quevedo |
+| **Clinic EDC** | **2027-05-21** | Makati Med scan report |
 
 ### What each method gives
 
@@ -62,30 +63,33 @@ difference.
 
 | Method | EDD | Implied conception |
 | --- | --- | --- |
-| LMP + 280, 28-day cycle | 2027-05-22 | 2026-08-29 |
-| **LMP + 280, 29-day cycle** | **2027-05-23** | **2026-08-30** |
-| LMP + 280, 30-day cycle | 2027-05-24 | 2026-08-31 |
-| Gestational sac, 5w2d | 2027-05-19 | 2026-08-26 |
+| **Chart: LMP 14 Aug + 280, 28-day cycle** | **2027-05-21** | **2026-08-28** |
+| Recalled LMP 15 Aug, 28-day cycle | 2027-05-22 | 2026-08-29 |
+| Recalled LMP 15 Aug, 29-day cycle | 2027-05-23 | 2026-08-30 |
+| Mean sac diameter, 5w2d | 2027-05-19 | 2026-08-26 |
 
-### The corroboration that settles it
+### The corroboration
 
-**Her cycle range maps exactly onto the conception window the couple recall.**
-They place conception in South Africa on **29–31 August**. A 28-day cycle implies
-the 29th, a 29-day cycle the 30th, a 30-day cycle the 31st. Every value in her
-stated range lands inside their independent recollection, and nothing outside it
-does.
+Every candidate lands within a few days of the conception window the couple
+independently recall — **29–31 August**, in South Africa. The chart date implies
+the 28th, one day before the window opens; a recalled LMP of the 15th with a
+29–30 day cycle lands inside it. The sac reading implies the 26th, furthest out.
 
-The sac reading implies conception on **26 August** — three days before that
-window opens.
+Spread across every method: **19–23 May**. Five days, which for a dating estimate
+this early is agreement, not conflict.
 
 ### Which dating wins, and why
 
-**LMP dating stands. The EDD remains 2027-05-23.**
+**LMP dating stands. The app uses 2027-05-21 — the clinic's EDC.**
+
+The app should never disagree with her medical record, and 21 May is the date on
+the chart, the date Dra. Villafria's team issued, and the date every appointment
+will be booked against.
 
 ACOG Committee Opinion 700 sets when a scan should replace LMP dating: at
-8w6d or earlier, only when the two disagree by **more than 5 days**. Here the
-disagreement is **3–5 days** depending on which cycle length is assumed. That is
-inside the tolerance, so the LMP date is kept.
+8w6d or earlier, only when the two disagree by **more than 5 days**. On the
+chart's own numbers the disagreement is **2 days** — the report header reads AOG
+5w0d by LMP against 5w2d by sac. Well inside tolerance, so the LMP date is kept.
 
 Two further reasons not to redate on this scan:
 
@@ -104,8 +108,8 @@ an offset.
 
 ### Where the pregnancy stands
 
-On **18 September 2026**, with an EDD of 2027-05-23: **Week 4, Day 5**, with 247
-days to go.
+On **18 September 2026**, with an EDD of 2027-05-21: **Week 5, Day 0**, with 245
+days to go — matching the AOG on the scan report.
 
 The app computes this as `280 − (EDD − today)` on Manila calendar dates, plus a
 per-pregnancy `dating_offset_days` that is **now zero**. The offset stays in the
@@ -120,21 +124,22 @@ standard-dating column: the EDD did not move.
 
 | Milestone | Gestational age | Date |
 | --- | --- | --- |
-| Implied LMP | 0w0d | 2026-08-15 |
-| Implied conception | 2w0d | 2026-08-30 |
-| NIPT available from | 10w0d | 2026-10-25 |
-| **Dating scan — the one that settles dating** | **7w0d – 9w0d** | **2026-10-04 – 2026-10-18** |
-| NT scan window | 11w0d – 13w6d | 2026-11-01 – 2026-11-21 |
-| End of first trimester | 13w6d | 2026-11-21 |
-| Anomaly scan window | 18w0d – 22w0d | 2026-12-20 – 2027-01-17 |
-| OGTT window | 24w0d – 28w0d | 2027-01-31 – 2027-02-28 |
-| Tdap window | 27w0d – 36w0d | 2027-02-21 – 2027-04-25 |
-| Third trimester begins | 28w0d | 2027-02-28 |
-| RSV vaccine window opens | 32w0d | 2027-03-28 |
-| GBS swab window | 35w0d – 37w0d | 2027-04-18 – 2027-05-02 |
-| Hospital bag packed by | 35w0d | 2027-04-18 |
-| Term | 37w0d | 2027-05-02 |
-| **EDD** | **40w0d** | **2027-05-23** |
+| Implied LMP | 0w0d | 2026-08-14 |
+| Implied conception | 2w0d | 2026-08-28 |
+| **Repeat scan — confirms viability** | **6w3d – 7w3d** | **2026-09-28 – 2026-10-05** |
+| Dating scan window (CRL measurable) | 7w0d – 9w0d | 2026-10-02 – 2026-10-16 |
+| NIPT available from | 10w0d | 2026-10-23 |
+| NT scan window | 11w0d – 13w6d | 2026-10-30 – 2026-11-19 |
+| End of first trimester | 13w6d | 2026-11-19 |
+| Anomaly scan window | 18w0d – 22w0d | 2026-12-18 – 2027-01-15 |
+| OGTT window | 24w0d – 28w0d | 2027-01-29 – 2027-02-26 |
+| Tdap window | 27w0d – 36w0d | 2027-02-19 – 2027-04-23 |
+| Third trimester begins | 28w0d | 2027-02-26 |
+| RSV vaccine window opens | 32w0d | 2027-03-26 |
+| GBS swab window | 35w0d – 37w0d | 2027-04-16 – 2027-04-30 |
+| Hospital bag packed by | 35w0d | 2027-04-16 |
+| Term | 37w0d | 2027-04-30 |
+| **EDD** | **40w0d** | **2027-05-21** |
 
 40 weeks now lands exactly on the due date, which is what an estimated due date
 means and what the offset was previously breaking.
@@ -881,8 +886,13 @@ Shorter holds, wider base, more support. Everything can be done holding a chair.
 
 ### The November walk
 
-Dani is walking a marathon event in November 2026 — around **week 15–16**,
-which is the best-timed part of the pregnancy for it.
+Dani is walking a marathon event in November 2026. Across that month she moves
+from **week 11 to week 16**, so the exact event date matters — early November is
+still the first trimester, late November is comfortably the second.
+
+> **Ask Dra. Villafria first, specifically about the subchorionic hemorrhage**
+> found on 18 September. The evidence does not support routine activity
+> restriction for a small SCH, but this is her call to make, not the app's.
 
 **Heat and hydration checklist:**
 - Start before 6am. Manila heat by 9am is the real risk, not the distance.
@@ -900,15 +910,15 @@ which is the best-timed part of the pregnancy for it.
 
 ## 8. Travel
 
-Weeks below are on the dating in section 1 (LMP 15 Aug 2026, EDD 23 May 2027).
-Unchanged by the September 2026 dating update.
+Weeks below are on the dating in section 1 (LMP 14 Aug 2026, EDC 21 May 2027, as
+issued by Makati Med on 18 September).
 
 | Trip | Dates | Week at start | Risk | Zika |
 | --- | --- | --- | --- | --- |
-| Vietnam | early Oct 2026 | ~7w1d | moderate | yes — present |
-| Korea | 5–9 Dec 2026 | 15w6d – 16w3d | low | no |
-| India | Jan 2027 | ~21w5d | high | yes — present |
-| Mexico | Mar 2027 | ~30w1d | **avoid** | yes — present |
+| Vietnam | early Oct 2026 | ~7w3d | moderate | yes — present |
+| Korea | 5–9 Dec 2026 | 16w1d – 16w5d | low | no |
+| India | Jan 2027 | ~22w0d | high | yes — present |
+| Mexico | Mar 2027 | ~30w3d | **avoid** | yes — present |
 
 ### The one rule that applies to all four
 
@@ -927,6 +937,11 @@ full remaining duration.
 
 First trimester, and the nausea is likely at its worst. That is the main
 practical constraint, not the destination.
+
+> **Have the repeat scan before flying.** The 18 September scan found a small
+> subchorionic hemorrhage and recommended a follow-up in 1–2 weeks —
+> 28 Sept–5 Oct, which overlaps this trip. That scan confirms viability; do it in
+> Makati, not after landing. See the medical log.
 
 - **Mosquitoes:** dengue and Zika both circulate. DEET up to 30% is safe in
   pregnancy — as is picaridin. Cover up at dawn and dusk, when *Aedes* bites.
