@@ -1,0 +1,149 @@
+@import 'tailwindcss';
+
+/*
+ * Palette. The named hues are the brand; the semantic tokens below are what
+ * components actually use, so a hue can be retuned in one place.
+ *
+ * Contrast is held to WCAG AA in both themes: body text sits at 8.3:1 on cream
+ * and 12.6:1 on charcoal, and the pastel surfaces are only ever used behind
+ * ink-coloured text, never behind white.
+ */
+@theme {
+  --color-cream: #fbf7f0;
+  --color-blush: #f4d9d9;
+  --color-sage: #cde0d0;
+  --color-powder: #cfe0ec;
+  --color-butter: #f6ebc8;
+  --color-ink: #4a4a4a;
+
+  /* Darker variants, for text and icons that need to read on a pastel fill. */
+  --color-blush-deep: #8c4f4f;
+  --color-sage-deep: #3f6b49;
+  --color-powder-deep: #3c6383;
+  --color-butter-deep: #7a6222;
+
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+}
+
+/* Semantic tokens — light theme. */
+:root {
+  --background: var(--color-cream);
+  --surface: #ffffff;
+  --surface-muted: #f5efe5;
+  --foreground: var(--color-ink);
+  --foreground-muted: #6d6a66;
+  --border: #e6ddd0;
+  --accent: var(--color-blush);
+  --accent-foreground: var(--color-blush-deep);
+  --ring: var(--color-powder-deep);
+
+  /* Nico's section runs on sage instead of blush. */
+  --nico-accent: var(--color-sage);
+  --nico-accent-foreground: var(--color-sage-deep);
+
+  color-scheme: light;
+}
+
+/*
+ * Dark theme: warm charcoal rather than pure black, with the pastels
+ * desaturated so they read as accents instead of glowing.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --background: #201d1b;
+    --surface: #2a2624;
+    --surface-muted: #332e2b;
+    --foreground: #ede7df;
+    --foreground-muted: #b3aaa0;
+    --border: #413a36;
+    --accent: #5b4344;
+    --accent-foreground: #f0cfcf;
+    --ring: #9cc2dc;
+    --nico-accent: #3e5245;
+    --nico-accent-foreground: #bcdcc3;
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --background: #201d1b;
+  --surface: #2a2624;
+  --surface-muted: #332e2b;
+  --foreground: #ede7df;
+  --foreground-muted: #b3aaa0;
+  --border: #413a36;
+  --accent: #5b4344;
+  --accent-foreground: #f0cfcf;
+  --ring: #9cc2dc;
+  --nico-accent: #3e5245;
+  --nico-accent-foreground: #bcdcc3;
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-ring: var(--ring);
+  --color-nico-accent: var(--nico-accent);
+  --color-nico-accent-foreground: var(--nico-accent-foreground);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    /* Keeps content clear of the iPhone home indicator and the bottom tab bar. */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  /* A visible focus ring everywhere, since the app is keyboard- and
+     switch-control navigable as well as touch. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+/* The bump illustration breathes; the confetti burst celebrates a milestone.
+   Both are suppressed wholesale for anyone who asks for reduced motion. */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+
+.animate-breathe {
+  animation: breathe 5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
