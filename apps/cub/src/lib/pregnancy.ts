@@ -8,17 +8,53 @@ import {
 /** A pregnancy is dated as 40 weeks from the last menstrual period. */
 export const FULL_TERM_DAYS = 280;
 
+/** A cycle of this length is what Naegele's rule assumes. */
+export const REFERENCE_CYCLE_LENGTH_DAYS = 28;
+
 /**
  * Days added to the raw dating arithmetic before it is shown.
  *
- * Dani's chart is dated two days ahead of what `EDD − today` alone produces:
- * with an EDD of 2027-05-23, 2026-09-16 reads as Week 4, Day 5 rather than the
- * Week 4, Day 3 the bare subtraction gives. Rather than bury that difference,
- * it lives here as one number, is stored per-pregnancy as `dating_offset_days`,
- * and is editable in Settings — which is also how a dating scan correction gets
- * applied, since scans routinely move dating by a few days.
+ * This is now zero, and the history is worth keeping: it briefly carried a +2
+ * fudge to force a particular week reading before the dating inputs were known.
+ * With an LMP of 2026-08-15 and a 28–30 day cycle, the EDD is derived properly
+ * by {@link eddFromLmp} and no offset is needed.
+ *
+ * It stays in the model, stored per-pregnancy as `dating_offset_days`, because
+ * it is the correct place to apply a clinic redating that does not come with a
+ * revised LMP. It should be set from a scan, never to make a number look right.
  */
-export const DEFAULT_DATING_OFFSET_DAYS = 2;
+export const DEFAULT_DATING_OFFSET_DAYS = 0;
+
+/**
+ * The due date implied by a last menstrual period — Naegele's rule, corrected
+ * for cycle length.
+ *
+ * Naegele assumes ovulation on day 14 of a 28-day cycle. A longer cycle ovulates
+ * later, so the due date moves later by the same difference; without this
+ * correction a 30-day cycle is dated two days early.
+ */
+export function eddFromLmp(lmp: CivilDate, cycleLengthDays = REFERENCE_CYCLE_LENGTH_DAYS): CivilDate {
+  return addCivilDays(lmp, FULL_TERM_DAYS + (cycleLengthDays - REFERENCE_CYCLE_LENGTH_DAYS));
+}
+
+/**
+ * Whether a scan's dating should replace LMP dating.
+ *
+ * ACOG Committee Opinion 700: in the first trimester a crown-rump length
+ * measurement redates the pregnancy only when it disagrees with LMP dating by
+ * more than a threshold that widens with gestational age. Inside the threshold
+ * the LMP date stands, because swapping dating on every small disagreement adds
+ * noise rather than accuracy.
+ *
+ * The thresholds assume a crown-rump length. A mean sac diameter is not a
+ * recommended dating measurement, so a sac-derived age should be treated as
+ * weaker evidence than this function's verdict alone suggests.
+ */
+export function shouldRedateFromScan(discrepancyDays: number, scanWeeks: number): boolean {
+  const toleranceDays =
+    scanWeeks <= 8 ? 5 : scanWeeks <= 13 ? 7 : scanWeeks <= 15 ? 7 : scanWeeks <= 21 ? 10 : scanWeeks <= 27 ? 14 : 21;
+  return Math.abs(discrepancyDays) > toleranceDays;
+}
 
 export type Trimester = 1 | 2 | 3;
 

@@ -107,9 +107,15 @@ create table public.pregnancy (
   household_id       uuid not null unique references public.households (id) on delete cascade,
   edd                date not null,
   conception_date    date,
-  -- Clinic dating adjustment applied on top of the 280-day count; see
-  -- src/lib/pregnancy.ts. A dating scan correction is applied here.
-  dating_offset_days smallint not null default 2,
+  -- The inputs the EDD is derived from, kept so dating can be recomputed rather
+  -- than only stored. Naegele's rule assumes a 28-day cycle, so a longer cycle
+  -- moves the due date later by the difference.
+  lmp_date           date,
+  cycle_length_days  smallint default 28,
+  -- Clinic redating applied on top of the 280-day count; see
+  -- src/lib/pregnancy.ts. Defaults to zero: it is for a scan correction that
+  -- does not come with a revised LMP, never for bending the arithmetic.
+  dating_offset_days smallint not null default 0,
   ob_name            text default 'Dra. Fe Villafria',
   ob_phone           text,
   hospital           text default 'Makati Medical Center',
@@ -121,7 +127,8 @@ create table public.pregnancy (
 
   constraint pregnancy_weight_range check (prepreg_weight_kg is null or prepreg_weight_kg between 20 and 300),
   constraint pregnancy_height_range check (height_cm is null or height_cm between 100 and 250),
-  constraint pregnancy_offset_range check (dating_offset_days between -14 and 14)
+  constraint pregnancy_offset_range check (dating_offset_days between -14 and 14),
+  constraint pregnancy_cycle_range check (cycle_length_days is null or cycle_length_days between 20 and 45)
 );
 
 -- Row level security --------------------------------------------------------

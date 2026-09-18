@@ -706,7 +706,8 @@ Flores de Mayo at 36 weeks and over.** There is no better month to be waiting.
 ## 8. The liturgical year, mapped to this pregnancy
 
 `kind: season`. Gestational ages are on **standard dating** (see the pregnancy
-guide — the +2 display offset shifts each by two days and changes nothing here).
+guide). These are unchanged by the September 2026 dating update: the EDD stayed
+at 23 May 2027 and the +2 display offset was removed.
 Moveable feasts were computed, not recalled: **Easter 2027 is 28 March.**
 
 | Date | Week | Feast | Why it lands well |

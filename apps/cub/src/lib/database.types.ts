@@ -57,6 +57,8 @@ export type PregnancyRow = {
   household_id: string;
   edd: string;
   conception_date: string | null;
+  lmp_date: string | null;
+  cycle_length_days: number | null;
   dating_offset_days: number;
   ob_name: string | null;
   ob_phone: string | null;

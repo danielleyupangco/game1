@@ -43,59 +43,101 @@ section for how this is handled.
 
 ## 1. Dating and the key dates
 
-| Field | Value | Source | Confidence |
-| --- | --- | --- | --- |
-| EDD | 2027-05-23 | Given | — |
-| Term length | 280 days from LMP | Naegele's rule, standard obstetric dating | high |
-| Implied LMP (bare count) | 2026-08-16 | Derived | high |
-| Implied conception (bare count) | 2026-08-30 | LMP + 14 days | high |
-| Displayed dating offset | +2 days | App setting `dating_offset_days` | — |
+**Updated 18 September 2026** with the real dating inputs. The earlier +2 display
+offset is gone — it was a fudge standing in for information we now have.
 
-**The offset, and why it is flagged.** The app displays gestational age as
-`280 − (EDD − today) + dating_offset_days`, with the offset defaulting to `2`
-so that 16 Sept 2026 reads as Week 4, Day 5. The bare subtraction gives Week 4,
-Day 3.
+### The inputs
 
-The bare count also places conception on **30 August 2026** — the middle of the
-29–31 August window the couple recall. The offset moves it to 28 August, just
-outside. That is a reason to raise the dating with Dra. Villafria at the dating
-scan rather than to assume the app is right. Setting the offset to `0` reverts
-to standard dating.
+| Field | Value | Source |
+| --- | --- | --- |
+| First day of last period | **2026-08-15** | Dani |
+| Cycle length | **28–30 days**, average | Dani |
+| Early scan | **5w2d on 2026-09-18**, by gestational sac | Clinic |
 
-### Milestone dates computed from the EDD
+### What each method gives
 
-Both columns are shown because they differ, and the difference matters.
+Naegele's rule is LMP + 280 days, which assumes a 28-day cycle with ovulation on
+day 14. A longer cycle ovulates later, so the due date moves later by the same
+difference.
 
-| Milestone | Gestational age | Standard dating | With +2 offset |
-| --- | --- | --- | --- |
-| Implied LMP | 0w0d | 2026-08-16 | 2026-08-14 |
-| Implied conception | 2w0d | 2026-08-30 | 2026-08-28 |
-| NIPT available from | 10w0d | 2026-10-25 | 2026-10-23 |
-| NT scan window | 11w0d – 13w6d | 2026-11-01 – 2026-11-21 | 2026-10-30 – 2026-11-19 |
-| End of first trimester | 13w6d | 2026-11-21 | 2026-11-19 |
-| Anomaly scan window | 18w0d – 22w0d | 2026-12-20 – 2027-01-17 | 2026-12-18 – 2027-01-15 |
-| OGTT window | 24w0d – 28w0d | 2027-01-31 – 2027-02-28 | 2027-01-29 – 2027-02-26 |
-| Tdap window | 27w0d – 36w0d | 2027-02-21 – 2027-04-25 | 2027-02-19 – 2027-04-23 |
-| Third trimester begins | 28w0d | 2027-02-28 | 2027-02-26 |
-| RSV vaccine window opens | 32w0d | 2027-03-28 | 2027-03-26 |
-| GBS swab window | 35w0d – 37w0d | 2027-04-18 – 2027-05-02 | 2027-04-16 – 2027-04-30 |
-| Hospital bag packed by | 35w0d | 2027-04-18 | 2027-04-16 |
-| Term | 37w0d | 2027-05-02 | 2027-04-30 |
-| 40 weeks | 40w0d | **2027-05-23** | **2027-05-21** |
+| Method | EDD | Implied conception |
+| --- | --- | --- |
+| LMP + 280, 28-day cycle | 2027-05-22 | 2026-08-29 |
+| **LMP + 280, 29-day cycle** | **2027-05-23** | **2026-08-30** |
+| LMP + 280, 30-day cycle | 2027-05-24 | 2026-08-31 |
+| Gestational sac, 5w2d | 2027-05-19 | 2026-08-26 |
 
-**Read the last row.** Under standard dating, 40w0d lands exactly on the EDD,
-which is what "estimated due date" means. With the +2 offset, the app reaches
-40 weeks *two days before* Dani's due date, and every window above shifts two
-days early with it.
+### The corroboration that settles it
 
-That is not a rounding artifact — it is the offset doing exactly what it was
-asked to do, and it is why the offset is presentation-only:
+**Her cycle range maps exactly onto the conception window the couple recall.**
+They place conception in South Africa on **29–31 August**. A 28-day cycle implies
+the 29th, a 29-day cycle the 30th, a 30-day cycle the 31st. Every value in her
+stated range lands inside their independent recollection, and nothing outside it
+does.
 
-- **Seed the appointment planner from the standard-dating column.** Those are
-  the dates to book against and the ones to put in front of Dra. Villafria.
-- **The offset changes only the "Week N, Day N" label** on the home screen.
-- If the dating scan confirms the 29–31 August conception window, set
-  `dating_offset_days` to `0` and the two columns collapse into one.
+The sac reading implies conception on **26 August** — three days before that
+window opens.
+
+### Which dating wins, and why
+
+**LMP dating stands. The EDD remains 2027-05-23.**
+
+ACOG Committee Opinion 700 sets when a scan should replace LMP dating: at
+8w6d or earlier, only when the two disagree by **more than 5 days**. Here the
+disagreement is **3–5 days** depending on which cycle length is assumed. That is
+inside the tolerance, so the LMP date is kept.
+
+Two further reasons not to redate on this scan:
+
+- **The thresholds are written for crown-rump length.** A mean sac diameter is
+  not a recommended dating measurement, and at 5w2d there is often no measurable
+  embryo yet. The sac reading is weaker evidence than the numbers suggest.
+- **The methods actually agree.** Three to five days apart, this early, is
+  corroboration rather than conflict.
+
+**What settles it properly:** the dating scan at 7–9 weeks, when a crown-rump
+length can be measured. That is the measurement ACOG dates by, and if it moves
+the EDD by more than five days, redate then — by changing the EDD, not by adding
+an offset.
+
+*Source: [ACOG Committee Opinion 700, Methods for Estimating the Due Date](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2017/05/methods-for-estimating-the-due-date). Verified 2026-09-18. Confidence: high.*
+
+### Where the pregnancy stands
+
+On **18 September 2026**, with an EDD of 2027-05-23: **Week 4, Day 5**, with 247
+days to go.
+
+The app computes this as `280 − (EDD − today)` on Manila calendar dates, plus a
+per-pregnancy `dating_offset_days` that is **now zero**. The offset stays in the
+model because it is the right place to hold a clinic redating that arrives
+without a revised LMP — but it is set from a scan, never to make a number look
+right.
+
+### Milestone dates
+
+One column now, because there is only one dating. Unchanged from the previous
+standard-dating column: the EDD did not move.
+
+| Milestone | Gestational age | Date |
+| --- | --- | --- |
+| Implied LMP | 0w0d | 2026-08-15 |
+| Implied conception | 2w0d | 2026-08-30 |
+| NIPT available from | 10w0d | 2026-10-25 |
+| **Dating scan — the one that settles dating** | **7w0d – 9w0d** | **2026-10-04 – 2026-10-18** |
+| NT scan window | 11w0d – 13w6d | 2026-11-01 – 2026-11-21 |
+| End of first trimester | 13w6d | 2026-11-21 |
+| Anomaly scan window | 18w0d – 22w0d | 2026-12-20 – 2027-01-17 |
+| OGTT window | 24w0d – 28w0d | 2027-01-31 – 2027-02-28 |
+| Tdap window | 27w0d – 36w0d | 2027-02-21 – 2027-04-25 |
+| Third trimester begins | 28w0d | 2027-02-28 |
+| RSV vaccine window opens | 32w0d | 2027-03-28 |
+| GBS swab window | 35w0d – 37w0d | 2027-04-18 – 2027-05-02 |
+| Hospital bag packed by | 35w0d | 2027-04-18 |
+| Term | 37w0d | 2027-05-02 |
+| **EDD** | **40w0d** | **2027-05-23** |
+
+40 weeks now lands exactly on the due date, which is what an estimated due date
+means and what the offset was previously breaking.
 
 ---
 
@@ -858,8 +900,8 @@ which is the best-timed part of the pregnancy for it.
 
 ## 8. Travel
 
-Weeks below are on **standard dating** (the +2 offset shifts each by two days;
-it does not change any recommendation).
+Weeks below are on the dating in section 1 (LMP 15 Aug 2026, EDD 23 May 2027).
+Unchanged by the September 2026 dating update.
 
 | Trip | Dates | Week at start | Risk | Zika |
 | --- | --- | --- | --- | --- |
