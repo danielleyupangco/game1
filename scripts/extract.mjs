@@ -30,8 +30,10 @@ export function extractCheckups() {
   for (const part of parts) {
     const newline = part.indexOf('\n');
     const heading = part.slice(0, newline).trim();
-    const date = /^(\d{4}-\d{2}-\d{2})|^(\d{1,2} \w+ \d{4})/.exec(heading);
-    if (!date) continue; // the template block
+    // Accepts an ISO date or a written one, including a range such as
+    // "4-5 September 2026". Anything else is the template block at the end.
+    const dated = /^\d{4}-\d{2}-\d{2}|^\d{1,2}(\s*[–-]\s*\d{1,2})?\s+\w+\s+\d{4}/.test(heading);
+    if (!dated) continue;
     entries.push({
       heading: inline(heading),
       html: mdToHtml(part.slice(newline + 1).trim()),

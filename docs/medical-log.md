@@ -185,6 +185,151 @@ activity and crown-rump length.
 
 ---
 
+## 18 September 2026 — Booking bloods, serology and urinalysis · 5w0d
+
+**Makati Medical Center**, Department of Pathology and Laboratories. Ordered
+4 September 2026 by Dr. Marinette Tuason Sto. Domingo; collected and released
+18 September.
+
+### Serology and infection screen — Lab 26596449, 26596452
+
+| Test | Result | Reading |
+| --- | --- | --- |
+| **Rubella IgG** | Reactive, **219.0 IU/mL** | **Immune.** The result you want. |
+| **HBsAg** | Nonreactive | No hepatitis B infection. |
+| **Anti-HBs** | Reactive, **288.00 IU/L** | **Immune, from vaccination.** |
+| **Anti-HCV** | Nonreactive | No hepatitis C. |
+| **RPR (qualitative)** | Nonreactive | Syphilis screen negative. |
+
+**Two of these come with lab boilerplate that reads worse than the result is.
+Read this before you read the report.**
+
+**Rubella IgG reactive means protected, not infected.** The printed comment
+— *"reactive result suggests possible infection"* — is generic text attached to
+the assay, not a finding about her. IgG is the long-term antibody: it is what
+remains after childhood MMR vaccination or a past infection, and its presence is
+the definition of immunity. Acute infection would show as **IgM**, which was not
+what was measured. At 219 IU/mL she is far above the usual protective threshold
+of around 10 IU/mL.
+
+This matters more than almost any other line on the page. Rubella caught during
+early pregnancy is one of the few infections that causes serious congenital
+harm, and there is no way to vaccinate against it while pregnant. **Being
+already immune removes that risk entirely.**
+
+**Anti-HBs reactive with HBsAg nonreactive is the textbook vaccinated picture.**
+The comment says "current or past infection, or recent vaccination" — but read
+the two lines together and it resolves cleanly: HBsAg is the marker of actual
+infection, and it is **negative**. Anti-HBs is the protective antibody, and at
+288 IU/L it is a strong titre (above 10 is considered protective). She is
+vaccinated and immune, not a carrier. Practically, this means **the baby will
+not need hepatitis B immunoglobulin at birth** on her account.
+
+### Chemistry — Lab 26596443
+
+| Test | Result | Reference |
+| --- | --- | --- |
+| **Hemoglobin A1c (NGSP)** | **5.2 %** | Less than 5.7 % |
+| Hemoglobin A1c (IFCC) | 33 mmol/mol | Less than 39 |
+
+Normal, with room to spare. The 5.7–6.4 % band is where increased diabetes risk
+starts, and 6.5 % and above is the diagnostic range. **A useful baseline going
+into the OGTT at 24–28 weeks** — it means she starts this pregnancy with normal
+glucose handling, so a later abnormal OGTT would be genuinely gestational rather
+than something pre-existing that had gone unnoticed.
+
+### Routine urinalysis — Lab 26596441
+
+| | Result |
+| --- | --- |
+| Colour / transparency | Yellow, clear |
+| pH | 7.0 (ref 4.8–7.8) |
+| **Specific gravity** | **1.002 — flagged low** (ref 1.015–1.025) |
+| **Protein** | **Negative** |
+| Glucose, ketones, bilirubin | Negative |
+| **Nitrites, leucocyte esterase** | **Negative** |
+| Blood | Negative |
+| RBC / WBC / epithelial cells | 0 /HPF |
+| Bacteria | 10 /HPF (ref 0–50) |
+| Crystals, casts | None seen |
+
+**Clean.** Three things worth naming:
+
+- **Protein negative** is the pre-eclampsia baseline. Pre-eclampsia is high blood
+  pressure *plus* protein in the urine, so a clean booking sample beside a
+  booking BP of 120/70 is exactly the pair of numbers she wants on file.
+- **No sign of a urinary infection** — nitrites, leucocyte esterase and WBCs all
+  negative. Worth noting because UTIs are common in pregnancy, often silent, and
+  matter more than they do otherwise.
+- **The low specific gravity just means very dilute urine** — she was well
+  hydrated when she gave the sample. Not a problem in itself. The only caveat is
+  that a very dilute sample is slightly less sensitive, so faint findings can be
+  missed. Nothing to redo on its own.
+
+### Actions
+
+- [ ] **Get the blood type and Rh status.** Not in this set, and it is standard
+      booking work. See the note below on why it is not urgent.
+- [ ] **Ask for the hematology / CBC result** (Lab 26596440). It was released the
+      same morning but is not in this batch — that is the haemoglobin and
+      platelet baseline, and anemia is common in Philippine pregnancies.
+- [ ] Confirm whether **HIV screening** was included; it is standard in the
+      Philippine prenatal panel and is not among these reports.
+- [ ] Mention the Pap smear inflammation note at the next visit.
+
+### On Rh, since there is a bleed
+
+The instinct with any first-trimester bleeding is to worry about anti-D
+immunoglobulin. **Current guidance says not to.** ACOG's 2024 clinical practice
+update states that patients under 12 weeks with vaginal bleeding or pregnancy
+loss **do not require routine Rh testing, and RhIg prophylaxis is not
+recommended** — recent evidence found fetal red cells in maternal circulation
+stayed below the sensitization threshold in 99.8% of cases before 12 weeks.
+SOGC, RCOG and WHO have moved the same way.
+
+So: still get the blood type, because it is needed for the 28-week anti-D dose
+and for delivery. But it is **not an emergency because of this bleed**, and it
+can be added to the next blood draw.
+
+### Next
+
+Repeat scan, 28 Sept – 5 Oct. Chase the CBC and blood type.
+
+*Sources: [ACOG Clinical Practice Update — Rh D Immune Globulin at Less Than 12 Weeks](https://pubmed.ncbi.nlm.nih.gov/39255498/); [ASRM position statement on Rho(D) immune globulin in the first trimester (2026)](https://www.asrm.org/practice-guidance/practice-committee-documents/position-statement-on-rhod-immune-globulin-administration-in-the-first-trimester-2026/); American Diabetes Association HbA1c thresholds, as printed on the report. Verified 2026-09-18. Confidence: high on the result readings; high on the Rh guidance.*
+
+---
+
+## 4–5 September 2026 — Pap smear · pre-pregnancy work-up
+
+**Makati Medical Center**, Lab CF2608270. Cytology, conventional processing.
+Requesting clinician: Dr. Marinette Tuason Sto. Domingo. Reported by
+Dr. Alejandro E. Arevalo, MD, FPSP.
+
+| | Result |
+| --- | --- |
+| Clinical impression | Essentially normal gyne findings |
+| Adequacy of specimen | Satisfactory for evaluation |
+| **General categorization** | **Negative for intraepithelial lesion or malignancy** |
+| Comments | Inflammation |
+| LMP recorded | **14 August 2026** |
+
+**"Negative for intraepithelial lesion or malignancy" — NILM — is a normal Pap.**
+No precancerous or cancerous cells. That is the whole point of the test and it
+came back clear.
+
+**The inflammation note is common and usually non-specific.** It describes what
+the cells looked like, not a diagnosis. It can follow a minor irritation, a
+recent infection, or nothing identifiable at all. It is worth mentioning at the
+next visit so Dra. Villafria can decide whether it needs anything, but on its own
+beside a NILM result it is not a finding to chase.
+
+**One useful side effect:** this report independently records **LMP 14 August
+2026** — written down two weeks before the scan, for a different purpose, by a
+different department. That is third-party corroboration of the date the whole
+dating calculation rests on.
+
+---
+
 ## Template for the next entry
 
 Copy this block. The site picks up any `## ` heading dated `YYYY-MM-DD`.
