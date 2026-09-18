@@ -226,7 +226,7 @@ milestone appears varies by a week either way between sources.*
 - *Tests:* Bloods at the first visit: blood type, CBC, hepatitis B, syphilis, HIV, urinalysis.
 - *Nutrition:* Small, frequent meals beat three large ones. Dry crackers before getting up can help.
 - *Stretch:* Morning routine, trimester one — slow, short, no core work.
-- *Filipino life:* **Vietnam trip lands near here.** See the travel section for the mosquito and food-hygiene rules.
+- *Filipino life:* The repeat scan falls in this window. Vietnam was planned for around now and has been cancelled.
 
 **Week 8 — raspberry / one small kalamansi to a grape**
 - *Baby:* Now officially a fetus. Fingers and toes are separating. It moves, though you cannot feel it.
@@ -300,7 +300,7 @@ milestone appears varies by a week either way between sources.*
 - *Tests:* Routine. Book the anomaly scan.
 - *Nutrition:* Choline — eggs are the easiest source.
 - *Stretch:* Pelvic tilts. Avoid supine positions.
-- *Filipino life:* **Korea trip falls near here** — the best-timed of the four. See travel.
+- *Filipino life:* **Korea trip falls near here** — the best-timed trip. See travel.
 
 **Week 17 — pear / one guava**
 - *Baby:* Fat stores begin to form. The skeleton shifts from cartilage to bone.
@@ -340,7 +340,7 @@ milestone appears varies by a week either way between sources.*
 - *Tests:* Routine.
 - *Nutrition:* Smaller meals help heartburn more than avoiding specific foods does.
 - *Stretch:* Upper-back opener; posture is starting to change.
-- *Filipino life:* **India trip falls near here.** This is the highest-planning trip of the four — see travel.
+- *Filipino life:* **India trip falls near here.** This is the highest-planning trip — see travel.
 
 **Week 22 — papaya / one small melon**
 - *Baby:* Lips, eyelids and eyebrows are distinct. Grip is developing.
@@ -915,12 +915,12 @@ issued by Makati Med on 18 September).
 
 | Trip | Dates | Week at start | Risk | Zika |
 | --- | --- | --- | --- | --- |
-| Vietnam | early Oct 2026 | ~7w3d | moderate | yes — present |
+| ~~Vietnam~~ | ~~early Oct 2026~~ | ~~7w3d~~ | **cancelled** | — |
 | Korea | 5–9 Dec 2026 | 16w1d – 16w5d | low | no |
 | India | Jan 2027 | ~22w0d | high | yes — present |
 | Mexico | Mar 2027 | ~30w3d | **avoid** | yes — present |
 
-### The one rule that applies to all four
+### The rule that applies to every trip
 
 **If Nico travels to a Zika-risk area, the couple use condoms or abstain for
 the rest of the pregnancy** — regardless of whether he has symptoms, and
@@ -933,28 +933,22 @@ full remaining duration.
 
 *Source: [CDC — Preventing Zika](https://www.cdc.gov/zika/prevention/index.html), [CDC — Recommendations for travelers](https://www.cdc.gov/zika/travel/index.html). Verified 2026-09-18. Confidence: high.*
 
-### Vietnam — early October 2026, ~week 7
+### Vietnam — cancelled
 
-First trimester, and the nausea is likely at its worst. That is the main
-practical constraint, not the destination.
+Planned for early October 2026, around week 7. **Not going** (decided
+18 September 2026).
 
-> **Have the repeat scan before flying.** The 18 September scan found a small
-> subchorionic hemorrhage and recommended a follow-up in 1–2 weeks —
-> 28 Sept–5 Oct, which overlaps this trip. That scan confirms viability; do it in
-> Makati, not after landing. See the medical log.
+Worth recording why it no longer matters: it would have fallen in the first
+trimester at the worst of the nausea, in a Zika and dengue area, and squarely on
+top of the repeat-scan window after the subchorionic hemorrhage finding. Three
+separate reasons, any one of which was a good argument.
 
-- **Mosquitoes:** dengue and Zika both circulate. DEET up to 30% is safe in
-  pregnancy — as is picaridin. Cover up at dawn and dusk, when *Aedes* bites.
-- **Food and water:** bottled water, no ice from unknown sources, no raw herbs
-  or salads, no street-stall raw preparations. The usual traveller's-diarrhoea
-  rules, applied more strictly — dehydration is worse when already nauseated.
-- **No raw fish.** Vietnamese cuisine has excellent raw and fermented dishes; none of them this trip.
-- Travel insurance that explicitly covers pregnancy. Most standard policies exclude it.
-- Bring a nausea plan: ginger, crackers, whatever is working at home.
+Kept here rather than deleted so the itinerary history stays intact. **Korea is
+now the next trip.**
 
-### Korea — 5–9 December 2026, weeks 15–16
+### Korea — 5–9 December 2026, week 16
 
-**The best-timed trip of the four.** Second trimester, past the nausea, well
+**The best-timed trip, and now the next one.** Second trimester, past the nausea, well
 before any airline restriction, and a low-risk destination with excellent
 medical care.
 

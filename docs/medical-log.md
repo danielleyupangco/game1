@@ -98,12 +98,33 @@ Dra. Villafria**, because it has two concrete consequences here:
 
 - **The November marathon walk.** Ask specifically. Depending on the event date
   that falls somewhere in weeks 11–16.
-- **Vietnam in early October.** See the timing conflict below.
+- **Travel.** Vietnam was cancelled on 18 September, which removes the nearest
+  conflict. Korea in December is the next trip, at week 16.
 
-**What to report immediately:** vaginal bleeding (especially heavy or with
-clots), cramping that builds or does not settle, or any fluid leaking. Some light
-spotting can happen as an SCH drains and is not automatically an emergency — but
-it is always worth the call, not a wait-and-see.
+**How Dra. Villafria described it:** *minor bleeding.* That is the plain-language
+name for exactly this finding — a subchorionic hemorrhage **is** a small bleed,
+sitting between the membrane and the uterine wall. "Minor" matches the
+measurement: 0.082 mL, at the small end of the scale that the research says
+drives the risk.
+
+**Seeing blood versus having a bleed are different things.** The collection on
+the scan is internal. Many women with an SCH never see any bleeding at all. Some
+have brown or pink spotting as it drains, which is old blood leaving and is
+common rather than alarming.
+
+**What to report, and how fast:**
+
+| What | What to do |
+| --- | --- |
+| Brown or pink spotting, no pain | Tell Dra. Villafria at the next contact. Normal with a known SCH. |
+| Fresh red bleeding, light | Call the same day. |
+| Bleeding like a period, or with clots | **Call now.** |
+| Soaking a pad in an hour | **Makati Med ER.** |
+| Cramping that builds, or one-sided pain | **Call now**, whatever the bleeding is doing. |
+| Any fluid leaking | Call now. |
+
+There is no prize for waiting it out, and no such thing as wasting her time with
+this. A call that turns out to be nothing is the correct outcome.
 
 ### The dating, reconciled
 
@@ -147,15 +168,13 @@ settles it properly.**
 - [ ] Confirm whether the EDD should be 21 May or adjusted for a 29–30 day cycle.
 - [ ] Start or confirm folic acid, if not already.
 
-### ⚠ A timing conflict worth resolving now
+### The Vietnam conflict, resolved
 
-**The repeat scan window (28 Sept – 5 Oct) overlaps the Vietnam trip in early
-October.** At 7w3d, Vietnam falls right at the end of the follow-up window.
+The repeat scan window (28 Sept – 5 Oct) overlapped the planned Vietnam trip in
+early October. **Vietnam was cancelled on 18 September**, so the conflict is
+gone and the scan can be booked anywhere in the window.
 
-Have the repeat scan **before flying**. Two reasons: the scan is the one
-confirming viability after an SCH finding, and if anything needs attention it is
-far better found in Makati than in Vietnam. The 28 September end of the window
-is the one to aim for.
+The scan itself still matters just as much. Book it.
 
 ### Next
 
