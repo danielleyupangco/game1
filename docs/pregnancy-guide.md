@@ -1474,3 +1474,74 @@ pre-eclampsia pattern. Any one warrants a call; together they warrant going in.
 > certainly not to wait until morning.
 
 *Sources: ACOG "Urgent Maternal Warning Signs"; NHS pregnancy symptom guidance; RCOG reduced fetal movement guidance. Verified 2026-09-18. Confidence: high. **This list is not exhaustive** — the app should say so, and should always end with: if something feels wrong, call.*
+
+---
+
+## 13. Birth day — dates and signs
+
+The calendar on this screen is computed live from the EDD, so every date
+re-derives itself if the dating changes. What follows is the reference behind it.
+
+### How a birth date is classified
+
+These are the official categories, not casual language. "Term" is not one thing,
+and the distinctions carry real clinical weight — which is why a planned
+caesarean is timed against them.
+
+| Category | Gestational age | What it means |
+| --- | --- | --- |
+| Preterm | before 37w0d | Early enough to carry added neonatal risk |
+| **Early term** | 37w0d – 38w6d | Measurably more respiratory trouble, temperature and glucose instability, NICU admission than full term |
+| **Full term** | 39w0d – 40w6d | The lowest-risk window. Where an elective section is timed |
+| Late term | 41w0d – 41w6d | Monitoring usually increases |
+| Post-term | 42w0d and beyond | Induction usually discussed well before this |
+
+*Source: ACOG / reVITALize gestational age terminology. Verified 2026-09-18. Confidence: high.*
+
+**Only about 1 in 20 babies arrive on the due date itself.** The date is the
+midpoint of a distribution, not an appointment. Most first babies arrive after
+it.
+
+### The star sign, and why this one is close
+
+Sun-sign boundaries move by up to a day each year, so they are computed for 2027
+rather than taken from a magazine table. Times are Manila.
+
+| Sign | From | Until |
+| --- | --- | --- |
+| Taurus | 20 April 2027, 16:00 | 21 May 2027, 15:00 |
+| **Gemini** | **21 May 2027, 15:00** | 21 June 2027, 23:00 |
+| Cancer | 21 June 2027, 23:00 | — |
+
+**The due date of 19 May lands in Taurus with two days to spare.** That is a
+narrow margin: arriving three days late makes the cub a Gemini instead, and
+first babies are more often late than early. A planned caesarean at 38 or 39
+weeks would be firmly Taurus; going past the due date is a coin-toss.
+
+The earliest plausible dates, from 37 weeks on 28 April, are all Taurus too — so
+in practice the only route to a Gemini is going past the due date.
+
+### The Chinese year
+
+Any date in this range falls in the **Year of the Fire Goat** (丁未, *Ding-Wei*),
+which runs from **6 February 2027 to 25 January 2028**. The Heavenly Stem *Ding*
+is yin fire; the Earthly Branch *Wei* is the Goat. The Goat is traditionally read
+as gentle, artistic and drawn to peace, and fire years are said to warm that into
+something more outgoing.
+
+*Source: [ChineseZodiac.com — Chinese New Year 2027](https://chinesezodiac.com/chinese-new-year/2027). Verified 2026-09-18. Confidence: high on the dates and the stem-branch pairing; the character readings are tradition, not prediction.*
+
+### Birthstones and birth flowers
+
+| Month | Stone | Flower |
+| --- | --- | --- |
+| April | Diamond | Daisy, sweet pea |
+| **May** | **Emerald** | **Lily of the valley, hawthorn** |
+| June | Pearl, moonstone, alexandrite | Rose, honeysuckle |
+
+*Modern Western birthstone list. Tradition, not fact — and there are older lists that disagree.*
+
+> **Said plainly:** none of this section is medicine and none of it predicts
+> anything. It is here because it is a nice thing to wonder about while you wait,
+> and because the term classifications at the top genuinely matter when a
+> delivery date is being chosen.

@@ -90,6 +90,7 @@ const prose = {
   prayerGrief: renderSection('prayer', '11. If the news is not good'),
 
   actions: renderSection('medical', 'Action steps'),
+  birthday: renderSection('pregnancy', '13. Birth day — dates and signs'),
 };
 
 const data = JSON.stringify({ edd: EDD, weeks: weekData, foods, caffeine, calendar })
@@ -115,6 +116,7 @@ const TABS = [
   ['prayers', 'Prayers'],
   ['nico', 'Nico'],
   ['checkups', 'Check-ups'],
+  ['birthday', 'Birth day'],
   ['calendar', 'Calendar'],
 ];
 
@@ -312,6 +314,39 @@ details.films summary{cursor:pointer;font-weight:700;font-size:.9rem;color:var(-
 details.films img{display:block;width:100%;height:auto;margin-top:.8rem;border-radius:10px}
 .prose li.task{list-style:none;margin-left:-1.25rem;display:flex;gap:.55rem;align-items:flex-start}
 .prose li.task input{margin-top:.45rem;flex:none;accent-color:var(--blush-deep)}
+.bd-summary{display:flex;flex-wrap:wrap;gap:.75rem;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1rem 1.15rem;box-shadow:var(--shadow);margin-bottom:1rem}
+.bd-summary div{flex:1 1 130px}
+.bd-summary dt{font-size:.66rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--fg-mute)}
+.bd-summary dd{margin:.1rem 0 0;font-family:var(--display);font-size:1.15rem}
+.bd-detail{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--blush-deep);border-radius:20px;padding:1rem 1.15rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.bd-detail h3{font-size:1.3rem;margin-bottom:.15rem}
+.bd-detail .ga{color:var(--fg-mute);font-size:.9rem;margin-bottom:.6rem}
+.bd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:.55rem}
+.bd-grid div{background:var(--surface-2);border-radius:12px;padding:.5rem .7rem}
+.bd-grid dt{font-size:.62rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--fg-mute)}
+.bd-grid dd{margin:.1rem 0 0;font-weight:700}
+.band{display:inline-block;font-size:.66rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:.2rem .5rem;border-radius:999px}
+.band.pre{background:var(--surface-2);color:var(--fg-mute)}
+.band.early{background:var(--caution-bg);color:var(--caution-fg)}
+.band.full{background:var(--safe-bg);color:var(--safe-fg)}
+.band.late{background:var(--powder);color:var(--powder-deep)}
+.band.post{background:var(--avoid-bg);color:var(--avoid-fg)}
+.bd-legend{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.9rem}
+.bd-month{margin-bottom:1.25rem}
+.bd-month h3{font-size:.8rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--fg-mute);margin-bottom:.4rem;font-family:var(--body)}
+.bd-dow,.bd-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.bd-dow span{text-align:center;font-size:.62rem;font-weight:700;color:var(--fg-mute);padding-bottom:.2rem}
+.bd-day{aspect-ratio:1;border:1px solid var(--line);border-radius:10px;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;font-family:var(--body);color:var(--fg);padding:0;min-width:0}
+.bd-day:disabled{cursor:default;opacity:.45}
+.bd-day .n{font-size:.82rem;font-weight:700;font-variant-numeric:tabular-nums}
+.bd-day .g{font-size:.54rem;color:var(--fg-mute);font-variant-numeric:tabular-nums}
+.bd-day[data-band="early"]{background:var(--caution-bg);border-color:transparent}
+.bd-day[data-band="full"]{background:var(--safe-bg);border-color:transparent}
+.bd-day[data-band="late"]{background:var(--powder);border-color:transparent}
+.bd-day[data-band="post"]{background:var(--avoid-bg);border-color:transparent}
+.bd-day.edd{outline:2px solid var(--blush-deep);outline-offset:-2px}
+.bd-day[aria-pressed="true"]{box-shadow:0 0 0 3px var(--blush-deep) inset}
+.bd-blank{aspect-ratio:1}
 .cal{display:grid;gap:.4rem}
 .calrow{display:grid;grid-template-columns:96px 62px 1fr;gap:.8rem;align-items:baseline;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.6rem .85rem}
 .calrow .d{font-variant-numeric:tabular-nums;font-size:.82rem;color:var(--fg-mute)}
@@ -431,6 +466,14 @@ ${panel('checkups', 'Check-ups', `
     <img src="${SCAN_FILMS}" alt="The full contact sheet of six ultrasound films from the 18 September 2026 scan." loading="lazy">
   </details>`,
   `<p class="lede">Every appointment and result, newest first. A measurement only means something next to the one before it &mdash; which is the whole reason for keeping this.</p>`)}
+
+${panel('birthday', 'Birth day', `
+  <div id="bd-summary" class="bd-summary"></div>
+  <div id="bd-detail"></div>
+  <div class="bd-legend" id="bd-legend"></div>
+  <div id="bd-cal"></div>
+  <div class="prose">${prose.birthday}</div>`,
+  `<p class="lede">Every date the cub could arrive, classified the way the hospital classifies it &mdash; and what each one would make them. Tap any day.</p>`)}
 
 ${panel('calendar', 'Calendar', `<div class="cal" id="callist"></div><div class="prose">${prose.milestones}</div>`,
   `<p class="lede">The liturgical year against gestational age. Moveable feasts were computed, not recalled &mdash; Easter 2027 is 28 March, which lands at 32w2d.</p>`)}
@@ -589,6 +632,126 @@ $('#view-food').insertAdjacentHTML('beforeend',
   '<h3 style="font-family:var(--display);font-size:1.25rem;margin:2.5rem 0 .3rem">Caffeine</h3>' +
   '<p class="lede">The daily limit is 200mg. Each bar is measured against it &mdash; two cups of barako put her over before lunch.</p>' +
   '<div class="tw" style="padding:.3rem .6rem">' + caf + '</div>');
+
+/* ---- birth day --------------------------------------------------------- */
+/* Sun-sign boundaries drift up to a day a year, so these are the computed
+   2027 ingress moments in Manila time rather than a generic table. */
+const SIGNS = [
+  { name: 'Taurus', glyph: '\u2649', from: '2027-04-20T16:00', trait: 'steady, stubborn, fond of comfort' },
+  { name: 'Gemini', glyph: '\u264A', from: '2027-05-21T15:00', trait: 'curious, quick, two minds at once' },
+  { name: 'Cancer', glyph: '\u264B', from: '2027-06-21T23:00', trait: 'tender, homebound, long memory' },
+];
+const BANDS = [
+  { id: 'pre',   label: 'Preterm',    max: 258, note: 'Before 37 weeks — early enough to carry added risk.' },
+  { id: 'early', label: 'Early term', max: 272, note: 'More respiratory, temperature and glucose trouble than full term. A planned section here needs an indication.' },
+  { id: 'full',  label: 'Full term',  max: 286, note: 'The lowest-risk window, and where an elective section is timed.' },
+  { id: 'late',  label: 'Late term',  max: 293, note: 'Monitoring usually steps up.' },
+  { id: 'post',  label: 'Post-term',  max: 9999, note: 'Induction is normally discussed well before here.' },
+];
+const STONES = {
+  3: ['Diamond', 'Daisy, sweet pea'],
+  4: ['Emerald', 'Lily of the valley, hawthorn'],
+  5: ['Pearl, moonstone', 'Rose, honeysuckle'],
+};
+
+const bandFor = (days) => BANDS.find((b) => days <= b.max);
+/**
+ * The sign for a calendar day.
+ *
+ * A sign changes at a moment, not at midnight, so the ingress date belongs to
+ * both signs — and 21 May 2027 is exactly that day here. Returning the cusp
+ * explicitly matters more than usual: the due date is two days before it.
+ */
+const signFor = (iso) => {
+  let current = { name: 'Aries', glyph: '\u2648', trait: 'headlong, impatient, brave' };
+  for (const s of SIGNS) {
+    const day = s.from.slice(0, 10);
+    if (iso === day) return { ...s, cusp: { before: current, at: s.from.slice(11) } };
+    if (iso > day) current = s;
+  }
+  return current;
+};
+const signLabel = (s) =>
+  s.cusp
+    ? s.cusp.before.glyph + ' ' + s.cusp.before.name + ' until ' + s.cusp.at + ', then ' + s.glyph + ' ' + s.name
+    : s.glyph + ' ' + s.name;
+
+const bdLmp = civil(DATA.edd) - 280 * MS;
+const iso = (t) => new Date(t).toISOString().slice(0, 10);
+const gaDays = (t) => Math.round((t - bdLmp) / MS);
+const gaLabel = (t) => { const d = gaDays(t); return Math.floor(d / 7) + 'w' + (d % 7) + 'd'; };
+const longDate = (t) => new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(t));
+
+$('#bd-legend').innerHTML = BANDS.map((b) => '<span class="band ' + b.id + '">' + b.label + '</span>').join('');
+
+(() => {
+  const edd = civil(DATA.edd);
+  const sign = signFor(DATA.edd);
+  const cusp = SIGNS.find((s) => s.from.slice(0, 10) > DATA.edd);
+  const toCusp = cusp ? Math.round((civil(cusp.from.slice(0, 10)) - edd) / MS) : null;
+  $('#bd-summary').innerHTML =
+    '<div><dt>Due date</dt><dd>' + new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', timeZone: 'UTC' }).format(new Date(edd)) + '</dd></div>' +
+    '<div><dt>On the day</dt><dd>' + signLabel(sign) + '</dd></div>' +
+    (toCusp !== null ? '<div><dt>' + cusp.name + ' from</dt><dd>' + toCusp + ' days later</dd></div>' : '') +
+    '<div><dt>Chinese year</dt><dd>Fire Goat</dd></div>';
+})();
+
+function showDay(t) {
+  const band = bandFor(gaDays(t));
+  const date = new Date(t);
+  const sign = signFor(iso(t));
+  const [stone, flower] = STONES[date.getUTCMonth()] ?? ['\u2014', '\u2014'];
+  const isEdd = iso(t) === DATA.edd;
+
+  $$('.bd-day').forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.t) === t)));
+  $('#bd-detail').innerHTML =
+    '<div class="bd-detail"><h3>' + longDate(t) + (isEdd ? ' \u2014 the due date' : '') + '</h3>' +
+    '<p class="ga">' + gaLabel(t) + ' \u00b7 <span class="band ' + band.id + '">' + band.label + '</span></p>' +
+    '<p>' + band.note + '</p>' +
+    '<div class="bd-grid">' +
+      '<div><dt>Star sign</dt><dd' + (sign.cusp ? ' style="font-size:.9rem"' : '') + '>' + signLabel(sign) + '</dd></div>' +
+      '<div><dt>Said to be</dt><dd style="font-weight:400">' + (sign.cusp ? 'A cusp day \u2014 it depends on the hour' : sign.trait) + '</dd></div>' +
+      '<div><dt>Chinese year</dt><dd>Fire Goat \u4e01\u672a</dd></div>' +
+      '<div><dt>Birthstone</dt><dd>' + stone + '</dd></div>' +
+      '<div><dt>Birth flower</dt><dd style="font-weight:400">' + flower + '</dd></div>' +
+    '</div></div>';
+}
+
+(() => {
+  const DOW = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+  let html = '';
+  for (const month of [3, 4, 5]) {
+    const first = Date.UTC(2027, month, 1);
+    const days = new Date(Date.UTC(2027, month + 1, 0)).getUTCDate();
+    const lead = (new Date(first).getUTCDay() + 6) % 7; // Monday-first
+    html += '<div class="bd-month"><h3>' +
+      new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(first)) +
+      '</h3><div class="bd-dow">' + DOW.map((d) => '<span>' + d + '</span>').join('') + '</div><div class="bd-days">';
+    html += '<div class="bd-blank"></div>'.repeat(lead);
+    for (let day = 1; day <= days; day += 1) {
+      const t = Date.UTC(2027, month, day);
+      const g = gaDays(t);
+      const band = bandFor(g);
+      // 22w0d to 42w6d. Outside that range a date is not a birth day anyone is
+      // planning for — nobody is still pregnant at 46 weeks, and showing it
+      // implies the calendar means something it does not.
+      const reachable = g >= 154 && g <= 300;
+      html += '<button type="button" class="bd-day' + (iso(t) === DATA.edd ? ' edd' : '') + '"' +
+        ' data-t="' + t + '" data-band="' + (reachable ? band.id : '') + '" aria-pressed="false"' +
+        (reachable ? '' : ' disabled') +
+        ' aria-label="' + longDate(t) + ', ' + gaLabel(t) + '">' +
+        '<span class="n">' + day + '</span>' +
+        (reachable ? '<span class="g">' + gaLabel(t) + '</span>' : '') +
+        '</button>';
+    }
+    html += '</div></div>';
+  }
+  $('#bd-cal').innerHTML = html;
+  $$('.bd-day').forEach((b) => {
+    if (!b.disabled) b.addEventListener('click', () => showDay(Number(b.dataset.t)));
+  });
+  showDay(civil(DATA.edd));
+})();
 
 /* ---- calendar ---------------------------------------------------------- */
 $('#callist').innerHTML = DATA.calendar.map(c =>
