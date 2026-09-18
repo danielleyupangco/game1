@@ -1,0 +1,954 @@
+<title>The Cub Handbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Nunito:wght@400;600;700&display=swap">
+<style>
+:root{
+  --cream:#FBF7F0; --blush:#F4D9D9; --sage:#CDE0D0; --powder:#CFE0EC; --butter:#F6EBC8;
+  --blush-deep:#8C4F4F; --sage-deep:#3F6B49; --powder-deep:#3C6383; --butter-deep:#7A6222;
+  --bg:var(--cream); --surface:#FFFFFF; --surface-2:#F5EFE5;
+  --fg:#4A4A4A; --fg-mute:#6D6A66; --line:#E6DDD0;
+  --safe-bg:#E4EFE6; --safe-fg:#35603F;
+  --caution-bg:#F7EDD2; --caution-fg:#6E571C;
+  --avoid-bg:#F3DEDC; --avoid-fg:#8E3A32;
+  --shadow:0 1px 2px rgba(74,74,74,.04), 0 10px 28px -16px rgba(74,74,74,.18);
+  --display:"Fraunces",ui-serif,Georgia,serif;
+  --body:"Nunito",ui-sans-serif,system-ui,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#201D1B; --surface:#2A2624; --surface-2:#332E2B;
+  --fg:#EDE7DF; --fg-mute:#B3AAA0; --line:#413A36;
+  --blush:#5B4344; --sage:#3E5245; --powder:#3A4B57; --butter:#4E452C;
+  --blush-deep:#F0CFCF; --sage-deep:#BCDCC3; --powder-deep:#9CC2DC; --butter-deep:#E2CE93;
+  --safe-bg:#2C3F31; --safe-fg:#AFD4B8;
+  --caution-bg:#413720; --caution-fg:#E4CE96;
+  --avoid-bg:#432C2A; --avoid-fg:#EFB3AA;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px -16px rgba(0,0,0,.6);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#201D1B; --surface:#2A2624; --surface-2:#332E2B;
+  --fg:#EDE7DF; --fg-mute:#B3AAA0; --line:#413A36;
+  --blush:#5B4344; --sage:#3E5245; --powder:#3A4B57; --butter:#4E452C;
+  --blush-deep:#F0CFCF; --sage-deep:#BCDCC3; --powder-deep:#9CC2DC; --butter-deep:#E2CE93;
+  --safe-bg:#2C3F31; --safe-fg:#AFD4B8;
+  --caution-bg:#413720; --caution-fg:#E4CE96;
+  --avoid-bg:#432C2A; --avoid-fg:#EFB3AA;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px -16px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--display);font-weight:600;line-height:1.2;text-wrap:balance;margin:0}
+a{color:var(--powder-deep)}
+hr{border:0;border-top:1px solid var(--line);margin:2rem 0}
+code{font-family:var(--mono);font-size:.85em;background:var(--surface-2);padding:.1em .35em;border-radius:4px}
+:focus-visible{outline:2px solid var(--powder-deep);outline-offset:2px;border-radius:4px}
+
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding-block:.6rem;padding-inline:16px;display:flex;align-items:center;gap:.65rem}
+.mark{width:34px;height:34px;flex:none}
+.wordmark{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:-.01em}
+.top-sub{color:var(--fg-mute);font-size:.72rem;display:block;font-family:var(--body);letter-spacing:.06em;text-transform:uppercase}
+.top-actions{margin-left:auto;display:flex;gap:.4rem}
+.iconbtn{min-width:40px;height:40px;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:12px;cursor:pointer;font-size:1rem;display:grid;place-items:center;padding:0 .6rem;font-family:var(--body)}
+.iconbtn.alarm{background:var(--blush);color:var(--blush-deep);border-color:transparent;font-weight:700;font-size:.8rem;gap:.35rem}
+
+nav.tabs{position:sticky;top:calc(env(safe-area-inset-top,0px) + 52px);z-index:19;background:var(--bg);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+.tabs-in{max-width:1080px;margin:0 auto;padding-inline:16px;display:flex;gap:.15rem}
+.tab{flex:none;border:0;background:none;color:var(--fg-mute);font-family:var(--body);font-weight:700;font-size:.85rem;padding:.7rem .7rem;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--blush-deep);border-bottom-color:var(--blush-deep)}
+
+main{max-width:1080px;margin:0 auto;padding-inline:16px;padding-block:1.5rem 4rem}
+.view-title{font-size:1.75rem;margin-bottom:.25rem}
+.lede{color:var(--fg-mute);margin:0 0 1.5rem;max-width:62ch}
+
+.hero{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1.25rem;box-shadow:var(--shadow);display:flex;flex-wrap:wrap;gap:1rem;align-items:center;margin-bottom:1.5rem}
+.hero-now{font-family:var(--display);font-size:2.1rem;line-height:1;letter-spacing:-.02em}
+.hero-meta{color:var(--fg-mute);font-size:.9rem}
+.hero-right{margin-left:auto;text-align:right}
+.hero-count{font-family:var(--display);font-size:1.5rem;font-variant-numeric:tabular-nums}
+
+.tri{margin-bottom:1.25rem}
+.tri-h{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-mute);margin-bottom:.45rem}
+.rail{display:flex;flex-wrap:wrap;gap:.3rem}
+.wk{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font-family:var(--body);font-weight:700;font-size:.9rem;cursor:pointer;font-variant-numeric:tabular-nums;position:relative}
+.wk[data-tri="1"]:hover{background:var(--blush)}
+.wk[data-tri="2"]:hover{background:var(--sage)}
+.wk[data-tri="3"]:hover{background:var(--powder)}
+.wk[aria-pressed="true"]{background:var(--blush-deep);color:var(--bg);border-color:transparent}
+.wk.is-now::after{content:"";position:absolute;inset-inline:10px;bottom:5px;height:2px;border-radius:2px;background:var(--butter-deep)}
+.wk[aria-pressed="true"].is-now::after{background:var(--bg)}
+.wk.has-feast{box-shadow:inset 0 3px 0 -1px var(--powder-deep)}
+
+.wkcard{background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+.wkcard-h{padding:1.1rem 1.25rem;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:.5rem;align-items:baseline}
+.wkcard-h h3{font-size:1.5rem}
+.size{color:var(--fg-mute);font-size:.9rem}
+.chip{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .55rem;border-radius:999px;background:var(--surface-2);color:var(--fg-mute)}
+.chip.t1{background:var(--blush);color:var(--blush-deep)}
+.chip.t2{background:var(--sage);color:var(--sage-deep)}
+.chip.t3{background:var(--powder);color:var(--powder-deep)}
+.fields{display:grid;gap:0}
+.field{display:grid;grid-template-columns:104px 1fr;gap:1rem;padding:.85rem 1.25rem;border-bottom:1px solid var(--line)}
+.field:last-child{border-bottom:0}
+.field dt{font-size:.68rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--fg-mute);padding-top:.2rem}
+.field dd{margin:0}
+@media (max-width:560px){.field{grid-template-columns:1fr;gap:.2rem}}
+
+.aside{margin-top:1rem;border-radius:20px;padding:1.1rem 1.25rem;border:1px solid var(--line)}
+.aside.prayer{background:var(--surface);border-left:3px solid var(--powder-deep)}
+.aside-h{font-size:.68rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--powder-deep);margin-bottom:.4rem}
+.intention{font-family:var(--display);font-size:1.05rem;margin-bottom:.5rem}
+.prayer-body{font-family:var(--display);font-size:1rem;line-height:1.75;color:var(--fg)}
+.feast{display:flex;gap:.6rem;align-items:baseline;font-size:.9rem;padding:.3rem 0}
+.feast b{font-family:var(--display)}
+.feast .d{color:var(--fg-mute);font-variant-numeric:tabular-nums;font-size:.8rem;flex:none}
+
+.tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;align-items:center}
+input[type=search]{flex:1 1 220px;min-width:0;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:0 .9rem;font-family:var(--body);font-size:1rem}
+.filt{height:36px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg-mute);font-family:var(--body);font-weight:700;font-size:.78rem;padding:0 .8rem;cursor:pointer}
+.filt[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:transparent}
+.filt[data-s="safe"][aria-pressed="true"]{background:var(--safe-fg);color:var(--safe-bg)}
+.filt[data-s="caution"][aria-pressed="true"]{background:var(--caution-fg);color:var(--caution-bg)}
+.filt[data-s="avoid"][aria-pressed="true"]{background:var(--avoid-fg);color:var(--avoid-bg)}
+.count{color:var(--fg-mute);font-size:.82rem;margin-left:auto}
+
+.foods{display:grid;gap:.4rem}
+.food{display:grid;grid-template-columns:1fr auto;gap:.2rem .8rem;background:var(--surface);border:1px solid var(--line);border-left-width:3px;border-radius:12px;padding:.7rem .9rem}
+.food[data-s="safe"]{border-left-color:var(--safe-fg)}
+.food[data-s="caution"]{border-left-color:var(--caution-fg)}
+.food[data-s="avoid"]{border-left-color:var(--avoid-fg)}
+.food b{font-weight:700}
+.food .why{grid-column:1/-1;color:var(--fg-mute);font-size:.88rem}
+.pill{font-size:.66rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:.2rem .5rem;border-radius:999px;height:fit-content}
+.pill.safe{background:var(--safe-bg);color:var(--safe-fg)}
+.pill.caution{background:var(--caution-bg);color:var(--caution-fg)}
+.pill.avoid{background:var(--avoid-bg);color:var(--avoid-fg)}
+.cat{font-size:.66rem;letter-spacing:.07em;text-transform:uppercase;color:var(--fg-mute);margin:.9rem 0 .1rem;font-weight:700}
+.empty{color:var(--fg-mute);padding:2rem 0;text-align:center}
+
+.caf{display:grid;grid-template-columns:1fr auto;gap:.15rem .8rem;align-items:center;padding:.5rem .9rem;border-bottom:1px solid var(--line)}
+.caf:last-child{border-bottom:0}
+.caf .s{color:var(--fg-mute);font-size:.82rem;grid-column:1}
+.caf .mg{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:700;grid-row:1/3}
+.bar{grid-column:1/-1;height:4px;border-radius:2px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--butter-deep)}
+.bar.over i{background:var(--avoid-fg)}
+
+.prose{max-width:68ch}
+.prose h3{font-size:1.25rem;margin:2rem 0 .5rem}
+.prose h4{font-size:1rem;margin:1.4rem 0 .35rem}
+.prose p{margin:.7rem 0}
+.prose ul,.prose ol{margin:.7rem 0;padding-left:1.2rem}
+.prose li{margin:.3rem 0}
+.prose blockquote{margin:1rem 0;padding:.85rem 1.1rem;background:var(--surface);border-left:3px solid var(--blush-deep);border-radius:0 14px 14px 0}
+.prose blockquote p{margin:.35rem 0}
+.prose em{color:var(--fg-mute)}
+.tw{overflow-x:auto;margin:1rem 0;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9rem;min-width:420px}
+th,td{text-align:left;padding:.55rem .75rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:var(--fg-mute);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.statline{font-family:var(--mono);font-size:.78rem;line-height:1.7;background:var(--surface-2);padding:.9rem 1rem;border-radius:14px;overflow-x:auto;border:1px solid var(--line)}
+
+.nico .prose blockquote{border-left-color:var(--sage-deep)}
+.nico .view-title{color:var(--sage-deep)}
+.prayers .prose blockquote{border-left-color:var(--powder-deep);font-family:var(--display);font-size:1.02rem;line-height:1.75}
+.flags .prose blockquote{border-left-color:var(--blush-deep)}
+.flags .prose ul li::marker{color:var(--blush-deep)}
+
+details.grief{margin-top:2rem;border:1px dashed var(--line);border-radius:14px;padding:.9rem 1.1rem;background:var(--surface)}
+details.grief summary{cursor:pointer;font-weight:700;color:var(--fg-mute);font-size:.92rem}
+details.grief[open] summary{margin-bottom:.5rem}
+
+.sub{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1.25rem}
+.subtab{border:1px solid var(--line);background:var(--surface);color:var(--fg-mute);border-radius:999px;padding:.35rem .75rem;font-family:var(--body);font-weight:700;font-size:.78rem;cursor:pointer}
+.subtab[aria-selected="true"]{background:var(--surface-2);color:var(--fg);border-color:var(--fg-mute)}
+
+.cal{display:grid;gap:.4rem}
+.calrow{display:grid;grid-template-columns:96px 62px 1fr;gap:.8rem;align-items:baseline;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.6rem .85rem}
+.calrow .d{font-variant-numeric:tabular-nums;font-size:.82rem;color:var(--fg-mute)}
+.calrow .g{font-family:var(--mono);font-size:.78rem;color:var(--powder-deep);font-weight:700}
+.calrow .n{grid-column:1/-1;color:var(--fg-mute);font-size:.86rem}
+@media (max-width:560px){.calrow{grid-template-columns:96px 1fr}}
+
+footer{border-top:1px solid var(--line);margin-top:3rem;padding-top:1.25rem;color:var(--fg-mute);font-size:.84rem;max-width:68ch}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <svg viewBox="0 0 48 48" aria-hidden="true" class="mark">
+<circle cx="11" cy="13" r="6" fill="var(--blush)"/><circle cx="37" cy="13" r="6" fill="var(--blush)"/>
+<circle cx="24" cy="26" r="15" fill="var(--blush)"/>
+<g stroke="var(--blush-deep)" stroke-width="1.5" stroke-linecap="round">
+<line x1="24.00" y1="21.50" x2="24.00" y2="17.50"/><line x1="27.18" y1="22.82" x2="30.01" y2="19.99"/><line x1="28.50" y1="26.00" x2="32.50" y2="26.00"/><line x1="27.18" y1="29.18" x2="30.01" y2="32.01"/><line x1="24.00" y1="30.50" x2="24.00" y2="34.50"/><line x1="20.82" y1="29.18" x2="17.99" y2="32.01"/><line x1="19.50" y1="26.00" x2="15.50" y2="26.00"/><line x1="20.82" y1="22.82" x2="17.99" y2="19.99"/>
+</g><circle cx="24" cy="26" r="4" fill="var(--butter)" stroke="var(--blush-deep)" stroke-width="1.5"/></svg>
+    <div><span class="wordmark">The Cub Handbook</span><span class="top-sub">Dani &amp; Nico &middot; Makati</span></div>
+    <div class="top-actions">
+      <button class="iconbtn" id="theme" type="button" aria-label="Switch theme">&#9681;</button>
+      <button class="iconbtn alarm" id="toflags" type="button">When to call</button>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs"><div class="tabs-in" role="tablist">
+<button class="tab" role="tab" id="tab-weeks" data-view="weeks" aria-selected="true">Weeks</button><button class="tab" role="tab" id="tab-food" data-view="food" aria-selected="false">Food</button><button class="tab" role="tab" id="tab-move" data-view="move" aria-selected="false">Move</button><button class="tab" role="tab" id="tab-travel" data-view="travel" aria-selected="false">Travel</button><button class="tab" role="tab" id="tab-money" data-view="money" aria-selected="false">Money</button><button class="tab" role="tab" id="tab-prayers" data-view="prayers" aria-selected="false">Prayers</button><button class="tab" role="tab" id="tab-nico" data-view="nico" aria-selected="false">Nico</button><button class="tab" role="tab" id="tab-calendar" data-view="calendar" aria-selected="false">Calendar</button>
+</div></nav>
+
+<main>
+<section class="view" id="view-weeks">
+  <div class="hero">
+    <div>
+      <div class="hero-now" id="now-week">&nbsp;</div>
+      <div class="hero-meta" id="now-meta">&nbsp;</div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-count" id="now-count">&nbsp;</div>
+      <div class="hero-meta">until 23 May 2027</div>
+    </div>
+  </div>
+  <div id="rails"></div>
+  <div id="weekcard"></div>
+</section>
+
+<section class="view" id="view-food" hidden><h2 class="view-title">Food</h2><p class="lede">131 items. Most of them are fine &mdash; the list leads with reassurance and saves <b>avoid</b> for genuine risk.</p>
+   <div class="tools">
+     <input type="search" id="foodq" placeholder="Search kinilaw, tuyo, cheese&hellip;" aria-label="Search foods">
+     <button class="filt" data-s="safe" aria-pressed="false" type="button">Safe</button>
+     <button class="filt" data-s="caution" aria-pressed="false" type="button">Caution</button>
+     <button class="filt" data-s="avoid" aria-pressed="false" type="button">Avoid</button>
+     <span class="count" id="foodcount"></span>
+   </div><div id="foodlist" class="foods"></div></section>
+
+<section class="view" id="view-move" hidden><h2 class="view-title">Move</h2><div class="prose"><blockquote><p><strong>Get clearance from Dra. Villafria before starting any routine.</strong> This applies to every routine below and should appear as a persistent banner on the Move screen, not a one-time dismissal.</p></blockquote>
+<p>The general guidance is 150 minutes of moderate activity a week in an uncomplicated pregnancy, and that staying active is beneficial rather than risky. Walking is ideal in Manila — indoors, in a mall, when it is too hot.</p>
+<p><strong>The talk test:</strong> if Dani can hold a conversation, the intensity is right. If she cannot finish a sentence, ease off. This replaces heart-rate targets, which are unreliable in pregnancy.</p>
+<h3>What to avoid, by trimester</h3>
+<div class="tw"><table><thead><tr><th>Trimester</th><th>Avoid</th></tr></thead><tbody><tr><td>First</td><td>Overheating. Hot yoga, saunas. Contact sports. New high-intensity training.</td></tr><tr><td>Second</td><td><strong>Lying flat on the back for extended periods from ~16 weeks</strong> — the uterus compresses the vena cava. Deep twists. Anything with a fall risk.</td></tr><tr><td>Third</td><td>Deep backbends, deep squats if pelvic pressure is high, inversions, anything requiring sudden balance.</td></tr></tbody></table></div>
+<p>Stop immediately and call for: vaginal bleeding, regular painful contractions, fluid leaking, dizziness, chest pain, calf pain or swelling, or headache.</p>
+<h3>Morning routine — first trimester (8 minutes)</h3>
+<div class="tw"><table><thead><tr><th>Move</th><th>Hold</th><th>Cue</th></tr></thead><tbody><tr><td>Seated neck rolls</td><td>30s each way</td><td>Slow. Let the weight of the head do the work.</td></tr><tr><td>Shoulder rolls</td><td>30s</td><td>Backwards, opening the chest.</td></tr><tr><td>Seated side stretch</td><td>30s each side</td><td>Reach up and over; keep both sitting bones down.</td></tr><tr><td>Cat–cow</td><td>60s</td><td>On hands and knees. Move with the breath, no forcing.</td></tr><tr><td>Child's pose, knees wide</td><td>60s</td><td>Knees wide enough that the belly has room.</td></tr><tr><td>Ankle circles</td><td>30s each</td><td>Circulation; do these in bed if easier.</td></tr><tr><td>Standing calf stretch</td><td>30s each</td><td>Against a wall.</td></tr></tbody></table></div>
+<h3>Night routine — first trimester (6 minutes)</h3>
+<div class="tw"><table><thead><tr><th>Move</th><th>Hold</th><th>Cue</th></tr></thead><tbody><tr><td>Legs up the wall</td><td>3 min</td><td>Reduces evening swelling. Skip if it feels breathless.</td></tr><tr><td>Seated forward fold, legs wide</td><td>45s</td><td>Only as far as comfortable.</td></tr><tr><td>Supine bound angle <em>(T1 only)</em></td><td>60s</td><td>Soles together. <strong>Drop this from 16 weeks</strong> — use side-lying instead.</td></tr><tr><td>Deep breathing</td><td>2 min</td><td>Four in, six out.</td></tr></tbody></table></div>
+<h3>Morning routine — second trimester (10 minutes)</h3>
+<div class="tw"><table><thead><tr><th>Move</th><th>Hold</th><th>Cue</th></tr></thead><tbody><tr><td>Cat–cow</td><td>60s</td><td></td></tr><tr><td>Bird dog</td><td>30s each side</td><td>Opposite arm and leg. Keep the hips level.</td></tr><tr><td>Hip flexor lunge stretch</td><td>45s each</td><td>Back knee down, gentle.</td></tr><tr><td>Wall squat</td><td>30s</td><td>Back against the wall, thighs above parallel.</td></tr><tr><td>Thoracic rotation, seated</td><td>30s each</td><td><strong>Rotate from the upper back only — no deep twisting through the belly.</strong></td></tr><tr><td>Standing calf and hamstring</td><td>30s each</td><td></td></tr><tr><td>Pelvic tilts</td><td>60s</td><td>Standing or on hands and knees.</td></tr></tbody></table></div>
+<h3>Night routine — second trimester (8 minutes)</h3>
+<div class="tw"><table><thead><tr><th>Move</th><th>Hold</th><th>Cue</th></tr></thead><tbody><tr><td>Legs up the wall</td><td>3 min</td><td></td></tr><tr><td>Side-lying quad stretch</td><td>30s each</td><td>Left side preferred.</td></tr><tr><td>Child's pose, knees wide</td><td>60s</td><td></td></tr><tr><td>Figure-four stretch, seated</td><td>45s each</td><td>For the glutes and lower back.</td></tr><tr><td>Breathing, left side-lying</td><td>2 min</td><td>Pillow between the knees.</td></tr></tbody></table></div>
+<h3>Morning routine — third trimester (8 minutes)</h3>
+<p>Shorter holds, wider base, more support. Everything can be done holding a chair.</p>
+<div class="tw"><table><thead><tr><th>Move</th><th>Hold</th><th>Cue</th></tr></thead><tbody><tr><td>Supported cat–cow</td><td>60s</td><td>Hands on a chair or the wall if the floor is awkward.</td></tr><tr><td>Birth ball hip circles</td><td>90s</td><td>Sitting on the ball, slow circles.</td></tr><tr><td>Supported squat</td><td>20s × 3</td><td>Hold a chair. Only as deep as comfortable.</td></tr><tr><td>Wide-leg standing side stretch</td><td>30s each</td><td></td></tr><tr><td>Pelvic floor: slow lifts</td><td>10 reps</td><td>Lift and hold 5s, full release between. The release matters as much as the lift.</td></tr><tr><td>Calf stretch</td><td>30s each</td><td>Cramp prevention.</td></tr></tbody></table></div>
+<h3>Night routine — third trimester (7 minutes)</h3>
+<div class="tw"><table><thead><tr><th>Move</th><th>Hold</th><th>Cue</th></tr></thead><tbody><tr><td>Legs up the wall, or on a chair</td><td>3 min</td><td>Stop if breathless.</td></tr><tr><td>Side-lying with pillow support</td><td>2 min</td><td>Left side, pillow between knees and under the bump.</td></tr><tr><td>Seated figure-four</td><td>30s each</td><td></td></tr><tr><td>Breathing for labour</td><td>2 min</td><td>Four in, eight out. This is the pattern for early labour.</td></tr></tbody></table></div>
+<h3>The November walk</h3>
+<p>Dani is walking a marathon event in November 2026 — around <strong>week 15–16</strong>, which is the best-timed part of the pregnancy for it.</p>
+<p><strong>Heat and hydration checklist:</strong></p>
+<ul><li>Start before 6am. Manila heat by 9am is the real risk, not the distance.</li><li>500ml of water in the two hours before; 150–250ml every 20 minutes during.</li><li>Electrolytes if walking beyond 60 minutes.</li><li>Light, loose, pale clothing. A cap.</li><li>A planned bail-out point at every kilometre. No prize is worth pushing through.</li><li><strong>Stop for:</strong> dizziness, headache, no sweating despite the heat, cramping, contractions, any bleeding.</li><li>Walk with someone. Nico is the obvious candidate.</li><li>The talk test applies throughout.</li></ul>
+<p><em>Sources: <a href="https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2020/04/physical-activity-and-exercise-during-pregnancy-and-the-postpartum-period" target="_blank" rel="noopener">ACOG — Physical Activity and Exercise During Pregnancy and the Postpartum Period</a>. Verified 2026-09-18. Confidence: high for the guidance; the specific routines are a reasonable construction from it, not a published protocol.</em></p>
+<hr></div></section>
+<section class="view" id="view-travel" hidden><h2 class="view-title">Travel</h2><div class="prose"><p>Weeks below are on <strong>standard dating</strong> (the +2 offset shifts each by two days; it does not change any recommendation).</p>
+<div class="tw"><table><thead><tr><th>Trip</th><th>Dates</th><th>Week at start</th><th>Risk</th><th>Zika</th></tr></thead><tbody><tr><td>Vietnam</td><td>early Oct 2026</td><td>~7w1d</td><td>moderate</td><td>yes — present</td></tr><tr><td>Korea</td><td>5–9 Dec 2026</td><td>15w6d – 16w3d</td><td>low</td><td>no</td></tr><tr><td>India</td><td>Jan 2027</td><td>~21w5d</td><td>high</td><td>yes — present</td></tr><tr><td>Mexico</td><td>Mar 2027</td><td>~30w1d</td><td><strong>avoid</strong></td><td>yes — present</td></tr></tbody></table></div>
+<h3>The one rule that applies to all four</h3>
+<p><strong>If Nico travels to a Zika-risk area, the couple use condoms or abstain for the rest of the pregnancy</strong> — regardless of whether he has symptoms, and regardless of whether Dani travelled with him. Zika persists in semen longer than in blood, and sexual transmission to a pregnant partner is the specific risk being managed.</p>
+<p>This is not a precaution that scales with how well he feels. It applies for the full remaining duration.</p>
+<p><em>Source: <a href="https://www.cdc.gov/zika/prevention/index.html" target="_blank" rel="noopener">CDC — Preventing Zika</a>, <a href="https://www.cdc.gov/zika/travel/index.html" target="_blank" rel="noopener">CDC — Recommendations for travelers</a>. Verified 2026-09-18. Confidence: high.</em></p>
+<h3>Vietnam — early October 2026, ~week 7</h3>
+<p>First trimester, and the nausea is likely at its worst. That is the main practical constraint, not the destination.</p>
+<ul><li><strong>Mosquitoes:</strong> dengue and Zika both circulate. DEET up to 30% is safe in pregnancy — as is picaridin. Cover up at dawn and dusk, when <em>Aedes</em> bites.</li><li><strong>Food and water:</strong> bottled water, no ice from unknown sources, no raw herbs or salads, no street-stall raw preparations. The usual traveller's-diarrhoea rules, applied more strictly — dehydration is worse when already nauseated.</li><li><strong>No raw fish.</strong> Vietnamese cuisine has excellent raw and fermented dishes; none of them this trip.</li><li>Travel insurance that explicitly covers pregnancy. Most standard policies exclude it.</li><li>Bring a nausea plan: ginger, crackers, whatever is working at home.</li></ul>
+<h3>Korea — 5–9 December 2026, weeks 15–16</h3>
+<p><strong>The best-timed trip of the four.</strong> Second trimester, past the nausea, well before any airline restriction, and a low-risk destination with excellent medical care.</p>
+<ul><li><strong>No alcohol</strong>, including in the soju-heavy social context.</li><li><strong>No raw seafood</strong> — skip the hoe (raw fish) and raw marinated crab entirely.</li><li><strong>Icy footing</strong> is the genuine risk. December in Seoul is below freezing and pavements ice over. A fall in the second trimester is the thing to avoid. Flat boots with real grip, and no rushing.</li><li>Cold air plus dry indoor heating aggravates nasal congestion, which is already a pregnancy symptom. Saline spray helps.</li><li>Walking a lot is good; just keep the pace conversational.</li></ul>
+<h3>India — January 2027, ~week 22</h3>
+<p>The trip needing the most preparation.</p>
+<ul><li><strong>Book a travel-health consultation 4–6 weeks beforehand</strong> — so, by early December. This is the single most important item, because vaccine and antimalarial decisions in pregnancy need a clinician.</li><li><strong>Malaria:</strong> risk varies enormously by region. Some antimalarials are contraindicated in pregnancy; others are not. This is a specialist decision based on the specific itinerary.</li><li><strong>Zika and dengue:</strong> both present. Mosquito precautions throughout.</li><li><strong>Food and water, strictly:</strong> bottled or boiled water only, no ice, no raw salads, no unpasteurised dairy (including lassi from street vendors), hot freshly-cooked food only. &quot;Boil it, cook it, peel it, or forget it.&quot;</li><li><strong>Air quality:</strong> Delhi and much of the north have severe winter particulate pollution in January. This is a real consideration in pregnancy. An N95 helps; choosing a different region helps more.</li><li>Confirm hospital access at the destination before departure.</li></ul>
+<h3>Mexico — March 2027, ~week 30 — <strong>defer or cancel</strong></h3>
+<blockquote><p><strong>This is the trip to reconsider.</strong> Not as a matter of caution, but because several separate factors compound.</p></blockquote>
+<ol><li><strong>Zika.</strong> Mexico has ongoing transmission. CDC advises that pregnant women avoid travel to areas with Zika risk. This alone is sufficient reason.</li><li><strong>Week 30, and long-haul.</strong> Manila to Mexico is among the longest routings in the world — typically 20–30 hours with connections. At 30 weeks that is a serious DVT exposure and a long way from Dra. Villafria.</li><li><strong>Airline cutoffs are close.</strong> By the end of March she is at ~32w3d, inside the range where most carriers require medical clearance. If anything delays the return, the restrictions tighten fast.</li><li><strong>Distance from care.</strong> At 30+ weeks, preterm labour is a real possibility, and it would happen a very long way from her OB and her hospital.</li></ol>
+<p>If the trip goes ahead regardless:</p>
+<ul><li>Written OB clearance, and a fit-to-fly certificate dated within the carrier's validity window (often 7–10 days before travel).</li><li>Aisle seat. Walk every hour. Compression stockings. Hydrate continuously.</li><li>Travel insurance explicitly covering pregnancy, preterm birth and neonatal care abroad — confirm in writing, as most policies exclude all three.</li><li>Identify the nearest hospital with a NICU at the destination before departure.</li><li>Rigorous mosquito precautions for the entire stay.</li><li>The condoms-or-abstinence rule applies to Nico afterwards regardless.</li></ul>
+<h3>Airline policy</h3>
+<p><strong>Confirm directly with the carrier when booking.</strong> Policies differ between airlines and between domestic and international routes, and they change.</p>
+<p>For Philippine Airlines, reporting indicates: a &quot;fit to travel&quot; medical certificate is required from around 32–34 weeks depending on route, valid within roughly 10 days of issue; an Expectant Mother's Information Sheet (EMIS) per flight; and <strong>carriage is refused beyond 35 weeks</strong>.</p>
+<blockquote><p><code>confidence: low</code>. Sources disagreed on whether the certificate threshold is 32 or 34 weeks. The 35-week refusal was consistent. <strong>Treat every number here as needing confirmation with PAL at booking</strong>, and have the app say so rather than assert it.</p></blockquote>
+<p><em>Source: <a href="https://www.philippineairlines.com/us/en/before-you-fly/special-needs-and-request/medical-passengers.html" target="_blank" rel="noopener">PAL medical passengers</a>. Verified 2026-09-18.</em></p>
+<h3>DVT prevention on any flight over four hours</h3>
+<ul><li>Aisle seat; walk every 60 minutes.</li><li>Ankle circles and calf pumps every 30 minutes while seated.</li><li>Graduated compression stockings — genuinely effective, and more so in pregnancy.</li><li>Water continuously; skip the salty snacks.</li><li>Seatbelt low, under the bump, across the hips.</li></ul>
+<h3>Per-trip packing checklist</h3>
+<p>Seeds <code>trips.checklist</code>:</p>
+<ul><li>Maternity records / prenatal chart copy</li><li>Dra. Villafria's number, and the Makati Med number</li><li>Travel insurance documents with the pregnancy clause</li><li>OB clearance letter, and fit-to-fly certificate if required</li><li>Prenatal vitamins for the whole trip plus three spare days</li><li>Insect repellent, DEET 30% or picaridin</li><li>Compression stockings</li><li>Ginger chews / nausea remedy</li><li>Paracetamol (the safe analgesic in pregnancy)</li><li>Oral rehydration salts</li><li>Hand sanitiser</li><li>Comfortable, flat, grippy shoes</li><li>A refillable water bottle</li><li>Snacks, for when the food is unsuitable or the timing is wrong</li></ul>
+<hr></div></section>
+<section class="view" id="view-money" hidden><h2 class="view-title">Money</h2><div class="prose"><blockquote><p><strong>Read the confidence column before showing any of these.</strong> None of the Philippine government figures below were read from a government source — the egress policy blocked <code>sss.gov.ph</code>, <code>philhealth.gov.ph</code> and <code>pcw.gov.ph</code>. They are from secondary reporting, and at least one widely-repeated figure is demonstrably wrong (see the SSS note). Every one needs confirming before it is relied on to file anything.</p></blockquote>
+<h3>Prenatal and testing</h3>
+<div class="tw"><table><thead><tr><th>Item</th><th>Typical cost</th><th>Confidence</th></tr></thead><tbody><tr><td>Prenatal consult, private OB, Metro Manila</td><td>₱800 – ₱2,000 per visit</td><td>medium</td></tr><tr><td>Full prenatal course (~12–14 visits)</td><td>₱12,000 – ₱28,000</td><td>medium</td></tr><tr><td>Dating / transvaginal scan</td><td>₱1,500 – ₱3,000</td><td>medium</td></tr><tr><td>NT scan (with nasal bone)</td><td>₱3,000 – ₱5,500</td><td>low</td></tr><tr><td>Congenital anomaly scan</td><td>₱3,500 – ₱10,300</td><td>medium</td></tr><tr><td>NIPT</td><td>₱21,500 – ₱55,000</td><td>medium</td></tr><tr><td>OGTT (75g)</td><td>₱500 – ₱1,525</td><td>medium</td></tr><tr><td>Routine bloods (CBC, blood type, urinalysis, serology)</td><td>₱2,500 – ₱5,000</td><td>low</td></tr><tr><td>Tdap vaccine</td><td>₱1,500 – ₱2,500</td><td>low</td></tr><tr><td>RSV vaccine (Abrysvo)</td><td>₱10,000 – ₱18,000</td><td>low</td></tr></tbody></table></div>
+<p><strong>NIPT is the single largest discretionary prenatal cost</strong> and is largely out of pocket. The range is wide because providers bundle differently.</p>
+<p><em>Sources: <a href="https://pinoymedical.com/nipt-test-price/" target="_blank" rel="noopener">PinoyMedical NIPT pricing</a>, <a href="https://www.clinicfinderph.com/blog/prenatal-checkup-cost-philippines" target="_blank" rel="noopener">ClinicFinder PH prenatal checkup costs</a>, <a href="https://pinoymedical.com/congenital-anomaly-scan-price/" target="_blank" rel="noopener">PinoyMedical congenital anomaly scan</a>, <a href="https://pinoymedical.com/glucose-tolerance-test-price/" target="_blank" rel="noopener">PinoyMedical glucose tolerance test</a>. Verified 2026-09-18.</em></p>
+<h3>Delivery at Makati Medical Center</h3>
+<div class="tw"><table><thead><tr><th>Item</th><th>Typical cost</th><th>Confidence</th></tr></thead><tbody><tr><td>Normal delivery, total bill</td><td>₱120,000 – ₱250,000</td><td>medium</td></tr><tr><td>Caesarean, total bill</td><td>₱200,000 – ₱400,000</td><td>low</td></tr><tr><td>Private room, per day</td><td>₱9,000 – ₱15,000</td><td>medium</td></tr><tr><td>OB professional fee</td><td>Varies by doctor — ask Dra. Villafria directly</td><td>—</td></tr><tr><td>Paediatrician attendance</td><td>₱5,000 – ₱15,000</td><td>low</td></tr><tr><td>Anaesthesiologist (epidural / CS)</td><td>₱15,000 – ₱30,000</td><td>low</td></tr></tbody></table></div>
+<p><strong>Makati Med is a premium hospital and prices accordingly.</strong> Ask billing for a written estimate — they provide them on request, and it is the only number that actually means anything.</p>
+<p><em>Source: <a href="https://www.clinicfinderph.com/blog/makati-medical-center-rates-fees" target="_blank" rel="noopener">ClinicFinder PH — MakatiMed rates</a>, <a href="https://www.clinicfinderph.com/blog/normal-delivery-cost-philippines" target="_blank" rel="noopener">ClinicFinder PH — normal delivery cost</a>. Verified 2026-09-18.</em></p>
+<h3>What PhilHealth covers</h3>
+<p>Rates increased on <strong>30 April 2026</strong>.</p>
+<div class="tw"><table><thead><tr><th>Benefit</th><th>Amount</th><th>Confidence</th></tr></thead><tbody><tr><td>Normal vaginal delivery</td><td>₱29,000</td><td>medium</td></tr><tr><td>Caesarean section</td><td>₱58,000 – ₱62,000 (by hospital level)</td><td>medium</td></tr><tr><td>Newborn care package</td><td>₱3,500 – ₱5,752.50 (sources disagree)</td><td>low</td></tr></tbody></table></div>
+<p>The newborn figure appeared as both ₱3,500 and ₱5,752.50 in different reporting, likely describing different package scopes. <strong>Confirm with PhilHealth or Makati Med billing.</strong></p>
+<p><em>Sources: <a href="https://pia.gov.ph/news/expanded-philhealth-coverage-aims-to-ease-childbirth-costs-improve-maternal-care/" target="_blank" rel="noopener">PIA — expanded PhilHealth coverage</a>, <a href="https://cebudailynews.inquirer.net/723066/how-much-does-it-cost-to-give-birth-now-with-philhealth" target="_blank" rel="noopener">Cebu Daily News</a>, <a href="https://www.philhealth.gov.ph/circulars/2026/PC2026-0004.pdf" target="_blank" rel="noopener">PhilHealth Circular 2026-0004</a> (not directly readable — blocked). Verified 2026-09-18.</em></p>
+<h3>SSS maternity benefit — and a figure not to trust</h3>
+<p><strong>The law (RA 11210, in force since 2019):</strong></p>
+<div class="tw"><table><thead><tr><th>Provision</th><th>Value</th><th>Confidence</th></tr></thead><tbody><tr><td>Paid maternity leave, live birth</td><td>105 days</td><td>high</td></tr><tr><td>Solo parent additional</td><td>+15 days (120 total)</td><td>high</td></tr><tr><td>Miscarriage / emergency termination</td><td>60 days</td><td>high</td></tr><tr><td>Optional extension, unpaid</td><td>+30 days</td><td>high</td></tr><tr><td>Days allocable to the father or an alternate caregiver</td><td>up to 7</td><td>high</td></tr></tbody></table></div>
+<p><strong>The computation:</strong> <code>Average Daily Salary Credit × 105</code>, where ADSC is the sum of the six highest monthly salary credits in the 12 months before the semester of contingency, divided by 180. Qualifying requires at least three monthly contributions in that 12-month window.</p>
+<p><strong>The maximum is where reporting breaks down.</strong> Sources repeated &quot;₱70,000 maximum&quot; while also stating an ADSC of ₱1,166.67. Those are inconsistent:</p>
+<ul><li>₱1,166.67 × 105 = <strong>₱122,500</strong>, and ₱1,166.67 × 180 ÷ 6 = an MSC of ₱35,000.</li><li>₱70,000 corresponds to an MSC ceiling of ₱20,000 — the <em>old</em> ceiling.</li><li>Independent 2026 contribution-table sources put the current MSC ceiling at <strong>₱35,000</strong> with a 15% contribution rate.</li></ul>
+<p>So ₱122,500 is the figure the arithmetic supports, and ₱70,000 appears to be stale text carried forward. <strong>The app should not display either as fact.</strong> Show the formula, let Dani enter her own salary credits, and link her to SSS to confirm — which is better advice anyway, since her actual benefit depends on her own contribution history, not the ceiling.</p>
+<p><em>Sources: <a href="https://pcw.gov.ph/faq-republic-act-11210/" target="_blank" rel="noopener">PCW RA 11210 FAQ</a> (blocked; via search summary), <a href="https://www.sss.gov.ph/maternity-benefit/" target="_blank" rel="noopener">SSS maternity benefit</a> (blocked), <a href="https://sprout.ph/articles/how-to-calculate-your-sss-monthly-contribution/" target="_blank" rel="noopener">Sprout Solutions 2026 contribution guide</a>. Verified 2026-09-18. Confidence: high on the legal entitlements, <strong>low on any peso maximum</strong>.</em></p>
+<h3>Paternity leave — a caveat that matters for Nico</h3>
+<div class="tw"><table><thead><tr><th>Entitlement</th><th>Days</th><th>Condition</th><th>Confidence</th></tr></thead><tbody><tr><td>RA 8187 paternity leave</td><td>7</td><td><strong>Requires legal marriage</strong> and cohabitation with the spouse. First four deliveries only.</td><td>high</td></tr><tr><td>RA 11210 allocated days</td><td>up to 7</td><td>Allocated by Dani from her 105. Goes to the child's father <em>or</em> an alternate caregiver — <strong>no marriage requirement</strong>.</td><td>high</td></tr></tbody></table></div>
+<p><strong>If Dani and Nico are not married, the 7 days under RA 8187 do not apply</strong> — but the 7 allocated days still do. The app should not promise 14 days without knowing their marital status. Make it a question in onboarding rather than an assumption.</p>
+<p>To claim the allocated days, Dani files the <strong>SSS Allocation of Maternity Leave Credits form</strong> together with her Maternity Notification. Nico's HR at RCBC needs both, and should be asked early — not in the delivery week.</p>
+<p><em>Sources: <a href="https://lawphil.net/statutes/repacts/ra1996/ra_8187_1996.html" target="_blank" rel="noopener">RA 8187 full text</a>, <a href="https://www.parenteam.com.ph/article/how-to-claim-paternity-leave-philippines" target="_blank" rel="noopener">ParenTeam — claiming paternity leave</a>, <a href="https://sprout.ph/articles/paternity-leave-in-the-philippines/" target="_blank" rel="noopener">Sprout Solutions</a>. Verified 2026-09-18.</em></p>
+<h3>Yaya cost calculator</h3>
+<p>The salary is not the cost. Seeds the calculator:</p>
+<div class="tw"><table><thead><tr><th>Component</th><th>2026 value</th><th>Confidence</th></tr></thead><tbody><tr><td>NCR kasambahay minimum wage</td><td>₱7,800/month, effective Feb 2026 (up ₱800)</td><td>high</td></tr><tr><td>Market rate, experienced yaya (NCR)</td><td>₱13,000 – ₱16,000/month</td><td>medium</td></tr><tr><td>Newborn / night nurse specialist</td><td>₱18,000 – ₱30,000/month</td><td>low</td></tr><tr><td>13th month pay</td><td>1/12 of annual basic — mandatory under PD 851 and RA 10361</td><td>high</td></tr><tr><td>SSS employer share</td><td>Per the 2026 table; MSC ₱8,000 bracket applies at the minimum wage</td><td>medium</td></tr><tr><td>PhilHealth</td><td>Per the 2026 premium schedule</td><td>medium</td></tr><tr><td>Pag-IBIG</td><td>2% employer + 2% employee, on compensation capped at ₱10,000 (so ₱200 each at the cap)</td><td>medium</td></tr><tr><td>Employees' Compensation</td><td>₱10/month at MSC ₱8,000</td><td>low</td></tr></tbody></table></div>
+<p><strong>The Kasambahay Law wrinkle:</strong> under RA 10361, where the kasambahay earns <strong>less than ₱5,000 a month</strong>, the employer shoulders the entire SSS, PhilHealth and Pag-IBIG contribution. At or above ₱5,000, the worker's share may be deducted from wages. At a market yaya salary of ₱13,000–16,000, deduction is legally permitted — but many households absorb it anyway.</p>
+<p><strong>The calculator should default to the employer absorbing everything</strong>, because that is the conservative (higher) budget number and the one that avoids an unpleasant surprise.</p>
+<p>Also budget for: food and lodging if live-in, a rest day (or pay in lieu), SSS registration within 30 days of hiring, and a written employment contract — all required by RA 10361.</p>
+<p><em>Sources: <a href="https://dole.gov.ph/news/kasambahays-in-ncr-to-receive-p800-monthly-minimum-wage-increase/" target="_blank" rel="noopener">DOLE — NCR kasambahay wage increase</a>, <a href="https://nwpc.dole.gov.ph/kasambahays-in-ncr-to-receive-p800-monthly-minimum-wage-increase/" target="_blank" rel="noopener">NWPC</a>, <a href="https://sweldoph.com/guides/kasambahay-law" target="_blank" rel="noopener">SweldoPH Kasambahay Law guide</a>, <a href="https://kamiworkforce.com/ph/blog/sss-philhealth-pagibig-contribution-tables-2026/" target="_blank" rel="noopener">KAMI Workforce 2026 contribution tables</a>. Verified 2026-09-18.</em></p>
+<h3>Budget bands by phase</h3>
+<p>Seeds the <code>expenses</code> table. <strong>These are planning bands for a Makati household using private care, not quotes.</strong> All <code>confidence: low</code> — they are constructed from the item costs above plus typical Metro Manila ranges, and every family's actual spend varies enormously.</p>
+<div class="tw"><table><thead><tr><th>Phase</th><th>Category</th><th>Band (₱)</th></tr></thead><tbody><tr><td>Pregnancy</td><td>Prenatal consults and routine tests</td><td>15,000 – 35,000</td></tr><tr><td>Pregnancy</td><td>Scans (dating, NT, anomaly)</td><td>8,000 – 20,000</td></tr><tr><td>Pregnancy</td><td>NIPT (optional)</td><td>21,500 – 55,000</td></tr><tr><td>Pregnancy</td><td>Vaccines (Tdap, RSV, flu)</td><td>12,000 – 25,000</td></tr><tr><td>Pregnancy</td><td>Vitamins and supplements</td><td>8,000 – 20,000</td></tr><tr><td>Pregnancy</td><td>Maternity clothes</td><td>8,000 – 25,000</td></tr><tr><td>Pregnancy</td><td>Childbirth class / doula (optional)</td><td>10,000 – 40,000</td></tr><tr><td>Y0</td><td>Delivery, net of PhilHealth and HMO</td><td>60,000 – 250,000</td></tr><tr><td>Y0</td><td>Nursery and gear (cot, stroller, car seat, carrier)</td><td>60,000 – 200,000</td></tr><tr><td>Y0</td><td>Diapers and wipes, first year</td><td>30,000 – 60,000</td></tr><tr><td>Y0</td><td>Formula, if used</td><td>40,000 – 120,000</td></tr><tr><td>Y0</td><td>Paediatrician visits and vaccines, first year</td><td>40,000 – 90,000</td></tr><tr><td>Y0</td><td>Yaya, first year (salary + statutory + 13th)</td><td>180,000 – 260,000</td></tr><tr><td>Y0</td><td>Night nurse, first 1–3 months (optional)</td><td>54,000 – 90,000</td></tr><tr><td>Y0</td><td>Binyag (christening)</td><td>30,000 – 200,000</td></tr><tr><td>Y1</td><td>First birthday party</td><td>50,000 – 300,000</td></tr><tr><td>Y1</td><td>Diapers, food, clothing</td><td>60,000 – 120,000</td></tr><tr><td>Y1</td><td>Paediatrician and vaccines</td><td>20,000 – 45,000</td></tr><tr><td>Y1</td><td>Yaya</td><td>190,000 – 275,000</td></tr><tr><td>Y2</td><td>Food, clothing, nappies to potty training</td><td>60,000 – 110,000</td></tr><tr><td>Y2</td><td>Health and vaccines</td><td>15,000 – 35,000</td></tr><tr><td>Y2</td><td>Yaya</td><td>200,000 – 290,000</td></tr><tr><td>Y2</td><td>Classes and play (optional)</td><td>20,000 – 80,000</td></tr><tr><td>Y3</td><td>Preschool / nursery</td><td>80,000 – 300,000</td></tr><tr><td>Y3</td><td>Food and clothing</td><td>60,000 – 110,000</td></tr><tr><td>Y3</td><td>Yaya</td><td>210,000 – 300,000</td></tr><tr><td>Y4</td><td>Preschool</td><td>100,000 – 350,000</td></tr><tr><td>Y4</td><td>Food, clothing, health</td><td>75,000 – 140,000</td></tr><tr><td>Y4</td><td>Classes and activities</td><td>25,000 – 100,000</td></tr><tr><td>Y5</td><td>Kindergarten / big school entry</td><td>120,000 – 450,000</td></tr><tr><td>Y5</td><td>Food, clothing, health</td><td>80,000 – 150,000</td></tr><tr><td>Y5</td><td>Classes and activities</td><td>30,000 – 120,000</td></tr></tbody></table></div>
+<p><strong>The two things that dominate this table</strong> are childcare and school fees. Gear, which is what expectant parents tend to worry about, is a rounding error beside either. Worth saying out loud in the app.</p>
+<hr><p>Seeds the <code>shops</code> table. <strong>Display with: &quot;Verify store availability — last checked September 2026.&quot;</strong> Retail tenancy in Metro Manila malls turns over frequently and this list will go stale.</p>
+<p><em>All entries <code>confidence: medium</code> — compiled from general knowledge of Metro Manila retail, not a store-by-store check. Verified 2026-09-18.</em></p>
+<div class="tw"><table><thead><tr><th>Store</th><th>Mall / location</th><th>Category</th></tr></thead><tbody><tr><td>Rustan's Department Store</td><td>Power Plant Mall, Rockwell</td><td>Premium gear, clothing, gifts</td></tr><tr><td>Rustan's</td><td>Glorietta / Makati</td><td>Premium gear, clothing</td></tr><tr><td>The SM Store — Baby Company</td><td>SM Makati, SM Aura BGC</td><td>Full range, mid-market</td></tr><tr><td>Mothercare</td><td>Power Plant Mall; SM Aura</td><td>Clothing, feeding, nursery</td></tr><tr><td>Mamas &amp; Papas</td><td>Shangri-La Plaza; SM Aura</td><td>Prams, cots, nursery furniture</td></tr><tr><td>Baby Hub PH</td><td>Online, Metro Manila delivery</td><td>Gear, car seats, strollers</td></tr><tr><td>Edamama</td><td>Online</td><td>Curated baby and toddler, PH brands</td></tr><tr><td>Chicco</td><td>SM Aura; Glorietta</td><td>Strollers, car seats, feeding</td></tr><tr><td>Uniqlo Baby</td><td>Glorietta, SM Aura, Power Plant</td><td>Basics, cotton</td></tr><tr><td>H&amp;M Baby</td><td>Glorietta, SM Aura</td><td>Basics, affordable</td></tr><tr><td>Cotton On Kids / Typo</td><td>Glorietta, SM Aura</td><td>Basics</td></tr><tr><td>Mercury Drug</td><td>Everywhere</td><td>Vitamins, thermometers, nappies</td></tr><tr><td>Watsons</td><td>Everywhere</td><td>Toiletries, nappy basics</td></tr><tr><td>Healthy Options</td><td>Power Plant, Glorietta</td><td>Organic, supplements, feeding</td></tr><tr><td>Lazada — official brand stores</td><td>Online</td><td>Avanti, Pigeon, Philips Avent, Chicco official stores</td></tr><tr><td>Shopee — official brand stores</td><td>Online</td><td>Same; check for the &quot;Mall&quot; badge</td></tr><tr><td>Landers / S&amp;R</td><td>Various</td><td>Bulk nappies and wipes — the cheapest per-unit route</td></tr></tbody></table></div>
+<p><strong>Malls for filtering:</strong> Power Plant (Rockwell), Greenbelt / Glorietta (Makati CBD), SM Aura (BGC), Shangri-La Plaza (Mandaluyong), SM Makati.</p>
+<p><strong>Buy the car seat new.</strong> It is the one item where second-hand is a genuine safety question — a seat involved in a previous crash can be compromised invisibly, and seats have expiry dates.</p>
+<h3>Registry and nursery checklist</h3>
+<p>Items feed the expenses tracker via <code>price_php</code> and <code>bought</code>.</p>
+<p><strong>Actually needed before the birth:</strong></p>
+<ul><li>Car seat (rear-facing, new)</li><li>Somewhere safe to sleep — cot, crib or bassinet, firm flat mattress</li><li>Fitted sheets ×3</li><li>Nappies, newborn size (do not overbuy — they outgrow the size fast)</li><li>Wipes, fragrance-free</li><li>Bodysuits / onesies ×7–10</li><li>Sleepsuits ×7</li><li>Swaddles or sleep sacks ×3</li><li>Muslin cloths ×6</li><li>Bath towel, hooded</li><li>Baby soap and shampoo, fragrance-free</li><li>Nappy cream</li><li>Digital thermometer</li><li>Nail scissors or file</li><li>Breast pump, if planning to pump</li><li>Bottles ×4, if planning to bottle-feed</li><li>Nursing bras ×3</li><li>Breast pads</li><li>Maternity pads (many more than seems reasonable)</li></ul>
+<p><strong>Useful, not urgent:</strong></p>
+<ul><li>Stroller</li><li>Baby carrier</li><li>Changing table or mat</li><li>Nappy bin</li><li>White noise machine</li><li>Nightlight</li><li>Baby monitor</li><li>Nursing pillow</li><li>Bottle steriliser</li><li>High chair (not until ~6 months)</li></ul>
+<p><strong>Frequently bought and rarely used:</strong> wipe warmers, cot bumpers (a suffocation risk — do not buy), shoes for a baby who cannot walk, newborn-size clothing in quantity, a full &quot;nursery set&quot;.</p>
+<hr></div></section>
+
+<section class="view" id="view-prayers" hidden><h2 class="view-title">Prayers</h2>
+  <div class="sub" role="tablist">
+    <button class="subtab" role="tab" data-sub="p-daily" aria-selected="true">Daily</button>
+    <button class="subtab" role="tab" data-sub="p-moments" aria-selected="false">Moments</button>
+    <button class="subtab" role="tab" data-sub="p-trad" aria-selected="false">Traditional</button>
+    <button class="subtab" role="tab" data-sub="p-novena" aria-selected="false">Novena</button>
+    <button class="subtab" role="tab" data-sub="p-rosary" aria-selected="false">Rosary</button>
+    <button class="subtab" role="tab" data-sub="p-devo" aria-selected="false">Philippine</button>
+    <button class="subtab" role="tab" data-sub="p-after" aria-selected="false">After</button>
+  </div>
+  <div class="prose subview" id="p-daily"><p>Four short prayers, one for each hinge of the day. The whole cycle takes under five minutes. <strong>It is meant to be sustainable at 3am in the third trimester</strong>, which is the only test that matters.</p>
+<h3>On waking — the morning offering</h3>
+<blockquote><p>Lord, this day is yours, and so is the child you are forming in me.</p>
+<p>I offer you the ordinary things — the tiredness, the work, the meals I may not manage to eat. Take the small discomforts and make them count for something.</p>
+<p>Keep our cub safe today. Keep me steady. And when I forget to think of you, go on holding us anyway.</p>
+<p>Amen.</p></blockquote>
+<h3>At midday — the Angelus</h3>
+<p>Traditionally prayed at six, noon and six, and the most fitting of all prayers for a pregnant woman: it is the Incarnation, recounted three times a day.</p>
+<blockquote><p><strong>V.</strong> The Angel of the Lord declared unto Mary, <strong>R.</strong> And she conceived of the Holy Spirit. <em>Hail Mary…</em></p>
+<p><strong>V.</strong> Behold the handmaid of the Lord, <strong>R.</strong> Be it done unto me according to thy word. <em>Hail Mary…</em></p>
+<p><strong>V.</strong> And the Word was made Flesh, <strong>R.</strong> And dwelt among us. <em>Hail Mary…</em></p>
+<p><strong>V.</strong> Pray for us, O holy Mother of God, <strong>R.</strong> That we may be made worthy of the promises of Christ.</p>
+<p>Let us pray. Pour forth, we beseech thee, O Lord, thy grace into our hearts; that we, to whom the Incarnation of Christ thy Son was made known by the message of an angel, may by his Passion and Cross be brought to the glory of his Resurrection. Through the same Christ our Lord. Amen.</p></blockquote>
+<p><strong>Why this one.</strong> Mary was pregnant. Not symbolically — actually, bodily, for nine months, with all of it: the tiredness, the waiting, the not knowing. &quot;The Word was made Flesh&quot; happened in a womb. Dani is praying the Angelus from inside the same experience.</p>
+<h3>At evening — a short examen</h3>
+<p>Five questions. No writing required.</p>
+<ol><li>Where was there kindness today — mine, or someone else's?</li><li>What did my body ask for that I ignored?</li><li>What frightened me?</li><li>What am I grateful for, even if it is very small?</li><li>Lord, what do we need tomorrow?</li></ol>
+<blockquote><p>Thank you for today, and for carrying us both through it. Forgive me what I got wrong. I am too tired to list it; you know it all. Bless Nico. Bless our cub. Let us sleep. Amen.</p></blockquote>
+<h3>In the night — for the hours when sleep will not come</h3>
+<blockquote><p>Lord, it is late and I am awake again.</p>
+<p>I will not ask for sleep, though I would like it. I will use this quiet instead: to be still with the one you are making, who is awake in here with me, turning.</p>
+<p>Hold the both of us through the dark. Let the morning be kind.</p>
+<p>Amen.</p></blockquote>
+<p><strong>And when even that is too much</strong>, the oldest Marian prayer in the Church, from third-century Egypt — short enough for any hour:</p>
+<blockquote><p>We fly to thy protection, O holy Mother of God. Despise not our petitions in our necessities, but deliver us always from all dangers, O glorious and blessed Virgin. Amen.</p>
+<p><em>— Sub Tuum Praesidium, c. 250 AD</em></p></blockquote>
+<hr></div>
+  <div class="prose subview" id="p-moments" hidden><p><code>kind: situational</code>. These are the ones the app should surface contextually — the nausea prayer when she logs nausea, the scan prayer the morning of an appointment. All <code>source: original</code> unless noted.</p>
+<h3>Before a scan or a test</h3>
+<blockquote><p>Lord, in a little while someone will look at our child and tell us what they see.</p>
+<p>I want to hear that all is well. I am asking for that plainly, because you know I am asking for it anyway.</p>
+<p>But if the news is not what we hoped, be in the room then too. Let us hear it together, and not fall apart, and know what to do next.</p>
+<p>Whatever they find, this child is already yours and already loved.</p>
+<p>Amen.</p></blockquote>
+<h3>After hard news</h3>
+<blockquote><p>I do not understand this, and I am not going to pretend that I do.</p>
+<p>I am angry, and frightened, and I do not have anything to offer you right now except that I am still here and still talking to you.</p>
+<p>Stay. That is all I am asking. Stay with us, and with this child, and help us put one foot in front of the other.</p>
+<p>Amen.</p></blockquote>
+<h3>When the nausea is relentless</h3>
+<blockquote><p>Lord, I am so tired of feeling like this.</p>
+<p>There is nothing noble in it and I am not going to pretend there is. It is just grim, and it is every day.</p>
+<p>Get me to the evening. Then get me to tomorrow. And let this be, in some way I cannot see from in here, the price of something very good.</p>
+<p>Amen.</p></blockquote>
+<h3>When she is afraid</h3>
+<blockquote><p>I am frightened, and I do not always know of what.</p>
+<p>Of something going wrong. Of the birth. Of being a mother and not being good at it. Of how much I already love someone I have not met.</p>
+<p>You knit this child together in me. You have not stopped paying attention. Take the fear — not away, necessarily, but take it from <em>me</em>, and carry it, because I have enough to carry.</p>
+<p>Amen.</p></blockquote>
+<h3>For Nico</h3>
+<blockquote><p>Lord, bless the man who is going through this beside me.</p>
+<p>He cannot feel any of it, and he worries in silence, and he is trying very hard at something no one taught him. Give him patience for the days I am not easy to live with. Give him the right words, or the sense to say nothing.</p>
+<p>Make him the father this child needs. He will be.</p>
+<p>Amen.</p></blockquote>
+<h3>For the baby</h3>
+<blockquote><p>Little one — cub, for now —</p>
+<p>you are the size of something I could hold in one hand, and you have already changed everything.</p>
+<p>Lord, guard the small unfinished work of this child. Every cell of it. Let the heart keep its rhythm and the bones grow strong and the mind be bright and the soul be yours from the first moment, which it already is.</p>
+<p>And let us meet. Please, let us meet.</p>
+<p>Amen.</p></blockquote>
+<h3>In thanksgiving, on a good day</h3>
+<blockquote><p>Today I felt well, and I noticed, and I wanted to say thank you before it passed.</p>
+<p>Thank you for this body that is doing something extraordinary. For food that stayed down. For the kick I felt this afternoon. For Nico. For a due date to count towards.</p>
+<p>Thank you. That is the whole prayer.</p>
+<p>Amen.</p></blockquote>
+<h3>Past the due date</h3>
+<blockquote><p>The day came and went and nothing happened, and everyone is asking.</p>
+<p>Lord, you know the hour. You have known it since before I did. Let me stop counting and let this child come when this child is ready.</p>
+<p>Give me patience for the phone calls. Give me sleep. And soon — let it be soon.</p>
+<p>Amen.</p></blockquote>
+<h3>At the very start of labour</h3>
+<blockquote><p>This is it. It is beginning.</p>
+<p>Lord, I am frightened and I am ready, both at once.</p>
+<p>Be in the room. Be in Nico's hands, and in Dra. Villafria's hands, and in every nurse's hands. Steady my breathing. Let me be brave, and if I cannot be brave, let me be carried.</p>
+<p>Bring our child safely through. Bring me safely through.</p>
+<p>Into your hands.</p>
+<p>Amen.</p></blockquote>
+<h3>The Memorare — for when the words will not come</h3>
+<p>The prayer to pray when you cannot construct one.</p>
+<blockquote><p>Remember, O most gracious Virgin Mary, that never was it known that anyone who fled to thy protection, implored thy help, or sought thy intercession, was left unaided.</p>
+<p>Inspired by this confidence, I fly unto thee, O Virgin of virgins, my Mother. To thee do I come, before thee I stand, sinful and sorrowful. O Mother of the Word Incarnate, despise not my petitions, but in thy mercy hear and answer me.</p>
+<p>Amen.</p></blockquote>
+<hr></div>
+  <div class="prose subview" id="p-trad" hidden><p><code>kind: traditional</code>, <code>source: traditional</code>. These belong to the whole Church and are given unaltered.</p>
+<h3>The Hail Mary</h3>
+<blockquote><p>Hail Mary, full of grace, the Lord is with thee. Blessed art thou amongst women, and blessed is the fruit of thy womb, Jesus.</p>
+<p>Holy Mary, Mother of God, pray for us sinners, now and at the hour of our death. Amen.</p></blockquote>
+<p><strong>Worth noticing while pregnant:</strong> &quot;blessed is the fruit of thy womb.&quot; Half of the most repeated prayer in Christian history is about a pregnancy.</p>
+<h3>The Magnificat — Mary's own song, sung while pregnant</h3>
+<p><em>Luke 1:46–55</em></p>
+<p>Mary prayed this while carrying Jesus, on visiting her pregnant cousin Elizabeth. It is the prayer of one expectant mother to another.</p>
+<blockquote><p>My soul doth magnify the Lord, and my spirit hath rejoiced in God my Saviour. For he hath regarded the lowliness of his handmaiden; for behold, from henceforth all generations shall call me blessed. For he that is mighty hath done great things to me, and holy is his name. And his mercy is from generation unto generations, to them that fear him. He hath shewed might in his arm; he hath scattered the proud in the conceit of their heart. He hath put down the mighty from their seat, and hath exalted the humble. He hath filled the hungry with good things, and the rich he hath sent empty away. He hath received Israel his servant, being mindful of his mercy. As he spoke to our fathers, to Abraham and to his seed for ever.</p>
+<p>Glory be to the Father, and to the Son, and to the Holy Spirit. As it was in the beginning, is now, and ever shall be, world without end. Amen.</p></blockquote>
+<h3>Blessing of a mother before childbirth</h3>
+<p><em>Adapted from the Roman Ritual. Traditionally given by a priest — <strong>worth asking your parish for</strong>, and commonly done in Philippine parishes on request.</em></p>
+<blockquote><p><strong>V.</strong> Our help is in the name of the Lord. <strong>R.</strong> Who made heaven and earth.</p>
+<p>Lord God, creator of all things, mighty and awesome, just and merciful: you alone are good and kind.</p>
+<p>You delivered Israel from every evil, and made our fathers a chosen people. You have made this your servant fruitful, and willed that she should conceive.</p>
+<p>Guard her, we pray, and protect the child you have given her to carry. Bring her safely to the hour of delivery, and let her bring forth her child in safety and in joy.</p>
+<p>Keep her under your protection, that she and the child she bears may come at last to the everlasting life of your kingdom.</p>
+<p>Through Christ our Lord. Amen.</p>
+<p><em>May the blessing of almighty God, the Father, the Son, and the Holy Spirit, come upon you and remain with you always. Amen.</em></p></blockquote>
+<h3>To St Gerard Majella, patron of expectant mothers</h3>
+<p><em><code>source: original</code>, in the traditional form</em></p>
+<p>St Gerard Majella (1726–1755), a Redemptorist brother, is the Church's patron of expectant mothers and of safe delivery. His feast is <strong>16 October</strong> — which falls at <strong>8w5d</strong> this pregnancy.</p>
+<blockquote><p>O good St Gerard, powerful intercessor before God and wonder-worker of our day, I call on you and seek your help.</p>
+<p>You who bore all your own sufferings with patience, and who are the appointed guardian of mothers and of children not yet born: watch over me in these months, and over the child I carry.</p>
+<p>Preserve us both from all danger. Bring me safely to the hour of delivery. And ask for this child the grace of baptism and a long life spent in the love of God.</p>
+<p>St Gerard, pray for us. Amen.</p></blockquote>
+<h3>To St Anne, mother of Mary</h3>
+<blockquote><p>Good St Anne, you who bore the Mother of God and taught her, and who know what it is to wait a long time for a child:</p>
+<p>pray for me now. Ask for me a safe delivery and a healthy child. And ask that I might be, to this child, something of what you were to your daughter.</p>
+<p>Amen.</p></blockquote>
+<h3>To St Raymond Nonnatus, patron of childbirth</h3>
+<p>St Raymond's name — <em>Nonnatus</em>, &quot;not born&quot; — comes from his having been delivered by caesarean after his mother died in labour. He is patron of childbirth, midwives, and mothers in difficult deliveries.</p>
+<blockquote><p>St Raymond, brought into this world at the cost of your mother's life, and patron of every mother in her hour:</p>
+<p>stand beside me when my hour comes. Ask that both of us come safely through it, and that whatever happens in that room, we are not alone.</p>
+<p>Amen.</p></blockquote>
+<p><strong>A note.</strong> His feast is <strong>31 August</strong> — inside the window in which this child was almost certainly conceived. Make of that what you like; it is at minimum a good day to mark each year.</p>
+<hr></div>
+  <div class="prose subview" id="p-novena" hidden><p><code>kind: novena</code>, <code>source: original</code>. Nine consecutive days.</p>
+<p><strong>When to pray it.</strong> Traditionally the nine days ending on his feast, <strong>16 October</strong> (so 8–16 October 2026, weeks 7–8). Equally: the nine days before a scan that worries you, or the nine days from 35 weeks as the bag goes by the door.</p>
+<p><strong>Each day:</strong> the opening, the day's intention and prayer, then one Our Father, one Hail Mary and one Glory Be.</p>
+<h3>The opening, prayed every day</h3>
+<blockquote><p>St Gerard, friend of mothers and of children not yet born, I come to you for nine days with one thing on my heart. Carry it to God for me, who never refused anyone who asked you.</p></blockquote>
+<p><strong>Day 1 — For a safe pregnancy.</strong></p>
+<blockquote><p>Ask that these months pass without harm to either of us, and that what is being formed in me is formed whole and well.</p></blockquote>
+<p><strong>Day 2 — For this child's body.</strong></p>
+<blockquote><p>Ask for a strong heart, clear eyes, sound limbs, a good mind — and that if any of these is not given, we are given instead the love to meet it.</p></blockquote>
+<p><strong>Day 3 — For this child's soul.</strong></p>
+<blockquote><p>Ask that this child be God's from the beginning, baptised, kept, and brought at last home.</p></blockquote>
+<p><strong>Day 4 — For my own courage.</strong></p>
+<blockquote><p>Ask that I not be ruled by fear in these months. I am afraid often. Ask that it not be the loudest thing.</p></blockquote>
+<p><strong>Day 5 — For Nico.</strong></p>
+<blockquote><p>Ask for patience for him, and steadiness, and that he knows he is part of this and not outside it.</p></blockquote>
+<p><strong>Day 6 — For those who care for us.</strong></p>
+<blockquote><p>For Dra. Villafria, and every nurse and midwife whose hands we will be in. Ask for skill for them, and rest, and good judgement on a long shift.</p></blockquote>
+<p><strong>Day 7 — For a safe delivery.</strong></p>
+<blockquote><p>For the hour itself. Ask that both of us come through it, and that I am brave, and that if I cannot be brave I am carried.</p></blockquote>
+<p><strong>Day 8 — For mothers who are not as fortunate.</strong></p>
+<blockquote><p>For every woman carrying in fear, or grieving, or alone, or who has lost a child. Ask for them what I am asking for myself. It is not right to ask only for my own.</p></blockquote>
+<p><strong>Day 9 — In thanksgiving.</strong></p>
+<blockquote><p>For this pregnancy, wanted and given. For a due date. For every week so far. Thank you. Take these nine days and do with them what is best, which may not be what I asked.</p></blockquote>
+<hr></div>
+  <div class="prose subview" id="p-rosary" hidden><p><code>kind: rosary</code>, <code>source: original</code> (the intentions; the mysteries themselves are traditional).</p>
+<p>Three of the five Joyful Mysteries are about pregnancy and birth. Praying them now is not a stretch — it is the plain sense.</p>
+<div class="tw"><table><thead><tr><th>Mystery</th><th>What happened</th><th>The intention</th></tr></thead><tbody><tr><td><strong>1. The Annunciation</strong></td><td>An angel asks a young woman to carry a child, and she says yes without knowing what it will cost.</td><td>For the courage to keep saying yes to this, on the days I would rather not.</td></tr><tr><td><strong>2. The Visitation</strong></td><td>Pregnant Mary travels to her pregnant cousin Elizabeth, and the child in Elizabeth leaps.</td><td>For the women around me who are carrying too, and for the ones who have helped me. Let me be an Elizabeth to somebody.</td></tr><tr><td><strong>3. The Nativity</strong></td><td>A birth, far from home, in poor conditions, and it goes ahead anyway.</td><td>For a safe delivery — and for peace about the parts of it I cannot plan.</td></tr><tr><td><strong>4. The Presentation</strong></td><td>The parents bring their baby to the temple, and are told plainly that a sword will pierce her heart.</td><td>For the love that is already frightening. Let me not be undone by how much this will matter.</td></tr><tr><td><strong>5. The Finding in the Temple</strong></td><td>Three days of searching for a lost child, and a mother who does not understand her son's answer.</td><td>For the whole long road after the birth, which I cannot picture yet.</td></tr></tbody></table></div>
+<p><strong>A way to pray it when there is no time or energy for a full rosary:</strong> one decade a day, in order, five days a week. Or the Annunciation decade only, every day. Nothing is lost by praying a little.</p>
+<hr></div>
+  <div class="prose subview" id="p-devo" hidden><p><code>kind: devotion</code>, <code>source: original</code> (the prayers), with traditional context.</p>
+<h3>Our Lady of Perpetual Help — the Wednesday novena</h3>
+<p>The Baclaran novena is one of the great devotions of Manila, prayed every Wednesday. Whether Dani goes to Baclaran or prays it at home, <strong>a fixed weekly hour is worth more than an ambitious daily plan that collapses by week 20.</strong></p>
+<blockquote><p>Mother of Perpetual Help, in the icon you are holding your son, and he is holding your hand — a child startled by what he has seen, reaching for his mother.</p>
+<p>I am carrying a child who will one day reach for me like that. Make me someone worth reaching for.</p>
+<p>You have never turned anyone away. Keep us both. Bring us to the day of this birth, and past it.</p>
+<p>Amen.</p></blockquote>
+<h3>Simbang Gabi — 16–24 December 2026, weeks 17–18</h3>
+<p>Nine dawn Masses before Christmas. Completing all nine is said to earn a wish; more truly, it is nine mornings of getting up in the dark because something matters.</p>
+<p><strong>A practical note, gently.</strong> Dani will be around 17–18 weeks — the second trimester, the best window for it. Early Masses mean early starts, crowded churches and standing for long periods. If she completes all nine, good. If she completes four, that is also good. <strong>The devotion is not improved by exhaustion</strong>, and a pregnant woman who sits down during Mass is doing nothing wrong.</p>
+<blockquote><p>Lord, nine mornings in the dark, waiting for a child to be born. I have never understood this season the way I understand it this year. Amen.</p></blockquote>
+<h3>Santo Niño — 17 January 2027, week 22</h3>
+<p>The Christ Child, and the most beloved image in Filipino Catholicism. A devotion for a household about to receive a child of its own.</p>
+<blockquote><p>Santo Niño, you were once what our child is now — small, and carried, and entirely dependent on a mother who did not know what she was doing either.</p>
+<p>Bless the child in me. Bless this house that is getting ready. Let there be laughter in it.</p>
+<p>Amen.</p></blockquote>
+<h3>Flores de Mayo — the whole of May 2027</h3>
+<p>The month of Mary, and the month this baby is due. <strong>Dani will spend all of Flores de Mayo at 36 weeks and over.</strong> There is no better month to be waiting.</p>
+<blockquote><p>Mother, this is your month and it is my last one. Walk it with me. Amen.</p></blockquote>
+<hr><p><code>kind: father</code>, <code>source: original</code>. These belong in the <strong>For Nico</strong> section, on the sage accent.</p>
+<h3>A father's prayer, for the months of waiting</h3>
+<blockquote><p>Lord, I cannot feel any of this.</p>
+<p>She is carrying our child and I am standing next to it, useful in small ways and helpless in the large ones. I do not always know what to do with that.</p>
+<p>Teach me to be steady. Let me carry what I can carry — the worry she should not have to hold, the things that need doing, the nights ahead.</p>
+<p>Make me the kind of father this child will not have to recover from.</p>
+<p>Amen.</p></blockquote>
+<h3>Before the birth</h3>
+<blockquote><p>Lord, I am about to watch the person I love go through something I cannot do for her, and I am frightened.</p>
+<p>Keep my hands steady and my voice calm. Let me remember what I was taught. Let me not look afraid, even if I am.</p>
+<p>Bring them both safely through. That is the only thing I am asking for.</p>
+<p>Amen.</p></blockquote>
+<h3>To St Joseph</h3>
+<blockquote><p>St Joseph, you took on a child who was not yours by any plan of your own, and a wife whose situation you did not fully understand, and you did it quietly and without complaint.</p>
+<p>Nothing you said was written down. Only what you did.</p>
+<p>Teach me that. Amen.</p></blockquote>
+<h3>At 3am, holding the baby</h3>
+<blockquote><p>Everyone else is asleep. It is just the two of us and I am very tired.</p>
+<p>Thank you for this. I will not always be able to say that at this hour, so I am saying it now, while I can.</p>
+<p>Amen.</p></blockquote>
+<hr></div>
+  <div class="prose subview" id="p-after" hidden><h3>In thanksgiving, for a safe delivery</h3>
+<blockquote><p>Lord, it is over and we are here and the child is breathing.</p>
+<p>I do not have a prayer worth the size of this. Thank you. Thank you. Thank you.</p>
+<p>Amen.</p></blockquote>
+<h3>For a mother on the hard days after</h3>
+<blockquote><p>Lord, I am sore and I have not slept and I do not feel the way I expected to feel.</p>
+<p>Everyone says this is the happiest time. It does not seem to be, yet, and I am frightened of what that means about me.</p>
+<p>Be near. Send me someone with hands and sense. And if this does not lift, give me the courage to say so out loud to someone who can help.</p>
+<p>Amen.</p>
+<p><strong>A note for whoever builds this screen.</strong> If she is praying this one repeatedly, that is worth noticing. The postpartum depression material in the dad guide — and the two-week line — applies. A prayer is not a treatment plan; put the resources next to it.</p></blockquote>
+<h3>A blessing over the child, for either parent to say</h3>
+<blockquote><p>May God keep you. May you be strong, and kind, and hard to frighten. May you be easy to love and quick to laugh. May you know, before you know anything else, that you were wanted.</p>
+<p>The Lord bless you and keep you. The Lord make his face to shine upon you and be gracious to you. The Lord lift up his countenance upon you, and give you peace.</p>
+<p>Amen.</p>
+<p><em>(The closing is the Aaronic blessing, Numbers 6:24–26 — traditional.)</em></p></blockquote>
+<hr>
+    <details class="grief"><summary>If the news is not good</summary><div class="prose"><p><code>kind: grief</code>, <code>source: original</code>.</p>
+<blockquote><p><strong>Build this carefully.</strong> These prayers must exist — leaving them out abandons people at the exact moment a prayer book should be there. But <strong>the app must never surface them on its own.</strong> No &quot;you might also like&quot;, no weekly rotation, no card on the home screen. They live behind a quiet, plainly-labelled link on the prayer index and nowhere else. Nobody should meet these words on an ordinary Tuesday.</p></blockquote>
+<h3>For a mother who has lost a child</h3>
+<blockquote><p>Lord, the child I was carrying is gone, and I do not know what to do with my hands or my body or the rest of today.</p>
+<p>I had a name. I had a due date. I had a whole life imagined and none of it is going to happen.</p>
+<p>I am not going to tell you this is alright, because it is not.</p>
+<p>Take this child, who was real, and who was ours, and who was loved from the first minute. Hold what I cannot hold.</p>
+<p>And stay with me. I have nothing else to ask.</p>
+<p>Amen.</p></blockquote>
+<h3>For a father, in the same hour</h3>
+<blockquote><p>Everyone is asking how she is. No one has asked how I am, and I would not know how to answer.</p>
+<p>Lord, I have lost a child too, and I am supposed to be the steady one.</p>
+<p>Let me grieve this properly and not put it away somewhere. Let me be a comfort to her without disappearing myself.</p>
+<p>Amen.</p></blockquote>
+<h3>For a diagnosis that changes everything</h3>
+<blockquote><p>We were told something today that we will be living with for a very long time.</p>
+<p>I do not accept it yet. I may not for a while.</p>
+<p>Lord, this child is still this child — still ours, still yours, still exactly as loved as yesterday, when we did not know.</p>
+<p>Give us what we need for the road we are actually on, not the one we thought we were on.</p>
+<p>Amen.</p></blockquote>
+<hr></div></details>
+  </div></section>
+
+<section class="view" id="view-nico" hidden><h2 class="view-title">For Nico</h2>
+  <div class="sub" role="tablist">
+    <button class="subtab" role="tab" data-sub="n-tri" aria-selected="true">Stat lines</button>
+    <button class="subtab" role="tab" data-sub="n-stages" aria-selected="false">By stage</button>
+    <button class="subtab" role="tab" data-sub="n-play" aria-selected="false">Birth playbook</button>
+    <button class="subtab" role="tab" data-sub="n-leave" aria-selected="false">Leave &amp; hospital</button>
+    <button class="subtab" role="tab" data-sub="n-after" aria-selected="false">After the birth</button>
+    <button class="subtab" role="tab" data-sub="n-skills" aria-selected="false">Skills</button>
+    <button class="subtab" role="tab" data-sub="n-life" aria-selected="false">His own</button>
+    <button class="subtab" role="tab" data-sub="n-bag" aria-selected="false">Go-bag</button>
+  </div>
+  <div class="prose subview" id="n-tri"><h3>First trimester — weeks 1–13</h3>
+<pre class="statline">BABY        poppy seed  →  peach          (~0.1mm → 75mm)
+HEARTBEAT   from week 6, ~110–160 bpm
+MISCARRIAGE RISK   ~10–20% early  →  ~2–3% after a heartbeat at 12 weeks
+DANI        nausea, exhaustion, sore breasts
+VISIBLE     nothing
+YOUR JOB    absorb load, tell nobody</pre>
+<p><strong>What is actually happening.</strong> Every major organ system is forming. This is the most consequential trimester developmentally and the one where Dani looks completely normal and feels worst. That gap is the whole story of the first trimester.</p>
+<p><strong>The exhaustion is not ordinary tiredness.</strong> Building a placenta is metabolically expensive — her resting metabolic rate rises measurably. She is not being dramatic and she cannot push through it.</p>
+<p><strong>What to do:</strong> take over anything involving smell. Cooking, the bins, the fridge. Do it without being asked and without announcing it.</p>
+<h3>Second trimester — weeks 14–27</h3>
+<pre class="statline">BABY        lemon  →  cabbage           (~85mm → ~370mm, ~1kg)
+MOVEMENT    first felt ~16–22 weeks (first pregnancies: later end)
+HEARING     from ~18 weeks — your voice carries better than hers
+DANI        energy returns, appetite returns
+VISIBLE     from ~20 weeks
+YOUR JOB    logistics, scans, decisions
+KEY DATES   anomaly scan 18–22w · OGTT 24–28w · Tdap from 27w</pre>
+<p><strong>The good trimester, and the one to use.</strong> Nausea lifts, energy returns, restrictions are still light. Travel, the nursery, the big decisions, the last proper trip — all of it belongs here.</p>
+<p><strong>Your voice carries.</strong> Lower frequencies travel through amniotic fluid better than higher ones, so from about 18 weeks the baby hears Nico more clearly than Dani in some registers. Talking to the bump is not sentimental nonsense; there is a mechanism.</p>
+<h3>Third trimester — weeks 28–40</h3>
+<pre class="statline">BABY        aubergine  →  pumpkin       (~1.1kg → ~3.4kg)
+WEIGHT GAIN ~200g per week from week 30
+DANI        breathless, broken sleep, heartburn, swelling
+VISITS      fortnightly → weekly from ~36w
+YOUR JOB    be reachable, be packed, be calm
+KEY DATES   RSV 32–36w · GBS 35–37w · bag packed 35w · term 37w</pre>
+<p><strong>Term is 37 weeks, not 40.</strong> The EDD is a midpoint, not a deadline — only about 1 in 20 babies arrive on it. Anyone who says the baby is &quot;late&quot; at 39 weeks is wrong.</p>
+<p><strong>Being reachable becomes a job.</strong> From 36 weeks, the phone stays on and charged, the car stays fuelled, and Nico knows two routes to Makati Med including one that works in Friday-evening traffic.</p>
+<hr></div>
+  <div class="prose subview" id="n-stages" hidden><div class="tw"><table><thead><tr><th>Weeks</th><th>Nico's job</th></tr></thead><tbody><tr><td>4–8</td><td>Take over cooking smells. Book the first OB appointment. Learn what she can't eat so she doesn't have to police it.</td></tr><tr><td>9–13</td><td>Go to the NT scan. Agree who gets told, and when. Start the household budget conversation.</td></tr><tr><td>14–17</td><td>Book the anomaly scan. Sort travel insurance for any trip. Start the nursery plan.</td></tr><tr><td>18–22</td><td>Anomaly scan — go to this one. Decide on finding out the sex. Start talking to the bump.</td></tr><tr><td>23–27</td><td>Yaya search if hiring. Hospital pre-registration at Makati Med. <strong>File paternity leave paperwork with RCBC HR.</strong></td></tr><tr><td>28–31</td><td>Birth plan conversation. Assemble the nursery. Take a birth class together.</td></tr><tr><td>32–35</td><td>Pack both bags. Confirm the route and a backup. Install the car seat and have it checked.</td></tr><tr><td>36–40</td><td>Phone on. Car fuelled. Say yes to everything. Do not travel.</td></tr><tr><td>Birth</td><td>The playbook below.</td></tr><tr><td>0–6 weeks</td><td>Shift sleep. Feed her. Watch for the postpartum red flags. Register the birth within 30 days.</td></tr></tbody></table></div>
+<hr></div>
+  <div class="prose subview" id="n-play" hidden><p>This is the part that matters most, and the part most partners have never practised. Read it before 36 weeks, not in the car.</p>
+<h3>The 3 Rs — Relaxation, Rhythm, Ritual</h3>
+<p>Penny Simkin's framework, and the most useful thing in this guide.</p>
+<p><strong>Relaxation.</strong> In early labour, help her rest. Dim light, low voices, a comfortable position. Coping well in early labour is what makes later labour survivable.</p>
+<p><strong>Rhythm.</strong> In active labour, women naturally find a rhythm — rocking, swaying, moaning on a pattern, tapping. <strong>Whatever rhythm she finds, your job is to protect it.</strong> Move with her. Count with her. Do not interrupt it to offer water, adjust a pillow, or ask how she is doing.</p>
+<p><strong>Ritual.</strong> Once a rhythm works, it becomes a ritual — the same movement, the same counting, the same phrase, contraction after contraction. Repeat it exactly. Boring is the goal. Novelty is the enemy.</p>
+<p><strong>The signal that it is working:</strong> she goes quiet and inward between contractions. <strong>The signal it has broken:</strong> she looks panicked, catches your eye, says she can't. That is the cue for the Take-Charge Routine below.</p>
+<h3>Counter-pressure</h3>
+<p>For back labour, which is common when the baby is posterior.</p>
+<ol><li>She leans forward — over a ball, the bed, or you.</li><li>Find the sacrum: the flat bony plate at the base of the spine, above the tailbone.</li><li>Heel of the hand, or a tennis ball. <strong>Steady, strong, constant pressure</strong> through the whole contraction.</li><li>Ask once where it helps. Then stop asking and keep doing it.</li><li>It will be harder than expected. Brace with your legs, not your back — you may be doing this for hours.</li></ol>
+<h3>The double hip squeeze</h3>
+<p>The single most effective physical technique available to a birth partner.</p>
+<ol><li>She is on hands and knees, or leaning forward.</li><li>Place the heels of both hands on the <strong>fleshy sides of her hips</strong> — the upper outer glutes, not the bony crests.</li><li>Press <strong>inward and slightly upward</strong>, squeezing the hips toward each other.</li><li>Firm and continuous through the contraction. Release between.</li><li>Use your body weight. Your arms will fail before she stops wanting it.</li></ol>
+<p>This opens space in the pelvic outlet and relieves the pressure directly. Many women describe it as the only thing that helped.</p>
+<h3>The Take-Charge Routine</h3>
+<p>For when she panics, says she can't do it, or loses her rhythm — often at transition, which is also when she is closest to the end.</p>
+<ol><li><strong>Get close.</strong> Face to face, near enough that she cannot look past you.</li><li><strong>Anchor her.</strong> A hand on her shoulder or holding her head steady.</li><li><strong>Make eye contact and hold it.</strong> &quot;Look at me. Look at my eyes.&quot;</li><li><strong>Take over the rhythm.</strong> Breathe it with her, loudly and exaggeratedly, and make her match you. Do not ask — lead.</li><li><strong>Same words, every time.</strong> &quot;Breathe with me. One. Two. Three.&quot; Repeat.</li><li><strong>Between contractions, tell her the truth:</strong> &quot;That one is done. It's over. You did it. Rest now.&quot;</li><li><strong>Do not:</strong> ask questions, offer choices, say &quot;relax&quot;, or look worried.</li></ol>
+<p><strong>She may be rude to you.</strong> She may tell you to stop, and then fall apart when you do. Keep going unless she is consistently and clearly telling you to stop. This is not the moment to take anything personally.</p>
+<h3>What not to say, and what to say instead</h3>
+<div class="tw"><table><thead><tr><th>Don't</th><th>Do</th></tr></thead><tbody><tr><td>&quot;Relax&quot;</td><td>&quot;Breathe out with me&quot;</td></tr><tr><td>&quot;Calm down&quot;</td><td>&quot;I'm right here&quot;</td></tr><tr><td>&quot;You're nearly there&quot; (you don't know)</td><td>&quot;You're doing this&quot;</td></tr><tr><td>&quot;Does that help?&quot; (repeatedly)</td><td>Watch her face and adjust</td></tr><tr><td>&quot;It can't be that bad&quot;</td><td>Nothing. Say nothing.</td></tr><tr><td>&quot;Should I call someone?&quot;</td><td>Call them, or don't. Don't make her decide.</td></tr></tbody></table></div>
+<p><em>Sources: Penny Simkin, &quot;The Birth Partner&quot; (the 3 Rs and Take-Charge Routine are her frameworks); DONA International birth doula training materials. Verified 2026-09-18. Confidence: high.</em></p>
+<hr></div>
+  <div class="prose subview" id="n-leave" hidden><p><strong>Confirm all of this directly — hospital policies change, and this is from general knowledge, not a policy document. <code>confidence: low</code>.</strong></p>
+<p>Questions to ask at pre-registration, ideally around 26–28 weeks:</p>
+<ul><li>How many birth companions are allowed in the labour room? In theatre for a caesarean?</li><li>Can Nico stay overnight? What does the room need to be for that?</li><li>What is the visiting policy for the ward?</li><li>Where does he park, and where does he go at 3am when the main entrance is shut?</li><li>What does the hospital provide, and what must they bring?</li><li>Is photography allowed? At what points?</li><li>What happens if a caesarean becomes necessary — where does he wait, and when does he see the baby?</li><li>How is the bill settled, and what does the HMO cover directly versus reimburse?</li><li>Pre-register and pre-file the PhilHealth paperwork. Do not do this in labour.</li></ul>
+<p><strong>Practical Makati notes:</strong> traffic on EDSA and Ayala can turn a 15-minute drive into an hour. Know a route that avoids both. Keep small cash for parking. Have the HMO card, PhilHealth number and a valid ID in the go-bag, not in a wallet that might be left behind.</p>
+<hr><h3>What Nico is entitled to</h3>
+<div class="tw"><table><thead><tr><th>Source</th><th>Days</th><th>Condition</th></tr></thead><tbody><tr><td>RA 8187</td><td>7</td><td><strong>Married to Dani and cohabiting.</strong> First four deliveries. Paid by the employer.</td></tr><tr><td>RA 11210 allocation</td><td>up to 7</td><td>Allocated from Dani's 105 days. <strong>No marriage requirement.</strong> Paid via SSS.</td></tr></tbody></table></div>
+<p><strong>Read the condition on the first row.</strong> RA 8187 paternity leave requires legal marriage. If Nico and Dani are not married, those 7 days do not apply — but the 7 allocated days still do, because RA 11210 allows allocation to the child's father or an alternate caregiver regardless of marital status.</p>
+<p>Don't let the app promise 14 days without checking. Ask once in onboarding.</p>
+<h3>The filing sequence</h3>
+<ol><li><strong>Now (by ~week 27):</strong> tell RCBC HR that a birth is expected, and ask in writing what they require and by when. Some employers want notice well in advance.</li><li><strong>Dani files</strong> her SSS Maternity Notification.</li><li><strong>For the allocated days:</strong> Dani completes the <strong>SSS Allocation of Maternity Leave Credits</strong> form. Both that and her Maternity Notification go to Nico's HR.</li><li><strong>Nico files</strong> his RA 8187 paternity leave application with RCBC HR, with the marriage certificate if applicable.</li><li><strong>After the birth:</strong> submit the birth certificate to close out both claims.</li></ol>
+<p><strong>Ask RCBC HR one more question:</strong> whether the bank offers anything beyond the statutory minimum. Many large Philippine employers, banks especially, do. It costs nothing to ask and it is never advertised.</p>
+<p><em>Sources: <a href="https://lawphil.net/statutes/repacts/ra1996/ra_8187_1996.html" target="_blank" rel="noopener">RA 8187</a>, <a href="https://www.parenteam.com.ph/article/how-to-claim-paternity-leave-philippines" target="_blank" rel="noopener">ParenTeam — claiming paternity leave</a>. Verified 2026-09-18. Confidence: high on entitlements, medium on procedure.</em></p>
+<hr></div>
+  <div class="prose subview" id="n-after" hidden><h3>Dani's postpartum red flags</h3>
+<p><strong>Nico is the monitoring system for the first six weeks.</strong> She will be exhausted, sore, and inclined to downplay everything. Several of these can develop fast.</p>
+<p><strong>Call or go in immediately for:</strong></p>
+<ul><li>Bleeding soaking more than one pad an hour, or clots bigger than a golf ball</li><li>Fever above 38°C</li><li><strong>Severe headache or vision changes</strong> — pre-eclampsia can appear <em>after</em> birth, and this is the one most people don't know</li><li>Chest pain or shortness of breath</li><li>Calf pain, swelling or redness on one side</li><li>A red, hot, painful area on the breast with fever — mastitis</li><li>Foul-smelling discharge</li><li>A caesarean incision that is red, opening, or leaking</li><li><strong>Any thought of harming herself or the baby</strong></li></ul>
+<h3>Postpartum depression versus the baby blues</h3>
+<p><strong>Baby blues:</strong> tearfulness, mood swings, feeling overwhelmed. Affects the majority. Starts days 3–5, <strong>resolves by about two weeks</strong>.</p>
+<p><strong>Postpartum depression:</strong> persists beyond two weeks, or starts later. Can begin any time in the first year. Low mood most of the day, loss of interest, hopelessness, guilt, inability to sleep even when the baby sleeps, no bond with the baby, thoughts of harm.</p>
+<p><strong>The two-week line is the thing to remember.</strong> If it hasn't lifted by then, it isn't the blues.</p>
+<p><strong>Postpartum psychosis</strong> — confusion, paranoia, hallucinations, grandiosity — is rare and a <strong>medical emergency</strong>. Go in the same day.</p>
+<h3>Paternal postnatal depression — Nico's own risk</h3>
+<p><strong>Roughly 8–10% of fathers experience depression in the first year.</strong> The strongest single predictor is the mother having it.</p>
+<p>It presents differently in men and is therefore missed more often: irritability and anger rather than sadness, withdrawal, working later than necessary, drinking more, physical complaints, risk-taking, feeling like a spare part.</p>
+<p><strong>The trap:</strong> &quot;she's the one who gave birth, I have no right to struggle.&quot; Being depressed doesn't help her, and it isn't a competition. Getting help is part of the job, not a retreat from it.</p>
+<h3>Support resources</h3>
+<div class="tw"><table><thead><tr><th>Resource</th><th>Contact</th></tr></thead><tbody><tr><td><strong>National Center for Mental Health crisis hotline (PH)</strong></td><td>1553 (toll-free, nationwide landline); 0917-899-8727</td></tr><tr><td>Dra. Villafria</td><td><em>number from Settings</em></td></tr><tr><td>Makati Med ER</td><td><em>number from Settings</em></td></tr><tr><td>Makati Med psychiatry referral</td><td>Ask Dra. Villafria for a referral</td></tr></tbody></table></div>
+<blockquote><p>Hotline numbers are as published by the Philippine Department of Health. <strong>Verify before shipping</strong> — hotline numbers change, and a wrong number in a crisis is worse than no number. <code>confidence: medium</code>, verified 2026-09-18. Everything else stays blank until entered in Settings. <strong>The app never invents a phone number.</strong></p></blockquote>
+<p><em>Sources: ACOG postpartum care guidance; AAP on paternal depression screening; DOH mental health hotline listings. Verified 2026-09-18.</em></p>
+<hr></div>
+  <div class="prose subview" id="n-skills" hidden><h3>Safe sleep — the ABCs</h3>
+<p>The AAP's rule, and the one that matters most:</p>
+<pre class="statline">A   ALONE     own sleep surface, nothing else in it
+B   BACK      on the back, every sleep, until age 1
+C   CRIB      firm flat surface, fitted sheet only</pre>
+<p><strong>Nothing else in the cot.</strong> No bumpers, no pillows, no blankets, no toys, no positioners, no wedges. A sleep sack instead of a blanket.</p>
+<p>Room-sharing — the baby's own cot in the parents' room — is recommended for at least the first six months and reduces risk substantially. <strong>Bed-sharing is not the same thing</strong> and carries the opposite risk profile.</p>
+<p>Other points: no overheating, no smoking around the baby, a dummy at sleep time may reduce risk, and if the baby falls asleep on someone, move them to the cot.</p>
+<p><strong>The 3am rule:</strong> the danger isn't the plan, it's the exhausted improvisation. Falling asleep on a sofa holding the baby is among the highest-risk situations there is. If Nico is too tired to stay awake, the baby goes in the cot first.</p>
+<p><em>Source: AAP Safe Sleep policy statement (2022). Verified 2026-09-18. Confidence: high.</em></p>
+<h3>Paced bottle feeding</h3>
+<p>If Dani is breastfeeding and Nico gives a bottle, do it this way — it prevents the flow-preference that makes babies reject the breast afterwards.</p>
+<ol><li>Baby <strong>upright</strong>, not lying back.</li><li>Bottle <strong>horizontal</strong>, not tipped up. The teat stays only half full.</li><li>Tickle the lips and let the baby <em>draw the teat in</em>. Don't push it in.</li><li><strong>Pause every 20–30 seconds.</strong> Tip the bottle down, let them breathe.</li><li>Switch sides halfway, as breastfeeding would.</li><li><strong>Stop when they stop.</strong> A finished bottle is not the goal.</li><li>A feed should take 15–20 minutes. Five minutes is too fast.</li></ol>
+<p><strong>Signs to stop:</strong> splayed fingers, turning away, milk spilling, frowning.</p>
+<h3>Swaddling</h3>
+<ol><li>Blanket in a diamond, top corner folded down.</li><li>Baby on it, shoulders just below the fold.</li><li>One arm down at the side, wrap that side across, tuck under the opposite side.</li><li>Bottom corner up.</li><li>Other arm down, wrap across, tuck.</li><li><strong>Snug across the chest, loose at the hips</strong> — two fingers should fit at the chest, and the legs must be free to bend up and out. A tight-hipped swaddle causes hip dysplasia.</li></ol>
+<p><strong>Stop swaddling the moment the baby shows any sign of rolling</strong>, usually around 2–3 months. A swaddled baby who rolls onto their front cannot roll back.</p>
+<h3>The shift sleep planner</h3>
+<p>The single highest-leverage thing a couple can do in the first six weeks. Fragmented sleep is worse than less sleep — one unbroken 4–5 hour block is worth more than eight broken hours.</p>
+<p><strong>Breastfeeding, with expressed milk available:</strong></p>
+<pre class="statline">21:00 – 02:00   DANI SLEEPS.  Nico does the wake, gives a bottle.
+02:00 – 07:00   NICO SLEEPS.  Dani feeds.</pre>
+<p><strong>Breastfeeding, no bottles yet:</strong></p>
+<pre class="statline">Dani feeds — but does nothing else.
+Nico does every nappy change, burp, resettle and transfer back to the cot.
+She feeds and returns to sleep. That halves her waking time.</pre>
+<p><strong>Formula or mixed feeding:</strong> alternate whole nights. One parent is fully off duty and sleeps in another room. A parent who sleeps every other night properly functions far better than two who are half-awake every night.</p>
+<p><strong>The rules:</strong> the off-duty parent sleeps somewhere else, with earplugs, and does not get up &quot;just to help&quot; — that defeats the entire arrangement. Revisit weekly; what works at week one will not work at week six.</p>
+<hr></div>
+  <div class="prose subview" id="n-life" hidden><h3>Fitness — the off-season</h3>
+<p>Treat it as an off-season, not a collapse. The goal is maintenance, not progress, and the season resumes.</p>
+<ul><li><strong>20 minutes at home beats 90 minutes at a gym he won't get to.</strong> Kettlebell, bands, bodyweight.</li><li>Train when the baby naps, or at 5am. Fixed time, low ambition, high consistency.</li><li>Sleep deprivation makes hard training counterproductive — it raises injury risk and blunts recovery. Go easier than feels right.</li><li>Walking with the pram counts, and gets Dani a break at the same time.</li><li>Expect to lose conditioning. It comes back quickly. Fighting for progress now costs more than it returns.</li></ul>
+<h3>Money — the four things to sort before the birth</h3>
+<p><strong>1. Life insurance.</strong> The highest-value item, and the one most often deferred. Term life is cheap and premiums rise with age, so now is cheaper than later. Cover Nico <em>and</em> Dani — the cost of replacing unpaid care work is real, and routinely underinsured. Rough guide: 10–12× annual income, or enough to clear the mortgage and fund the child to adulthood. <strong>Check what RCBC already provides as an employee benefit before buying anything</strong> — group cover may reduce what he needs, though it usually ends when employment does.</p>
+<p><strong>2. An education plan.</strong> Philippine private education is the largest foreseeable expense after housing, and inflates faster than general inflation. Options: an educational plan from a pre-need company (check the provider's trust-fund position carefully — the industry has a difficult history), a straightforward investment account such as a UITF or index fund with an 18-year horizon, or a mix. <strong>The earlier this starts, the less it costs monthly.</strong> Even a small amount from now compounds materially by 2045.</p>
+<p><strong>3. A will.</strong> The genuinely important part is not the money — it is <strong>naming a guardian</strong>. Without one, the courts decide. Philippine succession law also has forced-heirship rules (legitime) that constrain how an estate can be distributed, so a Philippine will should be drawn by a Philippine lawyer. A holographic will (entirely handwritten, dated and signed) is valid here but easier to challenge. Also: update beneficiaries on SSS, Pag-IBIG, insurance and any RCBC plan — those pass by beneficiary designation, not by will.</p>
+<p><strong>4. The emergency fund.</strong> Three to six months of expenses, in cash, accessible. The new expense isn't nappies; it's that the household's risk tolerance has changed.</p>
+<blockquote><p><strong>All financial items: <code>confidence: low</code>.</strong> This is general orientation, not financial or legal advice, and none of it was verified against a Philippine adviser. See a licensed financial adviser and a Philippine lawyer. Every product and rule needs checking against current terms. Verified 2026-09-18.</p></blockquote>
+<hr><p>Swipe cards. Affectionate, not preachy — everyone says at least one of these.</p>
+<div class="tw"><table><thead><tr><th>Don't say</th><th>Why</th><th>Say instead</th></tr></thead><tbody><tr><td>&quot;You look tired&quot;</td><td>She knows. It lands as &quot;you look bad&quot;.</td><td>&quot;Go and lie down, I've got this.&quot;</td></tr><tr><td>&quot;Is that allowed?&quot;</td><td>Makes him the food police.</td><td>Learn the list yourself and stay quiet.</td></tr><tr><td>&quot;My mum says…&quot;</td><td>Two problems in three words.</td><td>&quot;What do you want to do?&quot;</td></tr><tr><td>&quot;At least it's not twins&quot;</td><td>Minimises.</td><td>&quot;That sounds hard.&quot;</td></tr><tr><td>&quot;When are you due again?&quot;</td><td>He should know.</td><td>Know it.</td></tr><tr><td>&quot;Was it planned?&quot; — to anyone</td><td>Not anyone's business.</td><td>—</td></tr><tr><td>&quot;You're huge&quot; / &quot;Are you sure it's not twins?&quot;</td><td>Never once landed well.</td><td>&quot;You look great.&quot;</td></tr><tr><td>&quot;I'm tired too&quot;</td><td>True, and unhelpful.</td><td>&quot;I'll take the next one.&quot;</td></tr><tr><td>&quot;Just sleep when the baby sleeps&quot;</td><td>Ignores everything else that must happen.</td><td>&quot;Sleep — I'll do the rest.&quot;</td></tr><tr><td>&quot;Is she a good baby?&quot;</td><td>Implies babies can be bad.</td><td>&quot;How are you both doing?&quot;</td></tr><tr><td>&quot;Are you breastfeeding?&quot;</td><td>Loaded regardless of the answer.</td><td>&quot;Is feeding going OK?&quot;</td></tr><tr><td>&quot;You'll miss this&quot;</td><td>To someone struggling, this is dismissive.</td><td>&quot;This bit is hard.&quot;</td></tr><tr><td>&quot;Let me know if you need anything&quot;</td><td>Puts the work on her.</td><td>Bring food. Take the bins out. Don't ask.</td></tr><tr><td>&quot;Enjoy your sleep now!&quot;</td><td>Said to every expectant parent, helps none.</td><td>—</td></tr><tr><td>&quot;Natural birth is better&quot;</td><td>Judgemental and not true as stated.</td><td>&quot;Whatever gets you both through safely.&quot;</td></tr><tr><td>&quot;She's just hormonal&quot;</td><td>Dismisses a real feeling.</td><td>Ask what's wrong and listen.</td></tr><tr><td>&quot;I'll babysit&quot; — of his own child</td><td>You don't babysit your own child.</td><td>&quot;I'll take him Saturday.&quot;</td></tr></tbody></table></div>
+<hr><p>Advice arrives constantly and mostly from love. The skill is deflecting without wounding.</p>
+<p><strong>The three moves:</strong></p>
+<ol><li><strong>Thank, don't debate.</strong> &quot;Thank you po, I'll remember that.&quot; No argument needed.</li><li><strong>Put it on the doctor.</strong> &quot;Dra. Villafria wants us to do it this way.&quot; Nobody argues with the OB. This is the single most useful sentence available.</li><li><strong>Nico takes the hit, not Dani.</strong> If it's his family, he handles them. She is not obliged to manage his relatives while pregnant. This is the most important one.</li></ol>
+<p><strong>Where to actually hold the line:</strong> anything touching safe sleep (no pillows or bumpers in the cot, back sleeping), no honey before 12 months, no smoking near the baby, no unsolicited kissing the newborn's face, and nobody visiting while sick. On these, be warm and completely immovable.</p>
+<p><strong>Where to let it go:</strong> the safety pin, the belly-shape prediction, the food arriving unannounced, the opinion about the name. None of it matters, and accepting a harmless pamahiin graciously buys enormous goodwill for the times you do have to say no.</p>
+<p><strong>One genuine tension:</strong> Filipino families visit newborns early and in numbers. It is an expression of love and also an infection risk for a baby with no vaccines yet. A workable compromise: delay visits for two weeks, then keep them short, require handwashing, ban anyone with a cough, and nobody kisses the face. Frame it as the paediatrician's rule, not as a boundary against them.</p>
+<hr></div>
+  <div class="prose subview" id="n-bag" hidden><h3>His checklist timeline</h3>
+<div class="tw"><table><thead><tr><th>When</th><th>Task</th></tr></thead><tbody><tr><td>Week 8</td><td>Take over cooking and bins. Learn the food rules.</td></tr><tr><td>Week 12</td><td>Go to the NT scan. Agree the announcement plan.</td></tr><tr><td>Week 16</td><td>Travel insurance for any trip. Start the nursery plan.</td></tr><tr><td>Week 20</td><td>Anomaly scan. Start talking to the bump.</td></tr><tr><td>Week 24</td><td>Hospital pre-registration questions. Yaya search if hiring.</td></tr><tr><td>Week 27</td><td><strong>Raise paternity leave with RCBC HR.</strong> Ask about benefits above statutory.</td></tr><tr><td>Week 28</td><td>Birth plan conversation. Book a birth class.</td></tr><tr><td>Week 30</td><td>Read the birth-partner playbook properly. Practise the hip squeeze.</td></tr><tr><td>Week 32</td><td>Install the car seat. Confirm two routes to Makati Med.</td></tr><tr><td>Week 34</td><td>Sort life insurance, will and beneficiaries.</td></tr><tr><td>Week 35</td><td><strong>Both bags packed.</strong></td></tr><tr><td>Week 36</td><td>Phone on, car fuelled, no travel.</td></tr><tr><td>Week 37+</td><td>Say yes to everything.</td></tr><tr><td>Birth</td><td>Playbook.</td></tr><tr><td>Day 1–30</td><td><strong>Register the birth at the LCRO within 30 days.</strong></td></tr><tr><td>Week 1–6</td><td>Shift sleep. Watch the postpartum red flags. Feed her.</td></tr></tbody></table></div>
+<h3>Nico's hospital go-bag</h3>
+<p>Separate from Dani's. Labour is long and hospitals are cold.</p>
+<p><strong>Documents (a single folder, not loose):</strong></p>
+<ul><li>Both IDs, PhilHealth number, HMO card</li><li>Dani's prenatal records</li><li>Birth plan, printed</li><li>Dra. Villafria's number and the Makati Med number on paper, not only on a phone</li></ul>
+<p><strong>For him:</strong></p>
+<ul><li>Two changes of clothes — it may be more than a day</li><li>A warm layer. Delivery rooms are cold.</li><li>Comfortable shoes he can stand in for hours</li><li>Toothbrush, deodorant, a razor</li><li>Phone charger with a <strong>long</strong> cable, and a power bank</li><li>Snacks and a water bottle. He will not want to leave, and the canteen will be shut.</li><li>Small cash for parking and vending machines</li><li>Something to do during a long early labour</li></ul>
+<p><strong>For her, that he carries:</strong></p>
+<ul><li>Lip balm — hospital air is dry and she will not have thought of it</li><li>Hair ties</li><li>Her pillow from home, in a distinctive pillowcase so it comes back</li><li>A tennis ball for counter-pressure</li><li>A phone charger of her own</li><li>Flip-flops for the shower</li><li>Snacks for straight after the birth — she will be very hungry</li></ul>
+<p><strong>For going home:</strong></p>
+<ul><li><strong>Car seat, installed and checked before the day</strong></li><li>Going-home outfit for the baby, newborn size</li><li>A blanket</li><li>Loose, comfortable clothes for Dani — she will still look pregnant, and that is normal</li></ul></div></section>
+
+<section class="view" id="view-calendar" hidden><h2 class="view-title">Calendar</h2><p class="lede">The liturgical year against gestational age. Moveable feasts were computed, not recalled &mdash; Easter 2027 is 28 March, which lands at exactly 32 weeks.</p><div class="cal" id="callist"></div><div class="prose"><p>Seeds the <code>milestones</code> table. Dates use standard dating.</p>
+<div class="tw"><table><thead><tr><th>Milestone</th><th>Typical timing</th><th>Date</th><th>Notes</th></tr></thead><tbody><tr><td>Announcement</td><td>after 12–13 weeks</td><td>from 2026-11-15</td><td>After the risk drop, and usually after the NT scan</td></tr><tr><td>Gender reveal</td><td>18–20 weeks</td><td>2026-12-20 – 2027-01-03</td><td>Often combined with the anomaly scan result</td></tr><tr><td>SSS maternity notification</td><td>as early as possible</td><td>by ~2026-12-01</td><td>File early; do not leave it late</td></tr><tr><td>Baby shower</td><td>third trimester</td><td>Mar – Apr 2027</td><td>Commonly held later here than in the US</td></tr><tr><td>Hospital bag packed</td><td>35 weeks</td><td>2027-04-18</td><td>Both bags</td></tr><tr><td>Maternity leave filing</td><td>60 days before</td><td>by ~2027-03-23</td><td>105 days under RA 11210</td></tr><tr><td>Paternity leave filing</td><td>before the birth</td><td>by ~2027-05-01</td><td>RCBC HR — see the marriage caveat</td></tr><tr><td><strong>PSA birth registration</strong></td><td><strong>within 30 days of birth</strong></td><td>—</td><td>Act No. 3753. Filed at the Local Civil Registry Office of the city of birth, not with PSA directly</td></tr><tr><td>Newborn screening</td><td>24–72 hours after birth</td><td>—</td><td>Done at the hospital</td></tr><tr><td>Baby's passport</td><td>any time after registration</td><td>—</td><td>Infants under 1 year are exempt from the DFA appointment requirement</td></tr><tr><td>Binyag (christening)</td><td>1–6 months</td><td>—</td><td>Ninong/ninang list manager</td></tr><tr><td>First birthday</td><td>12 months</td><td>~May 2028</td><td>Often a large celebration</td></tr></tbody></table></div>
+<h3>PSA birth registration — the detail that trips people up</h3>
+<p>The 30-day deadline is real, and the filing goes to the <strong>Local Civil Registry Office of the city or municipality where the birth occurred</strong> — not to PSA. The LCRO records it and transmits it to PSA for national archiving.</p>
+<p>Miss the 30 days and it becomes a <em>delayed registration</em>: an affidavit explaining the delay, supporting documents, and a 10-day posting period on the LCRO noticeboard before approval. Entirely avoidable, and worth a reminder in the app at day 7 and day 20.</p>
+<p>For the baby's first passport, a newborn under one year without a PSA certificate yet may use an LCR-certified true copy authenticated by PSA.</p>
+<p><em>Sources: <a href="https://psa.gov.ph/civilregistration/facts" target="_blank" rel="noopener">PSA civil registration</a>, <a href="https://consular.dfa.gov.ph/minor-new/" target="_blank" rel="noopener">DFA minor passport requirements</a>, <a href="https://duranschulze.com/filing-a-delayed-registration-of-birth-in-the-philippines/" target="_blank" rel="noopener">Duran &amp; Duran-Schulze — delayed registration</a>. Verified 2026-09-18. Confidence: high on the 30-day rule, medium on procedural detail.</em></p>
+<h3>Pamahiin — myth or fact</h3>
+<p>Swipe cards. The tone should be affectionate, never mocking — these come from people who love them.</p>
+<div class="tw"><table><thead><tr><th>Pamahiin</th><th>Verdict</th><th>The honest answer</th></tr></thead><tbody><tr><td>Eating twin bananas means twins</td><td>Myth</td><td>Twinning is determined at conception.</td></tr><tr><td>Craving dark food darkens the baby's skin</td><td>Myth</td><td>Skin colour is genetic.</td></tr><tr><td>A round belly means a girl, pointed means a boy</td><td>Myth</td><td>Belly shape reflects the mother's build and the baby's position.</td></tr><tr><td>Bad heartburn means a hairy baby</td><td><strong>Surprisingly, some truth</strong></td><td>One small Johns Hopkins study found a real correlation — both are linked to the same hormones. Genuinely charming, and genuinely studied.</td></tr><tr><td>Lihi — cravings shape the baby's appearance</td><td>Myth</td><td>Cravings are hormonal. Nothing transfers.</td></tr><tr><td>A pregnant woman must not attend funerals</td><td>Myth</td><td>No physical basis. Attend or don't, as feels right.</td></tr><tr><td>Don't sit in doorways or the baby gets stuck</td><td>Myth</td><td>Comfort aside, no.</td></tr><tr><td>Don't sleep during the day or the baby grows too big</td><td>Myth</td><td>Rest is good. Sleep whenever possible.</td></tr><tr><td>Wearing a safety pin wards off harm</td><td>Myth</td><td>Harmless, and wear it if it pleases a lola.</td></tr><tr><td>Stepping over a rope causes cord entanglement</td><td>Myth</td><td>Cord position is unrelated.</td></tr><tr><td>Reaching overhead causes cord wrapping</td><td>Myth</td><td>Very common advice, and untrue.</td></tr><tr><td>Don't cut hair during pregnancy</td><td>Myth</td><td>Cut it.</td></tr><tr><td>Papaya causes miscarriage</td><td><strong>Partly</strong></td><td><em>Ripe</em> papaya is safe and good. <em>Unripe</em> papaya contains latex and is worth limiting. The pamahiin is over-broad, not baseless.</td></tr><tr><td>Pineapple causes miscarriage</td><td>Myth</td><td>Would require an implausible quantity.</td></tr><tr><td>Raising arms above the head is dangerous</td><td>Myth</td><td>It is not.</td></tr><tr><td>Craving sour food means a boy</td><td>Myth</td><td></td></tr><tr><td>Don't take a bath right after giving birth</td><td>Myth</td><td>Hygiene after birth is important.</td></tr><tr><td>Binyag must happen before the baby is one</td><td>Tradition</td><td>A custom, not a rule. Families decide.</td></tr></tbody></table></div>
+<hr></div></section>
+
+<section class="view" id="view-flags" hidden><h2 class="view-title">When to call</h2><div class="prose"><p>Seeds <code>red_flags</code>. <strong>Reachable in one tap from every screen.</strong> Calm layout, no alarming imagery, and the call buttons use only the numbers saved in Settings — <strong>the app never supplies a phone number it was not given.</strong></p>
+<h3>Call immediately, at any stage</h3>
+<ul><li>Heavy vaginal bleeding, or bleeding with cramping</li><li>Severe abdominal pain that does not ease</li><li>Severe headache that will not lift</li><li>Vision changes — blurring, spots, flashing lights</li><li>Sudden swelling of the face, hands or feet</li><li>Fever above 38°C</li><li>Fainting, or severe dizziness</li><li>Chest pain or difficulty breathing</li><li>Pain, redness or swelling in one calf (possible DVT)</li><li>Thoughts of harming herself or the baby</li></ul>
+<p><strong>Severe headache + vision changes + sudden swelling together</strong> is the pre-eclampsia pattern. Any one warrants a call; together they warrant going in.</p>
+<h3>First trimester</h3>
+<ul><li>Bleeding with cramping</li><li>Severe one-sided pain, with or without shoulder-tip pain — possible ectopic, which is an emergency</li><li>Vomiting so persistent nothing stays down for 24 hours</li><li>Pain or burning on urination</li><li>Fever</li></ul>
+<h3>Second trimester</h3>
+<ul><li>Bleeding</li><li>Regular contractions before 37 weeks</li><li>Fluid leaking from the vagina</li><li>Sudden severe swelling</li><li>No fetal movement after movement has been established</li><li>Severe back pain with fever</li></ul>
+<h3>Third trimester</h3>
+<ul><li><strong>Reduced fetal movement</strong> — this is the one to act on quickly. Do not &quot;wait and see&quot; overnight</li><li>Regular painful contractions before 37 weeks</li><li>Waters breaking before 37 weeks</li><li>Bleeding</li><li>Severe headache, vision changes, or sudden swelling</li><li>Intense itching, especially palms and soles — possible obstetric cholestasis</li></ul>
+<h3>Postpartum — for both of them to know</h3>
+<ul><li>Bleeding soaking more than one pad an hour</li><li>Passing clots larger than a golf ball</li><li>Fever above 38°C</li><li>Severe headache or vision changes — pre-eclampsia can appear <em>after</em> birth</li><li>Calf pain or swelling</li><li>Red, painful, hot area on the breast with fever — mastitis</li><li>Foul-smelling discharge</li><li>Thoughts of harming herself or the baby — this is an emergency, not a mood</li></ul>
+<blockquote><p><strong>Reduced fetal movement deserves its own emphasis.</strong> There is no &quot;normal number&quot; of kicks. What matters is a change from <em>her</em> baby's pattern. The advice is to call, not to drink cold water and lie down and hope, and certainly not to wait until morning.</p></blockquote>
+<p><em>Sources: ACOG &quot;Urgent Maternal Warning Signs&quot;; NHS pregnancy symptom guidance; RCOG reduced fetal movement guidance. Verified 2026-09-18. Confidence: high. <strong>This list is not exhaustive</strong> — the app should say so, and should always end with: if something feels wrong, call.</em></p></div></section>
+<section class="view" id="view-about" hidden><h2 class="view-title">Dating &amp; sources</h2><div class="prose"><div class="tw"><table><thead><tr><th>Field</th><th>Value</th><th>Source</th><th>Confidence</th></tr></thead><tbody><tr><td>EDD</td><td>2027-05-23</td><td>Given</td><td>—</td></tr><tr><td>Term length</td><td>280 days from LMP</td><td>Naegele's rule, standard obstetric dating</td><td>high</td></tr><tr><td>Implied LMP (bare count)</td><td>2026-08-16</td><td>Derived</td><td>high</td></tr><tr><td>Implied conception (bare count)</td><td>2026-08-30</td><td>LMP + 14 days</td><td>high</td></tr><tr><td>Displayed dating offset</td><td>+2 days</td><td>App setting <code>dating_offset_days</code></td><td>—</td></tr></tbody></table></div>
+<p><strong>The offset, and why it is flagged.</strong> The app displays gestational age as <code>280 − (EDD − today) + dating_offset_days</code>, with the offset defaulting to <code>2</code> so that 16 Sept 2026 reads as Week 4, Day 5. The bare subtraction gives Week 4, Day 3.</p>
+<p>The bare count also places conception on <strong>30 August 2026</strong> — the middle of the 29–31 August window the couple recall. The offset moves it to 28 August, just outside. That is a reason to raise the dating with Dra. Villafria at the dating scan rather than to assume the app is right. Setting the offset to <code>0</code> reverts to standard dating.</p>
+<h3>Milestone dates computed from the EDD</h3>
+<p>Both columns are shown because they differ, and the difference matters.</p>
+<div class="tw"><table><thead><tr><th>Milestone</th><th>Gestational age</th><th>Standard dating</th><th>With +2 offset</th></tr></thead><tbody><tr><td>Implied LMP</td><td>0w0d</td><td>2026-08-16</td><td>2026-08-14</td></tr><tr><td>Implied conception</td><td>2w0d</td><td>2026-08-30</td><td>2026-08-28</td></tr><tr><td>NIPT available from</td><td>10w0d</td><td>2026-10-25</td><td>2026-10-23</td></tr><tr><td>NT scan window</td><td>11w0d – 13w6d</td><td>2026-11-01 – 2026-11-21</td><td>2026-10-30 – 2026-11-19</td></tr><tr><td>End of first trimester</td><td>13w6d</td><td>2026-11-21</td><td>2026-11-19</td></tr><tr><td>Anomaly scan window</td><td>18w0d – 22w0d</td><td>2026-12-20 – 2027-01-17</td><td>2026-12-18 – 2027-01-15</td></tr><tr><td>OGTT window</td><td>24w0d – 28w0d</td><td>2027-01-31 – 2027-02-28</td><td>2027-01-29 – 2027-02-26</td></tr><tr><td>Tdap window</td><td>27w0d – 36w0d</td><td>2027-02-21 – 2027-04-25</td><td>2027-02-19 – 2027-04-23</td></tr><tr><td>Third trimester begins</td><td>28w0d</td><td>2027-02-28</td><td>2027-02-26</td></tr><tr><td>RSV vaccine window opens</td><td>32w0d</td><td>2027-03-28</td><td>2027-03-26</td></tr><tr><td>GBS swab window</td><td>35w0d – 37w0d</td><td>2027-04-18 – 2027-05-02</td><td>2027-04-16 – 2027-04-30</td></tr><tr><td>Hospital bag packed by</td><td>35w0d</td><td>2027-04-18</td><td>2027-04-16</td></tr><tr><td>Term</td><td>37w0d</td><td>2027-05-02</td><td>2027-04-30</td></tr><tr><td>40 weeks</td><td>40w0d</td><td><strong>2027-05-23</strong></td><td><strong>2027-05-21</strong></td></tr></tbody></table></div>
+<p><strong>Read the last row.</strong> Under standard dating, 40w0d lands exactly on the EDD, which is what &quot;estimated due date&quot; means. With the +2 offset, the app reaches 40 weeks <em>two days before</em> Dani's due date, and every window above shifts two days early with it.</p>
+<p>That is not a rounding artifact — it is the offset doing exactly what it was asked to do, and it is why the offset is presentation-only:</p>
+<ul><li><strong>Seed the appointment planner from the standard-dating column.</strong> Those are the dates to book against and the ones to put in front of Dra. Villafria.</li><li><strong>The offset changes only the &quot;Week N, Day N&quot; label</strong> on the home screen.</li><li>If the dating scan confirms the 29–31 August conception window, set <code>dating_offset_days</code> to <code>0</code> and the two columns collapse into one.</li></ul>
+<hr><p>All timings are the standard schedule; Dra. Villafria sets the actual plan.</p>
+<div class="tw"><table><thead><tr><th>Test</th><th>When</th><th>What it is</th><th>Source</th><th>Confidence</th></tr></thead><tbody><tr><td>Dating / viability scan</td><td>6–9 weeks</td><td>Confirms pregnancy location, heartbeat, and dating. Dating by crown-rump length in the first trimester is more accurate than LMP.</td><td>ACOG / RCOG standard practice</td><td>high</td></tr><tr><td>NIPT (cell-free DNA)</td><td>From 10 weeks</td><td>Blood screen for trisomy 21, 18, 13. A screen, not a diagnosis — a high-risk result needs confirmatory testing.</td><td>ACOG Practice Bulletin 226</td><td>high</td></tr><tr><td>NT scan</td><td>11w0d – 13w6d</td><td>Nuchal translucency + nasal bone, usually combined with first-trimester bloods.</td><td>Fetal Medicine Foundation standard window</td><td>high</td></tr><tr><td>Anomaly scan (CAS)</td><td>18–22 weeks</td><td>Detailed structural survey.</td><td>Philippine Society of Maternal Fetal Medicine</td><td>high</td></tr><tr><td>OGTT</td><td>24–28 weeks</td><td>Gestational diabetes screen. 75g two-hour test is standard in PH practice.</td><td>ADA / PH practice</td><td>high</td></tr><tr><td>Tdap</td><td>27–36 weeks, <strong>early in the window</strong></td><td>Maternal antibodies cross to the baby; pertussis protection before the baby's own shots. Given in <em>every</em> pregnancy, regardless of prior doses.</td><td>ACOG</td><td>high</td></tr><tr><td>RSV vaccine (Abrysvo)</td><td>32w0d – 36w6d</td><td>Single dose, not within 2 weeks of a planned delivery.</td><td>ACOG Practice Advisory; ACOG 2026–27 respiratory season release, Sept 2026</td><td>high</td></tr><tr><td>GBS swab</td><td>35–37 weeks</td><td>Group B strep; a positive result means IV antibiotics in labour.</td><td>ACOG</td><td>high</td></tr></tbody></table></div>
+<h3>Two flags on the vaccine timing</h3>
+<p><strong>RSV seasonality is not the US calendar.</strong> ACOG's window of 1 September – 1 March reflects Northern-Hemisphere temperate RSV seasonality. Philippine RSV activity tracks the rainy season instead, broadly mid-year. Dani reaches 32 weeks on <strong>28 March 2027</strong> on standard dating. Whether that is the right moment is a question for Dra. Villafria against local surveillance — do <strong>not</strong> let the app assert the US window as though it applied in Manila. <code>confidence: low</code> on the seasonal timing; <code>high</code> on the 32–36 week gestational window itself.</p>
+<p><strong>Tdap: earlier in the window is better.</strong> 27–28 weeks beats 35 weeks, because antibody transfer needs time. Worth surfacing as a nudge, not just a date range.</p>
+<p><em>Sources: <a href="https://www.acog.org/clinical/clinical-guidance/practice-advisory/articles/2023/09/maternal-respiratory-syncytial-virus-vaccination" target="_blank" rel="noopener">ACOG maternal RSV vaccination</a>, <a href="https://www.acog.org/news/news-releases/2026/09/acog-releases-2026-27-respiratory-virus-season-immunization-recommendations" target="_blank" rel="noopener">ACOG 2026–27 respiratory virus season recommendations</a>, <a href="https://www.acog.org/womens-health/faqs/the-tdap-vaccine-and-pregnancy" target="_blank" rel="noopener">ACOG Tdap in pregnancy</a>, <a href="https://psmfm.org/web/information-hub/congenital-anomaly-scan/" target="_blank" rel="noopener">PSMFM congenital anomaly scan</a>. Verified 2026-09-18.</em></p>
+<hr><div class="tw"><table><thead><tr><th>Nutrient</th><th>Daily target</th><th>Why</th><th>Filipino sources</th></tr></thead><tbody><tr><td>Folate / folic acid</td><td>400–600mcg</td><td>Neural tube closure, in the first weeks — often before pregnancy is known</td><td>Malunggay, kangkong, fortified rice, supplement</td></tr><tr><td>Iron</td><td>27mg</td><td>Blood volume rises ~45%; deficiency is very common in PH</td><td>Beef, liver (sparingly), malunggay, kangkong, fortified cereal</td></tr><tr><td>Calcium</td><td>1000mg</td><td>Fetal skeleton; drawn from maternal bone if intake is low</td><td>Milk, kesong puti (pasteurised), sardines with bones, malunggay, tofu</td></tr><tr><td>DHA (omega-3)</td><td>200–300mg</td><td>Brain and retinal development</td><td>Bangus, salmon, sardines, galunggong, supplement</td></tr><tr><td>Iodine</td><td>220mcg</td><td>Fetal brain development; deficiency is the leading preventable cause of intellectual disability worldwide</td><td>Iodised salt, seafood, seaweed</td></tr><tr><td>Vitamin D</td><td>600 IU</td><td>Calcium absorption; deficiency common despite the sunshine, because of sun avoidance</td><td>Fortified milk, eggs, fish, sunlight</td></tr><tr><td>Choline</td><td>450mg</td><td>Brain development. Under-discussed and commonly under-consumed</td><td>Eggs — two eggs give roughly half the target</td></tr><tr><td>Protein</td><td>~71g</td><td>Tissue growth</td><td>Fish, chicken, eggs, tofu, monggo</td></tr></tbody></table></div>
+<p><strong>The iron and calamansi pairing is real.</strong> Vitamin C substantially increases absorption of non-haem (plant) iron. Calamansi over kangkong is not folklore — it is useful. Conversely, coffee and tea with a meal reduce iron absorption, so space them out.</p>
+<p><em>Sources: ACOG nutrition in pregnancy; Philippine Dietary Reference Intakes (FNRI-DOST). Verified 2026-09-18. Confidence: high.</em></p>
+<h3>Calories by trimester</h3>
+<div class="tw"><table><thead><tr><th>Trimester</th><th>Additional daily kcal</th></tr></thead><tbody><tr><td>First</td><td>+0</td></tr><tr><td>Second</td><td>+340</td></tr><tr><td>Third</td><td>+450</td></tr></tbody></table></div>
+<p><strong>&quot;Eating for two&quot; is roughly a sandwich, not a second dinner.</strong> Equally, pregnancy is not a time to diet — restricting intake to limit weight gain is not recommended at any stage, and any concern about weight belongs in a conversation with Dra. Villafria rather than in a calorie deficit.</p>
+<p><em>Source: Institute of Medicine (2009); ACOG. Verified 2026-09-18. Confidence: high.</em></p>
+<h3>Weight gain bands (IOM 2009, singleton)</h3>
+<div class="tw"><table><thead><tr><th>Pre-pregnancy BMI</th><th>Total gain</th><th>Weekly gain, T2–T3</th></tr></thead><tbody><tr><td>Under 18.5</td><td>12.5–18 kg</td><td>0.44–0.58 kg</td></tr><tr><td>18.5–24.9</td><td>11.5–16 kg</td><td>0.35–0.50 kg</td></tr><tr><td>25–29.9</td><td>7–11.5 kg</td><td>0.23–0.33 kg</td></tr><tr><td>30 and above</td><td>5–9 kg</td><td>0.17–0.27 kg</td></tr></tbody></table></div>
+<p>First trimester gain of 0.5–2kg applies to all bands. <strong>Display these as a shaded range, never as a pass/fail line, and never in red.</strong></p>
+<p><em>Source: Institute of Medicine / National Research Council, &quot;Weight Gain During Pregnancy: Reexamining the Guidelines&quot; (2009). Verified 2026-09-18. Confidence: high. Already implemented in <code>src/lib/bmi.ts</code>.</em></p>
+<h3>Nausea — what actually helps</h3>
+<p>Ordered roughly by how well it works:</p>
+<ol><li>Eat before getting out of bed — dry crackers, plain bread.</li><li>Small and frequent beats large and spaced.</li><li>Ginger: salabat, ginger chews, fresh ginger in food.</li><li>Cold food often smells less than hot food, and smell is usually the trigger.</li><li>Vitamin B6 (pyridoxine) — evidence-backed. <strong>Ask Dra. Villafria for the dose.</strong></li><li>Hydrate between meals rather than during.</li><li>Keep a window open; Manila humidity in a closed room makes it worse.</li></ol>
+<p><strong>When it stops being ordinary:</strong> unable to keep fluids down for 24 hours, weight loss, dark urine, dizziness on standing. That is hyperemesis territory and needs a call, not endurance.</p>
+<hr><p>Every clinical, legal and price item carries a source and a <code>verified</code> date. The <code>confidence</code> field is doing real work — read it before putting a number in front of anyone:</p>
+<div class="tw"><table><thead><tr><th>Confidence</th><th>Meaning</th></tr></thead><tbody><tr><td><code>high</code></td><td>Traced to a named guideline body or statute. Safe to display.</td></tr><tr><td><code>medium</code></td><td>Consistent across several secondary sources, no primary source reached. Display with the source note visible.</td></tr><tr><td><code>low</code></td><td>Single secondary source, or sources disagreed. <strong>Display as an estimate and prompt the user to confirm.</strong></td></tr></tbody></table></div>
+<h3>A limitation worth stating plainly</h3>
+<p>This guide was compiled with search access only. The egress policy on the machine blocked direct access to <code>sss.gov.ph</code>, <code>philhealth.gov.ph</code>, <code>pcw.gov.ph</code> and <code>who.int</code>, so <strong>no Philippine government primary source was read directly</strong>. Every statutory figure below is from secondary reporting and is marked <code>medium</code> or <code>low</code> accordingly. Before Dani or Nico files anything, the numbers need confirming against the agency itself.</p>
+<p>One concrete example of why: search results for the SSS maternity maximum returned <strong>₱70,000</strong> alongside an average daily salary credit of <strong>₱1,166.67</strong>. Those two cannot both be right — ₱1,166.67 × 105 days is ₱122,500. The ₱70,000 figure belongs to the old ₱20,000 salary-credit ceiling. See the benefits section for how this is handled.</p>
+<hr></div></section>
+
+<footer>
+  <p>Built from the three source documents in <code>/docs</code>. General information, not medical advice &mdash; Dra. Villafria&rsquo;s guidance comes first, and in an emergency go to the Makati Med ER.</p>
+  <p><button class="subtab" data-view="about" type="button">Dating &amp; sources</button></p>
+</footer>
+</main>
+
+<script>
+const DATA = {"edd":"2027-05-23","weeks":[{"week":4,"size":"poppy seed / one malunggay leaflet","baby":"A ball of cells has burrowed into the uterine lining and become an embryo with three layers, which will form the nervous system, the organs, and the skin and skeleton.","you":"Most people feel nothing at all. A pregnancy test turns positive around now. Some light spotting as the embryo implants is normal.","tests":"Confirm the pregnancy. Book a first appointment with Dra. Villafria.","nutrition":"Folic acid, 400mcg daily, ideally already started. This is the window where it matters most for neural tube closure.","stretch":"Nothing new. Keep whatever you already do.","filipino":"Most couples tell nobody yet — not even family. There is no obligation to.","trimester":1,"prayer":{"intention":"that this is real","body":"Lord, there is almost nothing here yet, and already there is everything.\u003cbr>A few days ago I did not know. Now I cannot think of anything else.\u003cbr>Be with what has only just begun. Amen."},"feasts":[]},{"week":5,"size":"sesame seed / a single sago pearl","baby":"The neural tube closes. A heart tube begins to beat, though far too faintly to hear.","you":"Tiredness that feels unreasonable. Sore breasts. Nausea may start.","tests":"First prenatal visit is usually booked for 6–8 weeks.","nutrition":"Folate continues. Start thinking about iron-rich food; pair it with calamansi for absorption.","stretch":"Gentle walking. Nothing strenuous is required.","filipino":"If you are still commuting in Makati traffic, this is the week that starts to feel long.","trimester":1,"prayer":{"intention":"for the hidden work","body":"Today something in this child is deciding what will become the spine, the\u003cbr>brain, the nerves that will one day feel warmth and pain and being held.\u003cbr>None of it is visible. All of it is yours. Guard it. Amen."},"feasts":[]},{"week":6,"size":"lentil / one mung bean (monggo)","baby":"Facial features begin as small folds. Arm and leg buds appear. The heartbeat may be visible on a scan.","you":"Morning sickness rarely keeps to mornings. Smells become overwhelming.","tests":"Dating scan often falls between 6 and 9 weeks.","nutrition":"Eat what stays down. This is not the week for nutritional perfection.","stretch":"Gentle neck and shoulder rolls; nausea makes people hunch.","filipino":"Ginger tea (salabat) is the standard local remedy for nausea, and it is a reasonable one.","trimester":1,"prayer":{"intention":"for a heartbeat","body":"There is a heart in me that is not mine, and this week it begins to beat.\u003cbr>Lord, let it find its rhythm and keep it — every day, for a long life.\u003cbr>Amen."},"feasts":[]},{"week":7,"size":"blueberry / one calamansi","baby":"The brain is growing fast. Hands and feet look like paddles.","you":"More frequent trips to the bathroom. Possibly food aversions to things you used to love.","tests":"Bloods at the first visit: blood type, CBC, hepatitis B, syphilis, HIV, urinalysis.","nutrition":"Small, frequent meals beat three large ones. Dry crackers before getting up can help.","stretch":"Morning routine, trimester one — slow, short, no core work.","filipino":"\u003cstrong>Vietnam trip lands near here.\u003c/strong> See the travel section for the mosquito and food-hygiene rules.","trimester":1,"prayer":{"intention":"patience with my own body","body":"I am sick and exhausted and I look entirely ordinary, so no one knows.\u003cbr>You know. Let that be enough this week. Amen."},"feasts":[{"date":"2026-10-07","ga":"7w3d","feast":"Our Lady of the Rosary","note":"Begin the Joyful Mysteries"}]},{"week":8,"size":"raspberry / one small kalamansi to a grape","baby":"Now officially a fetus. Fingers and toes are separating. It moves, though you cannot feel it.","you":"Nausea often peaks between weeks 8 and 11.","tests":"If not already done, the dating scan.","nutrition":"Vitamin B6 helps some people with nausea — ask Dra. Villafria before adding anything.","stretch":"Cat-cow on hands and knees, slowly.","filipino":"Aircon and hydration matter more than usual; Manila heat plus nausea is a bad pairing.","trimester":1,"prayer":{"intention":"for the days I cannot eat","body":"Lord, I cannot keep much down and I am worried it is not enough.\u003cbr>You fed a whole people in a desert. Make what little I manage sufficient\u003cbr>for us both. Amen."},"feasts":[{"date":"2026-10-16","ga":"8w5d","feast":"\u003cstrong>St Gerard Majella\u003c/strong>","note":"Patron of expectant mothers. End the novena here"}]},{"week":9,"size":"green olive / one lanzones","baby":"The tail is gone. Essential organs are all present in early form.","you":"Waistbands feel different before there is anything to see.","tests":"Discuss NIPT — available from week 10.","nutrition":"Keep fluids up. Dehydration makes nausea worse, which makes drinking harder.","stretch":"Ankle circles and calf stretches; circulation changes start early.","filipino":"Worth deciding now who gets told first, before anyone guesses.","trimester":1,"prayer":{"intention":"for the ones we will tell","body":"Soon we will say it out loud and it will belong to other people too.\u003cbr>Give us the right moment, and the right words, and joy in the telling. Amen."},"feasts":[]},{"week":10,"size":"prune / one small santol","baby":"Vital organs are functioning. Nails begin forming.","you":"Nausea may begin to lift, or may not — both are normal.","tests":"\u003cstrong>NIPT available from today.\u003c/strong> NT scan can be booked for 11–13+6.","nutrition":"Iodine matters for brain development; iodised salt and fish cover it.","stretch":"Add gentle hip openers.","filipino":"NIPT is widely available in Metro Manila but is largely out of pocket — see costs.","trimester":1,"prayer":{"intention":"for the tests ahead","body":"This week we could learn things we cannot unlearn.\u003cbr>Give us courage for the knowing, whatever it is. Amen."},"feasts":[]},{"week":11,"size":"lime / one dalandan","baby":"Bones are hardening. The baby can hiccup, though you cannot feel it.","you":"Energy may start to return.","tests":"\u003cstrong>NT scan window opens.\u003c/strong>","nutrition":"Calcium, 1000mg daily. Kesong puti, milk, sardines with bones.","stretch":"Morning routine, full version.","filipino":"Many couples book the NT scan and the announcement photos on the same day.","trimester":1,"prayer":{"intention":"for bones","body":"Bones are hardening this week — the frame that will carry this child through\u003cbr>a whole life, running and climbing and standing up again.\u003cbr>Build them strong. Amen."},"feasts":[{"date":"2026-11-01","ga":"11w0d","feast":"All Saints / Undas","note":"Family graves, and the generations this child joins"}]},{"week":12,"size":"plum / one small mango","baby":"Reflexes are developing. Fingers and toes can curl.","you":"The uterus is rising out of the pelvis. Miscarriage risk drops substantially from here.","tests":"NT scan, if not already done.","nutrition":"Start DHA if not already — 200–300mg daily.","stretch":"Add gentle side stretches.","filipino":"\u003cstrong>The traditional announcement point.\u003c/strong> Many Filipino couples wait until after 12 weeks precisely because of the drop in risk.","trimester":1,"prayer":{"intention":"gratitude for getting here","body":"Twelve weeks. Lord, I have been holding my breath since the first day.\u003cbr>Thank you for bringing us this far. Let me breathe out. Amen."},"feasts":[]},{"week":13,"size":"peach / one chico","baby":"Vocal cords form. Fingerprints are appearing.","you":"The last week of the first trimester. Appetite often returns properly.","tests":"NT scan window closes at 13+6.","nutrition":"From the second trimester, roughly +340 kcal a day. Not before.","stretch":"Begin the second-trimester routine next week.","filipino":"Expect food to start arriving from relatives once the news is out.","trimester":1,"prayer":{"intention":"for the turning of the season","body":"The hardest part is behind me, they say. Let it be true.\u003cbr>And if it is not, be with me in the next part too. Amen."},"feasts":[]},{"week":14,"size":"lemon / one saba banana","baby":"Facial muscles work; the baby can squint and frown. Fine lanugo hair covers the skin.","you":"The &quot;good trimester&quot; usually begins. Energy returns.","tests":"Routine check-up.","nutrition":"+340 kcal daily from now. That is a sandwich and a glass of milk, not a second dinner.","stretch":"Second-trimester routine. \u003cstrong>Stop lying flat on your back for long periods from about 16 weeks.\u003c/strong>","filipino":"A good window for travel, if any is planned.","trimester":2,"prayer":{"intention":"for returning strength","body":"I feel like myself again, and I had forgotten what that was like.\u003cbr>Thank you. Let me use this season well and not waste it worrying. Amen."},"feasts":[]},{"week":15,"size":"apple / one medium mango","baby":"Can sense light through closed eyelids. Bones continue hardening.","you":"Possible nasal congestion and bleeding gums — both are normal pregnancy circulation changes.","tests":"Routine.","nutrition":"Vitamin C with iron-rich meals. Calamansi over everything is genuinely good advice here.","stretch":"Side-lying rest position; start getting used to sleeping on the left.","filipino":"Soft toothbrush; dental care is safe and worth keeping up in pregnancy.","trimester":2,"prayer":{"intention":"for Nico","body":"He cannot feel any of this. He waits outside it, and worries, and asks how I\u003cbr>am, and I am not always kind in answering.\u003cbr>Bless him this week. Let him feel part of it. Amen."},"feasts":[]},{"week":16,"size":"avocado / one small papaya","baby":"May begin to hear. Growing rapidly.","you":"Some feel the first flutters between 16 and 22 weeks. First pregnancies tend towards the later end.","tests":"Routine. Book the anomaly scan.","nutrition":"Choline — eggs are the easiest source.","stretch":"Pelvic tilts. Avoid supine positions.","filipino":"\u003cstrong>Korea trip falls near here\u003c/strong> — the best-timed of the four. See travel.","trimester":2,"prayer":{"intention":"for the first flutter","body":"Somewhere this month I will feel this child move for the first time and know\u003cbr>it for what it is.\u003cbr>Let me notice. Let me not be doing something else. Amen."},"feasts":[{"date":"2026-12-08","ga":"16w2d","feast":"\u003cstrong>Immaculate Conception\u003c/strong>","note":"Holy day of obligation in PH — \u003cem>note: this falls during the Korea trip (5–9 Dec)\u003c/em>"}]},{"week":17,"size":"pear / one guava","baby":"Fat stores begin to form. The skeleton shifts from cartilage to bone.","you":"Round ligament pain — sharp, brief twinges at the sides of the belly when you move suddenly.","tests":"Routine.","nutrition":"Keep protein steady across the day.","stretch":"Gentle hip flexor stretch helps round ligament discomfort.","filipino":"Time to think about whether you will find out the sex, and whether you want a reveal.","trimester":2,"prayer":{"intention":"for the body that is changing","body":"Nothing fits and I do not entirely recognise myself.\u003cbr>Let me be gentle with this body. It is not failing. It is working. Amen."},"feasts":[{"date":"2026-12-16 – 24","ga":"17w3d – 18w4d","feast":"\u003cstrong>Simbang Gabi\u003c/strong>","note":"Nine dawn Masses. Second trimester — the best window for it"}]},{"week":18,"size":"bell pepper / one small buko","baby":"Yawning, and moving a great deal. The sex is usually visible on a scan.","you":"Movement becomes more convincing.","tests":"\u003cstrong>Anomaly scan window opens (18–22 weeks).\u003c/strong>","nutrition":"Iron demand rises through the second trimester.","stretch":"Add wall-supported squats if comfortable.","filipino":"Gender reveals are popular and often large. There is no obligation to have one.","trimester":2,"prayer":{"intention":"for the scan that looks closely","body":"They will count the chambers of a heart the size of a thumbnail.\u003cbr>Be in that room. Let them find everything where it should be. Amen."},"feasts":[{"date":"2026-12-25","ga":"18w5d","feast":"\u003cstrong>Christmas — the Nativity\u003c/strong>","note":"Her first Christmas pregnant. A birth is the whole feast"}]},{"week":19,"size":"mango / one large mango","baby":"Vernix, a waxy coating, protects the skin. Sensory areas of the brain develop.","you":"Possible leg cramps at night, and dizziness on standing quickly.","tests":"Anomaly scan, if booked.","nutrition":"Magnesium and hydration for cramps.","stretch":"Calf stretches before bed, specifically.","filipino":"Standing in long queues gets harder; ask for the priority lane, which you are entitled to.","trimester":2,"prayer":{"intention":"for the senses waking up","body":"This child is beginning to hear, to taste, to feel.\u003cbr>The first world is my body, and it is a poor and ordinary one — make it\u003cbr>enough. Let the first thing known be that it is loved. Amen."},"feasts":[{"date":"2026-12-28","ga":"19w1d","feast":"Holy Innocents","note":"For children lost, and mothers grieving"},{"date":"2027-01-01","ga":"19w5d","feast":"Mary, Mother of God","note":"The year the baby arrives begins"}]},{"week":20,"size":"banana / one medium papaya","baby":"Halfway. Swallowing, and producing meconium.","you":"The bump is usually visible to others now.","tests":"Anomaly scan commonly falls this week.","nutrition":"Fibre and water; constipation is very common from here.","stretch":"Full second-trimester routine, morning and night.","filipino":"Halfway is a common point for a small family celebration.","trimester":2,"prayer":{"intention":"halfway","body":"Twenty weeks behind, twenty ahead.\u003cbr>Thank you for the half that is done. Carry us through the half that is not.\u003cbr>Amen."},"feasts":[]},{"week":21,"size":"carrot / one medium sayote","baby":"Movements become coordinated kicks rather than flutters.","you":"Appetite is usually strong. Heartburn may begin.","tests":"Routine.","nutrition":"Smaller meals help heartburn more than avoiding specific foods does.","stretch":"Upper-back opener; posture is starting to change.","filipino":"\u003cstrong>India trip falls near here.\u003c/strong> This is the highest-planning trip of the four — see travel.","trimester":2,"prayer":{"intention":"for the kicks","body":"There is someone in here now, moving with intention, answering when I press\u003cbr>back.\u003cbr>Thank you for this conversation, which is the strangest and best I have had.\u003cbr>Amen."},"feasts":[]},{"week":22,"size":"papaya / one small melon","baby":"Lips, eyelids and eyebrows are distinct. Grip is developing.","you":"Stretch marks may appear. Nothing prevents them reliably, whatever the cream claims.","tests":"Anomaly scan window closes.","nutrition":"Keep calcium consistent.","stretch":"Add thoracic rotation, seated.","filipino":"Ignore the pressure to buy expensive stretch mark oils. Moisturiser is fine.","trimester":2,"prayer":{"intention":"for the marks this leaves","body":"My body is keeping a record of this and will not give it back.\u003cbr>Let me not resent it. It is the evidence. Amen."},"feasts":[{"date":"2027-01-17","ga":"22w0d","feast":"\u003cstrong>Santo Niño\u003c/strong>","note":"The Christ Child, weeks before the anomaly scan results settle"}]},{"week":23,"size":"grapefruit / one small langka segment cluster","baby":"Can hear voices clearly now — including Nico's, which is lower and carries better.","you":"Swelling in the feet, especially in Manila heat.","tests":"Routine.","nutrition":"Reduce added salt if swelling is bothersome, but do not cut salt drastically.","stretch":"Legs up the wall, five minutes, in the evening.","filipino":"This is a good week for Nico to start talking to the bump. It is not silly; the baby can hear him.","trimester":2,"prayer":{"intention":"for Nico's voice","body":"This child can hear him now — better than me, they say, because his voice is\u003cbr>lower and carries further.\u003cbr>Let the sound of his father be one of the first things this child knows.\u003cbr>Amen."},"feasts":[]},{"week":24,"size":"corn cob / one medium suha segment","baby":"\u003cstrong>Viability milestone.\u003c/strong> Lungs develop surfactant. Survival outside the womb becomes possible with intensive care.","you":"Braxton Hicks — irregular, painless tightenings — may begin.","tests":"\u003cstrong>OGTT window opens (24–28 weeks).\u003c/strong>","nutrition":"Balanced carbohydrates ahead of the glucose test; do not crash-diet before it.","stretch":"Keep the routine short and frequent rather than long.","filipino":"A meaningful milestone worth marking privately.","trimester":2,"prayer":{"intention":"for the threshold","body":"This week our child crosses the line where life outside me becomes possible.\u003cbr>Lord, I do not want to need that. But thank you that it is there. Amen."},"feasts":[{"date":"2027-02-02","ga":"24w2d","feast":"Presentation of the Lord","note":"A baby brought to the temple — and the viability milestone week"}]},{"week":25,"size":"cauliflower / one small upo","baby":"Putting on fat. Skin is less translucent.","you":"Backache is common as the centre of gravity shifts.","tests":"Routine.","nutrition":"Protein at breakfast steadies energy through the day.","stretch":"Pelvic tilts and child's pose with knees wide.","filipino":"Consider the yaya search now if you plan to hire — good ones are booked early.","trimester":2,"prayer":{"intention":"for the aching back","body":"Everything hurts in small, unremarkable ways.\u003cbr>No drama, no crisis — just a body doing hard work every hour.\u003cbr>Give me rest where I can find it. Amen."},"feasts":[{"date":"2027-02-10","ga":"25w3d","feast":"Ash Wednesday","note":"\u003cstrong>Lent begins.\u003c/strong> Pregnant and nursing women are \u003cem>not\u003c/em> bound to fast"}]},{"week":26,"size":"lettuce head / one medium pechay bundle","baby":"Eyes open. Responds to sound with movement.","you":"Sleep gets harder. A pillow between the knees helps.","tests":"OGTT if not yet done.","nutrition":"Avoid large meals late; reflux worsens lying down.","stretch":"Night routine, emphasising hips.","filipino":"Start the hospital pre-registration conversation with Makati Med.","trimester":2,"prayer":{"intention":"for eyes that open","body":"This week the eyes open onto darkness, and one day they will open onto us.\u003cbr>Let them see a great deal of good. Amen."},"feasts":[]},{"week":27,"size":"cabbage head / one small kalabasa","baby":"Last week of the second trimester. Brain activity increases sharply.","you":"Shortness of breath as the uterus presses upward.","tests":"\u003cstrong>Tdap window opens — take it early in the window, not late.\u003c/strong>","nutrition":"Iron; demand peaks in the third trimester.","stretch":"Side-lying stretches only; avoid supine.","filipino":"A good time to file the SSS maternity notification. See benefits.","trimester":2,"prayer":{"intention":"at the end of the good season","body":"The easy trimester is closing. I am grateful for it and sorry to lose it.\u003cbr>Ready me for what comes. Amen."},"feasts":[]},{"week":28,"size":"aubergine / one medium kalabasa","baby":"Can blink. Sleep cycles, including REM, are established.","you":"Visits usually move to every two weeks.","tests":"OGTT window closes. Tdap if not yet given. Rh immunoglobulin if Rh negative.","nutrition":"\u003cstrong>+450 kcal daily from the third trimester.\u003c/strong>","stretch":"Third-trimester routine: shorter holds, wider base, more support.","filipino":"Baby showers are commonly held in the third trimester here, not earlier.","trimester":3,"prayer":{"intention":"for the last stretch","body":"Three months. It sounds short and it will not feel short.\u003cbr>Lord, give me stamina. Let me not wish away the days I will later miss.\u003cbr>Amen."},"feasts":[]},{"week":29,"size":"butternut squash / one medium kalabasa","baby":"Muscles and lungs maturing. Kicks are strong enough to be visible.","you":"Heartburn, haemorrhoids and swelling are all common and all normal.","tests":"Routine.","nutrition":"Fibre, water, and do not ignore constipation.","stretch":"Supported squats and pelvic floor work.","filipino":"\u003cstrong>Mexico trip falls near here — see the Zika warning. This is the trip to reconsider.\u003c/strong>","trimester":3,"prayer":{"intention":"for the things I cannot control","body":"I have read everything and prepared what can be prepared, and almost none of\u003cbr>what matters is up to me.\u003cbr>Take the rest. I am not able to carry it and this child at once. Amen."},"feasts":[]},{"week":30,"size":"large cabbage / one small winter melon","baby":"Around 1.3kg. Gaining roughly 200g a week from here.","you":"Fatigue returns. Sleep is broken.","tests":"Routine. Start discussing the birth plan.","nutrition":"Keep iron and calcium steady.","stretch":"Birth-ball sitting instead of a chair, where practical.","filipino":"Start the hospital bag list even if you pack it later.","trimester":3,"prayer":{"intention":"for the room we are making","body":"We are assembling a cot and folding very small clothes for someone who is not\u003cbr>here.\u003cbr>Bless this house. Let it be a good place to arrive. Amen."},"feasts":[{"date":"2027-03-19","ga":"30w5d","feast":"St Joseph","note":"Nico's feast. A father who took on a child not by his own plan"}]},{"week":31,"size":"coconut / one buko","baby":"All five senses working. Turning towards light.","you":"Braxton Hicks more noticeable.","tests":"Routine.","nutrition":"Small frequent meals; there is less room for the stomach now.","stretch":"Hip and lower back focus.","filipino":"Confirm what Makati Med allows for birth companions — policies change.","trimester":3,"prayer":{"intention":"for the birth, still ahead","body":"I think about it constantly and I am frightened of it.\u003cbr>Whatever kind of birth this turns out to be, let it be safe, and let me be\u003cbr>met in it. Amen."},"feasts":[{"date":"2027-03-25","ga":"31w4d","feast":"\u003cstrong>The Annunciation\u003c/strong>","note":"Nine months before Christmas. The day Mary said yes"},{"date":"2027-03-26","ga":"31w5d","feast":"Good Friday","note":" "}]},{"week":32,"size":"jicama / one medium singkamas","baby":"Most babies have turned head-down, though many still turn later.","you":"Visits may increase in frequency.","tests":"\u003cstrong>RSV vaccine window opens (32–36 weeks)\u003c/strong> — but see the seasonality flag above; confirm timing with Dra. Villafria.","nutrition":"Vitamin D and calcium for the final bone-building phase.","stretch":"Avoid deep twists. Keep movements small and supported.","filipino":"\u003cstrong>Airline cutoff territory.\u003c/strong> Most carriers require medical clearance from around here. Flying gets complicated from this point.","trimester":3,"prayer":{"intention":"for turning","body":"This child is finding a position for the journey out.\u003cbr>Turn them gently, in your own time, the right way round. Amen."},"feasts":[{"date":"2027-03-28","ga":"32w0d","feast":"\u003cstrong>Easter Sunday\u003c/strong>","note":"Exactly 32 weeks. The RSV window opens the same week"}]},{"week":33,"size":"pineapple / one medium pinya","baby":"Bones hardening, except the skull, which stays soft to allow moulding during birth.","you":"Possible carpal tunnel symptoms from fluid retention.","tests":"Routine.","nutrition":"Keep hydration high in Manila heat.","stretch":"Wrist and forearm stretches, genuinely useful this week.","filipino":"Confirm the paediatrician who will attend the birth.","trimester":3,"prayer":{"intention":"for broken sleep","body":"Awake again. This is practice, I know.\u003cbr>Let me not waste the nights being angry about them. Amen."},"feasts":[]},{"week":34,"size":"cantaloupe / one small melon","baby":"Fingernails reach the fingertips. Lungs nearly mature.","you":"The baby may drop, easing breathing but increasing pelvic pressure.","tests":"Routine, likely weekly soon.","nutrition":"Steady, unremarkable eating. Nothing special required.","stretch":"Gentle only. Stop anything that strains.","filipino":"Finalise the birth plan and share it with Dra. Villafria.","trimester":3,"prayer":{"intention":"for the people who will help","body":"Dra. Villafria, the midwives, the nurses whose names I do not yet know.\u003cbr>Bless their hands and their judgement. Let them be rested that day. Amen."},"feasts":[]},{"week":35,"size":"honeydew melon / one medium melon","baby":"Gaining fat quickly. Getting into position.","you":"Frequent urination returns as the head engages.","tests":"\u003cstrong>GBS swab window opens (35–37 weeks).\u003c/strong>","nutrition":"Keep iron up going into delivery.","stretch":"Pelvic floor and breathing practice.","filipino":"\u003cstrong>Hospital bag packed by now.\u003c/strong> Both bags — Dani's and Nico's.","trimester":3,"prayer":{"intention":"for readiness","body":"The bag is packed by the door. It could be any time now.\u003cbr>Let me be ready without being afraid. Amen."},"feasts":[]},{"week":36,"size":"romaine lettuce / one medium papaya","baby":"Considered early term from 37 weeks; almost there.","you":"Visits usually become weekly.","tests":"GBS if not done. Tdap window closes.","nutrition":"Eat normally. There is no food that starts labour, whatever you are told.","stretch":"Walking and gentle hip openers.","filipino":"Expect a great deal of advice this month. See the pamahiin section.","trimester":3,"prayer":{"intention":"for the advice","body":"Everyone has something to tell me, and all of it comes from love, and some of\u003cbr>it is nonsense.\u003cbr>Give me grace for the telling and confidence in what we have decided. Amen."},"feasts":[{"date":"2027-05-01","ga":"36w6d","feast":"\u003cstrong>Flores de Mayo begins\u003c/strong>","note":"Her whole final month is the month of Mary"}]},{"week":37,"size":"Swiss chard / one small langka","baby":"\u003cstrong>Early term.\u003c/strong> Practising breathing and sucking.","you":"Nesting is common. So is exhaustion.","tests":"Weekly checks. Position assessed.","nutrition":"Nothing special. Keep eating well.","stretch":"Whatever is comfortable, and nothing that is not.","filipino":"Confirm the route to Makati Med, and a backup for traffic.","trimester":3,"prayer":{"intention":"term","body":"This child is ready. Whatever happens now, they are ready.\u003cbr>Thank you. Amen."},"feasts":[]},{"week":38,"size":"leek / one medium upo","baby":"Around 3kg. Organs ready.","you":"Pelvic pressure, and possibly a loss of the mucus plug.","tests":"Weekly.","nutrition":"Keep hydrated; early labour is tiring.","stretch":"Walking, birth ball, breathing.","filipino":"Keep the phone charged and the car fuelled.","trimester":3,"prayer":{"intention":"for the last quiet","body":"Soon this house will never be quiet in the same way again.\u003cbr>Let me notice this week. Let me sit in it. Amen."},"feasts":[]},{"week":39,"size":"watermelon (small) / one small pakwan","baby":"\u003cstrong>Full term.\u003c/strong> Brain and lungs continue to mature right up to birth.","you":"Any day. Braxton Hicks may become regular contractions.","tests":"Weekly, with position and cervix checks.","nutrition":"Eat when hungry; labour uses a lot of energy.","stretch":"Gentle movement, rest when tired.","filipino":"Ignore anyone who tells you the baby is late. 39 weeks is full term.","trimester":3,"prayer":{"intention":"for the waiting","body":"Any day. Any hour. I cannot settle to anything.\u003cbr>Teach me to wait, which I have never been good at. Amen."},"feasts":[{"date":"2027-05-16","ga":"39w0d","feast":"Pentecost","note":"Full term"}]},{"week":40,"size":"pumpkin / one medium kalabasa","baby":"Fully developed and ready.","you":"The EDD is an estimate. Only about 1 in 20 babies arrive on it.","tests":"Monitoring increases past the due date. Discuss the induction plan.","nutrition":"Normal eating.","stretch":"Rest, walk, breathe.","filipino":"Going past the due date is normal and not a failure. Expect a lot of phone calls.","trimester":3,"prayer":{"intention":"for the hour you have chosen","body":"The date on the paper is today and it means nothing; you have known the real\u003cbr>day all along.\u003cbr>I am ready. Bring our child out into the light, and let us see each other.\u003cbr>Amen."},"feasts":[]}],"foods":[{"name":"Kinilaw","plain":"kinilaw","status":"avoid","reason":"Raw fish &quot;cooked&quot; in vinegar only. Acid does not kill listeria or parasites.","category":"Filipino dishes & local items"},{"name":"Balut","plain":"balut","status":"caution","reason":"Safe if fully cooked and served hot. The risk is undercooking and street-stall holding temperature.","category":"Filipino dishes & local items"},{"name":"Bagoong (shrimp paste)","plain":"bagoong (shrimp paste)","status":"caution","reason":"Fermented, very high in salt. Safe cooked into a dish; avoid raw spoonfuls.","category":"Filipino dishes & local items"},{"name":"Tuyo / daing (dried fish)","plain":"tuyo / daing (dried fish)","status":"safe","reason":"Cooked through before eating. Very high sodium.","category":"Filipino dishes & local items"},{"name":"Isaw (grilled intestine)","plain":"isaw (grilled intestine)","status":"caution","reason":"Only if hot, fully cooked and from a clean source. Street versions are often reheated repeatedly.","category":"Filipino dishes & local items"},{"name":"Fishball / kikiam / squidball","plain":"fishball / kikiam / squidball","status":"caution","reason":"Same reasoning — the sauce sitting out in the open is the bigger risk than the ball.","category":"Filipino dishes & local items"},{"name":"Taho","plain":"taho","status":"caution","reason":"Safe if the soy is fresh and kept hot. Room-temperature street taho is a spoilage risk.","category":"Filipino dishes & local items"},{"name":"Halo-halo","plain":"halo-halo","status":"caution","reason":"Depends entirely on the ice and the milk. From a reputable shop, fine.","category":"Filipino dishes & local items"},{"name":"Kesong puti","plain":"kesong puti","status":"caution","reason":"\u003cstrong>Only if pasteurised.\u003c/strong> Traditional carabao-milk versions often are not. Ask.","category":"Filipino dishes & local items"},{"name":"Longganisa","plain":"longganisa","status":"safe","reason":"Cooked through. High in fat and salt.","category":"Filipino dishes & local items"},{"name":"Tocino","plain":"tocino","status":"safe","reason":"Cooked through. Very high in sugar.","category":"Filipino dishes & local items"},{"name":"Hotdog (Filipino-style)","plain":"hotdog (filipino-style)","status":"safe","reason":"Safe when heated until steaming. Cold from the pack is a listeria risk.","category":"Filipino dishes & local items"},{"name":"Sisig","plain":"sisig","status":"safe","reason":"Served sizzling and fully cooked. Often includes chicken liver — see vitamin A.","category":"Filipino dishes & local items"},{"name":"Ripe papaya","plain":"ripe papaya","status":"safe","reason":"Ripe papaya is fine and a good source of vitamin C and folate.","category":"Filipino dishes & local items"},{"name":"Green (unripe) papaya","plain":"green (unripe) papaya","status":"caution","reason":"Contains latex/papain. Small amounts cooked in tinola are widely eaten; avoid large quantities raw.","category":"Filipino dishes & local items"},{"name":"Pineapple","plain":"pineapple","status":"safe","reason":"The bromelain-causes-miscarriage claim is a myth at any realistic quantity.","category":"Filipino dishes & local items"},{"name":"Malunggay (moringa)","plain":"malunggay (moringa)","status":"safe","reason":"Excellent source of iron, calcium and vitamin C. Commonly eaten throughout pregnancy.","category":"Filipino dishes & local items"},{"name":"Salabat (ginger tea)","plain":"salabat (ginger tea)","status":"safe","reason":"Genuinely helps nausea. Caffeine-free.","category":"Filipino dishes & local items"},{"name":"Milk tea","plain":"milk tea","status":"caution","reason":"Caffeine plus a large sugar load. Counts towards the 200mg daily caffeine limit.","category":"Filipino dishes & local items"},{"name":"Kapeng barako","plain":"kapeng barako","status":"caution","reason":"Notably strong. One cup can approach half the daily caffeine limit.","category":"Filipino dishes & local items"},{"name":"Sinigang","plain":"sinigang","status":"safe","reason":"Boiled, fully cooked.","category":"Filipino dishes & local items"},{"name":"Tinola","plain":"tinola","status":"safe","reason":"Boiled. Green papaya content is small and cooked.","category":"Filipino dishes & local items"},{"name":"Adobo","plain":"adobo","status":"safe","reason":"Cooked and acidic.","category":"Filipino dishes & local items"},{"name":"Kare-kare","plain":"kare-kare","status":"safe","reason":"Fully cooked. Bagoong served on the side — see above.","category":"Filipino dishes & local items"},{"name":"Lechon","plain":"lechon","status":"safe","reason":"Safe when hot and freshly carved; risk is in long room-temperature holding.","category":"Filipino dishes & local items"},{"name":"Dinuguan","plain":"dinuguan","status":"caution","reason":"Pork blood stew. Safe fully cooked and hot; ensure it is not reheated repeatedly.","category":"Filipino dishes & local items"},{"name":"Chicharon","plain":"chicharon","status":"safe","reason":"Cooked. Very high in salt and fat.","category":"Filipino dishes & local items"},{"name":"Ube halaya","plain":"ube halaya","status":"safe","reason":"Cooked.","category":"Filipino dishes & local items"},{"name":"Leche flan","plain":"leche flan","status":"caution","reason":"Safe when steamed through. Avoid versions with barely-set or raw egg.","category":"Filipino dishes & local items"},{"name":"Buko juice","plain":"buko juice","status":"safe","reason":"Excellent hydration. Drink fresh, not left standing.","category":"Filipino dishes & local items"},{"name":"Sago't gulaman","plain":"sago't gulaman","status":"caution","reason":"Depends on water and ice quality.","category":"Filipino dishes & local items"},{"name":"Puto / kutsinta","plain":"puto / kutsinta","status":"safe","reason":"Steamed.","category":"Filipino dishes & local items"},{"name":"Pancit","plain":"pancit","status":"safe","reason":"Cooked.","category":"Filipino dishes & local items"},{"name":"Lumpiang sariwa","plain":"lumpiang sariwa","status":"caution","reason":"Fresh wrapper and raw vegetables — a washing question. Fine at home.","category":"Filipino dishes & local items"},{"name":"Street-vendor ice","plain":"street-vendor ice","status":"avoid","reason":"Water source is unknown; a common cause of GI illness.","category":"Filipino dishes & local items"},{"name":"Marlin","plain":"marlin","status":"avoid","reason":"High mercury.","category":"Fish & mercury"},{"name":"Swordfish","plain":"swordfish","status":"avoid","reason":"High mercury.","category":"Fish & mercury"},{"name":"King mackerel","plain":"king mackerel","status":"avoid","reason":"High mercury.","category":"Fish & mercury"},{"name":"Large tanigue (Spanish mackerel)","plain":"large tanigue (spanish mackerel)","status":"avoid","reason":"High mercury in larger specimens.","category":"Fish & mercury"},{"name":"Shark","plain":"shark","status":"avoid","reason":"High mercury.","category":"Fish & mercury"},{"name":"Bigeye tuna","plain":"bigeye tuna","status":"avoid","reason":"High mercury.","category":"Fish & mercury"},{"name":"Tuna, canned light","plain":"tuna, canned light","status":"caution","reason":"Limit to roughly 2 servings a week.","category":"Fish & mercury"},{"name":"Tuna, albacore/yellowfin","plain":"tuna, albacore/yellowfin","status":"caution","reason":"Higher mercury than light; limit to 1 serving a week.","category":"Fish & mercury"},{"name":"Bangus (milkfish)","plain":"bangus (milkfish)","status":"safe","reason":"Low mercury. A staple and a good one.","category":"Fish & mercury"},{"name":"Tilapia","plain":"tilapia","status":"safe","reason":"Low mercury.","category":"Fish & mercury"},{"name":"Galunggong (round scad)","plain":"galunggong (round scad)","status":"safe","reason":"Low mercury.","category":"Fish & mercury"},{"name":"Salmon","plain":"salmon","status":"safe","reason":"Low mercury, high omega-3. Cooked, not raw.","category":"Fish & mercury"},{"name":"Sardines (incl. canned)","plain":"sardines (incl. canned)","status":"safe","reason":"Low mercury, high calcium when bones are eaten.","category":"Fish & mercury"},{"name":"Dilis (anchovies)","plain":"dilis (anchovies)","status":"safe","reason":"Low mercury.","category":"Fish & mercury"},{"name":"Tilapia / hito (catfish)","plain":"tilapia / hito (catfish)","status":"safe","reason":"Low mercury.","category":"Fish & mercury"},{"name":"Shrimp / hipon","plain":"shrimp / hipon","status":"safe","reason":"Low mercury. Cook thoroughly.","category":"Fish & mercury"},{"name":"Crab / alimango","plain":"crab / alimango","status":"safe","reason":"Cooked.","category":"Fish & mercury"},{"name":"Squid / pusit","plain":"squid / pusit","status":"safe","reason":"Cooked.","category":"Fish & mercury"},{"name":"Tahong (mussels)","plain":"tahong (mussels)","status":"caution","reason":"Safe fully cooked and from a clean source; discard any that stay shut. Check for red tide advisories.","category":"Fish & mercury"},{"name":"Talaba (oysters), raw","plain":"talaba (oysters), raw","status":"avoid","reason":"Raw shellfish.","category":"Fish & mercury"},{"name":"Oysters, cooked","plain":"oysters, cooked","status":"safe","reason":"Cooked thoroughly.","category":"Fish & mercury"},{"name":"Sashimi / sushi with raw fish","plain":"sashimi / sushi with raw fish","status":"avoid","reason":"Raw fish.","category":"Fish & mercury"},{"name":"Sushi with cooked fillings","plain":"sushi with cooked fillings","status":"safe","reason":"California roll, ebi, unagi, tamago.","category":"Fish & mercury"},{"name":"Smoked salmon, refrigerated","plain":"smoked salmon, refrigerated","status":"caution","reason":"Listeria risk unless heated through or in a cooked dish.","category":"Fish & mercury"},{"name":"Pasteurised milk","plain":"pasteurised milk","status":"safe","reason":" ","category":"Dairy & eggs"},{"name":"Unpasteurised / raw milk","plain":"unpasteurised / raw milk","status":"avoid","reason":"Listeria.","category":"Dairy & eggs"},{"name":"Carabao milk, unpasteurised","plain":"carabao milk, unpasteurised","status":"avoid","reason":"Listeria.","category":"Dairy & eggs"},{"name":"Hard cheese (cheddar, parmesan, edam)","plain":"hard cheese (cheddar, parmesan, edam)","status":"safe","reason":"Safe even when unpasteurised; low moisture.","category":"Dairy & eggs"},{"name":"Soft cheese, pasteurised (mozzarella, cream cheese, cottage)","plain":"soft cheese, pasteurised (mozzarella, cream cheese, cottage)","status":"safe","reason":" ","category":"Dairy & eggs"},{"name":"Soft mould-ripened cheese (brie, camembert)","plain":"soft mould-ripened cheese (brie, camembert)","status":"caution","reason":"Avoid unless cooked until steaming.","category":"Dairy & eggs"},{"name":"Blue cheese (roquefort, gorgonzola)","plain":"blue cheese (roquefort, gorgonzola)","status":"caution","reason":"Same — cooked only.","category":"Dairy & eggs"},{"name":"Feta, pasteurised","plain":"feta, pasteurised","status":"safe","reason":" ","category":"Dairy & eggs"},{"name":"Queso de bola","plain":"queso de bola","status":"safe","reason":"Hard cheese.","category":"Dairy & eggs"},{"name":"Yoghurt, pasteurised","plain":"yoghurt, pasteurised","status":"safe","reason":"Live cultures are fine.","category":"Dairy & eggs"},{"name":"Ice cream, commercial","plain":"ice cream, commercial","status":"safe","reason":"Made with pasteurised milk.","category":"Dairy & eggs"},{"name":"Soft-serve ice cream","plain":"soft-serve ice cream","status":"caution","reason":"Machine hygiene is the variable.","category":"Dairy & eggs"},{"name":"Eggs, fully cooked","plain":"eggs, fully cooked","status":"safe","reason":" ","category":"Dairy & eggs"},{"name":"Eggs, runny or raw","plain":"eggs, runny or raw","status":"caution","reason":"Salmonella risk. Lower where eggs are vaccinated, which is not standard in PH.","category":"Dairy & eggs"},{"name":"Homemade mayonnaise, raw-egg desserts, eggnog","plain":"homemade mayonnaise, raw-egg desserts, eggnog","status":"avoid","reason":"Raw egg.","category":"Dairy & eggs"},{"name":"Commercial mayonnaise","plain":"commercial mayonnaise","status":"safe","reason":"Made with pasteurised egg.","category":"Dairy & eggs"},{"name":"Beef / pork / chicken, well cooked","plain":"beef / pork / chicken, well cooked","status":"safe","reason":" ","category":"Meat"},{"name":"Rare or medium-rare steak","plain":"rare or medium-rare steak","status":"avoid","reason":"Toxoplasma.","category":"Meat"},{"name":"Pork, undercooked","plain":"pork, undercooked","status":"avoid","reason":"Toxoplasma and parasites.","category":"Meat"},{"name":"Liver, chicken or pork","plain":"liver, chicken or pork","status":"caution","reason":"\u003cstrong>Limit strictly\u003c/strong> — very high preformed vitamin A. Small amounts in sisig are fine; a liver dish as a main is not.","category":"Meat"},{"name":"Liver pâté","plain":"liver pâté","status":"avoid","reason":"Vitamin A plus listeria.","category":"Meat"},{"name":"Deli meat / cold cuts","plain":"deli meat / cold cuts","status":"caution","reason":"Heat until steaming.","category":"Meat"},{"name":"Tapa / tocino / longganisa","plain":"tapa / tocino / longganisa","status":"safe","reason":"Cooked through.","category":"Meat"},{"name":"Cured ham (prosciutto, jamón)","plain":"cured ham (prosciutto, jamón)","status":"caution","reason":"Cook it, or skip it.","category":"Meat"},{"name":"Hotdogs, cold","plain":"hotdogs, cold","status":"caution","reason":"Heat until steaming.","category":"Meat"},{"name":"Chicken, leftover","plain":"chicken, leftover","status":"safe","reason":"Reheat once, until steaming.","category":"Meat"},{"name":"Alcohol — all forms","plain":"alcohol — all forms","status":"avoid","reason":"\u003cstrong>No established safe amount.\u003c/strong> Includes lambanog, beer, wine, and alcohol in cooking that has not been boiled off.","category":"Drinks"},{"name":"Brewed coffee","plain":"brewed coffee","status":"caution","reason":"Counts towards 200mg/day.","category":"Drinks"},{"name":"Espresso","plain":"espresso","status":"caution","reason":"Counts towards 200mg/day.","category":"Drinks"},{"name":"Kapeng barako","plain":"kapeng barako","status":"caution","reason":"Strong; counts heavily.","category":"Drinks"},{"name":"Tea (black, green)","plain":"tea (black, green)","status":"caution","reason":"Lower caffeine, still counts.","category":"Drinks"},{"name":"Herbal tea","plain":"herbal tea","status":"caution","reason":"Ginger and rooibos are fine. Avoid unfamiliar herbal blends.","category":"Drinks"},{"name":"Salabat","plain":"salabat","status":"safe","reason":"Caffeine-free.","category":"Drinks"},{"name":"Soft drinks with caffeine (Coke)","plain":"soft drinks with caffeine (coke)","status":"caution","reason":"Counts towards the limit.","category":"Drinks"},{"name":"Energy drinks","plain":"energy drinks","status":"avoid","reason":"High caffeine plus unstudied stimulants.","category":"Drinks"},{"name":"Fresh juice, commercial pasteurised","plain":"fresh juice, commercial pasteurised","status":"safe","reason":" ","category":"Drinks"},{"name":"Unpasteurised / street fresh juice","plain":"unpasteurised / street fresh juice","status":"caution","reason":"Hygiene of water, ice and handling.","category":"Drinks"},{"name":"Buko juice, fresh","plain":"buko juice, fresh","status":"safe","reason":" ","category":"Drinks"},{"name":"Tap water, Metro Manila","plain":"tap water, metro manila","status":"caution","reason":"Generally treated, but filtered or bottled is the common practice.","category":"Drinks"},{"name":"Peanuts","plain":"peanuts","status":"safe","reason":"No reason to avoid unless Dani is allergic.","category":"Other"},{"name":"Bean sprouts, raw (togue)","plain":"bean sprouts, raw (togue)","status":"caution","reason":"Cook them.","category":"Other"},{"name":"Unwashed fruit and vegetables","plain":"unwashed fruit and vegetables","status":"caution","reason":"Toxoplasma from soil. Wash well.","category":"Other"},{"name":"Pre-cut fruit left standing","plain":"pre-cut fruit left standing","status":"caution","reason":" ","category":"Other"},{"name":"Salad from a buffet","plain":"salad from a buffet","status":"caution","reason":"Holding time and handling.","category":"Other"},{"name":"Rice, reheated","plain":"rice, reheated","status":"caution","reason":"Reheat once, hot; do not leave cooked rice at room temperature for hours.","category":"Other"},{"name":"Honey","plain":"honey","status":"safe","reason":"Safe for Dani. \u003cstrong>Not for the baby until 12 months\u003c/strong> — infant botulism.","category":"Other"},{"name":"Artificial sweeteners (aspartame, sucralose, stevia)","plain":"artificial sweeteners (aspartame, sucralose, stevia)","status":"safe","reason":"Safe in normal amounts.","category":"Other"},{"name":"Papaya seeds","plain":"papaya seeds","status":"avoid","reason":"Concentrated papain.","category":"Other"},{"name":"Ampalaya (bitter gourd)","plain":"ampalaya (bitter gourd)","status":"caution","reason":"Culinary amounts are fine; concentrated extracts and supplements are not.","category":"Other"},{"name":"Herbal supplements, unspecified","plain":"herbal supplements, unspecified","status":"avoid","reason":"Unregulated and largely unstudied in pregnancy. Ask Dra. Villafria first.","category":"Other"},{"name":"Ginger","plain":"ginger","status":"safe","reason":"Helps nausea.","category":"Other"},{"name":"Turmeric","plain":"turmeric","status":"safe","reason":"Culinary amounts.","category":"Other"},{"name":"Soy (tofu, taho, soy milk)","plain":"soy (tofu, taho, soy milk)","status":"safe","reason":"Normal dietary amounts.","category":"Other"},{"name":"Nata de coco","plain":"nata de coco","status":"safe","reason":"Commercially produced.","category":"Other"},{"name":"Macapuno","plain":"macapuno","status":"safe","reason":" ","category":"Other"},{"name":"Bibingka / puto bumbong","plain":"bibingka / puto bumbong","status":"safe","reason":"Cooked through. Salted egg on bibingka is cooked.","category":"Other"},{"name":"Salted egg (itlog na maalat)","plain":"salted egg (itlog na maalat)","status":"safe","reason":"Cooked and cured. High sodium.","category":"Other"},{"name":"Century egg","plain":"century egg","status":"caution","reason":"Cured, not cooked. Small amounts in a cooked dish only.","category":"Other"},{"name":"Atchara (pickled papaya)","plain":"atchara (pickled papaya)","status":"safe","reason":"Pickled in vinegar, commercially or home-made with clean handling.","category":"Other"},{"name":"Ginataang dishes","plain":"ginataang dishes","status":"safe","reason":"Coconut milk, cooked.","category":"Other"},{"name":"Laing","plain":"laing","status":"safe","reason":"Cooked taro leaves. Must be fully cooked — raw taro leaf is an irritant.","category":"Other"},{"name":"Pinakbet","plain":"pinakbet","status":"safe","reason":"Cooked. Contains bagoong — see above.","category":"Other"},{"name":"Bulalo","plain":"bulalo","status":"safe","reason":"Long-boiled.","category":"Other"},{"name":"Goto / arroz caldo","plain":"goto / arroz caldo","status":"safe","reason":"Boiled. A good sick-day food.","category":"Other"},{"name":"Champorado","plain":"champorado","status":"safe","reason":"Cooked. Contains cocoa — minor caffeine.","category":"Other"},{"name":"Dark chocolate","plain":"dark chocolate","status":"caution","reason":"Contains caffeine; counts towards the limit in quantity.","category":"Other"},{"name":"Milk chocolate","plain":"milk chocolate","status":"safe","reason":"Caffeine is negligible.","category":"Other"},{"name":"Mangga't bagoong","plain":"mangga't bagoong","status":"caution","reason":"Raw green mango is fine; the bagoong is the salt and hygiene question.","category":"Other"},{"name":"Sorbetes (dirty ice cream)","plain":"sorbetes (dirty ice cream)","status":"caution","reason":"Depends on the vendor's milk and storage.","category":"Other"},{"name":"Siomai / siopao","plain":"siomai / siopao","status":"safe","reason":"Steamed through. Eat hot.","category":"Other"},{"name":"Instant noodles","plain":"instant noodles","status":"safe","reason":"Cooked. Very high sodium, low nutrition.","category":"Other"},{"name":"Raw oysters with calamansi","plain":"raw oysters with calamansi","status":"avoid","reason":"Still raw. The calamansi does nothing to the bacteria.","category":"Other"}],"caffeine":[{"source":"Kapeng barako","serving":"240ml","mg":150},{"source":"Americano","serving":"double shot","mg":126},{"source":"Milk tea","serving":"500ml, black tea base","mg":100},{"source":"Brewed coffee","serving":"240ml (8oz)","mg":95},{"source":"Energy drink","serving":"250ml","mg":80},{"source":"Espresso","serving":"1 shot (30ml)","mg":63},{"source":"Latte / cappuccino","serving":"regular, 1 shot","mg":63},{"source":"Instant coffee","serving":"240ml","mg":60},{"source":"Milk tea","serving":"500ml, green tea base","mg":60},{"source":"3-in-1 coffee sachet","serving":"1 sachet","mg":50},{"source":"Black tea","serving":"240ml","mg":47},{"source":"Dark chocolate","serving":"50g","mg":40},{"source":"Coke / Pepsi","serving":"330ml can","mg":34},{"source":"Coke Zero","serving":"330ml","mg":34},{"source":"Green tea","serving":"240ml","mg":28},{"source":"Champorado","serving":"1 bowl","mg":15},{"source":"Milk chocolate","serving":"50g","mg":10},{"source":"Decaf coffee","serving":"240ml","mg":3}],"calendar":[{"date":"2026-08-31","ga":"2w1d","feast":"\u003cstrong>St Raymond Nonnatus\u003c/strong>","note":"Patron of childbirth — and inside the conception window they recall"},{"date":"2026-09-08","ga":"3w2d","feast":"Nativity of Mary","note":"Mary's own birthday, in the first weeks"},{"date":"2026-10-07","ga":"7w3d","feast":"Our Lady of the Rosary","note":"Begin the Joyful Mysteries"},{"date":"2026-10-16","ga":"8w5d","feast":"\u003cstrong>St Gerard Majella\u003c/strong>","note":"Patron of expectant mothers. End the novena here"},{"date":"2026-11-01","ga":"11w0d","feast":"All Saints / Undas","note":"Family graves, and the generations this child joins"},{"date":"2026-12-08","ga":"16w2d","feast":"\u003cstrong>Immaculate Conception\u003c/strong>","note":"Holy day of obligation in PH — \u003cem>note: this falls during the Korea trip (5–9 Dec)\u003c/em>"},{"date":"2026-12-16 – 24","ga":"17w3d – 18w4d","feast":"\u003cstrong>Simbang Gabi\u003c/strong>","note":"Nine dawn Masses. Second trimester — the best window for it"},{"date":"2026-12-25","ga":"18w5d","feast":"\u003cstrong>Christmas — the Nativity\u003c/strong>","note":"Her first Christmas pregnant. A birth is the whole feast"},{"date":"2026-12-28","ga":"19w1d","feast":"Holy Innocents","note":"For children lost, and mothers grieving"},{"date":"2027-01-01","ga":"19w5d","feast":"Mary, Mother of God","note":"The year the baby arrives begins"},{"date":"2027-01-17","ga":"22w0d","feast":"\u003cstrong>Santo Niño\u003c/strong>","note":"The Christ Child, weeks before the anomaly scan results settle"},{"date":"2027-02-02","ga":"24w2d","feast":"Presentation of the Lord","note":"A baby brought to the temple — and the viability milestone week"},{"date":"2027-02-10","ga":"25w3d","feast":"Ash Wednesday","note":"\u003cstrong>Lent begins.\u003c/strong> Pregnant and nursing women are \u003cem>not\u003c/em> bound to fast"},{"date":"2027-03-19","ga":"30w5d","feast":"St Joseph","note":"Nico's feast. A father who took on a child not by his own plan"},{"date":"2027-03-25","ga":"31w4d","feast":"\u003cstrong>The Annunciation\u003c/strong>","note":"Nine months before Christmas. The day Mary said yes"},{"date":"2027-03-26","ga":"31w5d","feast":"Good Friday","note":" "},{"date":"2027-03-28","ga":"32w0d","feast":"\u003cstrong>Easter Sunday\u003c/strong>","note":"Exactly 32 weeks. The RSV window opens the same week"},{"date":"2027-05-01","ga":"36w6d","feast":"\u003cstrong>Flores de Mayo begins\u003c/strong>","note":"Her whole final month is the month of Mary"},{"date":"2027-05-16","ga":"39w0d","feast":"Pentecost","note":"Full term"},{"date":"2027-05-23","ga":"**40w0d**","feast":"\u003cstrong>EDD\u003c/strong>","note":" "},{"date":"2027-05-31","ga":"41w1d","feast":"\u003cstrong>The Visitation\u003c/strong>","note":"Two pregnant women meeting. If the baby is late, this is the feast she waits through"}]};
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const MS = 86400000;
+const TRI_NAME = {1:"First trimester \u00b7 weeks 4\u201313", 2:"Second trimester \u00b7 weeks 14\u201327", 3:"Third trimester \u00b7 weeks 28\u201340"};
+
+/* ---- theme ------------------------------------------------------------- */
+try {
+  const saved = localStorage.getItem('cub-theme');
+  if (saved) document.documentElement.dataset.theme = saved;
+} catch (e) { /* private window; system theme still applies */ }
+
+$('#theme').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme
+    ? root.dataset.theme === 'dark'
+    : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+  try { localStorage.setItem('cub-theme', root.dataset.theme); } catch (e) {}
+});
+
+/* ---- dating ------------------------------------------------------------ */
+const civil = (s) => new Date(s + 'T00:00:00Z').getTime();
+function gestation(onDate) {
+  const daysToGo = Math.round((civil(DATA.edd) - onDate) / MS);
+  const total = Math.max(280 - daysToGo, 0);
+  return { weeks: Math.floor(total / 7), days: total % 7, daysToGo };
+}
+const todayManila = () =>
+  civil(new Intl.DateTimeFormat('en-CA', { timeZone:'Asia/Manila', year:'numeric', month:'2-digit', day:'2-digit' }).format(new Date()));
+
+const now = gestation(todayManila());
+$('#now-week').textContent = now.weeks < 4 ? 'Not long now' : 'Week ' + now.weeks + ', Day ' + now.days;
+$('#now-meta').textContent = now.daysToGo < 0
+  ? Math.abs(now.daysToGo) + ' days past the due date'
+  : 'Trimester ' + (now.weeks >= 28 ? 3 : now.weeks >= 14 ? 2 : 1);
+$('#now-count').textContent = now.daysToGo >= 0 ? now.daysToGo + ' days' : '\u2014';
+
+/* ---- week rails -------------------------------------------------------- */
+const rails = $('#rails');
+[1,2,3].forEach(t => {
+  const wrap = document.createElement('div');
+  wrap.className = 'tri';
+  wrap.innerHTML = '<div class="tri-h">' + TRI_NAME[t] + '</div><div class="rail"></div>';
+  const rail = $('.rail', wrap);
+  DATA.weeks.filter(w => w.trimester === t).forEach(w => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'wk' + (w.week === now.weeks ? ' is-now' : '') + (w.feasts.length ? ' has-feast' : '');
+    b.dataset.tri = t;
+    b.dataset.week = w.week;
+    b.setAttribute('aria-pressed', 'false');
+    b.textContent = w.week;
+    b.title = 'Week ' + w.week;
+    b.addEventListener('click', () => showWeek(w.week));
+    rail.appendChild(b);
+  });
+  rails.appendChild(wrap);
+});
+
+function showWeek(n) {
+  const w = DATA.weeks.find(x => x.week === n);
+  if (!w) return;
+  $$('.wk').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.week) === n)));
+
+  const field = (label, val) => val ? '<div class="field"><dt>' + label + '</dt><dd>' + val + '</dd></div>' : '';
+  const feasts = w.feasts.length
+    ? '<div class="aside"><div class="aside-h" style="color:var(--fg-mute)">Falls in this week</div>' +
+      w.feasts.map(f => '<div class="feast"><span class="d">' + f.date + '</span><span><b>' + f.feast + '</b> &mdash; ' + f.note + '</span></div>').join('') +
+      '</div>'
+    : '';
+  const prayer = w.prayer
+    ? '<div class="aside prayer"><div class="aside-h">Prayer for week ' + w.week + '</div>' +
+      '<div class="intention">' + w.prayer.intention + '</div>' +
+      '<div class="prayer-body">' + w.prayer.body + '</div></div>'
+    : '';
+
+  $('#weekcard').innerHTML =
+    '<div class="wkcard"><div class="wkcard-h">' +
+      '<h3>Week ' + w.week + '</h3>' +
+      '<span class="chip t' + w.trimester + '">Trimester ' + w.trimester + '</span>' +
+      '<span class="size">roughly the size of ' + w.size + '</span>' +
+    '</div><dl class="fields">' +
+      field('Baby', w.baby) + field('You', w.you) + field('Tests', w.tests) +
+      field('Nutrition', w.nutrition) + field('Stretch', w.stretch) + field('Filipino life', w.filipino) +
+    '</dl></div>' + prayer + feasts;
+}
+showWeek(Math.min(Math.max(now.weeks, 4), 40));
+
+/* ---- food checker ------------------------------------------------------ */
+const active = new Set();
+function renderFoods() {
+  const q = $('#foodq').value.trim().toLowerCase();
+  const hits = DATA.foods.filter(f =>
+    (!active.size || active.has(f.status)) &&
+    (!q || f.plain.includes(q) || f.reason.toLowerCase().includes(q))
+  );
+  $('#foodcount').textContent = hits.length + ' of ' + DATA.foods.length;
+
+  if (!hits.length) {
+    $('#foodlist').innerHTML = '<p class="empty">Nothing matches that. Try a shorter word &mdash; or ask Dra. Villafria.</p>';
+    return;
+  }
+  let html = '', cat = '';
+  for (const f of hits) {
+    if (f.category !== cat) { cat = f.category; html += '<div class="cat">' + cat + '</div>'; }
+    html += '<div class="food" data-s="' + f.status + '"><b>' + f.name + '</b>' +
+            '<span class="pill ' + f.status + '">' + f.status + '</span>' +
+            '<span class="why">' + f.reason + '</span></div>';
+  }
+  $('#foodlist').innerHTML = html;
+}
+$('#foodq').addEventListener('input', renderFoods);
+$$('.filt').forEach(b => b.addEventListener('click', () => {
+  const s = b.dataset.s;
+  if (active.has(s)) active.delete(s); else active.add(s);
+  b.setAttribute('aria-pressed', String(active.has(s)));
+  renderFoods();
+}));
+renderFoods();
+
+/* ---- caffeine card ----------------------------------------------------- */
+const caf = DATA.caffeine.map(c =>
+  '<div class="caf"><b>' + c.source + '</b><span class="mg">' + c.mg + 'mg</span>' +
+  '<span class="s">' + c.serving + '</span>' +
+  '<span class="bar' + (c.mg > 200 ? ' over' : '') + '"><i style="width:' + Math.min(100, (c.mg / 200) * 100) + '%"></i></span></div>'
+).join('');
+$('#view-food').insertAdjacentHTML('beforeend',
+  '<h3 style="font-family:var(--display);font-size:1.25rem;margin:2.5rem 0 .3rem">Caffeine</h3>' +
+  '<p class="lede">The daily limit is 200mg. Each bar is measured against it &mdash; two cups of barako put her over before lunch.</p>' +
+  '<div class="tw" style="padding:.3rem .6rem">' + caf + '</div>');
+
+/* ---- calendar ---------------------------------------------------------- */
+$('#callist').innerHTML = DATA.calendar.map(c =>
+  '<div class="calrow"><span class="d">' + c.date + '</span><span class="g">' + c.ga + '</span>' +
+  '<span><b>' + c.feast + '</b></span><span class="n">' + c.note + '</span></div>'
+).join('');
+
+/* ---- navigation -------------------------------------------------------- */
+function show(view) {
+  $$('.view').forEach(v => { v.hidden = v.id !== 'view-' + view; });
+  $$('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.view === view)));
+  document.body.className = view === 'nico' ? 'nico' : view === 'prayers' ? 'prayers' : view === 'flags' ? 'flags' : '';
+  scrollTo({ top: 0, behavior: 'instant' });
+}
+$$('[data-view]').forEach(b => b.addEventListener('click', () => show(b.dataset.view)));
+$('#toflags').addEventListener('click', () => show('flags'));
+
+$$('.subtab[data-sub]').forEach(b => b.addEventListener('click', () => {
+  const group = b.closest('.sub');
+  $$('.subtab', group).forEach(o => o.setAttribute('aria-selected', String(o === b)));
+  const views = group.parentElement;
+  $$('.subview', views).forEach(v => { v.hidden = v.id !== b.dataset.sub; });
+}));
+</script>
