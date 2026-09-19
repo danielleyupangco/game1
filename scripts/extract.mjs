@@ -64,14 +64,15 @@ export function extractVitals() {
 
   const rows = [];
   for (const line of section.split('\n')) {
-    const m = /^\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(good|watch|pending|urgent)\s*\|\s*(.+?)\s*\|$/.exec(line);
+    const m = /^\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(good|watch|pending|urgent)\s*\|\s*(.+?)\s*\|$/.exec(line);
     if (m) {
       rows.push({
         name: inline(m[1]),
-        value: inline(m[2]),
-        reference: inline(m[3]),
-        status: m[4],
-        measured: inline(m[5]),
+        plain: inline(m[2]),
+        value: inline(m[3]),
+        reference: inline(m[4]),
+        status: m[5],
+        measured: inline(m[6]),
       });
     }
   }

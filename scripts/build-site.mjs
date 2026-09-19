@@ -93,6 +93,7 @@ const prose = {
 
   actions: renderSection('medical', 'Action steps'),
   vitals: renderSection('medical', 'Vitals'),
+  glossary: renderSection('medical', 'Plain English'),
   birthday: renderSection('pregnancy', '13. Birth day — dates and signs'),
   birthplan: renderSection('pregnancy', '14. Birth plan — caesarean or vaginal'),
 };
@@ -311,6 +312,7 @@ details.grief[open] summary{margin-bottom:.5rem}
 .installtip{margin-top:1.5rem;padding:.75rem 1rem;border:1px dashed var(--line);border-radius:14px;font-size:.85rem;color:var(--fg-mute);text-align:center}
 .vitals{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1rem 1.15rem;margin-bottom:1.5rem;box-shadow:var(--shadow)}
 .vitals-h{display:flex;flex-wrap:wrap;gap:.5rem;align-items:baseline;margin-bottom:.6rem}
+.vitals-h .subtab{margin-left:auto}
 .vitals-h h3{font-size:1.2rem}
 .vitals-h span{font-size:.8rem;color:var(--fg-mute)}
 .vgroup{font-size:.66rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--fg-mute);margin:.9rem 0 .35rem}
@@ -318,7 +320,8 @@ details.grief[open] summary{margin-bottom:.5rem}
 .vrow:last-child{border-bottom:0}
 .vrow .vn{font-weight:700;font-size:.92rem}
 .vrow .vv{font-variant-numeric:tabular-nums;text-align:right;font-size:.92rem}
-.vrow .vr{grid-column:1/-1;font-size:.76rem;color:var(--fg-mute)}
+.vrow .vp{grid-column:1/-1;font-size:.86rem;margin-top:.05rem}
+.vrow .vr{grid-column:1/-1;font-size:.74rem;color:var(--fg-mute);margin-top:.1rem}
 .vpill{display:inline-flex;align-items:center;gap:.3rem;font-size:.62rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:.15rem .45rem;border-radius:999px;margin-left:.4rem;vertical-align:.08em}
 .vpill.good{background:var(--safe-bg);color:var(--safe-fg)}
 .vpill.watch{background:var(--caution-bg);color:var(--caution-fg)}
@@ -477,7 +480,8 @@ ${panel('nico', 'For Nico', `
 
 ${panel('checkups', 'Check-ups', `
   <section class="vitals" aria-labelledby="vitals-h">
-    <div class="vitals-h"><h3 id="vitals-h">Vitals</h3><span id="vitals-count"></span></div>
+    <div class="vitals-h"><h3 id="vitals-h">Vitals</h3><span id="vitals-count"></span>
+      <button class="subtab" type="button" data-view="glossary">What do these words mean?</button></div>
     <div id="vitals-list"></div>
   </section>
   <figure class="firstlook">
@@ -513,12 +517,16 @@ ${panel('birth', 'Birth', `
 ${panel('calendar', 'Calendar', `<div class="cal" id="callist"></div><div class="prose">${prose.milestones}</div>`,
   `<p class="lede">The liturgical year against gestational age. Moveable feasts were computed, not recalled &mdash; Easter 2027 is 28 March, which lands at 32w2d.</p>`)}
 
+${panel('glossary', 'Plain English', `<div class="prose">${prose.glossary}</div>`,
+  `<p class="lede">Every abbreviation and bit of jargon in this handbook, in ordinary words. Nothing here is meant to be looked up elsewhere.</p>`)}
+
 ${panel('flags', 'When to call', `<div class="prose">${prose.redFlags}</div>`)}
 ${panel('about', 'Dating &amp; sources', `<div class="prose">${prose.dating}${prose.tests}${prose.nutrients}${prose.sources}</div>`)}
 
 <footer>
   <p>Built from the three source documents in <code>/docs</code>. General information, not medical advice &mdash; Dra. Villafria&rsquo;s guidance comes first, and in an emergency go to the Makati Med ER.</p>
-  <p><button class="subtab" data-view="about" type="button">Dating &amp; sources</button></p>
+  <p><button class="subtab" data-view="glossary" type="button">Plain English</button>
+     <button class="subtab" data-view="about" type="button">Dating &amp; sources</button></p>
 </footer>
 </main>
 
@@ -686,7 +694,8 @@ const STATUS_MARK = { good: '\u2713', watch: '\u25B3', urgent: '\u25B3', pending
     '<div class="vrow"><span class="vn">' + v.name +
       '<span class="vpill ' + v.status + '">' + STATUS_MARK[v.status] + ' ' + v.status + '</span></span>' +
       '<span class="vv">' + v.value + '</span>' +
-      '<span class="vr">' + v.reference + ' \u00b7 ' + v.measured + '</span>' +
+      '<span class="vp">' + v.plain + '</span>' +
+      '<span class="vr">Normal is ' + v.reference + ' \u00b7 ' + v.measured + '</span>' +
     '</div>';
 
   $('#vitals-list').innerHTML =

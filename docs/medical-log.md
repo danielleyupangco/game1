@@ -15,35 +15,37 @@ height, and every scan.
 
 ## Vitals
 
-Everything measured so far, with where it sits. Status is one of `good`,
-`watch`, `pending` or `urgent` — and it is always written as a word, never
-signalled by colour alone.
+Everything measured so far, in plain words. Each row says what the test actually
+looks at, not just what the lab called it. Status is written as a word — `good`,
+`watch`, `pending` or `urgent` — and never signalled by colour alone.
 
-| Vital | Value | Reference | Status | Measured |
-| --- | --- | --- | --- | --- |
-| Blood pressure | 120/70 mmHg | Under 140/90 | good | 2026-09-18 |
-| HbA1c | 5.2 % | Under 5.7 % | good | 2026-09-18 |
-| Urine protein | Negative | Negative | good | 2026-09-18 |
-| Urine glucose | Negative | Negative | good | 2026-09-18 |
-| Urine ketones | Negative | Negative | good | 2026-09-18 |
-| Nitrites | Negative | Negative | good | 2026-09-18 |
-| Leucocyte esterase | Negative | Negative | good | 2026-09-18 |
-| Urine blood | Negative | Negative | good | 2026-09-18 |
-| Bacteria | 10 /HPF | 0–50 /HPF | good | 2026-09-18 |
-| Urine specific gravity | 1.002 | 1.015–1.025 | watch | 2026-09-18 |
-| Rubella IgG | Reactive, 219 IU/mL | Reactive means immune | good | 2026-09-18 |
-| HBsAg | Nonreactive | Nonreactive | good | 2026-09-18 |
-| Anti-HBs | Reactive, 288 IU/L | Above 10 is protective | good | 2026-09-18 |
-| Anti-HCV | Nonreactive | Nonreactive | good | 2026-09-18 |
-| RPR (syphilis) | Nonreactive | Nonreactive | good | 2026-09-18 |
-| Pap smear | NILM | No abnormal cells | good | 2026-09-05 |
-| Haemoglobin | — | Anaemia baseline | pending | Lab 26596440 |
-| Platelets | — | Clotting baseline | pending | Lab 26596440 |
-| Blood type & Rh | — | Needed at 28 weeks | pending | not ordered |
-| HIV screen | — | Standard PH panel | pending | not seen |
-| Pre-pregnancy weight | — | For BMI and gain bands | pending | not recorded |
-| Height | — | For BMI | pending | not recorded |
-| OGTT | — | Due 24–28 weeks | pending | 2027-01-27 – 2027-02-24 |
+**If a term here is unfamiliar, it is in the glossary at the end of this file.**
+
+| Vital | What it actually is | Value | Normal is | Status | Measured |
+| --- | --- | --- | --- | --- | --- |
+| Blood pressure | How hard blood pushes on your artery walls | 120/70 mmHg | Under 140/90 | good | 2026-09-18 |
+| HbA1c | Your average blood sugar over the last 2–3 months | 5.2 % | Under 5.7 % | good | 2026-09-18 |
+| Urine protein | Protein leaking into urine — the pre-eclampsia warning sign | Negative | Negative | good | 2026-09-18 |
+| Urine glucose | Sugar spilling into urine, which can point to diabetes | Negative | Negative | good | 2026-09-18 |
+| Urine ketones | A sign the body is burning fat because it is short of food or fluid | Negative | Negative | good | 2026-09-18 |
+| Nitrites | A chemical made by the bacteria that cause bladder infections | Negative | Negative | good | 2026-09-18 |
+| Leucocyte esterase | A sign white blood cells are in the urine, fighting infection | Negative | Negative | good | 2026-09-18 |
+| Urine blood | Blood in the urine | Negative | Negative | good | 2026-09-18 |
+| Bacteria | How many bacteria were seen under the microscope | 10 /HPF | 0–50 per view | good | 2026-09-18 |
+| Urine specific gravity | How concentrated your urine is — how much water is in it | 1.002 | 1.015–1.025 | watch | 2026-09-18 |
+| Rubella IgG | Whether you are immune to German measles | Reactive, 219 | Reactive means immune | good | 2026-09-18 |
+| HBsAg | Whether you currently have hepatitis B | Nonreactive | Nonreactive means no | good | 2026-09-18 |
+| Anti-HBs | Whether your hepatitis B vaccination is still protecting you | Reactive, 288 | Above 10 is protective | good | 2026-09-18 |
+| Anti-HCV | Whether you have hepatitis C | Nonreactive | Nonreactive means no | good | 2026-09-18 |
+| RPR | The syphilis test | Nonreactive | Nonreactive means no | good | 2026-09-18 |
+| Pap smear | Checks the cervix for abnormal cells | NILM | No abnormal cells | good | 2026-09-05 |
+| Haemoglobin | The part of blood that carries oxygen — low means anaemia | — | Not done yet | pending | Lab 26596440 |
+| Platelets | The cells that let blood clot | — | Not done yet | pending | Lab 26596440 |
+| Blood type & Rh | Your blood group, and whether you are Rh positive or negative | — | Needed by 28 weeks | pending | not ordered |
+| HIV screen | Standard test offered to everyone in pregnancy | — | Not seen yet | pending | not seen |
+| Pre-pregnancy weight | Your starting weight, used to work out healthy gain | — | Not recorded | pending | not recorded |
+| Height | Used with weight to work out BMI | — | Not recorded | pending | not recorded |
+| Sugar test (OGTT) | The proper test for pregnancy diabetes — a sweet drink, then bloods | — | Due 24–28 weeks | pending | 2027-01-27 – 2027-02-24 |
 
 ### The one flagged `watch`, and why it is not a problem
 
@@ -482,3 +484,89 @@ Copy this block. The site picks up any `## ` heading dated `YYYY-MM-DD`.
 Blood pressure, weight, urine dip (protein and glucose), and from around 20
 weeks fundal height. From 24 weeks, fetal heart rate. These are the numbers that
 only mean something as a trend — which is the entire reason for keeping this log.
+
+---
+
+## Plain English
+
+Every abbreviation and piece of jargon used anywhere in this handbook, in
+ordinary words. If something you were told isn't here, it belongs here — add it.
+
+### On the scan report
+
+| Term | What it means |
+| --- | --- |
+| **AOG** | Age of gestation. How far along you are, in weeks and days. |
+| **EDD / EDC** | Estimated due date / estimated date of confinement. Same thing, two names. |
+| **LMP** | Last menstrual period — the first day of your last period. Dating counts from here. |
+| **Gestational sac** | The fluid-filled bubble the baby grows inside. The first thing visible on a scan. |
+| **Yolk sac** | A small ring inside the sac that feeds the embryo until the placenta takes over. Seeing it is a good sign. |
+| **MSD** | Mean sac diameter. The average width of that bubble, used to estimate dating very early on. |
+| **CRL** | Crown-rump length. The baby measured head to bottom — the most accurate way to date a pregnancy. |
+| **Subchorionic hemorrhage** | A small pocket of blood between the membrane around the pregnancy and the wall of the womb. |
+| **Corpus luteum** | What's left of the follicle that released your egg. It makes the hormone holding the pregnancy up until the placenta takes over. |
+| **Anteverted** | Your womb tilts forward. Completely normal — most do. |
+| **Cul-de-sac** | The space behind the womb. Doctors look for fluid there, which can signal bleeding. |
+| **Sliding sign** | Organs move freely against each other. "Positive" means no scarring sticking them together — the good result. |
+| **G1 P0** | First pregnancy, no previous births. |
+| **Intrauterine** | Inside the womb, where it should be — as opposed to ectopic. |
+| **Ectopic** | A pregnancy growing outside the womb, usually in a tube. An emergency, and the main thing early scans rule out. |
+
+### On the blood and urine results
+
+| Term | What it means |
+| --- | --- |
+| **HbA1c** | Average blood sugar over 2–3 months, in one number. |
+| **Reactive / Nonreactive** | The lab's yes / no. Whether it's good news depends on the test — reactive is good for rubella, bad for hepatitis B surface antigen. |
+| **IgG** | The long-lasting antibody. Its presence means past infection or vaccination — in other words, immunity. |
+| **IgM** | The short-lived antibody. This is the one that signals a *current* infection. |
+| **HBsAg** | Hepatitis B surface antigen — the marker of actually having hepatitis B. |
+| **Anti-HBs** | The protective antibody against hepatitis B, usually from vaccination. |
+| **RPR** | The screening test for syphilis. |
+| **NILM** | "Negative for intraepithelial lesion or malignancy" — a normal Pap. No abnormal cells. |
+| **CBC** | Complete blood count. Checks your red cells, white cells and platelets. |
+| **Rh positive / negative** | A blood group feature. If you're negative and the baby is positive, you may need an injection called anti-D. |
+| **/HPF** | "Per high-power field" — how many were seen in one view down the microscope. |
+
+### Tests coming up
+
+| Term | What it means |
+| --- | --- |
+| **NIPT** | A blood test from 10 weeks that screens for Down syndrome and two other chromosome conditions. A screen, not a diagnosis. |
+| **NT scan** | Nuchal translucency. Measures fluid at the back of the baby's neck, at 11–14 weeks. |
+| **Anomaly scan** | The detailed 18–22 week scan that checks the baby's structure head to toe. |
+| **OGTT** | Oral glucose tolerance test. You drink something very sweet, then have bloods taken. Tests for pregnancy diabetes. |
+| **GBS** | Group B strep. A common harmless bacterium, swabbed for at 35–37 weeks. If present, you get antibiotics during labour. |
+| **Tdap** | The whooping cough vaccine, given in every pregnancy so the baby is protected before their own shots. |
+| **RSV vaccine** | Protects the newborn against a common winter chest virus. |
+
+### Words about the birth
+
+| Term | What it means |
+| --- | --- |
+| **Trimester** | A third of the pregnancy. First is weeks 1–13, second 14–27, third 28 onwards. |
+| **Preterm** | Born before 37 weeks. |
+| **Early term** | 37–38 weeks. Safe, but slightly more breathing and feeding trouble than full term. |
+| **Full term** | 39–40 weeks. The lowest-risk window. |
+| **Elective** | Planned in advance, rather than because something went wrong. An elective caesarean is a chosen one. |
+| **Indication** | A medical reason to do something. "No indication" means there's no medical need. |
+| **Placenta previa** | The placenta sitting over the cervix, blocking the exit. Means a caesarean. |
+| **Placenta accreta** | The placenta growing too deeply into the womb wall. Serious, and more likely after previous caesareans. |
+| **VBAC** | Vaginal birth after caesarean. Often still possible next time. |
+| **Pre-eclampsia** | High blood pressure plus protein in the urine. Why they check both at every visit. |
+| **Fundal height** | The bump measured from pubic bone to top of the womb, to track growth. |
+| **Braxton Hicks** | Practice tightenings. Irregular and painless — not real labour. |
+| **Epidural** | Pain relief injected near the spine, numbing you from the waist down. |
+
+### Words about the baby
+
+| Term | What it means |
+| --- | --- |
+| **Embryo** | What the baby is called up to 8 weeks. |
+| **Fetus** | What the baby is called from 8 weeks until birth. |
+| **Vernix** | The waxy white coating protecting the baby's skin in the womb. |
+| **Lanugo** | Fine soft hair covering the baby before birth. |
+| **Meconium** | The baby's first bowel movement — dark and sticky. |
+| **Neonatal** | To do with a newborn, roughly the first month. |
+| **NICU** | Neonatal intensive care unit. |
+| **Congenital** | Present from birth. |
