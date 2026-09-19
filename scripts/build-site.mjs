@@ -10,6 +10,7 @@ import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import {
   EDD,
   extractCheckups,
+  extractVitals,
   extractCaffeine,
   extractCalendar,
   extractFoods,
@@ -24,6 +25,7 @@ const foods = extractFoods();
 const caffeine = extractCaffeine();
 const calendar = extractCalendar();
 const checkups = extractCheckups();
+const vitals = extractVitals();
 
 /**
  * Scan images are inlined as data URIs rather than referenced as files, so the
@@ -90,11 +92,12 @@ const prose = {
   prayerGrief: renderSection('prayer', '11. If the news is not good'),
 
   actions: renderSection('medical', 'Action steps'),
+  vitals: renderSection('medical', 'Vitals'),
   birthday: renderSection('pregnancy', '13. Birth day — dates and signs'),
   birthplan: renderSection('pregnancy', '14. Birth plan — caesarean or vaginal'),
 };
 
-const data = JSON.stringify({ edd: EDD, weeks: weekData, foods, caffeine, calendar })
+const data = JSON.stringify({ edd: EDD, weeks: weekData, foods, caffeine, calendar, vitals })
   .replace(/</g, '\\u003c');
 
 const LOGO = `<svg viewBox="0 0 48 48" aria-hidden="true" class="mark">
@@ -306,6 +309,21 @@ details.grief[open] summary{margin-bottom:.5rem}
 .actions-body li.task{margin:.45rem 0}
 .actions-body hr{display:none}
 .installtip{margin-top:1.5rem;padding:.75rem 1rem;border:1px dashed var(--line);border-radius:14px;font-size:.85rem;color:var(--fg-mute);text-align:center}
+.vitals{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1rem 1.15rem;margin-bottom:1.5rem;box-shadow:var(--shadow)}
+.vitals-h{display:flex;flex-wrap:wrap;gap:.5rem;align-items:baseline;margin-bottom:.6rem}
+.vitals-h h3{font-size:1.2rem}
+.vitals-h span{font-size:.8rem;color:var(--fg-mute)}
+.vgroup{font-size:.66rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--fg-mute);margin:.9rem 0 .35rem}
+.vrow{display:grid;grid-template-columns:1fr auto;gap:.1rem .7rem;align-items:baseline;padding:.45rem 0;border-bottom:1px solid var(--line)}
+.vrow:last-child{border-bottom:0}
+.vrow .vn{font-weight:700;font-size:.92rem}
+.vrow .vv{font-variant-numeric:tabular-nums;text-align:right;font-size:.92rem}
+.vrow .vr{grid-column:1/-1;font-size:.76rem;color:var(--fg-mute)}
+.vpill{display:inline-flex;align-items:center;gap:.3rem;font-size:.62rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:.15rem .45rem;border-radius:999px;margin-left:.4rem;vertical-align:.08em}
+.vpill.good{background:var(--safe-bg);color:var(--safe-fg)}
+.vpill.watch{background:var(--caution-bg);color:var(--caution-fg)}
+.vpill.urgent{background:var(--avoid-bg);color:var(--avoid-fg)}
+.vpill.pending{background:var(--surface-2);color:var(--fg-mute)}
 .firstlook{margin:0 0 1.5rem;background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
 .firstlook img{display:block;width:100%;height:auto}
 .firstlook figcaption{padding:.9rem 1.1rem;font-size:.9rem;color:var(--fg-mute);border-top:1px solid var(--line)}
@@ -458,6 +476,10 @@ ${panel('nico', 'For Nico', `
   <div class="prose subview" id="n-bag" hidden>${prose.nicoBag}</div>`)}
 
 ${panel('checkups', 'Check-ups', `
+  <section class="vitals" aria-labelledby="vitals-h">
+    <div class="vitals-h"><h3 id="vitals-h">Vitals</h3><span id="vitals-count"></span></div>
+    <div id="vitals-list"></div>
+  </section>
   <figure class="firstlook">
     <img src="${SCAN_SAC}" alt="First ultrasound, 18 September 2026: the gestational sac, with the yolk sac visible inside it." loading="eager">
     <figcaption>
@@ -466,6 +488,7 @@ ${panel('checkups', 'Check-ups', `
       the yolk sac visible inside it. Makati Medical Center.
     </figcaption>
   </figure>
+  <div class="prose">${prose.vitals}</div>
   <div class="prose">${checkups.map((c) => `<h3>${c.heading}</h3>${c.html}`).join('')}</div>
   <details class="films"><summary>All six scan films</summary>
     <img src="${SCAN_FILMS}" alt="The full contact sheet of six ultrasound films from the 18 September 2026 scan." loading="lazy">
@@ -644,6 +667,32 @@ $('#view-food').insertAdjacentHTML('beforeend',
   '<h3 style="font-family:var(--display);font-size:1.25rem;margin:2.5rem 0 .3rem">Caffeine</h3>' +
   '<p class="lede">The daily limit is 200mg. Each bar is measured against it &mdash; two cups of barako put her over before lunch.</p>' +
   '<div class="tw" style="padding:.3rem .6rem">' + caf + '</div>');
+
+/* ---- vitals ------------------------------------------------------------ */
+/* Status is labelled as well as coloured: colour alone is not an encoding. */
+const STATUS_MARK = { good: '\u2713', watch: '\u25B3', urgent: '\u25B3', pending: '\u00B7' };
+
+(() => {
+  const measured = DATA.vitals.filter((v) => v.status !== 'pending');
+  const waiting = DATA.vitals.filter((v) => v.status === 'pending');
+  const flagged = measured.filter((v) => v.status !== 'good').length;
+
+  $('#vitals-count').textContent =
+    measured.length + ' measured \u00b7 ' +
+    (flagged ? flagged + ' to watch' : 'all in range') +
+    (waiting.length ? ' \u00b7 ' + waiting.length + ' outstanding' : '');
+
+  const row = (v) =>
+    '<div class="vrow"><span class="vn">' + v.name +
+      '<span class="vpill ' + v.status + '">' + STATUS_MARK[v.status] + ' ' + v.status + '</span></span>' +
+      '<span class="vv">' + v.value + '</span>' +
+      '<span class="vr">' + v.reference + ' \u00b7 ' + v.measured + '</span>' +
+    '</div>';
+
+  $('#vitals-list').innerHTML =
+    '<div class="vgroup">Measured</div>' + measured.map(row).join('') +
+    (waiting.length ? '<div class="vgroup">Not yet taken</div>' + waiting.map(row).join('') : '');
+})();
 
 /* ---- stage-gated prompts ----------------------------------------------- */
 /* Things that are not worth showing yet. Gated on the live week so they appear

@@ -13,6 +13,73 @@ height, and every scan.
 
 ---
 
+## Vitals
+
+Everything measured so far, with where it sits. Status is one of `good`,
+`watch`, `pending` or `urgent` — and it is always written as a word, never
+signalled by colour alone.
+
+| Vital | Value | Reference | Status | Measured |
+| --- | --- | --- | --- | --- |
+| Blood pressure | 120/70 mmHg | Under 140/90 | good | 2026-09-18 |
+| HbA1c | 5.2 % | Under 5.7 % | good | 2026-09-18 |
+| Urine protein | Negative | Negative | good | 2026-09-18 |
+| Urine glucose | Negative | Negative | good | 2026-09-18 |
+| Urine ketones | Negative | Negative | good | 2026-09-18 |
+| Nitrites | Negative | Negative | good | 2026-09-18 |
+| Leucocyte esterase | Negative | Negative | good | 2026-09-18 |
+| Urine blood | Negative | Negative | good | 2026-09-18 |
+| Bacteria | 10 /HPF | 0–50 /HPF | good | 2026-09-18 |
+| Urine specific gravity | 1.002 | 1.015–1.025 | watch | 2026-09-18 |
+| Rubella IgG | Reactive, 219 IU/mL | Reactive means immune | good | 2026-09-18 |
+| HBsAg | Nonreactive | Nonreactive | good | 2026-09-18 |
+| Anti-HBs | Reactive, 288 IU/L | Above 10 is protective | good | 2026-09-18 |
+| Anti-HCV | Nonreactive | Nonreactive | good | 2026-09-18 |
+| RPR (syphilis) | Nonreactive | Nonreactive | good | 2026-09-18 |
+| Pap smear | NILM | No abnormal cells | good | 2026-09-05 |
+| Haemoglobin | — | Anaemia baseline | pending | Lab 26596440 |
+| Platelets | — | Clotting baseline | pending | Lab 26596440 |
+| Blood type & Rh | — | Needed at 28 weeks | pending | not ordered |
+| HIV screen | — | Standard PH panel | pending | not seen |
+| Pre-pregnancy weight | — | For BMI and gain bands | pending | not recorded |
+| Height | — | For BMI | pending | not recorded |
+| OGTT | — | Due 24–28 weeks | pending | 2027-01-27 – 2027-02-24 |
+
+### The one flagged `watch`, and why it is not a problem
+
+**Urine specific gravity 1.002** is below the 1.015–1.025 reference, which means
+only that the sample was very dilute — she was well hydrated when she gave it.
+It is not a finding in its own right. The single caveat is that a very dilute
+sample is slightly less sensitive, so a faint trace of protein or bacteria could
+in principle be missed. Not a reason to repeat it on its own.
+
+### Blood sugar, in more detail
+
+**HbA1c 5.2 % is normal with room to spare.** It reflects average blood glucose
+over roughly the preceding two to three months, and 5.2 % corresponds to an
+average of about **103 mg/dL (5.7 mmol/L)**. The thresholds: under 5.7 % is
+normal, 5.7–6.4 % marks increased risk, and 6.5 % or above is the diagnostic
+range. The negative urine glucose agrees with it.
+
+Two things worth understanding about this number:
+
+- **HbA1c normally runs *lower* in pregnancy**, because red cells turn over
+  faster and plasma volume expands. So a normal result early on is expected
+  rather than remarkable — which is fine. It is a baseline, not an achievement.
+- **It does not screen for gestational diabetes, and a normal result does not
+  let anyone skip the OGTT.** Early-pregnancy HbA1c is there to catch
+  *pre-existing* diabetes that had gone unnoticed. Gestational diabetes develops
+  later, driven by placental hormones, and is diagnosed by the **oral glucose
+  tolerance test at 24–28 weeks — 27 January to 24 February 2027.**
+
+What this result does buy is interpretive power later. Starting from a normal
+HbA1c means that if the OGTT is ever abnormal, it is genuinely gestational,
+rather than something pre-existing finally being noticed.
+
+*Sources: American Diabetes Association HbA1c thresholds, as printed on the Makati Med report; eAG conversion from the ADAG study (eAG mg/dL = 28.7 × A1c − 46.7). Verified 2026-09-19. Confidence: high.*
+
+---
+
 ## Action steps
 
 Everything outstanding from the tests so far, in the order it needs doing.

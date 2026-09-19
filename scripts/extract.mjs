@@ -54,6 +54,32 @@ export function extractCheckups() {
   return entries;
 }
 
+/**
+ * The vitals table. Status is carried as a word in the source, so the rendered
+ * panel can label every row rather than relying on colour alone.
+ */
+export function extractVitals() {
+  const section = sections(DOCS.medical).get('Vitals');
+  if (!section) throw new Error('Vitals section not found');
+
+  const rows = [];
+  for (const line of section.split('\n')) {
+    const m = /^\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(good|watch|pending|urgent)\s*\|\s*(.+?)\s*\|$/.exec(line);
+    if (m) {
+      rows.push({
+        name: inline(m[1]),
+        value: inline(m[2]),
+        reference: inline(m[3]),
+        status: m[4],
+        measured: inline(m[5]),
+      });
+    }
+  }
+
+  if (!rows.length) throw new Error('No vitals rows extracted');
+  return rows;
+}
+
 /** Weeks 4-40, with the six fields each entry carries. */
 export function extractWeeks() {
   const weeks = [];
