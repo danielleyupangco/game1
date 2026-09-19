@@ -771,6 +771,48 @@ space them out.
 
 *Sources: ACOG nutrition in pregnancy; Philippine Dietary Reference Intakes (FNRI-DOST). Verified 2026-09-18. Confidence: high.*
 
+### Knowing where your iron actually stands
+
+Two different tests, and they answer two different questions.
+
+**Haemoglobin** is the oxygen-carrying part of blood. It tells you whether you
+are *already* anaemic. Because blood volume rises about 45% in pregnancy while
+red cells rise less, haemoglobin naturally falls — so pregnancy uses its own
+cut-offs, not the ones on a general lab sheet:
+
+| When | Anaemic below |
+| --- | --- |
+| First trimester | 11.0 g/dL |
+| Second trimester | 10.5 g/dL |
+| Third trimester | 11.0 g/dL |
+
+**Ferritin** is the storage tank. It tells you whether you are *running out*,
+which happens well before haemoglobin drops. A ferritin of **30 ng/mL or below**
+is taken as iron deficiency in pregnancy. Below 15 is not the right line — that
+threshold misses too many people.
+
+**This is why haemoglobin alone is not enough.** In one first-trimester study, a
+haemoglobin under 11 picked up only about **30%** of the people whose ferritin
+showed they were iron deficient. Seven in ten looked fine on the CBC and were
+not. A standard prenatal panel in the Philippines usually includes the CBC and
+usually does not include ferritin — so if you want the real answer, it has to be
+asked for by name.
+
+**Why it is worth asking for early.** Iron demand rises steeply from the second
+trimester and peaks in the third. Topping up a low tank at 10 weeks is a
+month of tablets; discovering an empty one at 32 weeks is a harder problem, and
+it is linked to fatigue, restless legs, and more blood loss mattering more at
+delivery. Iron deficiency is common in Philippine pregnancies.
+
+**If it does come back low,** the fix is ordinary: an oral iron tablet, and the
+current evidence favours taking it **every other day** rather than daily —
+absorption is better and the stomach upset is less. Take it with calamansi or
+another vitamin C source, and keep it away from coffee, tea, milk and calcium
+tablets by a couple of hours. Do not start iron on your own beyond what is in
+the prenatal vitamin; too much is not benign, and the dose depends on the number.
+
+*Sources: [ACOG — screening characteristics of hemoglobin and MCV for detection of iron deficiency in pregnancy](https://opqic.org/acog-screening-characteristics-of-hemoglobin-and-mean-corpuscular-volume-for-detection-of-iron-deficiency-in-pregnancy/); [ASH draft recommendations for the diagnosis of iron deficiency](https://www.hematology.org/-/media/hematology/files/education/clinicians/guidelines-quality/ida-dx-public-comment.pdf); [FIGO good practice recommendations on anemia in pregnancy](https://obgyn.onlinelibrary.wiley.com/doi/full/10.1002/ijgo.70529). Verified 2026-09-19. Confidence: high for the thresholds, medium for the alternate-day dosing.*
+
 ### Calories by trimester
 
 | Trimester | Additional daily kcal |
@@ -798,7 +840,7 @@ conversation with Dra. Villafria rather than in a calorie deficit.
 First trimester gain of 0.5–2kg applies to all bands. **Display these as a
 shaded range, never as a pass/fail line, and never in red.**
 
-*Source: Institute of Medicine / National Research Council, "Weight Gain During Pregnancy: Reexamining the Guidelines" (2009). Verified 2026-09-18. Confidence: high. Already implemented in `src/lib/bmi.ts`.*
+*Source: Institute of Medicine / National Research Council, "Weight Gain During Pregnancy: Reexamining the Guidelines" (2009). Verified 2026-09-18. Confidence: high.*
 
 ### Nausea — what actually helps
 
@@ -1643,3 +1685,123 @@ possible, and is worth asking about rather than assuming. It is not automaticall
 closed off.
 
 *Sources: [ACOG Committee Opinion 761 — Cesarean Delivery on Maternal Request](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2019/01/cesarean-delivery-on-maternal-request); [WHO Statement on Caesarean Section Rates](https://www.who.int/publications/i/item/WHO-RHR-15.02); [ACOG — Avoidance of Nonmedically Indicated Early-Term Deliveries](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2019/02/avoidance-of-nonmedically-indicated-early-term-deliveries-and-associated-neonatal-morbidities). Verified 2026-09-18. Confidence: high on the guidance; medium on the Philippine private-hospital rate, which is from secondary reporting; costs as per section 9 and low confidence.*
+
+---
+
+## 15. Sleep
+
+> **Right now, at 5 weeks, the single most useful thing on this page:
+> you do not have to sleep on your side yet.** The side-sleeping advice applies
+> from **28 weeks**. Until then, sleep in whatever position gets you to sleep.
+> A great many people spend the first trimester anxious about this unnecessarily.
+
+### Why the first trimester wrecks sleep
+
+It is a genuine paradox: exhausted all day, wide awake at 3am. Four things are
+doing it at once.
+
+- **Progesterone has surged.** It is sedating by day, which is the daytime
+  exhaustion, and it fragments night sleep.
+- **Your kidneys are filtering far more blood.** Night-time bathroom trips start
+  in the first trimester, long before the bump presses on anything.
+- **Nausea does not keep office hours.** An empty stomach at 4am makes it worse.
+- **Your mind has a great deal to do.** Early pregnancy is a lot to hold, and it
+  surfaces at night.
+
+None of this means you are doing it wrong. It is the normal shape of weeks 5–13.
+
+### What actually helps, by stage
+
+**First trimester — now until about week 13**
+
+- **Protect the 3am snack.** Plain crackers or dry toast on the bedside table.
+  Eating a little when you wake often settles both the nausea and the waking.
+- **Front-load fluids.** Drink plenty during the day and taper in the two hours
+  before bed. Do not cut back overall — dehydration makes nausea worse.
+- **Nap, but before 3pm and under 30 minutes.** Longer or later and it starts
+  eating into the night.
+- **Caffeine cut-off by early afternoon.** Under 200mg a day anyway, and none
+  after about 2pm — its half-life is roughly 5–6 hours, and *longer* in
+  pregnancy as metabolism slows.
+- **Get up if you have been awake 20 minutes.** Something dull and dim, then
+  back. Lying there teaches your body that bed is where you lie awake.
+
+**Second trimester — about 14 to 27 weeks**
+
+Usually the best sleep of the pregnancy. Use it, and build the habits now while
+they are easy: a fixed wake time, a dim hour before bed, the bed reserved for
+sleeping.
+
+- Start getting used to side-sleeping *before* you need to, so it is not a new
+  problem at 28 weeks.
+- Heartburn often begins here. Nothing heavy within three hours of bed; raise
+  the head of the bed a few inches rather than stacking pillows.
+
+**Third trimester — 28 weeks on**
+
+- **Go to sleep on your side, either side.** See below.
+- A pillow between the knees, one under the bump, one behind the back.
+- Reflux, leg cramps, restless legs and breathlessness all peak here. Each has
+  its own fix — the guide's stretch section covers the cramps.
+- Vivid dreams are almost universal and are not a sign of anything.
+
+### The position rule, precisely
+
+From **28 weeks**, go to sleep **on your side**. The evidence is about the
+position you *fall asleep in*, not the one you wake in: studies of late
+stillbirth found going to sleep on the back carried a meaningfully raised risk,
+with odds ratios of roughly 2.5 to 3.7 across the case-control work. The
+mechanism is mechanical — lying flat on the back lets the uterus compress the
+large vein returning blood to the heart, reducing the blood reaching the
+placenta.
+
+Three things this does **not** mean:
+
+- **It does not apply before 28 weeks.** Sleep however you like until then.
+- **It does not have to be the left side.** Left is marginally better on
+  circulation grounds, but either side is the actual advice, and a rule that is
+  too strict to follow helps nobody.
+- **Waking on your back is not a failure.** You cannot control what you do
+  asleep, and the evidence is about the going-to-sleep position. Roll back onto
+  your side and go back to sleep.
+
+*Sources: [Going to sleep in the supine position is a modifiable risk factor for late pregnancy stillbirth (PLOS One)](https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0179396); [Maternal sleep position during pregnancy (NCBI Bookshelf)](https://www.ncbi.nlm.nih.gov/books/NBK573947/). Verified 2026-09-19. Confidence: high on the 28-week threshold and the going-to-sleep framing.*
+
+### What is safe to take, and what is not
+
+| | |
+| --- | --- |
+| **Melatonin** | **Not recommended.** Evidence in pregnancy is thin, and it is not established as an effective insomnia treatment here. Widely sold and widely assumed harmless; neither is a reason. |
+| **Antihistamines used as sleep aids** | Ask Dra. Villafria first. Some are used in pregnancy, but this is a conversation, not a pharmacy decision. |
+| **Prescription sleeping tablets** | Only on a specialist's advice. |
+| **Herbal sleep teas and supplements** | Avoid unless specifically cleared. Unregulated and largely unstudied. |
+| **CBT-I** | **The first-line treatment, and it is safe in pregnancy.** Randomised trials, including of app-delivered versions, show it works for pregnancy insomnia — and it may reduce later postpartum depression symptoms. Ask Dra. Villafria for a referral or a reputable app. |
+
+*Sources: [Digital CBT-I for insomnia in pregnancy (JAMA Psychiatry)](https://www.ovid.com/journals/japs/pdf/10.1001/jamapsychiatry.2019.4491~efficacy-of-digital-cognitive-behavioral-therapy-for-the); [Sleeping for Two RCT](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8358257/); [MGH Center for Women's Mental Health on melatonin](https://womensmentalhealth.org/posts/you-asked-is-it-safe-to-take-melatonin-during-pregnancy/). Verified 2026-09-19.*
+
+### Two things to raise with the OB rather than solve alone
+
+**Restless legs.** That crawling, must-move feeling in the legs at night affects
+a large minority of pregnancies — and it is **strongly linked to low iron**.
+If it starts, that is a specific reason to ask for **ferritin**, not just a
+haemoglobin. Treating the iron often treats the legs.
+
+**Snoring plus daytime sleepiness.** Sleep apnoea becomes more common in
+pregnancy, and it is associated with raised blood pressure and gestational
+diabetes. If Nico notices you snoring heavily or stopping breathing, that is
+worth mentioning — it is treatable and routinely missed.
+
+### On tracking it
+
+A wearable measures sleep well enough to show a trend and badly enough that a
+single night's score means very little. Two cautions worth holding:
+
+- **A bad score is not a verdict on your night.** If you feel rested, you were.
+- **Watching the number can itself cost you sleep.** There is a recognised
+  pattern of anxiety about sleep data making sleep worse. If checking the score
+  first thing is making mornings tense, stop checking it.
+
+What a tracker *is* good for is the trend across weeks, and noticing the thing
+you would otherwise have missed — a slide that starts when the caffeine crept
+back up, or restless legs showing as broken sleep before you consciously
+noticed them.

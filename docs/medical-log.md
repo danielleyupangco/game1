@@ -40,6 +40,7 @@ looks at, not just what the lab called it. Status is written as a word — `good
 | RPR | The syphilis test | Nonreactive | Nonreactive means no | good | 2026-09-18 |
 | Pap smear | Checks the cervix for abnormal cells | NILM | No abnormal cells | good | 2026-09-05 |
 | Haemoglobin | The part of blood that carries oxygen — low means anaemia | — | Not done yet | pending | Lab 26596440 |
+| Ferritin | Your iron *stores* — runs low long before haemoglobin drops | — | Above 30 ng/mL | pending | not ordered |
 | Platelets | The cells that let blood clot | — | Not done yet | pending | Lab 26596440 |
 | Blood type & Rh | Your blood group, and whether you are Rh positive or negative | — | Needed by 28 weeks | pending | not ordered |
 | HIV screen | Standard test offered to everyone in pregnancy | — | Not seen yet | pending | not seen |
@@ -109,6 +110,12 @@ to-do that does not happen.
       **19 May**, the report header says **21 May**. The app uses 19 May. Two
       days apart, and it moves any planned section date with it. The CRL scan
       resolves it, so confirm before booking anything around the birth.
+- [ ] **Ferritin, added to the CBC.** The CBC gives haemoglobin, which only
+      shows anaemia once it has arrived. Ferritin shows the iron *stores*, and a
+      first-trimester haemoglobin catches only about 30% of the people whose
+      ferritin is already low. It is usually not in the standard panel, so it
+      has to be asked for by name — and it is far easier to fix now than at 32
+      weeks. *From the missing CBC.*
 - [ ] **The Pap inflammation note.** Common and non-specific beside a normal
       result, but worth raising once. *From the 4–5 Sept Pap.*
 
@@ -120,7 +127,8 @@ to-do that does not happen.
       under 12 weeks.
 - [ ] **The CBC** (Lab 26596440). Released the same morning but not in the batch.
       This is the haemoglobin and platelet baseline, and anemia is common in
-      Philippine pregnancies.
+      Philippine pregnancies. **Until it arrives there is no iron reading at
+      all** — the iron question cannot be answered from anything received so far.
 - [ ] **Whether HIV screening was included.** Standard in the Philippine prenatal
       panel; not among the reports received.
 
@@ -527,6 +535,11 @@ ordinary words. If something you were told isn't here, it belongs here — add i
 | **CBC** | Complete blood count. Checks your red cells, white cells and platelets. |
 | **Rh positive / negative** | A blood group feature. If you're negative and the baby is positive, you may need an injection called anti-D. |
 | **/HPF** | "Per high-power field" — how many were seen in one view down the microscope. |
+| **Haemoglobin (Hb)** | The part of red blood cells that carries oxygen. Low means anaemia. Pregnancy uses lower cut-offs than usual, because blood volume rises. |
+| **Ferritin** | Your iron *stores* — the tank behind the haemoglobin. It empties first, so it drops long before anaemia shows up. |
+| **Anaemia** | Not enough oxygen-carrying capacity in the blood. Usually, though not always, caused by low iron. |
+| **MCV** | The average size of your red blood cells. Small cells are a hint that iron is low. |
+| **Platelets** | The cells that let blood clot. Checked before delivery and before any epidural. |
 
 ### Tests coming up
 

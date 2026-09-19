@@ -96,6 +96,7 @@ const prose = {
   glossary: renderSection('medical', 'Plain English'),
   birthday: renderSection('pregnancy', '13. Birth day — dates and signs'),
   birthplan: renderSection('pregnancy', '14. Birth plan — caesarean or vaginal'),
+  sleep: renderSection('pregnancy', '15. Sleep'),
 };
 
 const data = JSON.stringify({ edd: EDD, weeks: weekData, foods, caffeine, calendar, vitals })
@@ -116,6 +117,7 @@ const TABS = [
   ['weeks', 'Weeks'],
   ['food', 'Food'],
   ['move', 'Move'],
+  ['sleep', 'Sleep'],
   ['travel', 'Travel'],
   ['money', 'Money'],
   ['prayers', 'Prayers'],
@@ -310,6 +312,30 @@ details.grief[open] summary{margin-bottom:.5rem}
 .actions-body li.task{margin:.45rem 0}
 .actions-body hr{display:none}
 .installtip{margin-top:1.5rem;padding:.75rem 1rem;border:1px dashed var(--line);border-radius:14px;font-size:.85rem;color:var(--fg-mute);text-align:center}
+.slog{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1rem 1.15rem;margin-bottom:1.5rem;box-shadow:var(--shadow)}
+.slog-h{display:flex;flex-wrap:wrap;gap:.5rem;align-items:baseline;margin-bottom:.7rem}
+.slog-h h3{font-size:1.2rem}
+.slog-h span{font-size:.8rem;color:var(--fg-mute)}
+.slog-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;margin-bottom:1rem}
+.slog-form label{display:flex;flex-direction:column;gap:.2rem;font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--fg-mute)}
+.slog-form input{min-height:44px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:0 .7rem;font-family:var(--body);font-size:1rem}
+.slogbtn{min-height:44px;align-self:end;border:0;border-radius:12px;background:var(--blush-deep);color:#fff;font-family:var(--body);font-weight:700;font-size:.85rem;cursor:pointer}
+.sbars{display:flex;align-items:flex-end;gap:3px;height:92px;padding:.4rem 0 0;border-bottom:1px solid var(--line);margin-bottom:.3rem}
+.sbar{flex:1;min-width:6px;border-radius:4px 4px 0 0;background:var(--powder);position:relative}
+.sbar[data-band="low"]{background:var(--caution-bg)}
+.sbar[data-band="poor"]{background:var(--avoid-bg)}
+.sbar.last{background:var(--powder-deep)}
+.sbar span{position:absolute;top:-1.05rem;left:50%;transform:translateX(-50%);font-size:.62rem;font-weight:700;color:var(--fg-mute);font-variant-numeric:tabular-nums}
+.saxis{display:flex;justify-content:space-between;font-size:.62rem;color:var(--fg-mute);margin-bottom:.9rem}
+.srow{display:grid;grid-template-columns:auto 1fr auto;gap:.2rem .7rem;align-items:baseline;padding:.45rem 0;border-bottom:1px solid var(--line)}
+.srow:last-of-type{border-bottom:0}
+.srow .sd{font-variant-numeric:tabular-nums;font-size:.85rem;font-weight:700}
+.srow .sw{font-size:.7rem;color:var(--powder-deep);font-weight:700}
+.srow .ss{font-variant-numeric:tabular-nums;font-weight:700}
+.srow .sfoot{grid-column:1/-1;display:flex;gap:.7rem;align-items:baseline;justify-content:space-between;font-size:.78rem;color:var(--fg-mute)}
+.sdel{border:0;background:none;color:var(--fg-mute);cursor:pointer;font-size:.72rem;padding:.2rem 0;text-decoration:underline;flex:none}
+.slog-empty{color:var(--fg-mute);font-size:.9rem;padding:.6rem 0 1rem}
+.slog-note{font-size:.76rem;color:var(--fg-mute);border-top:1px solid var(--line);padding-top:.7rem;margin:1rem 0 0}
 .vitals{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1rem 1.15rem;margin-bottom:1.5rem;box-shadow:var(--shadow)}
 .vitals-h{display:flex;flex-wrap:wrap;gap:.5rem;align-items:baseline;margin-bottom:.6rem}
 .vitals-h .subtab{margin-left:auto}
@@ -424,7 +450,12 @@ ${TABS.map(([id, label], n) => `<button class="tab" role="tab" id="tab-${id}" da
   <p class="installtip">On iPhone: <b>Share &rarr; Add to Home Screen</b> puts this one tap away, and the week updates itself each morning.</p>
 </section>
 
-${panel('food', 'Food', `<div id="foodlist" class="foods"></div>`,
+${panel('food', 'Food', `<div id="foodlist" class="foods"></div>
+  <div class="prose" id="nutrients">
+    <h3 style="font-family:var(--display);font-size:1.25rem;margin:2.5rem 0 .3rem">Nutrients that matter</h3>
+    <p class="lede">The eight that do the work, where to find them locally, and how to tell where your iron actually stands.</p>
+    ${prose.nutrients}
+  </div>`,
   `<p class="lede">131 items. Most of them are fine &mdash; the list leads with reassurance and saves <b>avoid</b> for genuine risk.</p>
    <div class="tools">
      <input type="search" id="foodq" placeholder="Search kinilaw, tuyo, cheese&hellip;" aria-label="Search foods">
@@ -435,6 +466,24 @@ ${panel('food', 'Food', `<div id="foodlist" class="foods"></div>`,
    </div>`)}
 
 ${panel('move', 'Move', `<div class="prose">${prose.move}</div>`)}
+${panel('sleep', 'Sleep', `
+  <section class="slog">
+    <div class="slog-h"><h3>Sleep log</h3><span id="slog-summary"></span></div>
+    <form id="slog-form" class="slog-form">
+      <label>Night of <input type="date" id="s-date" required></label>
+      <label>Sleep score <input type="number" id="s-score" min="0" max="100" inputmode="numeric" placeholder="0&ndash;100"></label>
+      <label>Hours slept <input type="number" id="s-hours" min="0" max="16" step="0.1" inputmode="decimal" placeholder="7.2"></label>
+      <label>Resting HR <input type="number" id="s-hr" min="30" max="140" inputmode="numeric" placeholder="bpm"></label>
+      <label>Note <input type="text" id="s-note" maxlength="60" placeholder="up at 3am, nausea&hellip;"></label>
+      <button class="slogbtn" type="submit">Save night</button>
+    </form>
+    <div id="slog-chart"></div>
+    <div id="slog-list"></div>
+    <p class="slog-note">Saved on this device only, in this browser. Not synced, not shared, and not visible to anyone you send the link to.</p>
+  </section>
+  <div class="prose">${prose.sleep}</div>`,
+  `<p class="lede">What helps depends on the stage, and right now the most useful thing is what you <em>don&rsquo;t</em> have to worry about yet.</p>`)}
+
 ${panel('travel', 'Travel', `<div class="prose">${prose.travel}</div>`)}
 ${panel('money', 'Money', `<div class="prose">${prose.money}${prose.shops}</div>`)}
 
@@ -521,7 +570,7 @@ ${panel('glossary', 'Plain English', `<div class="prose">${prose.glossary}</div>
   `<p class="lede">Every abbreviation and bit of jargon in this handbook, in ordinary words. Nothing here is meant to be looked up elsewhere.</p>`)}
 
 ${panel('flags', 'When to call', `<div class="prose">${prose.redFlags}</div>`)}
-${panel('about', 'Dating &amp; sources', `<div class="prose">${prose.dating}${prose.tests}${prose.nutrients}${prose.sources}</div>`)}
+${panel('about', 'Dating &amp; sources', `<div class="prose">${prose.dating}${prose.tests}${prose.sources}</div>`)}
 
 <footer>
   <p>Built from the three source documents in <code>/docs</code>. General information, not medical advice &mdash; Dra. Villafria&rsquo;s guidance comes first, and in an emergency go to the Makati Med ER.</p>
@@ -559,6 +608,8 @@ function gestation(onDate) {
   const total = Math.max(280 - daysToGo, 0);
   return { weeks: Math.floor(total / 7), days: total % 7, daysToGo };
 }
+const todayIso = () =>
+  new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
 const todayManila = () =>
   civil(new Intl.DateTimeFormat('en-CA', { timeZone:'Asia/Manila', year:'numeric', month:'2-digit', day:'2-digit' }).format(new Date()));
 
@@ -671,10 +722,134 @@ const caf = DATA.caffeine.map(c =>
   '<span class="s">' + c.serving + '</span>' +
   '<span class="bar' + (c.mg > 200 ? ' over' : '') + '"><i style="width:' + Math.min(100, (c.mg / 200) * 100) + '%"></i></span></div>'
 ).join('');
-$('#view-food').insertAdjacentHTML('beforeend',
+$('#nutrients').insertAdjacentHTML('beforebegin',
   '<h3 style="font-family:var(--display);font-size:1.25rem;margin:2.5rem 0 .3rem">Caffeine</h3>' +
   '<p class="lede">The daily limit is 200mg. Each bar is measured against it &mdash; two cups of barako put her over before lunch.</p>' +
   '<div class="tw" style="padding:.3rem .6rem">' + caf + '</div>');
+
+/* ---- sleep log --------------------------------------------------------- */
+/*
+ * Stored in localStorage, which is this browser on this device only. That is a
+ * deliberate limit rather than an oversight: the page's shared-database
+ * capability would make the artifact organization-internal and break the
+ * "anyone with the link" sharing already in use, which is not a trade to make
+ * on the reader's behalf. Every read and write is guarded — localStorage throws
+ * in a private window and can come back empty.
+ */
+const SLEEP_KEY = 'cub-sleep-v1';
+
+const loadSleep = () => {
+  try {
+    const raw = localStorage.getItem(SLEEP_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    return [];
+  }
+};
+const saveSleep = (nights) => {
+  try { localStorage.setItem(SLEEP_KEY, JSON.stringify(nights)); return true; } catch (e) { return false; }
+};
+
+let nights = loadSleep();
+
+/** Notes are free text typed by hand, and go into innerHTML. */
+const esc = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function renderSleep() {
+  const sorted = [...nights].sort((a, b) => (a.date < b.date ? -1 : 1));
+  const scored = sorted.filter((n) => typeof n.score === 'number');
+
+  if (!sorted.length) {
+    $('#slog-summary').textContent = '';
+    $('#slog-chart').innerHTML = '';
+    $('#slog-list').innerHTML =
+      '<p class="slog-empty">Nothing logged yet. Open Oura in the morning and copy the numbers across &mdash; ' +
+      'after a week or so the trend starts being worth more than any single night.</p>';
+    return;
+  }
+
+  const recent = scored.slice(-7);
+  const avg = recent.length
+    ? Math.round(recent.reduce((t, n) => t + n.score, 0) / recent.length)
+    : null;
+  const hours = sorted.filter((n) => typeof n.hours === 'number').slice(-7);
+  const avgH = hours.length
+    ? (hours.reduce((t, n) => t + n.hours, 0) / hours.length).toFixed(1)
+    : null;
+
+  $('#slog-summary').textContent =
+    sorted.length + ' night' + (sorted.length === 1 ? '' : 's') +
+    (avg !== null ? ' \u00b7 last 7 average ' + avg : '') +
+    (avgH !== null ? ' \u00b7 ' + avgH + 'h' : '');
+
+  // One series over time, so no legend; only the latest bar is labelled.
+  const bars = scored.slice(-21);
+  $('#slog-chart').innerHTML = bars.length
+    ? '<div class="sbars">' + bars.map((n, i) => {
+        const band = n.score >= 80 ? 'ok' : n.score >= 65 ? 'low' : 'poor';
+        const last = i === bars.length - 1;
+        return '<div class="sbar' + (last ? ' last' : '') + '" data-band="' + band + '"' +
+          ' style="height:' + Math.max(4, n.score) + '%"' +
+          ' title="' + n.date + ': ' + n.score + '">' +
+          (last ? '<span>' + n.score + '</span>' : '') + '</div>';
+      }).join('') + '</div>' +
+      '<div class="saxis"><span>' + bars[0].date + '</span><span>' + bars[bars.length - 1].date + '</span></div>'
+    : '';
+
+  $('#slog-list').innerHTML = [...sorted].reverse().slice(0, 14).map((n) => {
+    const g = gestationOn(n.date);
+    return '<div class="srow">' +
+      '<span class="sd">' + n.date + '</span>' +
+      '<span class="sw">' + (g ? g : '') + '</span>' +
+      '<span class="ss">' + (typeof n.score === 'number' ? n.score : '\u2014') +
+        (typeof n.hours === 'number' ? ' \u00b7 ' + n.hours + 'h' : '') +
+        (typeof n.hr === 'number' ? ' \u00b7 ' + n.hr + 'bpm' : '') + '</span>' +
+      '<span class="sfoot"><span>' + (n.note ? esc(n.note) : '') + '</span>' +
+        '<button class="sdel" type="button" data-date="' + n.date + '">Remove</button></span>' +
+    '</div>';
+  }).join('');
+
+  $$('.sdel').forEach((b) => b.addEventListener('click', () => {
+    nights = nights.filter((n) => n.date !== b.dataset.date);
+    saveSleep(nights);
+    renderSleep();
+  }));
+}
+
+/** The gestational age on a given night, so a score sits next to the stage. */
+function gestationOn(dateStr) {
+  const total = 280 - Math.round((civil(DATA.edd) - civil(dateStr)) / MS);
+  if (total < 0 || total > 320) return '';
+  return Math.floor(total / 7) + 'w' + (total % 7) + 'd';
+}
+
+$('#s-date').value = todayIso();
+$('#slog-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const date = $('#s-date').value;
+  if (!date) return;
+  const num = (sel, min, max) => {
+    const v = Number($(sel).value);
+    return $(sel).value !== '' && Number.isFinite(v) && v >= min && v <= max ? v : undefined;
+  };
+  const entry = {
+    date,
+    score: num('#s-score', 0, 100),
+    hours: num('#s-hours', 0, 16),
+    hr: num('#s-hr', 30, 140),
+    note: $('#s-note').value.trim() || undefined,
+  };
+  // One entry per night: re-saving the same date replaces it.
+  nights = [...nights.filter((n) => n.date !== date), entry];
+  if (!saveSleep(nights)) {
+    $('#slog-summary').textContent = 'Could not save \u2014 this browser is blocking storage.';
+  }
+  $('#s-score').value = ''; $('#s-hours').value = ''; $('#s-hr').value = ''; $('#s-note').value = '';
+  renderSleep();
+});
+
+renderSleep();
 
 /* ---- vitals ------------------------------------------------------------ */
 /* Status is labelled as well as coloured: colour alone is not an encoding. */
