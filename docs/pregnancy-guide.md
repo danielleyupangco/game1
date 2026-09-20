@@ -1457,6 +1457,53 @@ Seeds `red_flags`. **Reachable in one tap from every screen.** Calm layout, no
 alarming imagery, and the call buttons use only the numbers saved in Settings —
 **the app never supplies a phone number it was not given.**
 
+### Cramping: the normal kind, and the kind that is not
+
+Mild cramping that comes and goes is one of the most common first-trimester
+experiences, and on its own it is not a warning sign. Several ordinary things
+cause it at once:
+
+- **The uterus is growing.** It is a muscle that has to roughly double in size,
+  and the ligaments holding it pull as it does. Twinges swap sides because the
+  pull is not symmetrical.
+- **The corpus luteum.** The ovary that released the egg carries a cyst that
+  makes the hormone holding the pregnancy up until the placenta takes over. It
+  can be a couple of centimetres across and ache on that one side.
+- **Progesterone has slowed the bowel.** Trapped wind and constipation produce
+  cramps that feel identical to uterine ones. This is a bigger cause than most
+  people expect.
+- **A full bladder**, which presses directly on the uterus.
+- **A subchorionic hemorrhage**, where one is present.
+
+**What normal cramping looks like:** mild — you notice it but it does not stop
+you. Brief, seconds to a minute or two. Irregular, with no rhythm to it. It
+moves around or swaps sides. It eases with rest, a change of position, emptying
+the bladder, or passing wind. It is not building hour by hour.
+
+**What changes the picture** — any of these is a call, not a wait-and-see:
+
+- Cramping that is **severe**, or that **does not ease**
+- Pain **stuck on one side** that keeps getting worse, especially with
+  shoulder-tip pain, dizziness or fainting — the ectopic pattern
+- Cramping that **falls into a rhythm**, like early labour
+- **Heavy bleeding**, soaking a pad, or passing clots or tissue
+- **Fever**, or pain and burning on urination
+- Pain with **vomiting that keeps nothing down**
+
+**For the pain itself, paracetamol (Biogesic) is the one to take.** Avoid
+**mefenamic acid (Ponstan)**, ibuprofen (Advil, Medicol), naproxen and aspirin.
+This matters locally, because mefenamic acid is the reflex cramp remedy in the
+Philippines and it is sold over the counter — but it is an NSAID, and NSAIDs are
+not the right choice in pregnancy. A warm (not hot) compress, lying down, and
+water are all reasonable. No hot baths and no hot tubs.
+
+**Once an early scan has shown the pregnancy inside the uterus, ectopic is
+effectively off the table** — two pregnancies at once, one in each place, is
+rare enough to be a medical curiosity. That one line on a scan report takes the
+frightening cause of one-sided early pain away.
+
+*Sources: [Ectopic Pregnancy Trust — signs and symptoms](https://ectopic.org.uk/ectopic-pregnancy-symptoms); [Mayo Clinic — ectopic pregnancy](https://www.mayoclinic.org/diseases-conditions/ectopic-pregnancy/diagnosis-treatment/drc-20372093); FDA drug safety communication on NSAIDs in pregnancy. Verified 2026-09-20. Confidence: high.*
+
 ### Call immediately, at any stage
 
 - Heavy vaginal bleeding, or bleeding with cramping
