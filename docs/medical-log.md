@@ -43,7 +43,7 @@ looks at, not just what the lab called it. Status is written as a word — `good
 | Ferritin | Your iron *stores* — runs low long before haemoglobin drops | — | Above 30 ng/mL | pending | not ordered |
 | Platelets | The cells that let blood clot | — | Not done yet | pending | Lab 26596440 |
 | Blood type & Rh | Your blood group, and whether you are Rh positive or negative | — | Needed by 28 weeks | pending | not ordered |
-| HIV screen | Standard test offered to everyone in pregnancy | — | Not seen yet | pending | not seen |
+| HIV screen | Standard test offered to everyone in pregnancy | Nonreactive, 0.31 S/CO | Below 1.0 is negative | good | 2026-09-18 |
 | Pre-pregnancy weight | Your starting weight, used to work out healthy gain | — | Not recorded | pending | not recorded |
 | Height | Used with weight to work out BMI | — | Not recorded | pending | not recorded |
 | Sugar test (OGTT) | The proper test for pregnancy diabetes — a sweet drink, then bloods | — | Due 24–28 weeks | pending | 2027-01-27 – 2027-02-24 |
@@ -129,14 +129,12 @@ to-do that does not happen.
       This is the haemoglobin and platelet baseline, and anemia is common in
       Philippine pregnancies. **Until it arrives there is no iron reading at
       all** — the iron question cannot be answered from anything received so far.
-- [ ] **Whether HIV screening was included.** Standard in the Philippine prenatal
-      panel; not among the reports received.
 
 ### Already settled — no action
 
 Rubella immune. Hepatitis B immune and not infected. Hepatitis C negative.
-Syphilis screen negative. HbA1c normal. Urine clean, no protein. Pap normal.
-Blood pressure 120/70.
+Syphilis screen negative. **HIV screen nonreactive.** HbA1c normal. Urine clean,
+no protein. Pap normal. Blood pressure 120/70.
 
 ---
 
@@ -359,6 +357,39 @@ infection, and it is **negative**. Anti-HBs is the protective antibody, and at
 vaccinated and immune, not a carrier. Practically, this means **the baby will
 not need hepatitis B immunoglobulin at birth** on her account.
 
+### HIV screen — Accession 26-09-1131
+
+| Test | Result | Cut-off | Reading |
+| --- | --- | --- | --- |
+| **HIV Ag/Ab (screening)** | **0.31 S/CO** | 1.0 | **Nonreactive.** Negative. |
+
+Collected and released 18 September, same batch as the rest. Method:
+**chemiluminescent microparticle immunoassay (CMIA)**.
+
+**What the number means.** S/CO is "signal to cut-off" — the sample's signal
+divided by the line the lab draws for a positive. Anything **under 1.0 is
+negative**, and 0.31 is comfortably under it. It is not a percentage and not a
+viral load; there is no such thing as a "better" negative than another.
+
+**Ag/Ab is the fourth-generation test**, which looks for two things at once: the
+p24 **antigen**, which the virus itself sheds within about two weeks of
+infection, and the **antibodies** the body makes over the following weeks.
+Catching the antigen is what makes it far more sensitive in the early window
+than the older antibody-only tests.
+
+**The footnote is standard text, not a caveat about her.** Every HIV report
+carries it: a nonreactive result cannot exclude a very recent exposure, because
+nothing detectable has had time to appear. It is printed on all of them.
+
+**Why it is on the prenatal panel at all.** It is offered to everyone in
+pregnancy, and the reason is simple and worth knowing: when HIV is known about,
+treatment in pregnancy brings the chance of passing it to the baby to under 1%.
+Undiagnosed, it is far higher. The test is on the list because the outcome is so
+changeable, not because anything was suspected.
+
+**This closes the infection screen.** Rubella, hepatitis B, hepatitis C,
+syphilis and HIV were the five, and all five are now back and clear.
+
 ### Chemistry — Lab 26596443
 
 | Test | Result | Reference |
@@ -531,6 +562,9 @@ ordinary words. If something you were told isn't here, it belongs here — add i
 | **HBsAg** | Hepatitis B surface antigen — the marker of actually having hepatitis B. |
 | **Anti-HBs** | The protective antibody against hepatitis B, usually from vaccination. |
 | **RPR** | The screening test for syphilis. |
+| **HIV Ag/Ab** | The fourth-generation HIV test. Looks for the virus's own protein (antigen) *and* your antibodies, so it picks things up earlier than antibody-only tests. |
+| **S/CO** | "Signal to cut-off." The sample's reading divided by the line for a positive. Under 1.0 is negative. Not a percentage. |
+| **CMIA** | Chemiluminescent microparticle immunoassay — the machine method. It describes how the lab measured it, not what was found. |
 | **NILM** | "Negative for intraepithelial lesion or malignancy" — a normal Pap. No abnormal cells. |
 | **CBC** | Complete blood count. Checks your red cells, white cells and platelets. |
 | **Rh positive / negative** | A blood group feature. If you're negative and the baby is positive, you may need an injection called anti-D. |
