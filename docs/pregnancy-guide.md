@@ -1504,6 +1504,50 @@ frightening cause of one-sided early pain away.
 
 *Sources: [Ectopic Pregnancy Trust — signs and symptoms](https://ectopic.org.uk/ectopic-pregnancy-symptoms); [Mayo Clinic — ectopic pregnancy](https://www.mayoclinic.org/diseases-conditions/ectopic-pregnancy/diagnosis-treatment/drc-20372093); FDA drug safety communication on NSAIDs in pregnancy. Verified 2026-09-20. Confidence: high.*
 
+### Discharge: what the ordinary kind looks like
+
+More discharge is one of the earliest pregnancy changes there is — often the
+first, sometimes before a missed period. Oestrogen rises, blood flow to the
+cervix and vaginal walls increases sharply, and the cervix starts building the
+mucus plug that will seal it for the next eight months. The result is a genuine
+increase, and it does not stop. It usually gets heavier as the pregnancy goes
+on.
+
+It has a name — **leukorrhea** — which is worth knowing only because seeing a
+medical word for it makes clear how expected it is.
+
+**The normal kind:** thin or milky, clear to white, and mild-smelling or with no
+smell at all. No itching, no burning, no soreness. The amount can be enough to
+want a panty liner. That is all normal, and it is doing a job: it is part of how
+the vagina keeps infection away from the pregnancy.
+
+**What is worth a call, and roughly what each one is:**
+
+| What you see | Likely | Why it matters |
+| --- | --- | --- |
+| Thick, white, cottage-cheese, **with itching or soreness** | Thrush (yeast) | Very common in pregnancy, harmless to the baby, easily treated |
+| Thin, grey or off-white, **fishy smell**, often worse after sex | Bacterial vaginosis | Worth treating in pregnancy rather than leaving |
+| Green, yellow, or frothy | An infection needing a swab | Wants identifying, not guessing at |
+| **Fresh red blood**, or soaking through | Needs assessing | See the bleeding entries below |
+| Any discharge **with fever or pelvic pain** | Call | Not for waiting on |
+
+**Brown or pink is not the same as fresh red.** Brown is old blood that has
+taken its time coming out. Where a subchorionic hemorrhage has been seen on a
+scan, brown or pinkish-brown spotting is the expected way that collection
+drains, and can carry on intermittently for weeks. Worth mentioning at the next
+appointment, not worth an emergency call on its own. **Fresh red blood — bright,
+new, especially with cramping — is the one to ring about.**
+
+**On treating thrush yourself:** the safe treatment in pregnancy is a **topical**
+one — clotrimazole (Canesten) pessaries or cream, which barely absorbs into the
+body and is first choice. **Do not take oral fluconazole (Diflucan) without
+asking**, which is the tempting one-tablet option: guidance cautions against
+oral antifungals in pregnancy, and the concern is greatest in the first
+trimester and at higher or repeated doses. One is a local treatment; the other
+goes everywhere.
+
+*Sources: [UKTIS — clotrimazole in pregnancy](https://uktis.org/monographs/use-of-clotrimazole-in-pregnancy/); [MotherToBaby — fluconazole](https://mothertobaby.org/fact-sheets/fluconazole-pregnancy/); [Cochrane — topical treatment for vaginal candidiasis in pregnancy](https://pubmed.ncbi.nlm.nih.gov/11687074/). Verified 2026-09-21. Confidence: high.*
+
 ### Call immediately, at any stage
 
 - Heavy vaginal bleeding, or bleeding with cramping
