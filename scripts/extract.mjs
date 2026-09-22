@@ -14,6 +14,7 @@ export const DOCS = {
   nico: readFileSync(new URL('../docs/nico-dad-guide.md', import.meta.url), 'utf8'),
   prayer: readFileSync(new URL('../docs/prayer-book.md', import.meta.url), 'utf8'),
   medical: readFileSync(new URL('../docs/medical-log.md', import.meta.url), 'utf8'),
+  buy: readFileSync(new URL('../docs/buy-list.md', import.meta.url), 'utf8'),
 };
 
 /**
@@ -251,3 +252,36 @@ export const DELIVERY = {
   normal: { low: 120000, high: 250000, philhealth: 29000 },
   caesarean: { low: 200000, high: 400000, philhealth: 58000 },
 };
+
+/**
+ * The buy list. Ten columns, one row per item, with two tags the page filters
+ * on: CJ's own priority, and whether the row came from her sheet at all.
+ */
+export function extractBuyList() {
+  const section = sections(DOCS.buy).get('Items');
+  if (!section) throw new Error('Buy list items section not found');
+
+  const items = [];
+  for (const line of section.split('\n')) {
+    const cells = line.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim());
+    if (cells.length !== 10) continue;
+    if (cells[0] === 'Item' || /^-+$/.test(cells[0])) continue;
+    const [item, cat, prio, kind, brand, cost, verdict, note, link, src] = cells;
+    items.push({
+      item: inline(item),
+      plain: `${item} ${brand} ${cat}`.toLowerCase(),
+      cat,
+      prio,
+      kind,
+      brand: inline(brand),
+      cost,
+      verdict,
+      note: inline(note),
+      link,
+      src,
+    });
+  }
+
+  if (items.length < 100) throw new Error(`Expected 100+ buy-list items, extracted ${items.length}`);
+  return items;
+}

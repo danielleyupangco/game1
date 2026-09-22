@@ -14,6 +14,7 @@ import {
   extractCaffeine,
   extractCalendar,
   extractBudget,
+  extractBuyList,
   DELIVERY,
   extractFoods,
   extractWeeklyPrayers,
@@ -103,8 +104,9 @@ const prose = {
 };
 
 const budget = extractBudget();
+const buy = extractBuyList();
 
-const data = JSON.stringify({ edd: EDD, weeks: weekData, foods, caffeine, calendar, vitals, budget, delivery: DELIVERY })
+const data = JSON.stringify({ edd: EDD, weeks: weekData, foods, caffeine, calendar, vitals, budget, delivery: DELIVERY, buy })
   .replace(/</g, '\\u003c');
 
 const LOGO = `<svg viewBox="0 0 48 48" aria-hidden="true" class="mark">
@@ -126,6 +128,7 @@ const TABS = [
   ['travel', 'Travel'],
   ['money', 'Money'],
   ['runup', 'Run-up'],
+  ['buy', 'Buy'],
   ['prayers', 'Prayers'],
   ['nico', 'Nico'],
   ['checkups', 'Check-ups'],
@@ -318,6 +321,30 @@ details.grief[open] summary{margin-bottom:.5rem}
 .actions-body li.task{margin:.45rem 0}
 .actions-body hr{display:none}
 .installtip{margin-top:1.5rem;padding:.75rem 1rem;border:1px dashed var(--line);border-radius:14px;font-size:.85rem;color:var(--fg-mute);text-align:center}
+.buys{display:grid;gap:.6rem}
+.buy{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:.75rem .9rem;box-shadow:var(--shadow);display:grid;grid-template-columns:auto 1fr;gap:.2rem .75rem;align-items:start}
+.buy.done{opacity:.5}
+.buy.done .bn{text-decoration:line-through}
+.buy input[type=checkbox]{grid-row:1/3;width:22px;height:22px;margin-top:.15rem;accent-color:var(--blush-deep);cursor:pointer;flex:none}
+.buy .bh{display:flex;flex-wrap:wrap;gap:.4rem;align-items:baseline}
+.buy .bn{font-weight:700;font-size:.98rem}
+.buy .bbrand{font-size:.8rem;color:var(--fg-mute)}
+.buy .bmeta{grid-column:2;display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;margin-top:.35rem}
+.tag{font-size:.66rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.16rem .45rem;border-radius:999px;border:1px solid transparent;white-space:nowrap}
+.tag.p-High{background:var(--blush);color:var(--blush-deep)}
+.tag.p-Medium{background:var(--butter);color:var(--butter-deep)}
+.tag.p-Low{background:var(--surface-2);color:var(--fg-mute);border-color:var(--line)}
+.tag.cat{background:var(--surface-2);color:var(--fg-mute);border-color:var(--line)}
+.tag.v-must{background:var(--sage);color:var(--sage-deep)}
+.tag.v-skip{background:var(--avoid-bg);color:var(--avoid-fg)}
+.tag.src-Added{background:var(--powder);color:var(--powder-deep)}
+.tag.cost{background:transparent;border-color:var(--line);color:var(--fg-mute);font-variant-numeric:tabular-nums}
+.buy .bnote{grid-column:2;font-size:.82rem;color:var(--fg-mute);margin-top:.4rem;line-height:1.5}
+.buy .blinks{grid-column:2;display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}
+.buy .blinks a{font-size:.78rem;font-weight:700;color:var(--powder-deep);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px}
+.buy .blinks a.orig{color:var(--fg-mute)}
+.buysum{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:.8rem .9rem;margin-bottom:.9rem;font-size:.85rem;color:var(--fg-mute);box-shadow:var(--shadow)}
+.buysum b{color:var(--fg)}
 .tot{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1rem 1.15rem;margin-bottom:1.5rem;box-shadow:var(--shadow)}
 .tot h3{font-size:1.2rem;margin-bottom:.15rem}
 .tot .sub{font-size:.8rem;color:var(--fg-mute);margin-bottom:.9rem}
@@ -514,6 +541,23 @@ ${panel('money', 'Money', `
   <div id="totals"></div>
   <div class="prose">${prose.money}${prose.shops}</div>`,
   `<p class="lede">Bands, not quotes &mdash; but the totals below add them up, so the size of the thing is visible without doing the arithmetic.</p>`)}
+
+${panel('buy', 'Buy', `<div id="buylist" class="buys"></div>`,
+  `<p class="lede">109 items from CJ&rsquo;s registry, plus 8 of our own. <b>Priority is what she
+   thought beforehand; the verdict is what she learned after</b> &mdash; so a few things are tagged
+   <b>high</b> and <b>she&rsquo;d skip</b> at once, which is the most useful thing on the page.
+   Tap to tick off; ticks are saved on this device only.</p>
+   <div class="tools">
+     <input type="search" id="buyq" placeholder="Search bottles, swaddle, binder&hellip;" aria-label="Search the buy list">
+     <button class="filt" data-p="High" aria-pressed="false" type="button">High</button>
+     <button class="filt" data-p="Medium" aria-pressed="false" type="button">Medium</button>
+     <button class="filt" data-p="Low" aria-pressed="false" type="button">Low</button>
+     <button class="filt" data-v="must" aria-pressed="false" type="button">Her MUSTs</button>
+     <button class="filt" data-v="skip" aria-pressed="false" type="button">She&rsquo;d skip</button>
+     <button class="filt" data-s="Added" aria-pressed="false" type="button">Not CJ&rsquo;s</button>
+     <button class="filt" data-todo="1" aria-pressed="false" type="button">Not yet bought</button>
+     <span class="count" id="buycount"></span>
+   </div>`)}
 
 ${panel('runup', 'Run-up', `
   <div id="yaya"></div>
@@ -741,7 +785,7 @@ function renderFoods() {
   $('#foodlist').innerHTML = html;
 }
 $('#foodq').addEventListener('input', renderFoods);
-$$('.filt').forEach(b => b.addEventListener('click', () => {
+$$('#view-food .filt').forEach(b => b.addEventListener('click', () => {
   const s = b.dataset.s;
   if (active.has(s)) active.delete(s); else active.add(s);
   b.setAttribute('aria-pressed', String(active.has(s)));
@@ -759,6 +803,137 @@ $('#nutrients').insertAdjacentHTML('beforebegin',
   '<h3 style="font-family:var(--display);font-size:1.25rem;margin:2.5rem 0 .3rem">Caffeine</h3>' +
   '<p class="lede">The daily limit is 200mg. Each bar is measured against it &mdash; two cups of barako put her over before lunch.</p>' +
   '<div class="tw" style="padding:.3rem .6rem">' + caf + '</div>');
+
+/* ---- buy list ------------------------------------------------------------ */
+/*
+ * CJ's registry, made workable: her priority and her after-the-fact verdict are
+ * both carried as tags, and rows we added ourselves are tagged as ours rather
+ * than folded in silently.
+ *
+ * Every row gets a freshly built store search. Her own 2022 links are kept
+ * beside it where they exist, but a four-year-old Shopee URL is as likely to be
+ * dead as alive, so the search is the one that leads.
+ */
+const BUY_KEY = 'cub-buy-v1';
+
+const loadBought = () => {
+  try {
+    const raw = localStorage.getItem(BUY_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return new Set(Array.isArray(parsed) ? parsed : []);
+  } catch (e) {
+    return new Set();
+  }
+};
+let bought = loadBought();
+const saveBought = () => {
+  try { localStorage.setItem(BUY_KEY, JSON.stringify([...bought])); } catch (e) {}
+};
+
+const buyFilters = { q: '', prio: new Set(), verdict: new Set(), src: new Set(), todo: false };
+
+/*
+ * The brand column is CJ's own shorthand, and half of it is prose rather than a
+ * brand — "Newborn Set in Shopee includes all", "1 for wet items, 1 for dry".
+ * Useful to read, useless in a search box, so the keyword takes the first named
+ * brand only and falls back to the item name when there isn't one.
+ */
+const NOT_A_BRAND = /^(lazada|shopee|amazon|ikea|foldable|newborn set|1 for|recommended)/i;
+
+function searchKeyword(b) {
+  let brand = (b.brand || '')
+    .split(/\\s*[,;]\\s*|\\s+or\\s+|\\s+and\\s+/)[0]
+    .replace(/^\\d+\\s*\\.\\s*/, '')
+    .replace(/\\([^)]*\\)/g, '')
+    .replace(/[@#].*$/, '')
+    .trim();
+  if (!brand || brand.split(/\\s+/).length > 3 || NOT_A_BRAND.test(brand)) brand = '';
+  // A brand that already contains the item name does not want it twice.
+  const item = brand && brand.toLowerCase().includes(b.item.toLowerCase().split(/[\\s(/]/)[0])
+    ? '' : b.item;
+  return (brand + ' ' + item).trim().replace(/\\s+/g, ' ');
+}
+
+const searchUrl = (b) => 'https://shopee.ph/search?keyword=' + encodeURIComponent(searchKeyword(b));
+
+function renderBuy() {
+  const q = buyFilters.q.trim().toLowerCase();
+  const hits = DATA.buy.filter((b) =>
+    (!q || b.plain.includes(q)) &&
+    (!buyFilters.prio.size || buyFilters.prio.has(b.prio)) &&
+    (!buyFilters.verdict.size || buyFilters.verdict.has(b.verdict)) &&
+    (!buyFilters.src.size || buyFilters.src.has(b.src)) &&
+    (!buyFilters.todo || !bought.has(b.item)));
+
+  const high = DATA.buy.filter((b) => b.prio === 'High');
+  const highDone = high.filter((b) => bought.has(b.item)).length;
+
+  $('#buycount').textContent = hits.length + ' of ' + DATA.buy.length;
+
+  // Priority is what she thought before; verdict is what she learned after.
+  // Within a priority band the things she swore by lead and the regrets trail,
+  // so the top of the list is the part worth acting on.
+  const rank = { High: 0, Medium: 1, Low: 2 };
+  const vrank = { must: 0, note: 1, '': 1, skip: 2 };
+  const sorted = [...hits].sort((a, b) =>
+    (rank[a.prio] - rank[b.prio]) ||
+    (vrank[a.verdict] - vrank[b.verdict]) ||
+    a.cat.localeCompare(b.cat) || a.item.localeCompare(b.item));
+
+  const summary =
+    '<div class="buysum"><b>' + highDone + ' of ' + high.length + '</b> high-priority items ticked off' +
+    ' · <b>' + bought.size + '</b> of ' + DATA.buy.length + ' in total.' +
+    ' Her 7 <b>MUST</b>s and 11 <b>skip</b>s are the two filters worth starting with.</div>';
+
+  $('#buylist').innerHTML = summary + (sorted.length
+    ? sorted.map((b) => {
+        const done = bought.has(b.item);
+        const id = 'buy-' + b.item.replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+        return '<label class="buy' + (done ? ' done' : '') + '" for="' + id + '">' +
+          '<input type="checkbox" id="' + id + '" data-item="' + b.item.replace(/"/g, '&quot;') + '"' +
+            (done ? ' checked' : '') + '>' +
+          '<span class="bh"><span class="bn">' + b.item + '</span>' +
+            (b.brand ? '<span class="bbrand">' + b.brand + '</span>' : '') + '</span>' +
+          '<span class="bmeta">' +
+            '<span class="tag p-' + b.prio + '">' + b.prio + '</span>' +
+            '<span class="tag cat">' + b.cat + '</span>' +
+            (b.kind === 'Consumable' ? '<span class="tag cat">Repeat buy</span>' : '') +
+            (b.verdict === 'must' ? '<span class="tag v-must">Her MUST</span>' : '') +
+            (b.verdict === 'skip' ? '<span class="tag v-skip">She’d skip</span>' : '') +
+            (b.src === 'Added' ? '<span class="tag src-Added">Not CJ’s</span>' : '') +
+            (b.cost ? '<span class="tag cost">₱' + b.cost + ' in 2022</span>' : '') +
+          '</span>' +
+          (b.note ? '<span class="bnote">' + b.note + '</span>' : '') +
+          '<span class="blinks">' +
+            '<a href="' + searchUrl(b) + '" target="_blank" rel="noopener">Search Shopee</a>' +
+            (b.link ? '<a class="orig" href="' + b.link + '" target="_blank" rel="noopener">CJ’s 2022 link</a>' : '') +
+          '</span>' +
+        '</label>';
+      }).join('')
+    : '<p class="slog-empty">Nothing matches those filters.</p>');
+
+  $$('#buylist input[type=checkbox]').forEach((cb) => cb.addEventListener('change', () => {
+    if (cb.checked) bought.add(cb.dataset.item); else bought.delete(cb.dataset.item);
+    saveBought();
+    renderBuy();
+  }));
+}
+
+$('#buyq').addEventListener('input', (e) => { buyFilters.q = e.target.value; renderBuy(); });
+$$('#view-buy .filt').forEach((btn) => btn.addEventListener('click', () => {
+  const on = btn.getAttribute('aria-pressed') !== 'true';
+  btn.setAttribute('aria-pressed', String(on));
+  if (btn.dataset.todo) buyFilters.todo = on;
+  else {
+    const [key, val] = btn.dataset.p ? ['prio', btn.dataset.p]
+      : btn.dataset.v ? ['verdict', btn.dataset.v]
+      : ['src', btn.dataset.s];
+    if (on) buyFilters[key].add(val); else buyFilters[key].delete(val);
+  }
+  renderBuy();
+}));
+
+renderBuy();
 
 /* ---- budget totals ------------------------------------------------------ */
 /*
