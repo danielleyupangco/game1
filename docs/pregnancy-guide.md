@@ -1338,6 +1338,91 @@ frequently and this list will go stale.
 | Shopee — official brand stores | Online | Same; check for the "Mall" badge |
 | Landers / S&R | Various | Bulk nappies and wipes — the cheapest per-unit route |
 
+### What a friend actually used
+
+A couple in BGC kept a 101-line registry through their first baby and went back
+afterwards to mark what each thing was worth. That hindsight column is the rare
+part — anyone can produce a list of what to buy, almost nobody records what they
+regretted. Their total came to **₱161,229.75**.
+
+**Two caveats before reading it.** The sheet is from **2022**, so treat every
+peso figure as a shape rather than a price — four years of inflation sit between
+it and now. And it is one family's experience of one baby: a swaddle their
+daughter hated is a swaddle another baby sleeps in.
+
+**What they marked MUST, in their own words**
+
+| Item | Their note |
+| --- | --- |
+| Bottle warmer (Philips) | "MUST; useful and conv" |
+| Nipple cream (Lansinoh) | "MUST, helps a lot" — with air-drying and expressed milk |
+| Post-partum binder (Wink) | "MUST" |
+| Heating pad | "MUST, Shopee has versatile ones" |
+| Maternity pads / post-partum pants | "MUST for at least first 3–5 days, then hoard napkins" |
+| Stroller (Babyzen Yoyo2) | "MUST, we use for sun bathing outside too" — and their single biggest line at ₱45,500 |
+| Ikea Råskog trolley | "MUST" — ₱2,490, the cheapest thing on the MUST list |
+
+**What they bought and did not use**
+
+| Item | Their note | What it cost |
+| --- | --- | --- |
+| **3-in-1 co-sleeper** | "Not so useful to us, ends up sleeping on the bed" | **₱18,999.75** |
+| Swaddle (Halo) | "Barely used, she does not like it" | ₱2,100 |
+| Socks, mittens, beanie | "Pass; always getting removed" | — |
+| Petroleum jelly | "Pass; have not used" | ₱100 |
+| Manual pump (Haakaa) | "Not so useful for me" | ₱1,250 |
+| Perineal bottle | "Pass; bidet is fine" | ₱999 |
+| Nipple shield | "Pass" | — |
+| Crib | "Won't be able to maximise, better if play yard" | — |
+
+The co-sleeper is the line to look at. **Nineteen thousand pesos on the single
+thing most likely to go unused**, because where a newborn actually sleeps is not
+knowable in advance. It is the strongest argument in the sheet for borrowing,
+buying second-hand, or simply waiting on the big sleep purchase.
+
+**What the hospital gives you anyway** — they bought these and needn't have:
+baby thermometer, nasal aspirator, and baby bath soap for the stay.
+
+**Smaller things they learned**
+
+- **Onesies: buy the ones with feet**, and reckon on three to four a day for the
+  first three months.
+- **Second-hand worked.** Their swaddles came from Facebook, their nursing
+  pillow second-hand. Newborn things are outgrown before they wear out.
+- **Steam beats UV for sterilising.** Their own note: the evidence for UV is
+  thinner, and it cannot be used on silicone. They bought the UV one anyway.
+- **A nail grinder beats clippers** — about ₱200 on Shopee.
+- **Dark curtains and a dimmable night lamp** matter more than they sound, for
+  night feeds.
+- **On the breast pump: see a lactation consultant for flange sizing** before
+  buying into a system. Wrong size is the common reason pumping hurts and yields
+  little.
+- **Keep formula as a backup, unopened.** Some brands have long lead times
+  locally, and the moment you need it is not the moment to discover that.
+
+### Consumables: buy on unit price, not on price
+
+The same sheet tracked nappies and wipes by **effective cost per piece**, which
+is the only comparison that survives pack sizes ranging from 22 to 240. Their
+2022 spread ran from about **₱6 to ₱13.50 per nappy for the same sizes** — a
+difference of more than double, on identical products, decided entirely by pack
+size and sale timing.
+
+The transferable method, not the prices:
+
+- **Divide by the piece.** Write the ₱/nappy and ₱/wipe in a note; compare that
+  and nothing else.
+- **Buy the jumbo or super-jumbo box.** The cheapest rates in their sheet were
+  all 80- to 240-piece boxes.
+- **Wait for the double-date sales** — 10.10, 11.11, 12.12. The same nappy moved
+  several pesos a piece across them.
+- **Do not bulk-buy newborn size.** Babies grow out of it in weeks, and an
+  unopened box of the wrong size is money gone. Bulk from small upwards.
+- **Buy two brands first, in small packs.** Fit varies by baby, and a 240-box of
+  the one that leaks is an expensive way to find out.
+
+*Source: a friend's 2022 registry and price sheet, shared directly. Confidence: high for what they did and thought, low for every peso figure — 2022 prices.*
+
 **Malls for filtering:** Power Plant (Rockwell), Greenbelt / Glorietta (Makati
 CBD), SM Aura (BGC), Shangri-La Plaza (Mandaluyong), SM Makati.
 
@@ -1635,6 +1720,52 @@ caesarean is timed against them.
 midpoint of a distribution, not an appointment. Most first babies arrive after
 it.
 
+### The hospital bag, actually packed
+
+The list below is a real one, packed by a couple in BGC for a **24-hour stay
+after a vaginal birth**. It is worth having now only so that nothing on it is a
+surprise later — the packing itself belongs to about **36 weeks**, and a
+caesarean means two to four days, so roughly double the clothes and pads.
+
+**For the baby**
+
+- Tie-side shirts ×5 — tie-side, not over-the-head
+- Nappies ×5, **in two brands**, to see which fits
+- Swaddle or sleepsack ×2, receiving blanket, lampin ×4
+- Bonnet, rubber mat, cotton balls
+- Going-home outfit
+- Car seat or travel bassinet — **left in the car**, not carried in
+
+**The labour bag** — the one that is nearly all forgotten items
+
+- **Extension cord**, power bank, charger. Hospital sockets are never near the bed
+- Headphones and a small speaker, both charged
+- **Pen and paper for timing contractions**
+- Massage ball, lotion for massage
+- Lip balm, mints, hair ties ×3
+- Water bottle **with a straw** — you will be lying down
+- Something dull to read: a Kindle, a book
+- **Food for the birth partner.** Nobody packs this and everybody needs it
+- Snacks for you, if allowed: bananas, freeze-dried fruit, gelatin
+- **The birth plan, printed.** Doctor's orders, PhilHealth and insurance papers
+
+**For you**
+
+- Nightgown or shirts **with a front opening** — every top has to open for feeding
+- Bathrobe, PJs, cycling shorts, soft slippers
+- Nursing bras ×2, and cheap or disposable underwear ×2
+- **Maternity pads — more than you think.** Two packs is a starting point
+- Post-partum binder
+- Portable bidet
+- Toiletries **decanted into small bottles**
+- Going-home outfit — still maternity-sized
+- Nipple cream, and the silicone pump if you have one (boil it 2–3 minutes first)
+
+**What to leave at home:** a thermometer, a nasal aspirator and baby bath soap.
+The hospital provides all three.
+
+*Source: a friend's July 2022 hospital bag checklist, shared directly. Confidence: high as a record of what they packed.*
+
 ### The star sign, and why this one is close
 
 Sun-sign boundaries move by up to a day each year, so they are computed for 2027
@@ -1896,3 +2027,146 @@ What a tracker *is* good for is the trend across weeks, and noticing the thing
 you would otherwise have missed — a slide that starts when the caffeine crept
 back up, or restless legs showing as broken sleep before you consciously
 noticed them.
+
+---
+
+## 16. The run-up — help, the care team, and what happens when
+
+Most of what makes the last months calm is arranged in the middle ones. This
+section is a real plan, not a generic one: a couple in BGC worked through it for
+their first baby and kept the sheet, including who owned each task.
+
+### The order they did it in
+
+Nothing here is due at five weeks. It is here so the timings are known before
+they arrive.
+
+**Second trimester — roughly weeks 14 to 27**
+
+- [ ] Sort housing. Whether you are staying put or moving, decide early — they
+      renegotiated with their landlord and found the next place in this window,
+      and a move gets materially harder later.
+- [ ] **Start looking for help.** Finding someone good takes months, not weeks,
+      and the best route is usually a relative or referral of someone already
+      trusted. Theirs came through family in Bohol.
+- [ ] **Book the birthing class.** Theirs ran five Sunday sessions and was
+      recommended for around week 26, so it needs booking well before that.
+- [ ] Antenatal yoga or a movement class, if you want one.
+- [ ] **Hand the baby shower to someone else.** They assigned it, by name, to a
+      person who was not the pregnant one.
+
+**Third trimester — roughly weeks 28 to 40**
+
+- [ ] Help starts, and is trained, **before** the baby arrives — not after.
+- [ ] Buy the shopping list, **high-priority items only**. Their own hindsight
+      says the rest can wait until you know what this baby is like.
+- [ ] **Finalise the birth plan.** See the Birth tab.
+- [ ] Nursery: the practical part is blackout curtains and a dim lamp, not the
+      decorating.
+- [ ] Pack the hospital bag, around 36 weeks.
+- [ ] Baby shower.
+
+**Fourth trimester — the first three months after**
+
+They named it, which is the useful part. The weeks after the birth are a stage
+with its own needs, not an aftermath, and they planned for it in advance rather
+than improvising.
+
+### Choosing a paediatrician before you need one
+
+**This is chosen before the birth, not after.** The baby needs a first check
+within days of coming home, and a name and number you already trust is worth a
+great deal at 2am in week one.
+
+What their notes actually valued, which is worth copying as a question list:
+
+- **Do they reply to messages?** The single most-repeated praise in their sheet
+  was about responsiveness — one paediatrician was described as answering "even
+  in the wee hours."
+- **House calls, or drive-through visits?**
+- **Is the secretary good at scheduling, and do they remind you about vaccines?**
+- **How is the baby book kept** — do they record the actual brand of each vaccine
+  given?
+- **Are they calm with an anxious parent?** Their words, about one doctor: a
+  "steady calmness that always appeases even the most panicky mom."
+- **Are they light-handed giving injections?**
+- **Which insurance do they take?** They tracked Intellicare coverage per doctor.
+
+Paediatricians they had shortlisted, at **Makati Med** and **St. Luke's BGC** —
+their opinions, not a recommendation, and contact details are in their own sheet
+rather than reproduced here:
+
+| Doctor | Where | What they said |
+| --- | --- | --- |
+| Dr. Jose Enrique Clemente | Makati Med, Rm 349; also St. Luke's BGC | Clinic and drive-through visits, reachable, very organised baby books, patient, calm with anxious parents |
+| Dr. Romeo "Ome" Nugiud | St. Luke's BGC, Rm 507 | Does house calls, replies at any hour, good scheduling, light-handed with vaccines |
+| Dr. Cricket Palanca-Cheng | St. Luke's BGC | By appointment only |
+
+They also kept two **lactation consultants** on the list, one at Makati Med.
+Worth having a name before the birth rather than searching for one on day three,
+when latch problems actually show up.
+
+### What help really costs
+
+A yaya's salary is not what a yaya costs. Their fully-loaded budget, built in
+2022 on a **₱10,000 base**, came to about **₱12,020 a month** — roughly **20%
+on top** — because of everything stacked around it:
+
+| On top of the base salary | Their monthly figure |
+| --- | --- |
+| 13th month pay (one month, spread) | ₱833 |
+| SSS — employer and employee share | ₱970 |
+| PhilHealth — both shares | ₱400 |
+| Pag-IBIG — both shares | ₱200 |
+| Toiletries and supplies | ₱250 |
+| Medical allowance | ₱200 |
+| Travel allowance | ₱250 |
+| Five paid leave days, spread | ₱174 |
+
+Plus **one-off costs at the start**: health screening (~₱1,000), travel to
+Manila if they come from the provinces (~₱2,500), and a starter pack — shampoo,
+soap, toothbrush, toothpaste, tissue, bath towel, slippers, blanket, two
+pillows, and a basic phone.
+
+**The current legal floor is higher than their 2022 base.** The NCR minimum for
+a kasambahay is reported as **₱7,800 a month**, effective 7 February 2026 under
+Wage Order NCR-DW-06. Their ₱10,000 was above it then and is above it now, which
+is roughly the level a yaya for a newborn in BGC or Makati commands.
+
+**What the law requires** — the Batas Kasambahay, RA 10361:
+
+- **Registration with SSS, PhilHealth and Pag-IBIG** is the employer's job, not
+  the worker's.
+- If the wage is **below ₱5,000 a month, the employer pays the whole
+  contribution.** At ₱5,000 and above the statute provides for the kasambahay to
+  pay their share — though sources disagree on how that is applied in practice,
+  and their sheet simply budgeted **both** shares as an employer cost. That is
+  the safer way to plan: budget for both, and be pleasantly wrong.
+- **A day off every week**, and daily rest.
+- **Five days of paid leave after a year** of service.
+- **13th month pay.**
+- A written contract, and the papers to go with it: NBI clearance, barangay
+  clearance, a government ID, and ID photographs.
+
+**Get the registrations done in the first week.** Their plan had SSS, PhilHealth
+and Pag-IBIG all registered within three days of arrival, alongside the health
+check and NBI clearance — done as a block, before the routine sets in.
+
+> **These are 2022 figures for everything except the minimum wage, and the
+> statutory rates change.** Contribution tables in particular are revised
+> regularly. Confirm current SSS, PhilHealth and Pag-IBIG household-employer
+> rates before budgeting, and get the contract right — this is an employment
+> relationship with legal obligations, not an informal arrangement.
+
+### Classes, for much later
+
+Nothing here starts before the baby is a few months old, but they are listed
+because the good ones book up:
+
+| Type | Starts from | Where they looked |
+| --- | --- | --- |
+| Music | 0 months | Kindermusik |
+| Baby gym / parent-and-child | 4 months | The Little Gym |
+| Pre-swimming | 6 months | Bert Lozada Swim School, Ace Water Spa |
+
+*Sources: a friend's 2022 planning sheet, shared directly (high confidence as a record of what they did, low for peso figures). Kasambahay wage and statutory duties from secondary reporting — [NCR kasambahay wage order](https://sweldoph.com/news/ncr-kasambahay-7800-2026), [RA 10361 employer guide](https://sweldoph.com/guides/kasambahay-law) — because the egress policy blocks Philippine government sites. Confidence: medium. Verified 2026-09-22.*

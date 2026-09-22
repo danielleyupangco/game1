@@ -97,6 +97,7 @@ const prose = {
   birthday: renderSection('pregnancy', '13. Birth day — dates and signs'),
   birthplan: renderSection('pregnancy', '14. Birth plan — caesarean or vaginal'),
   sleep: renderSection('pregnancy', '15. Sleep'),
+  runup: renderSection('pregnancy', '16. The run-up — help, the care team, and what happens when'),
 };
 
 const data = JSON.stringify({ edd: EDD, weeks: weekData, foods, caffeine, calendar, vitals })
@@ -485,7 +486,9 @@ ${panel('sleep', 'Sleep', `
   `<p class="lede">What helps depends on the stage, and right now the most useful thing is what you <em>don&rsquo;t</em> have to worry about yet.</p>`)}
 
 ${panel('travel', 'Travel', `<div class="prose">${prose.travel}</div>`)}
-${panel('money', 'Money', `<div class="prose">${prose.money}${prose.shops}</div>`)}
+${panel('money', 'Money', `<div class="prose">${prose.money}${prose.shops}
+  <h3 style="font-family:var(--display);font-size:1.4rem;margin:3rem 0 .3rem">The run-up</h3>
+  ${prose.runup}</div>`)}
 
 ${panel('prayers', 'Prayers', `
   <div class="sub" role="tablist">
