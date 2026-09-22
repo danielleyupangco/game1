@@ -2108,9 +2108,13 @@ when latch problems actually show up.
 
 ### What help really costs
 
-A yaya's salary is not what a yaya costs. Their fully-loaded budget, built in
-2022 on a **₱10,000 base**, came to about **₱12,020 a month** — roughly **20%
-on top** — because of everything stacked around it:
+A yaya's salary is not what a yaya costs. **The calculator at the top of this
+screen does the arithmetic** — change the salary and it shows the real monthly
+and annual figure. Its defaults come from this sheet.
+
+Their fully-loaded budget, built in 2022 on a **₱10,000 base**, came to about
+**₱12,020 a month in cash** and **₱159,323 over the year** — **1.33× the
+salary** — because of everything stacked around it:
 
 | On top of the base salary | Their monthly figure |
 | --- | --- |

@@ -13,6 +13,8 @@ import {
   extractVitals,
   extractCaffeine,
   extractCalendar,
+  extractBudget,
+  DELIVERY,
   extractFoods,
   extractWeeklyPrayers,
   extractWeeks,
@@ -100,7 +102,9 @@ const prose = {
   runup: renderSection('pregnancy', '16. The run-up — help, the care team, and what happens when'),
 };
 
-const data = JSON.stringify({ edd: EDD, weeks: weekData, foods, caffeine, calendar, vitals })
+const budget = extractBudget();
+
+const data = JSON.stringify({ edd: EDD, weeks: weekData, foods, caffeine, calendar, vitals, budget, delivery: DELIVERY })
   .replace(/</g, '\\u003c');
 
 const LOGO = `<svg viewBox="0 0 48 48" aria-hidden="true" class="mark">
@@ -121,6 +125,7 @@ const TABS = [
   ['sleep', 'Sleep'],
   ['travel', 'Travel'],
   ['money', 'Money'],
+  ['runup', 'Run-up'],
   ['prayers', 'Prayers'],
   ['nico', 'Nico'],
   ['checkups', 'Check-ups'],
@@ -313,6 +318,25 @@ details.grief[open] summary{margin-bottom:.5rem}
 .actions-body li.task{margin:.45rem 0}
 .actions-body hr{display:none}
 .installtip{margin-top:1.5rem;padding:.75rem 1rem;border:1px dashed var(--line);border-radius:14px;font-size:.85rem;color:var(--fg-mute);text-align:center}
+.tot{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1rem 1.15rem;margin-bottom:1.5rem;box-shadow:var(--shadow)}
+.tot h3{font-size:1.2rem;margin-bottom:.15rem}
+.tot .sub{font-size:.8rem;color:var(--fg-mute);margin-bottom:.9rem}
+.totrow{display:grid;grid-template-columns:1fr auto;gap:.15rem .7rem;align-items:baseline;padding:.5rem 0;border-bottom:1px solid var(--line)}
+.totrow:last-child{border-bottom:0}
+.totrow.grand{border-top:2px solid var(--blush-deep);border-bottom:0;margin-top:.3rem;padding-top:.7rem}
+.totrow .lbl{font-weight:700;font-size:.92rem}
+.totrow.grand .lbl{font-size:1rem}
+.totrow .amt{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+.totrow.grand .amt{font-size:1.1rem;color:var(--blush-deep)}
+.totrow .note{grid-column:1/-1;font-size:.76rem;color:var(--fg-mute)}
+.totrow.opt .lbl,.totrow.opt .amt{font-weight:400;color:var(--fg-mute)}
+.tot .seg{display:flex;gap:.4rem;margin-bottom:.9rem;flex-wrap:wrap}
+.tot .seg button{min-height:40px;padding:0 .85rem;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font-family:var(--body);font-size:.82rem;font-weight:700;cursor:pointer}
+.tot .seg button[aria-pressed="true"]{background:var(--blush);border-color:var(--blush-deep);color:var(--blush-deep)}
+.tot .cav{font-size:.76rem;color:var(--fg-mute);border-top:1px solid var(--line);padding-top:.7rem;margin:1rem 0 0}
+.yform{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;margin-bottom:1rem}
+.yform label{display:flex;flex-direction:column;gap:.2rem;font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--fg-mute)}
+.yform input{min-height:44px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:0 .7rem;font-family:var(--body);font-size:1rem}
 .slog{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1rem 1.15rem;margin-bottom:1.5rem;box-shadow:var(--shadow)}
 .slog-h{display:flex;flex-wrap:wrap;gap:.5rem;align-items:baseline;margin-bottom:.7rem}
 .slog-h h3{font-size:1.2rem}
@@ -486,9 +510,15 @@ ${panel('sleep', 'Sleep', `
   `<p class="lede">What helps depends on the stage, and right now the most useful thing is what you <em>don&rsquo;t</em> have to worry about yet.</p>`)}
 
 ${panel('travel', 'Travel', `<div class="prose">${prose.travel}</div>`)}
-${panel('money', 'Money', `<div class="prose">${prose.money}${prose.shops}
-  <h3 style="font-family:var(--display);font-size:1.4rem;margin:3rem 0 .3rem">The run-up</h3>
-  ${prose.runup}</div>`)}
+${panel('money', 'Money', `
+  <div id="totals"></div>
+  <div class="prose">${prose.money}${prose.shops}</div>`,
+  `<p class="lede">Bands, not quotes &mdash; but the totals below add them up, so the size of the thing is visible without doing the arithmetic.</p>`)}
+
+${panel('runup', 'Run-up', `
+  <div id="yaya"></div>
+  <div class="prose">${prose.runup}</div>`,
+  `<p class="lede">None of this is due yet. It is here so the order is known before the deadlines arrive.</p>`)}
 
 ${panel('prayers', 'Prayers', `
   <div class="sub" role="tablist">
@@ -729,6 +759,179 @@ $('#nutrients').insertAdjacentHTML('beforebegin',
   '<h3 style="font-family:var(--display);font-size:1.25rem;margin:2.5rem 0 .3rem">Caffeine</h3>' +
   '<p class="lede">The daily limit is 200mg. Each bar is measured against it &mdash; two cups of barako put her over before lunch.</p>' +
   '<div class="tw" style="padding:.3rem .6rem">' + caf + '</div>');
+
+/* ---- budget totals ------------------------------------------------------ */
+/*
+ * Every figure here is summed from DATA.budget at run time. The bands in the
+ * document have been edited several times; a total typed alongside them would
+ * have gone quietly wrong on the first edit.
+ *
+ * Committed and optional are kept apart because they answer different
+ * questions: what this costs if nothing is chosen, and what the choices add.
+ */
+const peso = (n) => '₱' + Math.round(n).toLocaleString('en-PH');
+const band = (lo, hi) => peso(lo) + ' – ' + peso(hi);
+
+const sumBand = (rows) => rows.reduce((t, r) => [t[0] + r.low, t[1] + r.high], [0, 0]);
+
+const PHASE_NAME = {
+  Pregnancy: 'Pregnancy',
+  Y0: 'First year',
+  Y1: 'Year 1–2',
+  Y2: 'Year 2–3',
+  Y3: 'Year 3–4',
+  Y4: 'Year 4–5',
+  Y5: 'Year 5–6',
+};
+
+function totalsRow(label, lo, hi, cls, note) {
+  return '<div class="totrow' + (cls ? ' ' + cls : '') + '">' +
+    '<span class="lbl">' + label + '</span>' +
+    '<span class="amt">' + band(lo, hi) + '</span>' +
+    (note ? '<span class="note">' + note + '</span>' : '') +
+  '</div>';
+}
+
+(() => {
+  const core = DATA.budget.filter((r) => !r.optional);
+  const opt = DATA.budget.filter((r) => r.optional);
+
+  /* --- what you actually pay on the day --- */
+  const d = DATA.delivery;
+  const oop = (k) => [d[k].low - d[k].philhealth, d[k].high - d[k].philhealth];
+  const [nLo, nHi] = oop('normal');
+  const [cLo, cHi] = oop('caesarean');
+
+  /* --- pregnancy, to the birth --- */
+  const pCore = sumBand(core.filter((r) => r.phase === 'Pregnancy'));
+  const pOpt = sumBand(opt.filter((r) => r.phase === 'Pregnancy'));
+
+  /* --- first year, and the whole of nought to five --- */
+  const y0Core = sumBand(core.filter((r) => r.phase === 'Y0'));
+  const y0Opt = sumBand(opt.filter((r) => r.phase === 'Y0'));
+  const allCore = sumBand(core);
+  const allOpt = sumBand(opt);
+
+  /* --- the two lines that dominate everything --- */
+  const childcare = sumBand(DATA.budget.filter((r) => /yaya|night nurse/i.test(r.category)));
+  const school = sumBand(DATA.budget.filter((r) => /preschool|kindergarten|school/i.test(r.category)));
+  const gear = sumBand(DATA.budget.filter((r) => /nursery and gear/i.test(r.category)));
+
+  $('#totals').innerHTML =
+    '<section class="tot">' +
+      '<h3>What it comes to</h3>' +
+      '<div class="sub">Summed from the bands further down. Low to high, in pesos.</div>' +
+
+      totalsRow('Pregnancy — committed', pCore[0], pCore[1], '',
+        'Consults, tests, scans, vaccines, vitamins, maternity clothes.') +
+      totalsRow('Pregnancy — if you choose them', pOpt[0], pOpt[1], 'opt',
+        'NIPT, and a childbirth class or doula.') +
+      totalsRow('Pregnancy, all in', pCore[0] + pOpt[0], pCore[1] + pOpt[1], 'grand') +
+
+      '<div style="height:1.4rem"></div>' +
+
+      totalsRow('Birth — vaginal, after PhilHealth', nLo, nHi, '',
+        'Makati Med bill of ' + band(d.normal.low, d.normal.high) + ', less the ' +
+        peso(d.normal.philhealth) + ' PhilHealth benefit. Before any HMO.') +
+      totalsRow('Birth — caesarean, after PhilHealth', cLo, cHi, '',
+        'Bill of ' + band(d.caesarean.low, d.caesarean.high) + ', less ' +
+        peso(d.caesarean.philhealth) + ' — the low end of the ' + peso(58000) + '–' +
+        peso(62000) + ' band, so this is the cautious figure. A section costs you roughly ' +
+        peso(cLo - nLo) + ' – ' + peso(cHi - nHi) + ' more.') +
+
+      '<div style="height:1.4rem"></div>' +
+
+      totalsRow('First year — committed', y0Core[0], y0Core[1], '',
+        'Delivery, gear, nappies, paediatrician, a yaya, the binyag.') +
+      totalsRow('First year — if you choose them', y0Opt[0], y0Opt[1], 'opt',
+        'Formula, and a night nurse for the first months.') +
+      totalsRow('First year, all in', y0Core[0] + y0Opt[0], y0Core[1] + y0Opt[1], 'grand') +
+
+      '<div style="height:1.4rem"></div>' +
+
+      totalsRow('Everything, birth to five', allCore[0] + allOpt[0], allCore[1] + allOpt[1], 'grand',
+        'Six years of the table below, optional lines included.') +
+
+      '<p class="cav"><b>Of that, childcare is ' + band(childcare[0], childcare[1]) +
+      ' and school fees are ' + band(school[0], school[1]) + '.</b> ' +
+      'Together they are most of the number. The gear everyone worries about — cot, ' +
+      'stroller, car seat, carrier — is ' + band(gear[0], gear[1]) + ', a rounding error ' +
+      'beside either. If you want to change this figure, that is where the lever is, ' +
+      'not in the registry.</p>' +
+
+      '<p class="cav">These are planning bands for a Makati household using private ' +
+      'care, not quotes. Every peso figure carries <b>low confidence</b>. For the ' +
+      'birth, Makati Med billing will give a written estimate on request — that is ' +
+      'the only number that means anything.</p>' +
+    '</section>';
+})();
+
+/* ---- yaya cost calculator ----------------------------------------------- */
+/*
+ * Built on a real 2022 stack a friend kept: a 10,000 base came to 159,323 a
+ * year once everything statutory was counted. The salary-linked parts scale;
+ * the contributions and allowances are editable, because contribution tables
+ * are revised and this session could not read the government ones.
+ */
+(() => {
+  const el = $('#yaya');
+  if (!el) return;
+
+  el.innerHTML =
+    '<section class="tot">' +
+      '<h3>What help actually costs</h3>' +
+      '<div class="sub">Salary is about three-quarters of it. Change any figure.</div>' +
+      '<div class="yform">' +
+        '<label>Monthly salary <input type="number" id="y-sal" min="0" step="500" value="13000"></label>' +
+        '<label>Contributions / mo <input type="number" id="y-con" min="0" step="10" value="1570"></label>' +
+        '<label>Allowances / mo <input type="number" id="y-all" min="0" step="50" value="700"></label>' +
+      '</div>' +
+      '<div id="y-out"></div>' +
+      '<p class="cav">The defaults reproduce a friend’s real 2022 sheet: on a ' +
+      peso(10000) + ' base this lands within ' + peso(200) + ' of the ' + peso(159323) +
+      ' a year they actually budgeted. Set the salary to ' + peso(10000) + ' to see it.</p>' +
+      '<p class="cav"><b>Contributions</b> are SSS, PhilHealth and Pag-IBIG, both shares, ' +
+      'as a household that absorbs them would budget. They rise with salary bracket, ' +
+      'so check the current tables. <b>Allowances</b> default to toiletries, a medical ' +
+      'allowance and travel. Not included: food and lodging if live-in, one-off hiring ' +
+      'costs, or pay in lieu of a rest day.</p>' +
+    '</section>';
+
+  const num = (id, fallback) => {
+    const v = Number($(id).value);
+    return Number.isFinite(v) && v >= 0 ? v : fallback;
+  };
+
+  function render() {
+    const sal = num('#y-sal', 0);
+    const con = num('#y-con', 0);
+    const all = num('#y-all', 0);
+
+    const thirteenth = sal / 12;          // one month's pay, spread
+    const leave = (sal * 5) / 12 / 26;    // five paid days a year, spread
+    const monthly = sal + thirteenth + leave + con + all;
+    const annual = monthly * 12;
+    const multiple = sal > 0 ? annual / (sal * 12) : 0;
+
+    const line = (l, v, cls, note) =>
+      '<div class="totrow' + (cls ? ' ' + cls : '') + '">' +
+        '<span class="lbl">' + l + '</span><span class="amt">' + peso(v) + '</span>' +
+        (note ? '<span class="note">' + note + '</span>' : '') + '</div>';
+
+    $('#y-out').innerHTML =
+      line('Salary', sal) +
+      line('13th month, spread', thirteenth) +
+      line('Five paid leave days, spread', leave) +
+      line('Contributions', con) +
+      line('Allowances', all) +
+      line('Per month', monthly, 'grand') +
+      line('Per year', annual, 'grand',
+        sal > 0 ? 'That is ' + multiple.toFixed(2) + '× the salary. Budgeting the salary alone understates it by ' + peso(annual - sal * 12) + ' a year.' : '');
+  }
+
+  ['#y-sal', '#y-con', '#y-all'].forEach((id) => $(id).addEventListener('input', render));
+  render();
+})();
 
 /* ---- sleep log --------------------------------------------------------- */
 /*

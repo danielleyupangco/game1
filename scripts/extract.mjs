@@ -208,3 +208,46 @@ export function renderSection(doc, heading) {
 }
 
 export { mdToHtml, sections };
+
+/**
+ * The budget bands table, as numbers.
+ *
+ * Totals are computed from these rows at build time rather than written into
+ * the document by hand: a hand-summed total silently goes wrong the moment a
+ * row is edited, and this table has been edited several times already.
+ *
+ * `optional` marks the rows a household can decide not to spend at all —
+ * NIPT, formula, a night nurse, parties, classes — so the totals can separate
+ * what is committed from what is a choice.
+ */
+export function extractBudget() {
+  const section = sections(DOCS.pregnancy).get('9. Costs and benefits (PHP)');
+  if (!section) throw new Error('Costs section not found');
+
+  const start = section.indexOf('### Budget bands by phase');
+  if (start < 0) throw new Error('Budget bands table not found');
+
+  const rows = [];
+  for (const line of section.slice(start).split('\n')) {
+    const m = /^\|\s*(Pregnancy|Y\d)\s*\|\s*(.+?)\s*\|\s*([\d,]+)\s*–\s*([\d,]+)\s*\|$/.exec(line);
+    if (!m) continue;
+    const num = (t) => Number(t.replace(/,/g, ''));
+    const category = m[2];
+    rows.push({
+      phase: m[1],
+      category: inline(category),
+      low: num(m[3]),
+      high: num(m[4]),
+      optional: /\(optional\)|if used/i.test(category),
+    });
+  }
+
+  if (rows.length < 30) throw new Error(`Expected 30+ budget rows, extracted ${rows.length}`);
+  return rows;
+}
+
+/** Delivery and PhilHealth figures, for the out-of-pocket total. */
+export const DELIVERY = {
+  normal: { low: 120000, high: 250000, philhealth: 29000 },
+  caesarean: { low: 200000, high: 400000, philhealth: 58000 },
+};
