@@ -100,6 +100,7 @@ const prose = {
   birthday: renderSection('pregnancy', '13. Birth day — dates and signs'),
   birthplan: renderSection('pregnancy', '14. Birth plan — caesarean or vaginal'),
   sleep: renderSection('pregnancy', '15. Sleep'),
+  weight: renderSection('pregnancy', '17. Weight, and what the range actually means'),
   runup: renderSection('pregnancy', '16. The run-up — help, the care team, and what happens when'),
 };
 
@@ -125,6 +126,7 @@ const TABS = [
   ['food', 'Food'],
   ['move', 'Move'],
   ['sleep', 'Sleep'],
+  ['weight', 'Weight'],
   ['travel', 'Travel'],
   ['money', 'Money'],
   ['runup', 'Run-up'],
@@ -321,6 +323,32 @@ details.grief[open] summary{margin-bottom:.5rem}
 .actions-body li.task{margin:.45rem 0}
 .actions-body hr{display:none}
 .installtip{margin-top:1.5rem;padding:.75rem 1rem;border:1px dashed var(--line);border-radius:14px;font-size:.85rem;color:var(--fg-mute);text-align:center}
+.wtcard{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1rem 1.15rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.wtcard h3{font-size:1.2rem;margin-bottom:.15rem}
+.wtcard .sub{font-size:.8rem;color:var(--fg-mute);margin-bottom:.9rem}
+.wtform{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;align-items:end}
+.wtform label{display:flex;flex-direction:column;gap:.2rem;font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--fg-mute)}
+.wtform input{min-height:44px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:0 .7rem;font-family:var(--body);font-size:1rem}
+.wtbtn{min-height:44px;border:0;border-radius:12px;background:var(--blush-deep);color:#fff;font-family:var(--body);font-weight:700;font-size:.85rem;cursor:pointer;padding:0 1rem}
+.wtbtn.ghost{background:transparent;color:var(--fg-mute);border:1px solid var(--line)}
+.wtnow{display:flex;flex-wrap:wrap;gap:.3rem 1.4rem;align-items:baseline;margin-bottom:.2rem}
+.wtnow .big{font-family:var(--display);font-size:2rem;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.wtnow .unit{font-size:.9rem;color:var(--fg-mute)}
+.wtverdict{font-size:.92rem;line-height:1.55;margin-top:.5rem}
+.wtverdict b{color:var(--fg)}
+.wtchart{margin:.4rem -.3rem .2rem}
+.wtchart svg{width:100%;height:auto;display:block;overflow:visible}
+.wtaxis{font-size:9px;fill:var(--fg-mute);font-family:var(--body)}
+.wtbandlabel{font-size:9.5px;font-weight:700;fill:var(--fg-mute);font-family:var(--body)}
+.wtendlabel{font-size:10.5px;font-weight:700;fill:var(--fg);font-family:var(--body)}
+.wtrows{margin-top:.4rem}
+.wtrow{display:grid;grid-template-columns:auto auto 1fr auto;gap:.2rem .7rem;align-items:baseline;padding:.45rem 0;border-bottom:1px solid var(--line);font-size:.88rem}
+.wtrow:last-child{border-bottom:0}
+.wtrow .d{font-variant-numeric:tabular-nums;font-weight:700}
+.wtrow .g{font-size:.72rem;color:var(--powder-deep);font-weight:700}
+.wtrow .k{font-variant-numeric:tabular-nums;font-weight:700;justify-self:end}
+.wtcard .x{border:0;background:none;color:var(--fg-mute);cursor:pointer;font-size:.72rem;font-family:var(--body);text-decoration:underline;padding:.2rem 0}
+.wtnote{font-size:.76rem;color:var(--fg-mute);border-top:1px solid var(--line);padding-top:.7rem;margin:1rem 0 0}
 .buys{display:grid;gap:.6rem}
 .buy{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:.75rem .9rem;box-shadow:var(--shadow);display:grid;grid-template-columns:auto 1fr;gap:.2rem .75rem;align-items:start}
 .buy.done{opacity:.5}
@@ -535,6 +563,11 @@ ${panel('sleep', 'Sleep', `
   </section>
   <div class="prose">${prose.sleep}</div>`,
   `<p class="lede">What helps depends on the stage, and right now the most useful thing is what you <em>don&rsquo;t</em> have to worry about yet.</p>`)}
+
+${panel('weight', 'Weight', `
+  <div id="wt"></div>
+  <div class="prose">${prose.weight}</div>`,
+  `<p class="lede">A shaded range, not a target. <b>At five weeks the number means almost nothing</b> &mdash; it starts being worth reading from about week 14.</p>`)}
 
 ${panel('travel', 'Travel', `<div class="prose">${prose.travel}</div>`)}
 ${panel('money', 'Money', `
@@ -803,6 +836,229 @@ $('#nutrients').insertAdjacentHTML('beforebegin',
   '<h3 style="font-family:var(--display);font-size:1.25rem;margin:2.5rem 0 .3rem">Caffeine</h3>' +
   '<p class="lede">The daily limit is 200mg. Each bar is measured against it &mdash; two cups of barako put her over before lunch.</p>' +
   '<div class="tw" style="padding:.3rem .6rem">' + caf + '</div>');
+
+/* ---- weight ------------------------------------------------------------- */
+/*
+ * IOM 2009 bands, drawn as a shaded range rather than a line to stay on the
+ * right side of. The guide is explicit that this is never a pass/fail and never
+ * red: the band is a calm wash, the reading is one series over it, and the
+ * wording for a point outside the band says what to do, not what went wrong.
+ *
+ * Setup (height, pre-pregnancy weight) and every reading are localStorage —
+ * this is the most personal data on the page and it does not leave the device.
+ */
+const WT_KEY = 'cub-weight-v1';
+
+const GAIN_BANDS = [
+  { max: 18.5, label: 'Under 18.5', total: [12.5, 18], weekly: [0.44, 0.58] },
+  { max: 25, label: '18.5 to 24.9', total: [11.5, 16], weekly: [0.35, 0.5] },
+  { max: 30, label: '25 to 29.9', total: [7, 11.5], weekly: [0.23, 0.33] },
+  { max: Infinity, label: '30 and above', total: [5, 9], weekly: [0.17, 0.27] },
+];
+const T1_GAIN = [0.5, 2];
+const STEADY_FROM = 13;
+
+const loadWt = () => {
+  try {
+    const raw = localStorage.getItem(WT_KEY);
+    const v = raw ? JSON.parse(raw) : null;
+    if (!v || typeof v !== 'object') return { height: null, pre: null, log: [] };
+    return { height: v.height ?? null, pre: v.pre ?? null, log: Array.isArray(v.log) ? v.log : [] };
+  } catch (e) {
+    return { height: null, pre: null, log: [] };
+  }
+};
+let wt = loadWt();
+const saveWt = () => {
+  try { localStorage.setItem(WT_KEY, JSON.stringify(wt)); return true; } catch (e) { return false; }
+};
+
+const gainBandFor = (bmi) => GAIN_BANDS.find((b) => bmi < b.max);
+
+/** Recommended cumulative gain at a gestational week, as [low, high] kg. */
+function gainRange(week, band) {
+  if (week <= 0) return [0, 0];
+  if (week <= STEADY_FROM) {
+    const f = week / STEADY_FROM;
+    return [T1_GAIN[0] * f, T1_GAIN[1] * f];
+  }
+  const extra = week - STEADY_FROM;
+  return [T1_GAIN[0] + band.weekly[0] * extra, T1_GAIN[1] + band.weekly[1] * extra];
+}
+
+/** Gestational week as a decimal, for plotting a reading against the band. */
+function weekOn(dateStr) {
+  const total = 280 - Math.round((civil(DATA.edd) - civil(dateStr)) / MS);
+  return total / 7;
+}
+
+const kg = (n) => (Math.round(n * 10) / 10).toFixed(1);
+
+function weightChart(band, readings) {
+  const W = 340, H = 190, L = 30, R = 12, T = 12, B = 22;
+  const iw = W - L - R, ih = H - T - B;
+  const wkMax = 41;
+  const yMax = Math.max(gainRange(wkMax, band)[1], ...readings.map((r) => r.gain), 2) + 1.5;
+  const yMin = Math.min(0, ...readings.map((r) => r.gain)) - 0.5;
+  const x = (w) => L + (w / wkMax) * iw;
+  const y = (g) => T + ih - ((g - yMin) / (yMax - yMin)) * ih;
+
+  const steps = [];
+  for (let w = 0; w <= wkMax; w += 0.5) steps.push(w);
+  const lo = steps.map((w) => [x(w), y(gainRange(w, band)[0])]);
+  const hi = steps.map((w) => [x(w), y(gainRange(w, band)[1])]);
+  const areaPath = 'M' + hi.map((p) => p.join(' ')).join(' L ') +
+    ' L ' + [...lo].reverse().map((p) => p.join(' ')).join(' L ') + ' Z';
+
+  // Hairline solid gridlines, one step off the surface, and clean tick numbers.
+  // Ticks anchored on zero, so they read 0/4/8 rather than whatever the lowest
+  // reading happened to round to.
+  const yTicks = [];
+  const step = yMax > 14 ? 4 : 2;
+  for (let g = Math.ceil(yMin / step) * step; g <= yMax; g += step) yTicks.push(g);
+  const xTicks = [0, 10, 20, 30, 40];
+
+  const pts = readings.map((r) => [x(r.week), y(r.gain)]);
+  const line = pts.length > 1 ? 'M' + pts.map((p) => p.join(' ')).join(' L ') : '';
+  const last = readings[readings.length - 1];
+
+  return '<div class="wtchart"><svg viewBox="0 0 ' + W + ' ' + H + '" role="img" ' +
+    'aria-label="Weight gain against the recommended range, by gestational week.">' +
+    yTicks.map((g) =>
+      '<line x1="' + L + '" y1="' + y(g) + '" x2="' + (W - R) + '" y2="' + y(g) +
+      '" stroke="var(--line)" stroke-width="1"/>' +
+      '<text class="wtaxis" x="' + (L - 5) + '" y="' + (y(g) + 3) + '" text-anchor="end">' + g + '</text>').join('') +
+    '<path d="' + areaPath + '" fill="var(--sage)" fill-opacity="0.55"/>' +
+    '<path d="M' + hi.map((p) => p.join(' ')).join(' L ') + '" fill="none" stroke="var(--sage-deep)" stroke-width="1" stroke-opacity="0.45"/>' +
+    '<path d="M' + lo.map((p) => p.join(' ')).join(' L ') + '" fill="none" stroke="var(--sage-deep)" stroke-width="1" stroke-opacity="0.45"/>' +
+    '<text class="wtbandlabel" x="' + (W - R) + '" y="' + (y(gainRange(wkMax, band)[1]) - 7) +
+      '" text-anchor="end">Recommended range</text>' +
+    xTicks.map((w) =>
+      '<text class="wtaxis" x="' + x(w) + '" y="' + (H - 6) + '" text-anchor="middle">' +
+      (w === 0 ? 'wk 0' : w) + '</text>').join('') +
+    '<line x1="' + L + '" y1="' + y(0) + '" x2="' + (W - R) + '" y2="' + y(0) +
+    '" stroke="var(--line)" stroke-width="1"/>' +
+    (line ? '<path d="' + line + '" fill="none" stroke="var(--blush-deep)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' : '') +
+    pts.map((p, i) => {
+      const isLast = i === pts.length - 1;
+      return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="' + (isLast ? 5 : 3.5) + '" ' +
+        'fill="var(--blush-deep)" stroke="var(--surface)" stroke-width="2"><title>Week ' +
+        readings[i].week.toFixed(1) + ': ' + (readings[i].gain >= 0 ? '+' : '') +
+        kg(readings[i].gain) + 'kg</title></circle>';
+    }).join('') +
+    (last ? '<text class="wtendlabel" x="' + Math.min(x(last.week) + 9, W - R - 26) + '" y="' +
+      (y(last.gain) - 9) + '">' + (last.gain >= 0 ? '+' : '') + kg(last.gain) + 'kg</text>' : '') +
+    '</svg></div>';
+}
+
+function renderWeight() {
+  const el = $('#wt');
+  if (!el) return;
+
+  const ready = wt.height > 0 && wt.pre > 0;
+
+  if (!ready) {
+    el.innerHTML =
+      '<section class="wtcard">' +
+        '<h3>Set this up once</h3>' +
+        '<div class="sub">Your range depends on where you started. Both stay on this device.</div>' +
+        '<div class="wtform">' +
+          '<label>Height (cm) <input type="number" id="w-h" min="120" max="220" step="0.5" inputmode="decimal" placeholder="160"></label>' +
+          '<label>Weight before pregnancy (kg) <input type="number" id="w-p" min="30" max="200" step="0.1" inputmode="decimal" placeholder="55"></label>' +
+          '<button class="wtbtn" type="button" id="w-save">Save</button>' +
+        '</div>' +
+        '<p class="wtnote">If you do not know your pre-pregnancy weight, the closest reading from the few months before is fine — the band is wide and a kilo either way rarely moves it. Dra. Villafria will have a booking weight too.</p>' +
+      '</section>';
+    $('#w-save').addEventListener('click', () => {
+      const h = Number($('#w-h').value), p = Number($('#w-p').value);
+      if (!(h >= 120 && h <= 220) || !(p >= 30 && p <= 200)) return;
+      wt.height = h; wt.pre = p; saveWt(); renderWeight();
+    });
+    return;
+  }
+
+  const bmi = wt.pre / ((wt.height / 100) ** 2);
+  const band = gainBandFor(bmi);
+  const readings = [...wt.log]
+    .sort((a, b) => (a.date < b.date ? -1 : 1))
+    .map((r) => ({ ...r, week: weekOn(r.date), gain: r.kg - wt.pre }));
+  const last = readings[readings.length - 1];
+
+  let verdict;
+  if (!last) {
+    verdict = 'No readings yet. One a week is plenty — the same day, the same time, before breakfast.';
+  } else {
+    const [lo, hi] = gainRange(last.week, band);
+    const w = last.week;
+    if (w < 14) {
+      verdict = '<b>Too early to read anything into.</b> Expected gain across the whole first trimester is ' +
+        kg(T1_GAIN[0]) + '&ndash;' + kg(T1_GAIN[1]) + 'kg, which is less than a normal day-to-day swing. ' +
+        'Losing a little is common with nausea and is not a problem on its own.';
+    } else if (last.gain >= lo - 0.4 && last.gain <= hi + 0.4) {
+      verdict = '<b>Inside the range for week ' + Math.floor(w) + '</b>, which at this point is ' +
+        kg(lo) + '&ndash;' + kg(hi) + 'kg. Nothing to do.';
+    } else if (last.gain > hi) {
+      verdict = '<b>Above the range for week ' + Math.floor(w) + '</b> (' + kg(lo) + '&ndash;' + kg(hi) + 'kg). ' +
+        'One reading is not a finding — weight moves a kilo on fluid alone. If three or four in a row ' +
+        'sit the same way, mention it at your next appointment. <b>Do not respond by eating less</b>: ' +
+        'restricting is not recommended in pregnancy at any stage.';
+    } else {
+      verdict = '<b>Below the range for week ' + Math.floor(w) + '</b> (' + kg(lo) + '&ndash;' + kg(hi) + 'kg). ' +
+        'One reading is not a finding. If the trend holds over a few weeks, or eating is difficult, ' +
+        'that is worth raising with Dra. Villafria — it is the kind of thing she would rather know early.';
+    }
+  }
+
+  el.innerHTML =
+    '<section class="wtcard">' +
+      '<div class="wtnow">' +
+        '<span><span class="big">' + (last ? (last.gain >= 0 ? '+' : '') + kg(last.gain) : '—') +
+          '</span> <span class="unit">kg gained</span></span>' +
+        '<span><span class="big">' + (Math.round(bmi * 10) / 10) + '</span> <span class="unit">starting BMI · band ' + band.label + '</span></span>' +
+      '</div>' +
+      '<div class="sub">Range for this band: <b>' + kg(band.total[0]) + '–' + kg(band.total[1]) +
+        'kg over the pregnancy</b> · ' + band.weekly[0] + '–' + band.weekly[1] +
+        'kg a week from week 14</div>' +
+      weightChart(band, readings) +
+      '<p class="wtverdict">' + verdict + '</p>' +
+    '</section>' +
+    '<section class="wtcard">' +
+      '<h3>Add a reading</h3>' +
+      '<div class="sub">Once a week is plenty. Same day, same time, before breakfast.</div>' +
+      '<div class="wtform">' +
+        '<label>Date <input type="date" id="w-date"></label>' +
+        '<label>Weight (kg) <input type="number" id="w-kg" min="30" max="200" step="0.1" inputmode="decimal" placeholder="' + kg(wt.pre) + '"></label>' +
+        '<button class="wtbtn" type="button" id="w-add">Save reading</button>' +
+      '</div>' +
+      '<div class="wtrows" id="w-rows"></div>' +
+      '<p class="wtnote">Height ' + wt.height + 'cm, starting weight ' + kg(wt.pre) + 'kg. ' +
+        '<button class="x" type="button" id="w-reset">Change these</button><br>' +
+        'Everything here is saved on this device only, in this browser. Not synced, not shared. ' +
+        'The tracker is optional — if weighing yourself is not good for you, hand it to the clinic and skip this tab.</p>' +
+    '</section>';
+
+  $('#w-date').value = todayIso();
+  $('#w-rows').innerHTML = [...readings].reverse().slice(0, 12).map((r) => {
+    const g = Math.floor(r.week) + 'w' + Math.round((r.week % 1) * 7) + 'd';
+    return '<div class="wtrow"><span class="d">' + r.date + '</span><span class="g">' + g + '</span>' +
+      '<button class="x" type="button" data-date="' + r.date + '">Remove</button>' +
+      '<span class="k">' + kg(r.kg) + 'kg <span class="g">' + (r.gain >= 0 ? '+' : '') + kg(r.gain) + '</span></span></div>';
+  }).join('');
+
+  $('#w-add').addEventListener('click', () => {
+    const date = $('#w-date').value, v = Number($('#w-kg').value);
+    if (!date || !(v >= 30 && v <= 200)) return;
+    wt.log = [...wt.log.filter((r) => r.date !== date), { date, kg: v }];
+    saveWt(); renderWeight();
+  });
+  $('#w-reset').addEventListener('click', () => { wt.height = null; wt.pre = null; saveWt(); renderWeight(); });
+  $$('#w-rows .x').forEach((b) => b.addEventListener('click', () => {
+    wt.log = wt.log.filter((r) => r.date !== b.dataset.date);
+    saveWt(); renderWeight();
+  }));
+}
+
+renderWeight();
 
 /* ---- buy list ------------------------------------------------------------ */
 /*

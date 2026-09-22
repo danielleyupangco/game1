@@ -2174,3 +2174,83 @@ because the good ones book up:
 | Pre-swimming | 6 months | Bert Lozada Swim School, Ace Water Spa |
 
 *Sources: a friend's 2022 planning sheet, shared directly (high confidence as a record of what they did, low for peso figures). Kasambahay wage and statutory duties from secondary reporting — [NCR kasambahay wage order](https://sweldoph.com/news/ncr-kasambahay-7800-2026), [RA 10361 employer guide](https://sweldoph.com/guides/kasambahay-law) — because the egress policy blocks Philippine government sites. Confidence: medium. Verified 2026-09-22.*
+
+---
+
+## 17. Weight, and what the range actually means
+
+### Right now, at five weeks, the number means almost nothing
+
+Expected gain in the whole first trimester is **0.5 to 2kg** — across thirteen
+weeks. That is less than the swing between a Tuesday morning and a Friday
+evening on the same scale. Anything you weigh this month is noise.
+
+**Plenty of people lose weight in the first trimester**, because nausea makes
+food difficult and nothing stays appealing. That is not a problem in itself and
+does not mean the baby is going short. The baby is the size of a sesame seed;
+its demands are trivial compared to what your own body is already doing. If you
+are losing steadily, or cannot keep anything down for 24 hours, that is worth a
+call — otherwise it is just the first trimester.
+
+**The tracker is here for later.** The number starts meaning something from
+about week 14, when gain becomes steady and a trend over weeks — never a single
+morning — is the thing to look at.
+
+### Where the range comes from
+
+The bands are the **Institute of Medicine's 2009 guidance**, set by
+pre-pregnancy BMI, for a single baby. They exist because both ends carry risk:
+gaining very little is associated with smaller babies and preterm birth, gaining
+a great deal with a larger baby, a harder delivery and weight that stays
+afterwards.
+
+| Pre-pregnancy BMI | Total gain | Weekly, from week 14 |
+| --- | --- | --- |
+| Under 18.5 | 12.5 – 18 kg | 0.44 – 0.58 kg |
+| 18.5 – 24.9 | 11.5 – 16 kg | 0.35 – 0.50 kg |
+| 25 – 29.9 | 7 – 11.5 kg | 0.23 – 0.33 kg |
+| 30 and above | 5 – 9 kg | 0.17 – 0.27 kg |
+
+First-trimester gain of **0.5 – 2kg** applies to every band.
+
+### How to read it, and how not to
+
+**It is a range, not a target.** There is no prize for landing in the middle,
+and the edges are not a line you fail by crossing. It was written to inform a
+conversation with your OB, and that is all it does here.
+
+**Weigh in at most once a week, at the same time of day.** Day-to-day weight
+moves a kilo or more on fluid alone — salt, heat, how much water you have drunk,
+where you are in your bowel habits. A daily number measures the noise, not the
+trend. Manila heat makes this worse, not better.
+
+**One reading outside the range is not a finding.** Three or four in a row
+heading the same way is a thing to mention at an appointment.
+
+**Do not diet, at any point.** Restricting intake to control gain is not
+recommended in pregnancy at any stage or any starting BMI. If gain is a concern,
+it belongs in a conversation with Dra. Villafria — who can see the whole picture
+— and not in a calorie deficit worked out alone.
+
+**If this number starts to occupy you**, that is worth saying out loud to
+someone. Pregnancy puts weight on a chart for nine months, and for anyone who
+has had a difficult relationship with the scale that is genuinely hard. You are
+allowed to hand the weighing to the clinic and not do it at home at all — the
+tracker is optional, and skipping it costs nothing clinically.
+
+### What the gain is actually made of, at term
+
+Most of it is not fat, which is worth knowing when the total sounds large:
+
+| | Roughly |
+| --- | --- |
+| Baby | 3.0 – 3.5 kg |
+| Placenta | 0.6 kg |
+| Amniotic fluid | 0.8 kg |
+| Larger uterus | 0.9 kg |
+| Breast tissue | 0.4 kg |
+| Extra blood | 1.2 kg |
+| Extra fluid in tissue | 1.2 kg |
+| Fat stores, for feeding | 2.5 – 3.5 kg |
+
+*Source: Institute of Medicine / National Research Council, "Weight Gain During Pregnancy: Reexamining the Guidelines" (2009); ACOG guidance on nutrition and weight in pregnancy. Verified 2026-09-22. Confidence: high.*
