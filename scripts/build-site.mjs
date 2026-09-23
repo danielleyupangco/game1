@@ -328,6 +328,12 @@ details.grief[open] summary{margin-bottom:.5rem}
 .wtcard .sub{font-size:.8rem;color:var(--fg-mute);margin-bottom:.9rem}
 .wtform{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;align-items:end}
 .wtform label{display:flex;flex-direction:column;gap:.2rem;font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--fg-mute)}
+.wtsub{text-transform:none;letter-spacing:0;font-weight:400;color:var(--fg-mute);opacity:.85}
+.useg{display:flex;gap:.4rem;margin-bottom:.8rem}
+.useg-b{min-height:38px;padding:0 .9rem;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--fg-mute);font-family:var(--body);font-weight:700;font-size:.8rem;cursor:pointer}
+.useg-b[aria-pressed="true"]{background:var(--blush);border-color:var(--blush-deep);color:var(--blush-deep)}
+.wterr{font-size:.84rem;line-height:1.5;color:var(--blush-deep);font-weight:700;margin:.6rem 0 0}
+.wterr:empty{margin:0}
 .wtform input{min-height:44px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:0 .7rem;font-family:var(--body);font-size:1rem}
 .wtbtn{min-height:44px;border:0;border-radius:12px;background:var(--blush-deep);color:#fff;font-family:var(--body);font-weight:700;font-size:.85rem;cursor:pointer;padding:0 1rem}
 .wtbtn.ghost{background:transparent;color:var(--fg-mute);border:1px solid var(--line)}
@@ -567,7 +573,7 @@ ${panel('sleep', 'Sleep', `
 ${panel('weight', 'Weight', `
   <div id="wt"></div>
   <div class="prose">${prose.weight}</div>`,
-  `<p class="lede">A shaded range, not a target. <b>At five weeks the number means almost nothing</b> &mdash; it starts being worth reading from about week 14.</p>`)}
+  `<p class="lede">A shaded range, not a target. <b>In the first trimester the number means almost nothing</b> &mdash; it starts being worth reading from about week 14.</p>`)}
 
 ${panel('travel', 'Travel', `<div class="prose">${prose.travel}</div>`)}
 ${panel('money', 'Money', `
@@ -863,12 +869,49 @@ const loadWt = () => {
     const raw = localStorage.getItem(WT_KEY);
     const v = raw ? JSON.parse(raw) : null;
     if (!v || typeof v !== 'object') return { height: null, pre: null, log: [] };
-    return { height: v.height ?? null, pre: v.pre ?? null, log: Array.isArray(v.log) ? v.log : [] };
+    return {
+      height: v.height ?? null,
+      pre: v.pre ?? null,
+      units: v.units === 'imperial' ? 'imperial' : 'metric',
+      log: Array.isArray(v.log) ? v.log : [],
+    };
   } catch (e) {
-    return { height: null, pre: null, log: [] };
+    return { height: null, pre: null, units: 'metric', log: [] };
   }
 };
 let wt = loadWt();
+
+/*
+ * Height in feet and weight in pounds are how plenty of people here actually
+ * know their own numbers, so both are first-class rather than something to
+ * convert in your head before typing. Everything is stored in cm and kg; the
+ * unit choice only decides what the form asks for.
+ */
+const LB_PER_KG = 2.2046226218;
+const toKg = (v, units) => (units === 'imperial' ? v / LB_PER_KG : v);
+const fromKg = (v, units) => (units === 'imperial' ? v * LB_PER_KG : v);
+const cmFromFtIn = (ft, inch) => (ft * 12 + inch) * 2.54;
+const ftInFromCm = (cm) => {
+  const total = Math.round(cm / 2.54);
+  return { ft: Math.floor(total / 12), inch: total % 12 };
+};
+const wUnit = () => (wt.units === 'imperial' ? 'lb' : 'kg');
+
+/** A number from a field, or null — never a silent NaN posing as zero. */
+const fieldNum = (sel) => {
+  const el = $(sel);
+  if (!el) return null;
+  const raw = el.value.trim().replace(',', '.');
+  if (raw === '') return null;
+  const v = Number(raw);
+  return Number.isFinite(v) ? v : null;
+};
+
+/** Says what is wrong, where the reader can see it. */
+const showWtError = (sel, msg) => {
+  const el = $(sel);
+  if (el) el.textContent = msg || '';
+};
 const saveWt = () => {
   try { localStorage.setItem(WT_KEY, JSON.stringify(wt)); return true; } catch (e) { return false; }
 };
@@ -895,18 +938,20 @@ function weekOn(dateStr) {
 const kg = (n) => (Math.round(n * 10) / 10).toFixed(1);
 
 function weightChart(band, readings) {
+  // One conversion at the edge: everything inside the chart is in display units.
+  const u = (v) => fromKg(v, wt.units);
   const W = 340, H = 190, L = 30, R = 12, T = 12, B = 22;
   const iw = W - L - R, ih = H - T - B;
   const wkMax = 41;
-  const yMax = Math.max(gainRange(wkMax, band)[1], ...readings.map((r) => r.gain), 2) + 1.5;
-  const yMin = Math.min(0, ...readings.map((r) => r.gain)) - 0.5;
+  const yMax = Math.max(u(gainRange(wkMax, band)[1]), ...readings.map((r) => u(r.gain)), 2) + (wt.units === 'imperial' ? 4 : 1.5);
+  const yMin = Math.min(0, ...readings.map((r) => u(r.gain))) - (wt.units === 'imperial' ? 1.5 : 0.5);
   const x = (w) => L + (w / wkMax) * iw;
   const y = (g) => T + ih - ((g - yMin) / (yMax - yMin)) * ih;
 
   const steps = [];
   for (let w = 0; w <= wkMax; w += 0.5) steps.push(w);
-  const lo = steps.map((w) => [x(w), y(gainRange(w, band)[0])]);
-  const hi = steps.map((w) => [x(w), y(gainRange(w, band)[1])]);
+  const lo = steps.map((w) => [x(w), y(u(gainRange(w, band)[0]))]);
+  const hi = steps.map((w) => [x(w), y(u(gainRange(w, band)[1]))]);
   const areaPath = 'M' + hi.map((p) => p.join(' ')).join(' L ') +
     ' L ' + [...lo].reverse().map((p) => p.join(' ')).join(' L ') + ' Z';
 
@@ -914,11 +959,11 @@ function weightChart(band, readings) {
   // Ticks anchored on zero, so they read 0/4/8 rather than whatever the lowest
   // reading happened to round to.
   const yTicks = [];
-  const step = yMax > 14 ? 4 : 2;
+  const step = yMax > 25 ? 10 : yMax > 14 ? 4 : 2;
   for (let g = Math.ceil(yMin / step) * step; g <= yMax; g += step) yTicks.push(g);
   const xTicks = [0, 10, 20, 30, 40];
 
-  const pts = readings.map((r) => [x(r.week), y(r.gain)]);
+  const pts = readings.map((r) => [x(r.week), y(u(r.gain))]);
   const line = pts.length > 1 ? 'M' + pts.map((p) => p.join(' ')).join(' L ') : '';
   const last = readings[readings.length - 1];
 
@@ -931,7 +976,7 @@ function weightChart(band, readings) {
     '<path d="' + areaPath + '" fill="var(--sage)" fill-opacity="0.55"/>' +
     '<path d="M' + hi.map((p) => p.join(' ')).join(' L ') + '" fill="none" stroke="var(--sage-deep)" stroke-width="1" stroke-opacity="0.45"/>' +
     '<path d="M' + lo.map((p) => p.join(' ')).join(' L ') + '" fill="none" stroke="var(--sage-deep)" stroke-width="1" stroke-opacity="0.45"/>' +
-    '<text class="wtbandlabel" x="' + (W - R) + '" y="' + (y(gainRange(wkMax, band)[1]) - 7) +
+    '<text class="wtbandlabel" x="' + (W - R) + '" y="' + (y(u(gainRange(wkMax, band)[1])) - 7) +
       '" text-anchor="end">Recommended range</text>' +
     xTicks.map((w) =>
       '<text class="wtaxis" x="' + x(w) + '" y="' + (H - 6) + '" text-anchor="middle">' +
@@ -944,10 +989,10 @@ function weightChart(band, readings) {
       return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="' + (isLast ? 5 : 3.5) + '" ' +
         'fill="var(--blush-deep)" stroke="var(--surface)" stroke-width="2"><title>Week ' +
         readings[i].week.toFixed(1) + ': ' + (readings[i].gain >= 0 ? '+' : '') +
-        kg(readings[i].gain) + 'kg</title></circle>';
+        kg(u(readings[i].gain)) + wUnit() + '</title></circle>';
     }).join('') +
     (last ? '<text class="wtendlabel" x="' + Math.min(x(last.week) + 9, W - R - 26) + '" y="' +
-      (y(last.gain) - 9) + '">' + (last.gain >= 0 ? '+' : '') + kg(last.gain) + 'kg</text>' : '') +
+      (y(u(last.gain)) - 9) + '">' + (last.gain >= 0 ? '+' : '') + kg(u(last.gain)) + wUnit() + '</text>' : '') +
     '</svg></div>';
 }
 
@@ -958,22 +1003,70 @@ function renderWeight() {
   const ready = wt.height > 0 && wt.pre > 0;
 
   if (!ready) {
+    const imperial = wt.units === 'imperial';
     el.innerHTML =
       '<section class="wtcard">' +
         '<h3>Set this up once</h3>' +
         '<div class="sub">Your range depends on where you started. Both stay on this device.</div>' +
+        '<div class="useg">' +
+          '<button type="button" class="useg-b" data-u="metric" aria-pressed="' + (!imperial) + '">cm / kg</button>' +
+          '<button type="button" class="useg-b" data-u="imperial" aria-pressed="' + imperial + '">ft / lb</button>' +
+        '</div>' +
         '<div class="wtform">' +
-          '<label>Height (cm) <input type="number" id="w-h" min="120" max="220" step="0.5" inputmode="decimal" placeholder="160"></label>' +
-          '<label>Weight before pregnancy (kg) <input type="number" id="w-p" min="30" max="200" step="0.1" inputmode="decimal" placeholder="55"></label>' +
+          (imperial
+            ? '<label>Height <span class="wtsub">feet</span><input type="number" id="w-ft" min="3" max="7" step="1" inputmode="numeric" placeholder="5"></label>' +
+              '<label>and <span class="wtsub">inches</span><input type="number" id="w-in" min="0" max="11" step="1" inputmode="numeric" placeholder="4"></label>'
+            : '<label>Height <span class="wtsub">cm</span><input type="number" id="w-h" min="120" max="220" step="0.5" inputmode="decimal" placeholder="160"></label>') +
+          '<label>Weight before pregnancy <span class="wtsub">' + wUnit() + '</span>' +
+            '<input type="number" id="w-p" step="0.1" inputmode="decimal" placeholder="' +
+            (imperial ? '120' : '55') + '"></label>' +
           '<button class="wtbtn" type="button" id="w-save">Save</button>' +
         '</div>' +
-        '<p class="wtnote">If you do not know your pre-pregnancy weight, the closest reading from the few months before is fine — the band is wide and a kilo either way rarely moves it. Dra. Villafria will have a booking weight too.</p>' +
+        '<p class="wterr" id="w-err" role="status"></p>' +
+        '<p class="wtnote">If you do not know your pre-pregnancy weight, the closest reading from the few months before is fine \u2014 the band is wide and a kilo either way rarely moves it. Dra. Villafria will have a booking weight too.</p>' +
       '</section>';
+
+    $$('#wt .useg-b').forEach((btn) => btn.addEventListener('click', () => {
+      wt.units = btn.dataset.u;
+      saveWt();
+      renderWeight();
+    }));
+
     $('#w-save').addEventListener('click', () => {
-      const h = Number($('#w-h').value), p = Number($('#w-p').value);
-      if (!(h >= 120 && h <= 220) || !(p >= 30 && p <= 200)) return;
-      wt.height = h; wt.pre = p; saveWt(); renderWeight();
+      const imp = wt.units === 'imperial';
+      let cm;
+      if (imp) {
+        const ft = fieldNum('#w-ft');
+        const inch = fieldNum('#w-in') ?? 0;
+        if (ft === null) return showWtError('#w-err', 'Add your height in feet.');
+        if (ft < 3 || ft > 7) return showWtError('#w-err', 'Feet should be between 3 and 7.');
+        if (inch < 0 || inch > 11) return showWtError('#w-err', 'Inches should be between 0 and 11.');
+        cm = cmFromFtIn(ft, inch);
+      } else {
+        cm = fieldNum('#w-h');
+        if (cm === null) return showWtError('#w-err', 'Add your height in centimetres.');
+        if (cm > 3 && cm < 8) {
+          return showWtError('#w-err',
+            'That looks like feet. Switch to ft / lb above, or type it in centimetres \u2014 ' +
+            'five foot four is about 163cm.');
+        }
+        if (cm < 120 || cm > 220) return showWtError('#w-err', 'Height should be between 120 and 220cm.');
+      }
+
+      const entered = fieldNum('#w-p');
+      if (entered === null) return showWtError('#w-err', 'Add your weight before pregnancy.');
+      const preKg = toKg(entered, wt.units);
+      if (preKg < 30 || preKg > 200) {
+        return showWtError('#w-err', 'That weight looks out of range. Check the unit above is right.');
+      }
+
+      showWtError('#w-err', '');
+      wt.height = cm;
+      wt.pre = preKg;
+      if (!saveWt()) return showWtError('#w-err', 'Could not save \u2014 this browser is blocking storage.');
+      renderWeight();
     });
+
     return;
   }
 
@@ -990,20 +1083,24 @@ function renderWeight() {
   } else {
     const [lo, hi] = gainRange(last.week, band);
     const w = last.week;
+    // The bands are stored in kilograms; the reader sees their own unit.
+    const d = (v) => kg(fromKg(v, wt.units));
+    const span = (a, b) => d(a) + '&ndash;' + d(b) + wUnit();
+    const range = span(lo, hi);
     if (w < 14) {
       verdict = '<b>Too early to read anything into.</b> Expected gain across the whole first trimester is ' +
-        kg(T1_GAIN[0]) + '&ndash;' + kg(T1_GAIN[1]) + 'kg, which is less than a normal day-to-day swing. ' +
+        span(T1_GAIN[0], T1_GAIN[1]) + ', which is less than a normal day-to-day swing. ' +
         'Losing a little is common with nausea and is not a problem on its own.';
     } else if (last.gain >= lo - 0.4 && last.gain <= hi + 0.4) {
       verdict = '<b>Inside the range for week ' + Math.floor(w) + '</b>, which at this point is ' +
-        kg(lo) + '&ndash;' + kg(hi) + 'kg. Nothing to do.';
+        range + '. Nothing to do.';
     } else if (last.gain > hi) {
-      verdict = '<b>Above the range for week ' + Math.floor(w) + '</b> (' + kg(lo) + '&ndash;' + kg(hi) + 'kg). ' +
+      verdict = '<b>Above the range for week ' + Math.floor(w) + '</b> (' + range + '). ' +
         'One reading is not a finding — weight moves a kilo on fluid alone. If three or four in a row ' +
         'sit the same way, mention it at your next appointment. <b>Do not respond by eating less</b>: ' +
         'restricting is not recommended in pregnancy at any stage.';
     } else {
-      verdict = '<b>Below the range for week ' + Math.floor(w) + '</b> (' + kg(lo) + '&ndash;' + kg(hi) + 'kg). ' +
+      verdict = '<b>Below the range for week ' + Math.floor(w) + '</b> (' + range + '). ' +
         'One reading is not a finding. If the trend holds over a few weeks, or eating is difficult, ' +
         'that is worth raising with Dra. Villafria — it is the kind of thing she would rather know early.';
     }
@@ -1012,13 +1109,14 @@ function renderWeight() {
   el.innerHTML =
     '<section class="wtcard">' +
       '<div class="wtnow">' +
-        '<span><span class="big">' + (last ? (last.gain >= 0 ? '+' : '') + kg(last.gain) : '—') +
-          '</span> <span class="unit">kg gained</span></span>' +
+        '<span><span class="big">' + (last ? (last.gain >= 0 ? '+' : '') + kg(fromKg(last.gain, wt.units)) : '—') +
+          '</span> <span class="unit">' + wUnit() + ' gained</span></span>' +
         '<span><span class="big">' + (Math.round(bmi * 10) / 10) + '</span> <span class="unit">starting BMI · band ' + band.label + '</span></span>' +
       '</div>' +
-      '<div class="sub">Range for this band: <b>' + kg(band.total[0]) + '–' + kg(band.total[1]) +
-        'kg over the pregnancy</b> · ' + band.weekly[0] + '–' + band.weekly[1] +
-        'kg a week from week 14</div>' +
+      '<div class="sub">Range for this band: <b>' + kg(fromKg(band.total[0], wt.units)) + '–' +
+        kg(fromKg(band.total[1], wt.units)) + wUnit() + ' over the pregnancy</b> · ' +
+        kg(fromKg(band.weekly[0], wt.units)) + '–' + kg(fromKg(band.weekly[1], wt.units)) +
+        wUnit() + ' a week from week 14</div>' +
       weightChart(band, readings) +
       '<p class="wtverdict">' + verdict + '</p>' +
     '</section>' +
@@ -1027,11 +1125,16 @@ function renderWeight() {
       '<div class="sub">Once a week is plenty. Same day, same time, before breakfast.</div>' +
       '<div class="wtform">' +
         '<label>Date <input type="date" id="w-date"></label>' +
-        '<label>Weight (kg) <input type="number" id="w-kg" min="30" max="200" step="0.1" inputmode="decimal" placeholder="' + kg(wt.pre) + '"></label>' +
+        '<label>Weight <span class="wtsub">' + wUnit() + '</span><input type="number" id="w-kg" step="0.1" inputmode="decimal" placeholder="' +
+          kg(fromKg(wt.pre, wt.units)) + '"></label>' +
         '<button class="wtbtn" type="button" id="w-add">Save reading</button>' +
       '</div>' +
+      '<p class="wterr" id="w-err2" role="status"></p>' +
       '<div class="wtrows" id="w-rows"></div>' +
-      '<p class="wtnote">Height ' + wt.height + 'cm, starting weight ' + kg(wt.pre) + 'kg. ' +
+      '<p class="wtnote">Height ' + (wt.units === 'imperial'
+          ? ftInFromCm(wt.height).ft + '\u2032' + ftInFromCm(wt.height).inch + '\u2033'
+          : Math.round(wt.height) + 'cm') +
+        ', starting weight ' + kg(fromKg(wt.pre, wt.units)) + wUnit() + '. ' +
         '<button class="x" type="button" id="w-reset">Change these</button><br>' +
         'Everything here is saved on this device only, in this browser. Not synced, not shared. ' +
         'The tracker is optional — if weighing yourself is not good for you, hand it to the clinic and skip this tab.</p>' +
@@ -1042,14 +1145,24 @@ function renderWeight() {
     const g = Math.floor(r.week) + 'w' + Math.round((r.week % 1) * 7) + 'd';
     return '<div class="wtrow"><span class="d">' + r.date + '</span><span class="g">' + g + '</span>' +
       '<button class="x" type="button" data-date="' + r.date + '">Remove</button>' +
-      '<span class="k">' + kg(r.kg) + 'kg <span class="g">' + (r.gain >= 0 ? '+' : '') + kg(r.gain) + '</span></span></div>';
+      '<span class="k">' + kg(fromKg(r.kg, wt.units)) + wUnit() + ' <span class="g">' +
+        (r.gain >= 0 ? '+' : '') + kg(fromKg(r.gain, wt.units)) + '</span></span></div>';
   }).join('');
 
   $('#w-add').addEventListener('click', () => {
-    const date = $('#w-date').value, v = Number($('#w-kg').value);
-    if (!date || !(v >= 30 && v <= 200)) return;
+    const date = $('#w-date').value;
+    if (!date) return showWtError('#w-err2', 'Pick a date for this reading.');
+    const entered = fieldNum('#w-kg');
+    if (entered === null) return showWtError('#w-err2', 'Add a weight in ' + wUnit() + '.');
+    const v = toKg(entered, wt.units);
+    if (v < 30 || v > 200) {
+      return showWtError('#w-err2', 'That looks out of range for ' + wUnit() + '. Check the unit on the card above.');
+    }
+    if (date > todayIso()) return showWtError('#w-err2', 'That date is in the future.');
+    showWtError('#w-err2', '');
     wt.log = [...wt.log.filter((r) => r.date !== date), { date, kg: v }];
-    saveWt(); renderWeight();
+    if (!saveWt()) return showWtError('#w-err2', 'Could not save \u2014 this browser is blocking storage.');
+    renderWeight();
   });
   $('#w-reset').addEventListener('click', () => { wt.height = null; wt.pre = null; saveWt(); renderWeight(); });
   $$('#w-rows .x').forEach((b) => b.addEventListener('click', () => {

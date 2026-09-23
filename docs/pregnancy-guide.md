@@ -2038,7 +2038,7 @@ their first baby and kept the sheet, including who owned each task.
 
 ### The order they did it in
 
-Nothing here is due at five weeks. It is here so the timings are known before
+Nothing here is due yet. It is here so the timings are known before
 they arrive.
 
 **Second trimester — roughly weeks 14 to 27**
@@ -2179,7 +2179,7 @@ because the good ones book up:
 
 ## 17. Weight, and what the range actually means
 
-### Right now, at five weeks, the number means almost nothing
+### In the first trimester, the number means almost nothing
 
 Expected gain in the whole first trimester is **0.5 to 2kg** — across thirteen
 weeks. That is less than the swing between a Tuesday morning and a Friday
