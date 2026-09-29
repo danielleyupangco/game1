@@ -48,10 +48,11 @@ looks at, not just what the lab called it. Status is written as a word — `good
 | Ferritin | Your iron *stores* — runs low long before haemoglobin drops | — | Above 30 ng/mL | pending | not ordered |
 | Platelets | The cells that let blood clot | 209,000 /µL | 150,000–450,000 | good | 2026-09-18 |
 | White cells | The infection-fighting cells, also on the CBC | 5.91 ×10³/µL | 4.40–11.00 | good | 2026-09-18 |
-| Fasting blood sugar | Blood sugar after not eating overnight | — | Under 92 mg/dL | pending | ordered, not received |
-| TSH | The pituitary's signal to the thyroid — the main thyroid number | — | Roughly 0.1–4.0 in the first trimester | pending | ordered, not received |
-| Free T4 / T3 | The thyroid hormones themselves | — | Lab's pregnancy range | pending | ordered, not received |
-| Vitamin D (25-OH) | Your vitamin D stores | — | Above 30 ng/mL is comfortable | pending | ordered, not received |
+| Fasting blood sugar | Blood sugar after not eating overnight | 76 mg/dL | 74–99 | good | 2026-09-18 |
+| TSH | The pituitary's signal to the thyroid — the main thyroid number | **5.13 uIU/mL** | 0.27–4.20, and under 4.0 in pregnancy | urgent | 2026-09-18 |
+| Total T4 | The thyroid hormone itself. *Total*, not free — see note | 10.06 ug/dL | 5.15–14.12 | good | 2026-09-18 |
+| Total T3 | The other thyroid hormone | 1.11 ug/dL | 0.85–2.02 | good | 2026-09-18 |
+| Vitamin D (25-OH) | Your vitamin D stores | 29.6 ng/mL | 30.0 or above is sufficient | watch | 2026-09-18 |
 | Blood type & Rh | Your blood group, and whether you are Rh positive or negative | — | Needed by 28 weeks | pending | not ordered |
 | HIV screen | Standard test offered to everyone in pregnancy | Nonreactive, 0.31 S/CO | Below 1.0 is negative | good | 2026-09-18 |
 | Pre-pregnancy weight | Your starting weight, used to work out healthy gain | — | Not recorded | pending | not recorded |
@@ -101,6 +102,11 @@ to-do that does not happen.
 
 ### Do now
 
+- [ ] **Show Dra. Villafria the TSH of 5.13, at the scan.** This is the one
+      abnormal result in the whole panel that needs a decision, and it has
+      already sat unread since 18 September. Ask for **TPO antibodies, free T4
+      and a repeat TSH** — one draw, three tests. TPO is what decides whether
+      treatment is recommended or merely considered. *From Lab 26596449 page 2.*
 - [ ] **Book the repeat scan.** Window is **28 Sept – 5 Oct**. Aim late in it —
       at 7w3d a heartbeat and a crown-rump length should both be measurable, and
       that is the scan that settles both the dating and the subchorionic
@@ -128,6 +134,9 @@ to-do that does not happen.
       steeply from the second trimester, so knowing now is worth more than
       knowing at 32 weeks. It is not part of a standard panel, so it has to be
       asked for by name.
+- [ ] **Vitamin D at 29.6, against a cutoff of 30.** Borderline rather than
+      deficient. Ask whether the prenatal vitamin already covers it or whether a
+      separate supplement is worth adding. Least urgent thing on the list.
 - [ ] **The Pap inflammation note.** Common and non-specific beside a normal
       result, but worth raising once. *From the 4–5 Sept Pap.*
 
@@ -141,34 +150,18 @@ to-do that does not happen.
 - [ ] **Varicella IgG — also never ordered.** Whether you are immune to
       chickenpox. Often skipped where someone clearly had it as a child, so ask
       whether that was the reasoning rather than assuming it was an oversight.
-- [ ] **Three results still outstanding — ask whether they were ever drawn.**
-      The form ordered **twelve** tests on 4 September. **Nine** are in hand. The
-      portal was checked on 29 September and holds six results and nothing else,
-      so **the fasting blood sugar, the thyroid panel and the vitamin D are not
-      lost in it — they are not there at all.** One draw, several tubes: a tube
-      that never went is as likely as a report that never came. Ask the lab which
-      it was, because the answer decides whether you are chasing paperwork or
-      booking another draw.
-- [ ] **The thyroid panel (T3, T4, TSH) — chase this one first.** Thyroid demand
-      rises sharply in the first trimester, the baby cannot make its own thyroid
-      hormone until about week 12, and every symptom of an underactive thyroid
-      reads as ordinary early pregnancy. A blood test finds it and a cheap daily
-      tablet treats it.
-- [ ] **The fasting blood sugar.** Pairs with the HbA1c of 5.2% already back, to
-      make the baseline the 24–28 week OGTT is compared against.
-- [ ] **The vitamin D (25-OH).** Least urgent of the three. Deficiency is common
-      in Manila because of sun avoidance, and it is corrected cheaply.
-- [ ] **Check page 2 of Lab 26596449.** The serology chemistry report is marked
-      "Page 1 of 2" and only page 1 has been seen. Probably just the remainder of
-      the rubella and hepatitis remarks, but worth opening once.
 
 ### Already settled — no action
 
 Rubella immune. Hepatitis B immune and not infected. Hepatitis C negative.
-Syphilis screen negative. **HIV screen nonreactive.** HbA1c normal. Urine clean,
-no protein. Pap normal. Blood pressure 120/70. **CBC normal — haemoglobin 13.5,
-platelets 209,000, white cells 5.91, differential normal.** Not anaemic, and
-clotting cells in range.
+Syphilis screen negative. **HIV screen nonreactive.** HbA1c 5.2% and **fasting
+glucose 76** — both normal. Urine clean, no protein. Pap normal. Blood pressure
+120/70. **CBC normal — haemoglobin 13.5, platelets 209,000, white cells 5.91,
+differential normal.** Not anaemic, and clotting cells in range. **T3 and T4
+normal.**
+
+**All twelve ordered tests are now in hand.** Eleven are normal or better. The
+TSH is the one exception, and it is at the top of this list.
 
 ---
 
@@ -348,6 +341,85 @@ The scan itself still matters just as much. Book it.
 activity and crown-rump length.
 
 *Sources: [ACOG Committee Opinion 700 — Methods for Estimating the Due Date](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2017/05/methods-for-estimating-the-due-date); [First-trimester subchorionic hematoma and pregnancy loss, Scientific Reports 2024](https://www.nature.com/articles/s41598-024-81759-3); [Subchorionic hemorrhage, StatPearls](https://www.ncbi.nlm.nih.gov/books/NBK559017/); [Subchorionic hemorrhage in first-trimester pregnancies, Radiology](https://pubs.rsna.org/doi/10.1148/radiology.200.3.8756935). Verified 2026-09-18. Confidence: high on the report transcription and the dating arithmetic; high on the ACOG threshold; medium on SCH prognosis, where study populations and size definitions vary.*
+
+---
+
+## 18 September 2026 — Thyroid, fasting glucose and vitamin D · 5w0d
+
+**Lab 26596449, page 2.** Same report as the hepatitis and rubella serology,
+same draw, released 18 September 12:02. Page 1 was the only page seen until
+29 September.
+
+| Test | Result | Reference |
+| --- | --- | --- |
+| Glucose (fasting) | 76 mg/dL | 74 – 99 |
+| Total T3 | 1.11 ug/dL | 0.85 – 2.02 |
+| Total T4 | 10.06 ug/dL | 5.15 – 14.12 |
+| **Vitamin D, total** | **29.6 ng/mL** — flagged low | 30.0 or above is sufficient |
+| **TSH** | **5.130 uIU/mL** — flagged high | 0.270 – 4.200 |
+
+### The TSH is the one thing in this pregnancy that needs a decision
+
+**TSH 5.13 against a ceiling of 4.20 — and pregnancy uses a lower ceiling
+still, commonly 4.0 in the first trimester.** With a normal T4 beside it, that
+pattern has a name: **subclinical hypothyroidism**. Not an emergency, not a
+crisis, and not something to leave sitting either.
+
+**Why it matters more in pregnancy than it would otherwise.** The baby cannot
+make any thyroid hormone of its own until around week 12 and runs entirely on
+yours until then. Subclinical hypothyroidism in pregnancy is associated with a
+raised risk of miscarriage and preterm birth. The evidence that treating it
+improves the child's later neurocognitive outcomes is *not* strong — that is
+worth knowing so nobody oversells it — but the pregnancy-loss association is
+why guidelines lean towards treating rather than watching.
+
+**Timing makes this more striking, not less.** hCG mildly stimulates the thyroid
+and normally pushes TSH *down* through the first trimester, reaching its lowest
+point around weeks 9–12. This sample was drawn at **5w0d**, so the number was
+taken before much of that dip, and it was still above range.
+
+**What decides the treatment is a test you have not had: TPO antibodies.**
+Under the 2017 American Thyroid Association guidance:
+
+| Situation | What the guidance says |
+| --- | --- |
+| TPO antibodies **positive**, TSH above the pregnancy range | **Treat** |
+| TPO antibodies **negative**, TSH above 10 | **Treat** |
+| TPO antibodies **negative**, TSH above the pregnancy range but under 10 | **Consider treating**, aiming to bring TSH to 2.5 or below |
+
+At 5.13 you are in the third row unless the antibodies come back positive, in
+which case the first. Either way the treatment is **levothyroxine**, typically
+started at 25–50mcg — a cheap daily tablet, taken on an empty stomach, kept
+apart from iron and calcium by several hours. It is one of the most
+well-established medications in pregnancy.
+
+**One technical point worth raising with her.** What was measured was **total**
+T3 and T4, not **free** T4. Oestrogen raises thyroxine-binding globulin sharply
+in pregnancy, which inflates the total figures by roughly half by mid-pregnancy.
+Total T4 is the wrong denominator from here on; **free T4** is the pregnancy
+test. At 5w0d the distortion is still small, so the 10.06 is probably a fair
+reading — but any repeat should be free T4.
+
+**What to ask for:** TPO antibodies, free T4, and a repeat TSH. All three from
+one draw.
+
+### The fasting glucose is normal
+
+**76 mg/dL** against 74–99, and comfortably under the 92 that pregnancy uses as
+its fasting threshold. It sits alongside the HbA1c of 5.2%, and the two together
+are the baseline the OGTT at 24–28 weeks will be read against. Nothing to do.
+
+### Vitamin D is 0.4 below the line
+
+**29.6 ng/mL** against the lab's own sufficiency cutoff of 30.0. Technically
+insufficient; practically, borderline, and the least urgent thing on the page.
+Deficiency is common in Metro Manila despite the sunshine, because of sun
+avoidance and long days indoors. The fix is a daily supplement — the prenatal
+vitamin usually contains some already, so the question for Dra. Villafria is
+whether what you are taking is enough rather than whether to start something
+new.
+
+*Source: Makati Medical Center, Lab 26596449 page 2, released 18 September 2026. Treatment thresholds from the [2017 American Thyroid Association guidelines](https://www.e-lactancia.org/media/papers/TiroidesLevotiroxinaLiotironinaBFGuia-Thyr2017.pdf) and [NHS Lothian's summary of subclinical hypothyroidism in pregnancy](https://apps.nhslothian.scot/refhelp/guidelines/endocrinology/thyroid-conditions-and-pregnancy/subclinical-hypothyroidism-and-pregnancy/). Verified 2026-09-29. Confidence: high for the result, high for the guidance, and **this is a summary of published guidance, not a treatment decision — that is Dra. Villafria's.***
 
 ---
 
@@ -597,8 +669,14 @@ dating calculation rests on.
 ## 4 September 2026 — What was ordered, and what came back
 
 The request form, signed by **Dr. Marinette Tuason-Sto. Domingo** (Lic. 88082)
-and addressed to the Makati Med laboratory, ordered **twelve** tests. **Nine**
-results are in hand. **Three have never appeared.**
+and addressed to the Makati Med laboratory, ordered **twelve** tests. **All
+twelve results are in hand.**
+
+Three of them spent eleven days appearing to be missing because they sit on
+**page 2 of Lab 26596449** — the same report as the hepatitis and rubella
+serology, whose page 1 carries no hint that the thyroid, the fasting glucose and
+the vitamin D are overleaf. Worth remembering for every report from here: **check
+the page count in the top right corner.**
 
 ### Everything ordered, against everything received
 
@@ -606,14 +684,14 @@ results are in hand. **Three have never appeared.**
 | --- | --- | --- | --- | --- | --- |
 | 1 | CBC | yes | **yes** | Normal. Hb 13.5, platelets 209,000, WBC 5.91 | Portal 26596440 |
 | 2 | Urinalysis | yes | **yes** | Clean. No protein, no infection | Portal 26596441 |
-| 3 | **FBS (fasting sugar)** | yes | **no** | — | **Nowhere** |
+| 3 | FBS (fasting sugar) | yes | **yes** | 76 mg/dL — normal | Portal 26596449 **page 2** |
 | 4 | HbA1c | yes | **yes** | 5.2 % — normal | Portal 26596443 |
-| 5 | **T3, T4, TSH** | yes | **no** | — | **Nowhere** |
+| 5 | **T3, T4, TSH** | yes | **yes** | T3 and T4 normal. **TSH 5.13 — high** | Portal 26596449 **page 2** |
 | 6 | HBsAg | yes | **yes** | Nonreactive — no hepatitis B | Portal 26596449 |
 | 7 | Anti-HBs | yes | **yes** | Reactive 288 — immune | Portal 26596449 |
 | 8 | Anti-HCV | yes | **yes** | Nonreactive — no hepatitis C | Portal 26596449 |
 | 9 | Rubella IgG | yes | **yes** | Reactive 219 — immune | Portal 26596449 |
-| 10 | **Vitamin D (25-OH)** | yes | **no** | — | **Nowhere** |
+| 10 | Vitamin D (25-OH) | yes | **yes** | 29.6 ng/mL — just under the 30 cutoff | Portal 26596449 **page 2** |
 | 11 | RPR | yes | **yes** | Nonreactive — syphilis screen clear | Portal 26596452 |
 | 12 | HIV Ag/Ab | yes | **yes** | Nonreactive, 0.31 S/CO | **Paper only** — Accession 26-09-1131 |
 
@@ -635,7 +713,8 @@ results are in hand. **Three have never appeared.**
 | 75g OGTT | Correct to omit. Belongs at 24–28 weeks. |
 | Group B strep swab | Correct to omit. Belongs at 36–37 weeks. |
 
-**Running total: 12 ordered, 9 received, 3 missing, 3 to add.**
+**Running total: 12 ordered, 12 received, 0 missing, 3 to add.** Eleven results
+normal. One — the TSH — needs a decision.
 
 ### The portal has been checked, and it holds six results
 
@@ -652,11 +731,10 @@ Pulmonary, Nuclear Medicine, Other Centers.
 | 26596449 | Clinical chemistry | 18 Sept | Hepatitis and rubella serology |
 | 26596452 | Serology | 18 Sept | RPR |
 
-**So the fasting sugar, the thyroid panel and the vitamin D are genuinely not
-there.** That is worth knowing precisely, because it changes the next move from
-*look again* to *ask the laboratory what happened to them*. They may never have
-been drawn — one blood draw, several tubes, and a missing tube is as likely an
-explanation as a missing report.
+**Six result IDs, twelve results.** The count is right and the conclusion drawn
+from it on 29 September — that three tests were missing — was wrong: one of
+those six PDFs runs to two pages and carries five results rather than four. A
+portal index counts documents, not tests.
 
 **The portal is not a complete record, so do not treat it as one.** Two results
 that exist are absent from it: the **HIV screen** (Accession 26-09-1131, issued

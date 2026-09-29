@@ -2054,6 +2054,13 @@ a large minority of pregnancies — and it is **strongly linked to low iron**.
 If it starts, that is a specific reason to ask for **ferritin**, not just a
 haemoglobin. Treating the iron often treats the legs.
 
+**Exhaustion that the sleep advice does not touch.** First-trimester tiredness
+is normal and enormous, so it hides things. An underactive thyroid produces
+exactly the same picture — flat, cold, heavy, unrefreshed by sleep — and is
+found on a blood test rather than guessed at. Iron is the other one. If the
+tiredness is not moving and the sleep itself is not obviously broken, the
+answer may not be in this section at all; it may be a number on a lab report.
+
 **Snoring plus daytime sleepiness.** Sleep apnoea becomes more common in
 pregnancy, and it is associated with raised blood pressure and gestational
 diabetes. If Nico notices you snoring heavily or stopping breathing, that is
