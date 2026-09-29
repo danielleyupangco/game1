@@ -141,12 +141,14 @@ to-do that does not happen.
 - [ ] **Varicella IgG — also never ordered.** Whether you are immune to
       chickenpox. Often skipped where someone clearly had it as a child, so ask
       whether that was the reasoning rather than assuming it was an oversight.
-- [ ] **Three results still outstanding.** Dra. Sto. Domingo's form ordered
-      **twelve** tests on 4 September. **Nine** are now in hand — the CBC was
-      retrieved from the portal on 29 September. **Three have never appeared
-      anywhere: the fasting blood sugar, the thyroid panel and the vitamin D.**
-      They are not in the portal either, so ask the lab directly rather than
-      looking again.
+- [ ] **Three results still outstanding — ask whether they were ever drawn.**
+      The form ordered **twelve** tests on 4 September. **Nine** are in hand. The
+      portal was checked on 29 September and holds six results and nothing else,
+      so **the fasting blood sugar, the thyroid panel and the vitamin D are not
+      lost in it — they are not there at all.** One draw, several tubes: a tube
+      that never went is as likely as a report that never came. Ask the lab which
+      it was, because the answer decides whether you are chasing paperwork or
+      booking another draw.
 - [ ] **The thyroid panel (T3, T4, TSH) — chase this one first.** Thyroid demand
       rises sharply in the first trimester, the baby cannot make its own thyroid
       hormone until about week 12, and every symptom of an underactive thyroid
@@ -622,6 +624,32 @@ than omissions by the lab:
 | **Varicella IgG** | Chickenpox immunity. Often skipped where someone clearly had it as a child — ask whether that was the reasoning. |
 | 75g OGTT | Correct. That belongs at 24–28 weeks, not at booking. |
 | Group B strep swab | Correct. That is a 36–37 week swab. |
+
+### The portal has been checked, and it holds six results
+
+Checked 29 September. The Makati Med portal lists **Laboratory 6** and **zero**
+under every other section — Radiology, CVDL-Heart Station, Breast Clinic,
+Pulmonary, Nuclear Medicine, Other Centers.
+
+| Result ID | Section | Released | What it is |
+| --- | --- | --- | --- |
+| CF2608270 | Cytology | 5 Sept | Pap smear |
+| 26596440 | Hematology | 18 Sept | CBC |
+| 26596441 | Clinical microscopy | 18 Sept | Urinalysis |
+| 26596443 | Clinical chemistry | 18 Sept | HbA1c |
+| 26596449 | Clinical chemistry | 18 Sept | Hepatitis and rubella serology |
+| 26596452 | Serology | 18 Sept | RPR |
+
+**So the fasting sugar, the thyroid panel and the vitamin D are genuinely not
+there.** That is worth knowing precisely, because it changes the next move from
+*look again* to *ask the laboratory what happened to them*. They may never have
+been drawn — one blood draw, several tubes, and a missing tube is as likely an
+explanation as a missing report.
+
+**The portal is not a complete record, so do not treat it as one.** Two results
+that exist are absent from it: the **HIV screen** (Accession 26-09-1131, issued
+on paper) and the **18 September ultrasound**, which is why Radiology reads zero
+despite the scan having happened. Anything that arrives on paper stays on paper.
 
 ### What the three newly-missing results would tell you
 
