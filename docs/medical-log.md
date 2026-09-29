@@ -597,33 +597,45 @@ dating calculation rests on.
 ## 4 September 2026 — What was ordered, and what came back
 
 The request form, signed by **Dr. Marinette Tuason-Sto. Domingo** (Lic. 88082)
-and addressed to the Makati Med laboratory, ordered **twelve** tests. Eight
-results have been received. **Four have not.**
+and addressed to the Makati Med laboratory, ordered **twelve** tests. **Nine**
+results are in hand. **Three have never appeared.**
 
-| Ordered | Received | |
-| --- | --- | --- |
-| CBC | **No** | Lab 26596440 — released, never sent |
-| Urinalysis | Yes | Lab 26596441 |
-| FBS (fasting, 8–10 hrs) | **No** | Never seen |
-| HbA1c | Yes | 5.2% |
-| T3, T4, TSH | **No** | Never seen |
-| HBsAg | Yes | Nonreactive |
-| Anti-HBs | Yes | Reactive, 288 |
-| Anti-HCV | Yes | Nonreactive |
-| Rubella IgG | Yes | Reactive, 219 |
-| Vitamin D3 (25-OH) | **No** | Never seen |
-| RPR (qualitative) | Yes | Nonreactive |
-| HIV Ag/Ab | Yes | Nonreactive, 0.31 S/CO |
+### Everything ordered, against everything received
 
-**Deliberately not ordered** — the boxes are blank, so these were choices rather
-than omissions by the lab:
+| # | Test | Ordered | Received | Result | Where it is |
+| --- | --- | --- | --- | --- | --- |
+| 1 | CBC | yes | **yes** | Normal. Hb 13.5, platelets 209,000, WBC 5.91 | Portal 26596440 |
+| 2 | Urinalysis | yes | **yes** | Clean. No protein, no infection | Portal 26596441 |
+| 3 | **FBS (fasting sugar)** | yes | **no** | — | **Nowhere** |
+| 4 | HbA1c | yes | **yes** | 5.2 % — normal | Portal 26596443 |
+| 5 | **T3, T4, TSH** | yes | **no** | — | **Nowhere** |
+| 6 | HBsAg | yes | **yes** | Nonreactive — no hepatitis B | Portal 26596449 |
+| 7 | Anti-HBs | yes | **yes** | Reactive 288 — immune | Portal 26596449 |
+| 8 | Anti-HCV | yes | **yes** | Nonreactive — no hepatitis C | Portal 26596449 |
+| 9 | Rubella IgG | yes | **yes** | Reactive 219 — immune | Portal 26596449 |
+| 10 | **Vitamin D (25-OH)** | yes | **no** | — | **Nowhere** |
+| 11 | RPR | yes | **yes** | Nonreactive — syphilis screen clear | Portal 26596452 |
+| 12 | HIV Ag/Ab | yes | **yes** | Nonreactive, 0.31 S/CO | **Paper only** — Accession 26-09-1131 |
 
-| Not ordered | Why it probably was not, and whether to ask |
+### Ordered separately, outside that form
+
+| Test | Received | Result | Where it is |
+| --- | --- | --- | --- |
+| Pap smear | **yes** | NILM — normal. Comment: inflammation | Portal CF2608270 |
+| First OB ultrasound | **yes** | Intrauterine, 5w2d, subchorionic hemorrhage | **Paper and films only** |
+| Blood pressure | **yes** | 120/70 | Clinic, 18 Sept |
+
+### Never ordered — the boxes are blank, so these were choices
+
+| Test | Verdict |
 | --- | --- |
-| **Blood typing with Rh** | Genuinely needed by 28 weeks. Worth adding to the next request. |
-| **Varicella IgG** | Chickenpox immunity. Often skipped where someone clearly had it as a child — ask whether that was the reasoning. |
-| 75g OGTT | Correct. That belongs at 24–28 weeks, not at booking. |
-| Group B strep swab | Correct. That is a 36–37 week swab. |
+| **Blood typing with Rh** | **Needs adding.** Genuinely required by 28 weeks for the anti-D decision and for delivery. |
+| **Ferritin** | **Needs adding.** Not on the form at all. The CBC rules out anaemia but says nothing about iron stores. |
+| **Varicella IgG** | **Ask.** Chickenpox immunity. Often skipped where childhood infection is known — check that was the reasoning. |
+| 75g OGTT | Correct to omit. Belongs at 24–28 weeks. |
+| Group B strep swab | Correct to omit. Belongs at 36–37 weeks. |
+
+**Running total: 12 ordered, 9 received, 3 missing, 3 to add.**
 
 ### The portal has been checked, and it holds six results
 
