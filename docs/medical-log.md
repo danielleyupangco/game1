@@ -39,10 +39,15 @@ looks at, not just what the lab called it. Status is written as a word — `good
 | Anti-HCV | Whether you have hepatitis C | Nonreactive | Nonreactive means no | good | 2026-09-18 |
 | RPR | The syphilis test | Nonreactive | Nonreactive means no | good | 2026-09-18 |
 | Pap smear | Checks the cervix for abnormal cells | NILM | No abnormal cells | good | 2026-09-05 |
-| Haemoglobin | The part of blood that carries oxygen — low means anaemia | — | Not done yet | pending | Lab 26596440 |
+| Haemoglobin | The part of blood that carries oxygen — low means anaemia | 13.5 g/dL | 12.3–16.0 | good | 2026-09-18 |
+| Haematocrit | What share of your blood is red cells | 41.1 % | 35.9–48.0 | good | 2026-09-18 |
+| MCV | The average size of a red cell — small points to low iron | 88 fL | 80–96 | good | 2026-09-18 |
+| MCH | How much haemoglobin sits in an average red cell | 29 pg | 27.5–33.2 | good | 2026-09-18 |
+| RDW | How much red cell sizes vary — rises early in iron deficiency | 12.3 % | 11.6–14.6 | good | 2026-09-18 |
+| MCHC | Haemoglobin packed into a red cell. Calculated, not measured | 32.8 % | 33.4–35.5 | watch | 2026-09-18 |
 | Ferritin | Your iron *stores* — runs low long before haemoglobin drops | — | Above 30 ng/mL | pending | not ordered |
-| Platelets | The cells that let blood clot | — | Not done yet | pending | Lab 26596440 |
-| White cells | The infection-fighting cells, also on the CBC | — | Not done yet | pending | Lab 26596440 |
+| Platelets | The cells that let blood clot | 209,000 /µL | 150,000–450,000 | good | 2026-09-18 |
+| White cells | The infection-fighting cells, also on the CBC | 5.91 ×10³/µL | 4.40–11.00 | good | 2026-09-18 |
 | Fasting blood sugar | Blood sugar after not eating overnight | — | Under 92 mg/dL | pending | ordered, not received |
 | TSH | The pituitary's signal to the thyroid — the main thyroid number | — | Roughly 0.1–4.0 in the first trimester | pending | ordered, not received |
 | Free T4 / T3 | The thyroid hormones themselves | — | Lab's pregnancy range | pending | ordered, not received |
@@ -115,12 +120,14 @@ to-do that does not happen.
       **19 May**, the report header says **21 May**. The app uses 19 May. Two
       days apart, and it moves any planned section date with it. The CRL scan
       resolves it, so confirm before booking anything around the birth.
-- [ ] **Ferritin, added to the CBC.** The CBC gives haemoglobin, which only
-      shows anaemia once it has arrived. Ferritin shows the iron *stores*, and a
-      first-trimester haemoglobin catches only about 30% of the people whose
-      ferritin is already low. It is usually not in the standard panel, so it
-      has to be asked for by name — and it is far easier to fix now than at 32
-      weeks. *From the missing CBC.*
+- [ ] **Ferritin, as a separate request.** The CBC has now arrived and the
+      haemoglobin is normal at 13.5, so this is no longer about anaemia — it is
+      a stock-check. Haemoglobin shows whether the tank has run dry; ferritin
+      shows how much is left in it, and a first-trimester haemoglobin catches
+      only about 30% of people whose stores are already low. Demand climbs
+      steeply from the second trimester, so knowing now is worth more than
+      knowing at 32 weeks. It is not part of a standard panel, so it has to be
+      asked for by name.
 - [ ] **The Pap inflammation note.** Common and non-specific beside a normal
       result, but worth raising once. *From the 4–5 Sept Pap.*
 
@@ -134,34 +141,32 @@ to-do that does not happen.
 - [ ] **Varicella IgG — also never ordered.** Whether you are immune to
       chickenpox. Often skipped where someone clearly had it as a child, so ask
       whether that was the reasoning rather than assuming it was an oversight.
-- [ ] **Four results, not one.** Dra. Sto. Domingo's request form ordered
-      **twelve** tests on 4 September. **Eight** came back on 18 September.
-      **Four have never been seen: the CBC, the fasting blood sugar, the thyroid
-      panel and the vitamin D.** Ask for all four by name — they were ordered
-      together, so they are likely sitting together.
-- [ ] **The CBC** (Lab 26596440). Released the same morning but not in the batch.
-      This is the haemoglobin and platelet baseline, and anemia is common in
-      Philippine pregnancies. **Until it arrives there is no iron reading at
-      all** — the iron question cannot be answered from anything received so far,
-      and neither can any question about **bruising**, which is a platelet
-      question. Nothing else in the 18 September batch speaks to clotting.
-- [ ] **The thyroid panel (T3, T4, TSH).** The most clinically important of the
-      three newly-missing ones. Thyroid demand rises sharply in the first
-      trimester, an underactive thyroid is common, easily missed behind ordinary
-      pregnancy tiredness, and **treated with a cheap daily tablet when caught**.
-      This one is worth chasing first.
-- [ ] **The fasting blood sugar.** Pairs with the HbA1c of 5.2% already back.
-      That result was reassuring on its own; the FBS is the other half of the
-      baseline going into the OGTT at 24–28 weeks.
-- [ ] **The vitamin D (25-OH).** Least urgent of the four, and worth having:
-      deficiency is common in Manila despite the sun, because of sun avoidance,
-      and it is corrected with an inexpensive supplement.
+- [ ] **Three results still outstanding.** Dra. Sto. Domingo's form ordered
+      **twelve** tests on 4 September. **Nine** are now in hand — the CBC was
+      retrieved from the portal on 29 September. **Three have never appeared
+      anywhere: the fasting blood sugar, the thyroid panel and the vitamin D.**
+      They are not in the portal either, so ask the lab directly rather than
+      looking again.
+- [ ] **The thyroid panel (T3, T4, TSH) — chase this one first.** Thyroid demand
+      rises sharply in the first trimester, the baby cannot make its own thyroid
+      hormone until about week 12, and every symptom of an underactive thyroid
+      reads as ordinary early pregnancy. A blood test finds it and a cheap daily
+      tablet treats it.
+- [ ] **The fasting blood sugar.** Pairs with the HbA1c of 5.2% already back, to
+      make the baseline the 24–28 week OGTT is compared against.
+- [ ] **The vitamin D (25-OH).** Least urgent of the three. Deficiency is common
+      in Manila because of sun avoidance, and it is corrected cheaply.
+- [ ] **Check page 2 of Lab 26596449.** The serology chemistry report is marked
+      "Page 1 of 2" and only page 1 has been seen. Probably just the remainder of
+      the rubella and hepatitis remarks, but worth opening once.
 
 ### Already settled — no action
 
 Rubella immune. Hepatitis B immune and not infected. Hepatitis C negative.
 Syphilis screen negative. **HIV screen nonreactive.** HbA1c normal. Urine clean,
-no protein. Pap normal. Blood pressure 120/70.
+no protein. Pap normal. Blood pressure 120/70. **CBC normal — haemoglobin 13.5,
+platelets 209,000, white cells 5.91, differential normal.** Not anaemic, and
+clotting cells in range.
 
 ---
 
@@ -341,6 +346,71 @@ The scan itself still matters just as much. Book it.
 activity and crown-rump length.
 
 *Sources: [ACOG Committee Opinion 700 — Methods for Estimating the Due Date](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2017/05/methods-for-estimating-the-due-date); [First-trimester subchorionic hematoma and pregnancy loss, Scientific Reports 2024](https://www.nature.com/articles/s41598-024-81759-3); [Subchorionic hemorrhage, StatPearls](https://www.ncbi.nlm.nih.gov/books/NBK559017/); [Subchorionic hemorrhage in first-trimester pregnancies, Radiology](https://pubs.rsna.org/doi/10.1148/radiology.200.3.8756935). Verified 2026-09-18. Confidence: high on the report transcription and the dating arithmetic; high on the ACOG threshold; medium on SCH prognosis, where study populations and size definitions vary.*
+
+---
+
+## 18 September 2026 — Complete blood count · 5w0d
+
+**Lab 26596440**, Hematology. Ordered 4 September, released 18 September
+10:48. Retrieved from the Makati Med portal on 29 September, eleven days after
+it was released and after three separate questions had been blocked on it.
+
+| | Result | Reference |
+| --- | --- | --- |
+| **Haemoglobin** | **13.5 g/dL** | 12.3 – 16.0 |
+| Red blood cells | 4.68 ×10⁶/µL | 4.50 – 5.10 |
+| Haematocrit | 41.1 % | 35.9 – 48.0 |
+| MCV | 88 fL | 80 – 96 |
+| MCH | 29 pg | 27.5 – 33.2 |
+| **MCHC** | **32.8 %** — flagged low | 33.4 – 35.5 |
+| RDW | 12.3 % | 11.6 – 14.6 |
+| White blood cells | 5.91 ×10³/µL | 4.40 – 11.00 |
+| Neutrophils / Lymphocytes | 60 % / 31 % | 40–70 / 22–43 |
+| Monocytes / Eosinophils / Basophils | 6 % / 2 % / 1 % | 0–7 / 0–4 / 0–1 |
+| **Platelets** | **209,000 /µL** | 150,000 – 450,000 |
+| MPV | 11.9 fL | 7.00 – 12.00 |
+
+### Platelets are normal, so the bruising is not a clotting problem
+
+**209,000** sits comfortably in range. Gestational thrombocytopenia is the
+common reason platelets drop in pregnancy and this is nowhere near it —
+spontaneous bruising from low platelets belongs to counts far below this.
+Bruising more easily is instead the ordinary hormonal one: oestrogen and
+progesterone make small vessels more fragile, blood volume is climbing, and
+shins meet furniture.
+
+This is also the number an anaesthetist wants before an epidural, so the
+booking baseline is now on file.
+
+### Not anaemic — but this still does not settle iron
+
+**Haemoglobin 13.5** is comfortably normal, and well above the 11.0 g/dL
+first-trimester threshold for anaemia in pregnancy. The supporting indices agree:
+**MCV 88** and **MCH 29** are mid-range, and small, pale red cells are what iron
+deficiency produces. **RDW 12.3** is normal too, and RDW usually rises early in
+iron deficiency, before anything else moves.
+
+That is a genuinely good picture. **It still does not answer the ferritin
+question**, because haemoglobin measures whether the tank has run dry, not how
+much is left in it. A first-trimester haemoglobin catches only about 30% of
+people whose ferritin is already low, and demand climbs steeply from the second
+trimester. Ferritin remains worth asking for — the difference now is that it is
+a stock-check rather than a worry.
+
+### The one flagged value is a non-finding
+
+**MCHC 32.8** against a floor of 33.4 is the only thing the lab marked. It is
+not measured; it is calculated from the two numbers above it — haemoglobin
+divided by haematocrit, ×100. Doing that by hand: 13.5 ÷ 41.1 × 100 = **32.8**.
+It is the least informative of the red cell indices and the one most prone to
+analyser quirks.
+
+What would make a low MCHC meaningful is company: a low MCV, a low MCH, a raised
+RDW, a low haemoglobin. **All four are normal here.** A value 0.6 below a
+reference floor, alone, with every related index mid-range, is noise. Worth one
+sentence to Dra. Villafria for completeness, not worth thinking about.
+
+*Source: Makati Medical Center, Department of Pathology and Laboratories, Lab 26596440, released 18 September 2026. Pregnancy anaemia thresholds per ACOG. Verified 2026-09-29. Confidence: high.*
 
 ---
 
