@@ -128,7 +128,9 @@ to-do that does not happen.
 - [ ] **The CBC** (Lab 26596440). Released the same morning but not in the batch.
       This is the haemoglobin and platelet baseline, and anemia is common in
       Philippine pregnancies. **Until it arrives there is no iron reading at
-      all** — the iron question cannot be answered from anything received so far.
+      all** — the iron question cannot be answered from anything received so far,
+      and neither can any question about **bruising**, which is a platelet
+      question. Nothing else in the 18 September batch speaks to clotting.
 
 ### Already settled — no action
 

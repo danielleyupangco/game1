@@ -1633,6 +1633,52 @@ goes everywhere.
 
 *Sources: [UKTIS — clotrimazole in pregnancy](https://uktis.org/monographs/use-of-clotrimazole-in-pregnancy/); [MotherToBaby — fluconazole](https://mothertobaby.org/fact-sheets/fluconazole-pregnancy/); [Cochrane — topical treatment for vaginal candidiasis in pregnancy](https://pubmed.ncbi.nlm.nih.gov/11687074/). Verified 2026-09-21. Confidence: high.*
 
+### Bruising more easily
+
+Most people bruise more easily in pregnancy, and it starts early. Oestrogen and
+progesterone both make small blood vessels more fragile and more permeable, and
+blood volume is already climbing. A knock that would have left nothing now
+leaves a mark. Shins take the worst of it, because shins meet furniture.
+
+**What makes a bruise ordinary:** you can think of the knock, or it is somewhere
+you knock constantly — shins, thighs, upper arms. It is one or two, not a
+scatter. It fades through the usual purple-green-yellow over one to two weeks.
+
+**What makes bruising worth asking about**, as a pattern rather than a single
+mark:
+
+- Bruises appearing **with no injury you can account for**
+- Bruises **in unusual places** — the trunk, the back, the face
+- **Many at once**, or ones that keep growing
+- **Petechiae**: tiny flat red or purple pinpoint dots, often in clusters, that
+  do not fade when you press on them. These are not bruises and are a different
+  kind of sign
+- **Bleeding gums** when brushing, or **nosebleeds** that are new or frequent
+- Blood in urine or stool
+- Bruising alongside **heavier vaginal bleeding**
+
+### The test that answers it is the CBC
+
+Bruising is a question about **platelets**, the cells that let blood clot. Normal
+is **150–450** (×10⁹/L). Nothing else on a booking panel speaks to it —
+serology, HbA1c, urinalysis and the infection screen say nothing about clotting
+at all.
+
+**Low platelets in pregnancy are usually benign.** *Gestational
+thrombocytopenia* affects roughly 5–11% of pregnancies, accounts for most low
+counts found in pregnancy, and is typically mild. Spontaneous bleeding is rare
+above 50, and serious bleeding is very rare in gestational thrombocytopenia at
+all. Below 100 usually earns a haematology opinion.
+
+Two practical reasons the count matters beyond the bruise: **an epidural needs a
+platelet count**, so it will be checked before delivery regardless; and **low
+platelets are one component of HELLP**, a serious late-pregnancy complication
+that arrives with pre-eclampsia rather than on its own — which is why the number
+gets rechecked in the third trimester, not why a bruise in the first trimester
+is alarming.
+
+*Sources: [UT Southwestern — low platelets in pregnancy](https://utswmed.org/medblog/low-platelets-pregnancy/); [Medscape — thrombocytopenia in pregnancy](https://emedicine.medscape.com/article/272867-overview); [Frimley Health NHS — thrombocytopenia in pregnancy](https://www.fhft.nhs.uk/patients-and-visitors/patient-information-library/thrombocytopenia-pregnancy). Verified 2026-09-29. Confidence: high.*
+
 ### Call immediately, at any stage
 
 - Heavy vaginal bleeding, or bleeding with cramping
