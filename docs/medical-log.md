@@ -42,6 +42,11 @@ looks at, not just what the lab called it. Status is written as a word — `good
 | Haemoglobin | The part of blood that carries oxygen — low means anaemia | — | Not done yet | pending | Lab 26596440 |
 | Ferritin | Your iron *stores* — runs low long before haemoglobin drops | — | Above 30 ng/mL | pending | not ordered |
 | Platelets | The cells that let blood clot | — | Not done yet | pending | Lab 26596440 |
+| White cells | The infection-fighting cells, also on the CBC | — | Not done yet | pending | Lab 26596440 |
+| Fasting blood sugar | Blood sugar after not eating overnight | — | Under 92 mg/dL | pending | ordered, not received |
+| TSH | The pituitary's signal to the thyroid — the main thyroid number | — | Roughly 0.1–4.0 in the first trimester | pending | ordered, not received |
+| Free T4 / T3 | The thyroid hormones themselves | — | Lab's pregnancy range | pending | ordered, not received |
+| Vitamin D (25-OH) | Your vitamin D stores | — | Above 30 ng/mL is comfortable | pending | ordered, not received |
 | Blood type & Rh | Your blood group, and whether you are Rh positive or negative | — | Needed by 28 weeks | pending | not ordered |
 | HIV screen | Standard test offered to everyone in pregnancy | Nonreactive, 0.31 S/CO | Below 1.0 is negative | good | 2026-09-18 |
 | Pre-pregnancy weight | Your starting weight, used to work out healthy gain | — | Not recorded | pending | not recorded |
@@ -121,16 +126,36 @@ to-do that does not happen.
 
 ### Chase from the lab
 
-- [ ] **Blood type and Rh.** Standard booking work, missing from the 18 Sept
-      batch. Needed for the 28-week anti-D dose and for delivery — **not urgent
-      because of the bleed**, since current guidance does not recommend RhIg
-      under 12 weeks.
+- [ ] **Blood type and Rh — never ordered.** The request form's box is blank,
+      so this was not missed by the lab; it was not asked for. Needed for the
+      28-week anti-D dose and for delivery, and **not urgent because of the
+      bleed**, since current guidance does not recommend RhIg under 12 weeks.
+      Worth adding to the next request rather than treating as lost.
+- [ ] **Varicella IgG — also never ordered.** Whether you are immune to
+      chickenpox. Often skipped where someone clearly had it as a child, so ask
+      whether that was the reasoning rather than assuming it was an oversight.
+- [ ] **Four results, not one.** Dra. Sto. Domingo's request form ordered
+      **twelve** tests on 4 September. **Eight** came back on 18 September.
+      **Four have never been seen: the CBC, the fasting blood sugar, the thyroid
+      panel and the vitamin D.** Ask for all four by name — they were ordered
+      together, so they are likely sitting together.
 - [ ] **The CBC** (Lab 26596440). Released the same morning but not in the batch.
       This is the haemoglobin and platelet baseline, and anemia is common in
       Philippine pregnancies. **Until it arrives there is no iron reading at
       all** — the iron question cannot be answered from anything received so far,
       and neither can any question about **bruising**, which is a platelet
       question. Nothing else in the 18 September batch speaks to clotting.
+- [ ] **The thyroid panel (T3, T4, TSH).** The most clinically important of the
+      three newly-missing ones. Thyroid demand rises sharply in the first
+      trimester, an underactive thyroid is common, easily missed behind ordinary
+      pregnancy tiredness, and **treated with a cheap daily tablet when caught**.
+      This one is worth chasing first.
+- [ ] **The fasting blood sugar.** Pairs with the HbA1c of 5.2% already back.
+      That result was reassuring on its own; the FBS is the other half of the
+      baseline going into the OGTT at 24–28 weeks.
+- [ ] **The vitamin D (25-OH).** Least urgent of the four, and worth having:
+      deficiency is common in Manila despite the sun, because of sun avoidance,
+      and it is corrected with an inexpensive supplement.
 
 ### Already settled — no action
 
@@ -494,6 +519,69 @@ beside a NILM result it is not a finding to chase.
 2026** — written down two weeks before the scan, for a different purpose, by a
 different department. That is third-party corroboration of the date the whole
 dating calculation rests on.
+
+---
+
+## 4 September 2026 — What was ordered, and what came back
+
+The request form, signed by **Dr. Marinette Tuason-Sto. Domingo** (Lic. 88082)
+and addressed to the Makati Med laboratory, ordered **twelve** tests. Eight
+results have been received. **Four have not.**
+
+| Ordered | Received | |
+| --- | --- | --- |
+| CBC | **No** | Lab 26596440 — released, never sent |
+| Urinalysis | Yes | Lab 26596441 |
+| FBS (fasting, 8–10 hrs) | **No** | Never seen |
+| HbA1c | Yes | 5.2% |
+| T3, T4, TSH | **No** | Never seen |
+| HBsAg | Yes | Nonreactive |
+| Anti-HBs | Yes | Reactive, 288 |
+| Anti-HCV | Yes | Nonreactive |
+| Rubella IgG | Yes | Reactive, 219 |
+| Vitamin D3 (25-OH) | **No** | Never seen |
+| RPR (qualitative) | Yes | Nonreactive |
+| HIV Ag/Ab | Yes | Nonreactive, 0.31 S/CO |
+
+**Deliberately not ordered** — the boxes are blank, so these were choices rather
+than omissions by the lab:
+
+| Not ordered | Why it probably was not, and whether to ask |
+| --- | --- |
+| **Blood typing with Rh** | Genuinely needed by 28 weeks. Worth adding to the next request. |
+| **Varicella IgG** | Chickenpox immunity. Often skipped where someone clearly had it as a child — ask whether that was the reasoning. |
+| 75g OGTT | Correct. That belongs at 24–28 weeks, not at booking. |
+| Group B strep swab | Correct. That is a 36–37 week swab. |
+
+### What the three newly-missing results would tell you
+
+**The thyroid panel is the one to chase first.** Thyroid demand rises sharply in
+the first trimester — the baby cannot make its own thyroid hormone until about
+week 12 and relies entirely on yours until then. An underactive thyroid is
+common, and its symptoms are exhaustion, feeling cold, low mood and weight
+change, every one of which is indistinguishable from ordinary early pregnancy.
+It is found by a blood test and treated with a cheap daily tablet. Missing it
+is the expensive outcome; finding it is trivial.
+
+Rough first-trimester reading: **TSH up to about 4.0** is generally treated as
+normal, though laboratories set their own pregnancy ranges and guidance has
+moved on this. Between **2.5 and 4.0**, some guidelines suggest checking thyroid
+antibodies (TPO) before deciding anything. Above 4.0 with a normal free T4 is
+*subclinical hypothyroidism*, which in pregnancy is usually treated.
+
+**The fasting blood sugar** pairs with the HbA1c already back at 5.2%, which was
+reassuring on its own. In pregnancy a fasting glucose **under 92 mg/dL** is
+normal; 126 or above would point to diabetes that predates the pregnancy rather
+than a gestational one. Together the two make the baseline that the OGTT at
+24–28 weeks is compared against.
+
+**The vitamin D** is the least urgent and still worth having. Deficiency is
+common in Metro Manila despite the sunshine, precisely because of sun avoidance.
+Above **30 ng/mL** is comfortable; below **20** is deficient. It is corrected
+with an inexpensive daily supplement, and the pregnancy vitamin usually contains
+some already.
+
+*Source: the signed laboratory request form, photographed 29 September 2026, read against the results received. Thyroid and vitamin D thresholds from [American Thyroid Association](https://www.thyroid.org/hypothyroidism-in-pregnancy/), [Korean Thyroid Association 2023 guidelines](https://www.e-enm.org/journal/view.php?doi=10.3803%2FEnM.2023.1696) and [ACOG on vitamin D screening](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2011/07/vitamin-d-screening-and-supplementation-during-pregnancy). Verified 2026-09-29. Confidence: high for the reconciliation, medium for the thresholds, which are laboratory- and guideline-dependent.*
 
 ---
 
