@@ -95,6 +95,7 @@ const prose = {
   prayerGrief: renderSection('prayer', '11. If the news is not good'),
 
   actions: renderSection('medical', 'Action steps'),
+  meds: renderSection('medical', 'Medications'),
   vitals: renderSection('medical', 'Vitals'),
   glossary: renderSection('medical', 'Plain English'),
   birthday: renderSection('pregnancy', '13. Birth day — dates and signs'),
@@ -644,6 +645,8 @@ ${panel('nico', 'For Nico', `
   <div class="prose subview" id="n-bag" hidden>${prose.nicoBag}</div>`)}
 
 ${panel('checkups', 'Check-ups', `
+  <div class="prose"><h3 style="font-family:var(--display);font-size:1.3rem;margin:0 0 .3rem">Medications</h3>${prose.meds}</div>
+
   <section class="vitals" aria-labelledby="vitals-h">
     <div class="vitals-h"><h3 id="vitals-h">Vitals</h3><span id="vitals-count"></span>
       <button class="subtab" type="button" data-view="glossary">What do these words mean?</button></div>

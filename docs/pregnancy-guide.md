@@ -979,6 +979,31 @@ full remaining duration.
 
 *Source: [CDC — Preventing Zika](https://www.cdc.gov/zika/prevention/index.html), [CDC — Recommendations for travelers](https://www.cdc.gov/zika/travel/index.html). Verified 2026-09-18. Confidence: high.*
 
+### Japan — December 2026, at around 17–18 weeks
+
+Raised with Dra. Villafria on 2 October and she is aware of it. **The second
+trimester is the best window for travel there is** — the first-trimester nausea
+has usually passed, the bump is not yet an obstacle, and the late-pregnancy
+flying restrictions are months away. Around 17–18 weeks is comfortably inside it.
+
+What was actually advised, and what it is worth adding:
+
+- **Expect a great deal of walking.** Japan in December is a walking holiday
+  whether or not it is planned as one.
+- **Sensible shoes.** Her words. Ligaments loosen in pregnancy and footing on
+  wet or icy pavement is less reliable than usual.
+- **Cold, not heat, is the issue this time.** Layers, and bear in mind that
+  pregnancy runs warm — overdressing indoors is as likely a problem as the cold
+  outside.
+- **Take the handbook offline.** It works with no signal, which is the point.
+- **Know the hospital nearest where you are staying** before going. Not because
+  anything is expected, but because looking it up in advance costs nothing.
+- **Move every hour on the flight**, and drink more water than feels necessary.
+  Clot risk is higher in pregnancy and this is the whole of the mitigation.
+
+*Note: the liturgical calendar still carries a Korea trip for 5–9 December, from
+an earlier plan. If Japan has replaced it, that entry needs correcting.*
+
 ### Vietnam — cancelled
 
 Planned for early October 2026, around week 7. **Not going** (decided

@@ -94,6 +94,35 @@ rather than something pre-existing finally being noticed.
 
 ---
 
+## Medications
+
+As prescribed on 2 October 2026. **Two names below could not be verified and are
+recorded as heard, not as fact** — automatic note-takers mis-hear drug names
+routinely, and a drug name is not a thing to guess at.
+
+| What | Dose | For | Confidence |
+| --- | --- | --- | --- |
+| **Dydrogesterone** | As prescribed, until 12 weeks | Progesterone support across the luteoplacental shift | **High** — a standard, well-established choice in early pregnancy |
+| **Folic acid** | 400–600mcg daily, six more weeks | Neural tube; the tube closes around week 6 | High |
+| **Prenatal vitamin** | Daily — switching to a smaller tablet | General | High on the plan, **unverified on the brand** |
+| "Lapas" | One tablet twice daily, for circulation | — | **Unverified.** No medicine of that name identified |
+| "Quadrocol" | Continue as prescribed | — | **Unverified.** No medicine of that name identified |
+
+**On the two unverified ones.** The names as transcribed do not match anything
+identifiable, which almost certainly means the note-taker misheard rather than
+that anything is wrong with the prescription. They are left exactly as heard
+rather than corrected to a plausible guess, because a guessed drug name is worse
+than an obvious gap.
+
+**To close this: photograph the boxes, or the written prescription.** Thirty
+seconds, and it settles both names, both doses, and what each is actually for.
+
+**Nothing here should be started, stopped or substituted on the strength of this
+table.** It is a record of what was said, kept so the questions are ready at the
+next visit.
+
+---
+
 ## Action steps
 
 Everything outstanding from the tests so far, in the order it needs doing.
@@ -102,14 +131,28 @@ to-do that does not happen.
 
 ### Do now
 
-- [ ] **The TSH of 5.13 — the one thing still open.** Every other result is
+- [ ] **Book Dr. Capellan, the endocrinologist.** Dra. Villafria's referral for
+      the TSH. This is the one open clinical question, and the thing that most
+      wants a date in the diary. *From the 2 Oct consultation.*
+- [ ] **Confirm the next OB appointment is four WEEKS, not four months.** As
+      noted it was four months, which lands at 24w3d and skips the NT scan, the
+      NIPT window and the anomaly scan. Four weeks is 30 October, the day before
+      the NT window opens and with the progesterone due for review. **Almost
+      certainly a transcription slip — but worth one message to confirm.**
+- [ ] **Photograph the medicine boxes or the written prescription.** Two items
+      on the list ("Lapas", "Quadrocol") could not be matched to any known
+      medicine. Likely misheard names, and thirty seconds settles it.
+- [ ] **Request the work-from-home arrangement formally.** Dra. Villafria
+      recommended it; two days a week in the office at present.
+- [ ] **The TSH of 5.13 — the detail for Dr. Capellan.** Every other result is
       normal and the 2 October scan was good, which leaves this as the only
       outstanding question in the pregnancy. Ask for **TPO antibodies, free T4
       and a repeat TSH** — one draw, three tests. If it was already raised at
       the 2 October visit, note what she said and tick this off.
       *From Lab 26596449 page 2.*
-- [ ] **Folic acid, 400–600mcg daily, starting today.** The neural tube closes
-      around week 6, which is this week. Nothing else here is as time-critical.
+- [ ] **Folic acid — continue, six more weeks.** Dra. Villafria's instruction on
+      2 October. The neural tube has now closed; this carries on through the
+      period where it still counts.
 
 ### Ask Dra. Villafria
 
@@ -150,10 +193,108 @@ normal.**
 **All twelve ordered tests are now in hand.** Eleven are normal or better. The
 TSH is the one exception, and it is at the top of this list.
 
-**From the 2 October scan:** heartbeat at 128 bpm, dating settled at 22 May 2027
-by crown-rump length, **subchorionic hemorrhage resolved**, cervix long and
-closed. The bleed question, the activity question, the progesterone question and
-the due-date question are all closed by this scan.
+**From the 2 October scan and consultation:** heartbeat at 128 bpm, dating
+settled at 22 May 2027 by crown-rump length, **subchorionic hemorrhage
+resolved**, cervix long and closed. **Progesterone support prescribed** until
+12 weeks. Activity guidance given. The bleed question, the activity question,
+the progesterone question and the due-date question are all now answered.
+
+**Fatigue, cramps and white discharge were all raised and all called normal** —
+which matches what this handbook has been saying about each of them.
+
+---
+
+## 2 October 2026 — Consultation with Dra. Villafria · 6w6d
+
+From notes taken at the visit. **These were captured by an automatic
+note-taker, so names and numbers in them are treated as drafts until checked
+against the paperwork** — three items below did not survive that check.
+
+### The plan
+
+| | |
+| --- | --- |
+| **Progesterone support** | **Dydrogesterone**, until 12 weeks |
+| Folic acid | Continue for six more weeks |
+| Prenatal vitamin | Switching to a smaller tablet, easier to swallow |
+| Two further items | Names unverified — see below |
+| Endocrinology referral | **Dr. Capellan**, for the TSH |
+| Due date, as given | 22 May, give or take two weeks |
+
+**Progesterone is now prescribed, and the reasoning is sound.** Until about
+12 weeks the pregnancy is kept going by the **corpus luteum** — the cyst on the
+left ovary that every scan has noted. After that the **placenta** takes over
+hormone production, which is a steadier arrangement. That handover is the
+*luteoplacental shift*, and the support bridges it. On the current dating,
+**12 weeks falls on 7 November 2026**.
+
+### Activity, as advised
+
+- **No abdominal work** — no crunches, no sit-ups
+- **No jumping or high-impact** anything
+- **Light weights to about 5 lb** are fine
+- **Walking is encouraged**
+- **Working from home** recommended; currently going in two days a week
+- **Stay away from the renovation site.** Dust, solvents and old paint are the
+  reason, and the move-in can be postponed
+
+### Three things in the notes that do not match the paperwork
+
+**1. The heart rate.** The notes record **166 bpm**. The ultrasound report and
+the image itself both read **128 bpm**. The notes also describe the rate as
+*"slightly low but appropriate for age"* — a description that fits 128 at 6w6d
+and does not fit 166. **128 is the documented figure** and the one this log
+uses. Both are normal for the stage; the discrepancy is a transcription
+artifact, not a clinical disagreement.
+
+**2. "Thyroid crisis at delivery."** As written, that does not match the
+finding. **Thyroid crisis — thyroid storm — is a complication of an
+*overactive* thyroid.** The picture here is the opposite: a mildly *under*active
+one. The risks that are actually established for untreated subclinical
+hypothyroidism in pregnancy are **miscarriage and preterm birth**, which is
+reason enough to treat it and is almost certainly what was said. Worth asking
+Dr. Capellan to state the risk in his own words rather than relying on this line.
+
+**3. "Next OB appointment in approximately 4 months."** Four months from
+2 October is early February, which is **24w3d** — and that interval would skip
+**both** of the first-trimester windows:
+
+| | When | Where 4 months lands |
+| --- | --- | --- |
+| NT scan | 31 Oct – 20 Nov 2026 | Missed |
+| NIPT, if wanted | from 24 Oct 2026 | Missed |
+| Anomaly scan | 19 Dec 2026 – 16 Jan 2027 | Missed |
+
+**Four *weeks* lands on 30 October at 10w6d**, which is exactly the right place —
+the day before the NT window opens, and with progesterone running out at
+12 weeks and needing review. That is near-certainly what was meant. **Confirm
+the interval before leaving it four months.**
+
+### On NIPT
+
+Offered as optional, available 11–13 weeks, and **not strongly recommended**
+given Dani's age and no family history. That is a defensible position: the
+chance of the conditions NIPT screens for rises with maternal age, and at 27 the
+prior probability is low.
+
+Two things to keep straight, because they are easily conflated: **NIPT is a
+blood test and the NT scan is an ultrasound.** They are different things in
+overlapping windows. Declining NIPT is a reasonable choice; the NT scan is
+standard first-trimester care and is not the same decision.
+
+### Travel
+
+**Japan in December**, at around **17–18 weeks** — the second trimester, which is
+the best window there is for travel. Dra. Villafria is aware. Much walking
+expected; sensible shoes advised. *Note: the prayer calendar still carries a
+Korea trip for 5–9 December. If that has become the Japan trip, say so and it
+will be corrected.*
+
+### Also
+
+**Telling the family this weekend.**
+
+*Source: consultation notes, 2 October 2026, captured by an automatic note-taker and reconciled against the ultrasound report of the same morning. Confidence: high for the plan as recorded, **low for any drug name or number not independently confirmed**.*
 
 ---
 
