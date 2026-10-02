@@ -131,9 +131,9 @@ to-do that does not happen.
 
 - [ ] **Blood type and Rh — never ordered.** The request form's box is blank,
       so this was not missed by the lab; it was not asked for. Needed for the
-      28-week anti-D dose and for delivery, and **not urgent because of the
-      bleed**, since current guidance does not recommend RhIg under 12 weeks.
-      Worth adding to the next request rather than treating as lost.
+      28-week anti-D dose and for delivery. **No longer urgent at all** — the
+      only thing that ever made it time-sensitive was the bleed, and the
+      2 October scan found the bleed gone. Add it to the next request.
 - [ ] **Varicella IgG — also never ordered.** Whether you are immune to
       chickenpox. Often skipped where someone clearly had it as a child, so ask
       whether that was the reasoning rather than assuming it was an oversight.
