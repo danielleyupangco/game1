@@ -102,30 +102,17 @@ to-do that does not happen.
 
 ### Do now
 
-- [ ] **Show Dra. Villafria the TSH of 5.13, at the scan.** This is the one
-      abnormal result in the whole panel that needs a decision, and it has
-      already sat unread since 18 September. Ask for **TPO antibodies, free T4
-      and a repeat TSH** — one draw, three tests. TPO is what decides whether
-      treatment is recommended or merely considered. *From Lab 26596449 page 2.*
-- [ ] **Book the repeat scan.** Window is **28 Sept – 5 Oct**. Aim late in it —
-      at 7w3d a heartbeat and a crown-rump length should both be measurable, and
-      that is the scan that settles both the dating and the subchorionic
-      hemorrhage. *From the 18 Sept scan.*
+- [ ] **The TSH of 5.13 — the one thing still open.** Every other result is
+      normal and the 2 October scan was good, which leaves this as the only
+      outstanding question in the pregnancy. Ask for **TPO antibodies, free T4
+      and a repeat TSH** — one draw, three tests. If it was already raised at
+      the 2 October visit, note what she said and tick this off.
+      *From Lab 26596449 page 2.*
 - [ ] **Folic acid, 400–600mcg daily, starting today.** The neural tube closes
       around week 6, which is this week. Nothing else here is as time-critical.
 
 ### Ask Dra. Villafria
 
-- [ ] **The bleed and activity.** Specifically: the November walk, and whether
-      pelvic rest applies. Evidence does not support routine restriction for a
-      small SCH, but this is her call. *From the 18 Sept scan.*
-- [ ] **Progesterone support** — asked openly, not expectantly. Evidence is
-      mixed: one SCH study found dydrogesterone protective, while broader
-      guidance does not recommend routine use.
-- [ ] **The due date — which one is she working to?** The scan film says
-      **19 May**, the report header says **21 May**. The app uses 19 May. Two
-      days apart, and it moves any planned section date with it. The CRL scan
-      resolves it, so confirm before booking anything around the birth.
 - [ ] **Ferritin, as a separate request.** The CBC has now arrived and the
       haemoglobin is normal at 13.5, so this is no longer about anaemia — it is
       a stock-check. Haemoglobin shows whether the tank has run dry; ferritin
@@ -162,6 +149,84 @@ normal.**
 
 **All twelve ordered tests are now in hand.** Eleven are normal or better. The
 TSH is the one exception, and it is at the top of this list.
+
+**From the 2 October scan:** heartbeat at 128 bpm, dating settled at 22 May 2027
+by crown-rump length, **subchorionic hemorrhage resolved**, cervix long and
+closed. The bleed question, the activity question, the progesterone question and
+the due-date question are all closed by this scan.
+
+---
+
+## 2 October 2026 — Follow-up scan · 6w6d · **heartbeat**
+
+**Makati Medical Center**, Section of Maternal & Fetal Medicine and OB-GYN
+Ultrasound. Attending: **Dr. Maria Fe P. Villafria**. Scanned by **Dr. Sharon
+Leah R. Enghog**, FPOGS, FPSUOG. First trimester ultrasound, outpatient.
+
+| | Finding |
+| --- | --- |
+| **Cardiac rate** | **128 beats per minute** |
+| **Crown-rump length** | **8.5 mm → 6 weeks 6 days** |
+| **Subchorionic hemorrhage** | **None** |
+| Gestational sac | Single, regular in shape, upper in location |
+| Yolk sac | 3.6 mm |
+| Uterus | 70.8 × 67.3 × 61.9 mm, anteverted, homogeneous, regular |
+| Cervix | 34.6 × 28.5 × 34.2 mm, **long and closed** |
+| Right ovary | 34.2 × 26.6 × 18.5 mm (8.9 mL) |
+| Left ovary | 34.8 × 30.1 × 21.6 mm (11.9 mL), corpus luteum 23.0 × 15.5 mm |
+| Cul-de-sac | No fluid. Not adherent, positive sliding sign |
+| **Ultrasound EDD** | **22 May 2027** |
+
+**Impression as reported:** Single live intrauterine pregnancy, 6 weeks and 6
+days by crown-rump length. No subchorionic hemorrhage. Normal-sized uterus, long
+cervix. Normal-sized ovaries with corpus luteum in the left. EDD 22 May 2027.
+
+### There is a heartbeat
+
+**128 beats per minute at 6w6d.** That is squarely where it should be — the
+embryonic heart starts around 100 and climbs through the following fortnight to
+roughly 170 by weeks 9 to 10, so 128 at not-quite-seven-weeks is on the expected
+curve rather than at either edge of it.
+
+This is the milestone that changes the odds. Once a heartbeat is seen at around
+seven weeks in a pregnancy with no bleeding, the chance of continuing is
+**high** — the published figures sit in the 90s. The first three weeks of
+uncertainty since 18 September are over.
+
+### The subchorionic hemorrhage has gone
+
+The September scan found a collection at the inferior pole, 4.0 × 11.6 × 3.3 mm,
+volume 0.082 mL. This report records **none**. Not smaller — absent. That is the
+usual course for a small one, and it is the single best outcome that line could
+have had.
+
+The cul-de-sac findings back it up: no free fluid, positive sliding sign, same
+as before.
+
+### The date is now settled
+
+**22 May 2027**, by crown-rump length. See the dating section of the guide for
+what moved and why. Two things worth noting here:
+
+**The scan agrees with Dani, not with the chart.** The implied last period is
+**15 August** — the date she gave from the start, against the chart's 14th.
+
+**The second number on the report is not a disagreement.** The header reads AOG
+7 weeks 2 days, because the ultrasound machine was set to an assumed LMP of
+12 August. The measurement is 6w6d. Where a machine's assumed date and a
+measured embryo disagree, the measurement wins; the header is arithmetic on an
+input, not a finding.
+
+### Everything else is as it should be
+
+**Cervix long and closed** — 34.6mm, which is what you want and will be measured
+again at the anomaly scan. **Corpus luteum still present** on the left and
+slightly smaller than in September (23.0 × 15.5 against 24.2mm), which is the
+expected course as the placenta takes over hormone production over the next few
+weeks. **Uterus noticeably larger** than three weeks ago — 70.8mm against
+58.5mm. **Yolk sac 3.6mm**, within normal.
+
+*Source: Makati Medical Center first-trimester ultrasound report, 2 October 2026, 09:33. Verified 2026-10-02. Confidence: high.*
 
 ---
 
@@ -303,28 +368,25 @@ disagree by **more than 5 days**. It does not here, so LMP dating stands — and
 those thresholds are written for crown-rump length anyway, which this scan could
 not measure. A mean sac diameter is not a recommended dating measurement.
 
-**The app uses 2027-05-19 — the date printed on the scan film.**
+**At the time, the app used 2027-05-19 — the date printed on the scan film.**
 
-Her paperwork carries both. The report header gives EDC 21 May from LMP dating;
-the film prints EDD 05/19/2027 from the sac. The app follows the film, because
-that is the dating Dani has been given and the reason she is 5w2d on
+Her paperwork carried both. The report header gave EDC 21 May from LMP dating;
+the film printed EDD 05/19/2027 from the sac. The app followed the film, because
+that was the dating Dani had been given and the reason she read 5w2d on
 18 September rather than 5w0d.
 
-The two-day gap sits well inside the redating threshold either way, so neither
-date is wrong. **The CRL scan settles it properly** — and until it does, nothing
-irreversible should be booked against either.
+> **Superseded on 2 October 2026.** The crown-rump length measured that day gives
+> **22 May 2027**, and that is the date the app runs on now. The reasoning above
+> is kept as a record of what was known in September, not as current guidance.
+> It also called this correctly: the gap was inside the redating threshold,
+> neither date was wrong, and the CRL settled it.
 
-### Actions
+### Actions — all closed by the 2 October scan
 
-- [ ] **Book the repeat scan for 28 September – 5 October** (1–2 weeks out, which
-      is 6w3d–7w3d). Cardiac activity and a CRL should both be measurable by the
-      later end of that window.
-- [ ] **Ask Dra. Villafria about the SCH and activity** — specifically the
-      marathon walk and the flight.
-- [ ] Ask whether she wants progesterone support, which some clinicians use with
-      an early SCH.
-- [ ] Confirm which due date she is working to — the film's 19 May or the
-      header's 21 May.
+- [x] **Book the repeat scan for 28 September – 5 October.** Done, 2 October.
+- [x] **Ask about the SCH and activity.** Moot: the hemorrhage had resolved.
+- [x] **Progesterone support.** Moot for the same reason.
+- [x] **Confirm which due date.** Settled: neither. The CRL gives **22 May**.
 - [ ] Start or confirm folic acid, if not already.
 
 ### The Vietnam conflict, resolved

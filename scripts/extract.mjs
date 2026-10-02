@@ -18,17 +18,22 @@ export const DOCS = {
 };
 
 /**
- * The due date the app runs on: 19 May 2027, as printed on the 18 Sept 2026
- * scan film ("EDD 05/19/2027") and derived from the mean sac diameter.
+ * The due date the app runs on: 22 May 2027, from the crown-rump length
+ * measured at the 2 October 2026 follow-up scan.
  *
- * Dani's own paperwork carries two dates. The report header gives EDC 21 May,
- * derived from LMP 14 Aug on a 28-day cycle; the film gives 19 May from the sac
- * measurement. They differ by two days. The app follows the scan because that
- * is where Dani is being told she is — 5w2d on 18 September, not 5w0d.
+ * This is the date the whole first month of this app was waiting for. The
+ * 18 September scan could only measure the sac, and sac diameter is not a
+ * dating method — it was a placeholder that happened to be the best available.
+ * A crown-rump length of 8.5mm at 2 October gives 6w6d, the report's own
+ * ultrasound EDD of 22 May 2027, and an embryo measured head to bottom before
+ * 9 weeks is the most accurate dating there is.
  *
- * The crown-rump-length scan supersedes both. Change this constant when it does.
+ * It moves the date three days later than the sac estimate and one day later
+ * than the LMP chart date. Everything in the app derives from this constant, so
+ * changing it here moves the calendar, the countdown, the section-date options
+ * and the star sign together.
  */
-export const EDD = '2027-05-19';
+export const EDD = '2027-05-22';
 
 /**
  * Check-up entries, newest first. Each is a `## <date> — <title>` section in

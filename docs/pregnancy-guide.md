@@ -4,7 +4,7 @@ Source content for the app. Everything here is written to be converted into
 structured seed data (`weeks`, `foods`, `stretch_routines`, `shops`,
 `red_flags`, expense bands), not rendered as prose.
 
-**Compiled 18 September 2026.** Dani's EDD is 19 May 2027 (Makati Med scan film, 18 Sept 2026); care is with
+**Compiled 18 September 2026, redated 2 October 2026.** Dani's EDD is 22 May 2027 (Makati Med scan, crown-rump length, 2 Oct 2026); care is with
 Dra. Fe Villafria at Makati Medical Center.
 
 > **This is general information, not medical advice.** Every clinical item
@@ -43,118 +43,98 @@ section for how this is handled.
 
 ## 1. Dating and the key dates
 
-**Updated 18 September 2026** with the real dating inputs. The earlier +2 display
-offset is gone — it was a fudge standing in for information we now have.
+**Settled 2 October 2026 by crown-rump length.** The due date is **22 May
+2027**. This is the measurement everything before it was waiting for, and it is
+not provisional in the way the earlier dates were.
 
-### The inputs
+### How the date was reached
 
 | Field | Value | Source |
 | --- | --- | --- |
-| First day of last period | **2026-08-14** | Makati Med scan report, 18 Sept 2026 |
-| Cycle length | **28–30 days**, average | Dani (Dani recalled LMP as the 15th; the chart says the 14th) |
-| Early scan | **5w2d on 2026-09-18**, by mean sac diameter | Makati Med, Dr. Quevedo |
-| **EDD in use** | **2027-05-19** | Makati Med scan film, by mean sac diameter |
-| Chart EDC (alternative) | 2027-05-21 | Report header, from LMP on a 28-day cycle |
+| **EDD in use** | **2027-05-22** | Crown-rump length 8.5mm, scan of 2 Oct 2026 |
+| Crown-rump length | **8.5mm → 6w6d** | Makati Med, Dr. Enghog |
+| Implied LMP | 2026-08-15 | Derived from the scan |
+| Implied conception | 2026-08-29 | Derived from the scan |
 
-### What each method gives
+**Why this one is different from the two before it.** The 18 September scan
+could only measure the gestational sac, because at 5w2d there was no embryo to
+measure. **Mean sac diameter is not a dating method** — it is an estimate of
+last resort, and the app used it only because nothing better existed. A
+crown-rump length measured before 9 weeks is the most accurate dating in
+obstetrics, accurate to within about five days, and it supersedes everything
+else including the last menstrual period.
 
-Naegele's rule is LMP + 280 days, which assumes a 28-day cycle with ovulation on
-day 14. A longer cycle ovulates later, so the due date moves later by the same
-difference.
+### Every date this pregnancy has had, and what happened to each
 
-| Method | EDD | Implied conception |
+| Method | EDD | Status |
 | --- | --- | --- |
-| **Mean sac diameter, 5w2d — in use** | **2027-05-19** | **2026-08-26** |
-| Chart header: LMP 14 Aug + 280, 28-day cycle | 2027-05-21 | 2026-08-28 |
-| Recalled LMP 15 Aug, 28-day cycle | 2027-05-22 | 2026-08-29 |
-| Recalled LMP 15 Aug, 29-day cycle | 2027-05-23 | 2026-08-30 |
+| **Crown-rump length, 2 Oct** | **2027-05-22** | **In use. Final unless something unexpected happens.** |
+| Chart header, LMP 14 Aug + 280 | 2027-05-21 | One day out. Superseded. |
+| Mean sac diameter, 18 Sept | 2027-05-19 | Three days out. Superseded. |
+| Dani's recalled LMP, 15 Aug | 2027-05-22 | **Matches the scan exactly.** |
 
-### The corroboration
+**The last row is worth a moment.** Dani said from the beginning that her last
+period began on **15 August**. The clinic chart recorded the 14th, and the app
+followed the chart. The crown-rump length now implies an LMP of **15 August** —
+her own recollection, confirmed seven weeks later by a measurement that had no
+knowledge of it.
 
-Every candidate lands within a few days of the conception window the couple
-independently recall — **29–31 August**, in South Africa. The chart date implies
-the 28th, one day before the window opens; a recalled LMP of the 15th with a
-29–30 day cycle lands inside it. The sac reading implies the 26th, furthest out.
+It also lands the implied conception on **29 August**, which is the first day of
+the window the couple independently recall. Three independent routes to the same
+few days.
 
-Spread across every method: **19–23 May**. Five days, which for a dating estimate
-this early is agreement, not conflict.
+### What moved, and what it means practically
 
-### Which dating wins, and why
+The date is **three days later** than the app has been running on since
+September. Everything derived from it moved with it — the countdown, the
+calendar, the caesarean windows, and the star sign.
 
-**The app uses 2027-05-19 — the scan's own date.**
+**The star sign changed.** On 19 May the baby was a Taurus. The Sun enters
+Gemini on 21 May 2027 at about 15:00 Manila time, and the new date is the 22nd.
+**It is a Gemini**, with no cusp ambiguity.
 
-Her paperwork carries both: the report header says EDC 21 May from LMP dating,
-and the scan film prints EDD 05/19/2027 from the sac measurement. Two days
-apart. The app follows the film, because that is the dating Dani is being given
-and the reason she reads 5w2d rather than 5w0d on 18 September.
-
-Worth holding lightly. The two-day gap sits well inside the ACOG threshold, so
-neither is "wrong", and **the crown-rump-length scan settles it properly**.
-Nothing irreversible — flights, leave dates, a booked section — should be fixed
-before then.
-
-ACOG Committee Opinion 700 sets when a scan should replace LMP dating: at
-8w6d or earlier, only when the two disagree by **more than 5 days**. On the
-chart's own numbers the disagreement is **2 days** — the report header reads AOG
-5w0d by LMP against 5w2d by sac. Well inside tolerance, so the LMP date is kept.
-
-Two further reasons not to redate on this scan:
-
-- **The thresholds are written for crown-rump length.** A mean sac diameter is
-  not a recommended dating measurement, and at 5w2d there is often no measurable
-  embryo yet. The sac reading is weaker evidence than the numbers suggest.
-- **The methods actually agree.** Three to five days apart, this early, is
-  corroboration rather than conflict.
-
-**What settles it properly:** the dating scan at 7–9 weeks, when a crown-rump
-length can be measured. That is the measurement ACOG dates by, and if it moves
-the EDD by more than five days, redate then — by changing the EDD, not by adding
-an offset.
-
-*Source: [ACOG Committee Opinion 700, Methods for Estimating the Due Date](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2017/05/methods-for-estimating-the-due-date). Verified 2026-09-18. Confidence: high.*
+*Source: Makati Medical Center first-trimester ultrasound, 2 October 2026, Dr. Sharon Leah R. Enghog. Redating standard: [ACOG Committee Opinion 700](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2017/05/methods-for-estimating-the-due-date). Verified 2026-10-02. Confidence: high.*
 
 ### Where the pregnancy stands
 
-On **18 September 2026**, with an EDD of 2027-05-19: **Week 5, Day 2**, with 243
-days to go — matching the impression on the scan report.
+On **2 October 2026**: **6 weeks 6 days**, with 232 days to go. A heartbeat was
+seen at **128 beats per minute**, and the subchorionic hemorrhage found in
+September had resolved completely.
 
-The app computes this as `280 − (EDD − today)` on Manila calendar dates, plus a
-per-pregnancy `dating_offset_days` that is **now zero**. The offset stays in the
-model because it is the right place to hold a clinic redating that arrives
-without a revised LMP — but it is set from a scan, never to make a number look
-right.
+The app computes gestational age as `280 − (EDD − today)` on Manila calendar
+dates. The per-pregnancy `dating_offset_days` is zero and should stay there:
+the EDD itself now carries the right answer.
 
 ### Milestone dates
 
-One column now, because there is only one dating. Unchanged from the previous
-standard-dating column: the EDD did not move.
+Recomputed from the 22 May date. Everything below moved three days later than
+the version this app ran on through September.
 
 | Milestone | Gestational age | Date |
 | --- | --- | --- |
-| Implied LMP | 0w0d | 2026-08-12 |
-| Implied conception | 2w0d | 2026-08-26 |
-| **Repeat scan — confirms viability** | **6w3d – 7w3d** | **2026-09-26 – 2026-10-03** |
-| Dating scan window (CRL measurable) | 7w0d – 9w0d | 2026-09-30 – 2026-10-14 |
-| NIPT available from | 10w0d | 2026-10-21 |
-| NT scan window | 11w0d – 13w6d | 2026-10-28 – 2026-11-17 |
-| End of first trimester | 13w6d | 2026-11-17 |
-| Anomaly scan window | 18w0d – 22w0d | 2026-12-16 – 2027-01-13 |
-| OGTT window | 24w0d – 28w0d | 2027-01-27 – 2027-02-24 |
-| Tdap window | 27w0d – 36w0d | 2027-02-17 – 2027-04-21 |
-| Third trimester begins | 28w0d | 2027-02-24 |
-| RSV vaccine window opens | 32w0d | 2027-03-24 |
-| GBS swab window | 35w0d – 37w0d | 2027-04-14 – 2027-04-28 |
-| Hospital bag packed by | 35w0d | 2027-04-14 |
-| Term | 37w0d | 2027-04-28 |
-| **EDD** | **40w0d** | **2027-05-19** |
+| Implied LMP | 0w0d | 2026-08-15 |
+| Implied conception | 2w0d | 2026-08-29 |
+| **Heartbeat seen — 128 bpm** | **6w6d** | **2026-10-02** |
+| NIPT available from | 10w0d | 2026-10-24 |
+| NT scan window | 11w0d – 13w6d | 2026-10-31 – 2026-11-20 |
+| End of first trimester | 13w6d | 2026-11-20 |
+| Anomaly scan window | 18w0d – 22w0d | 2026-12-19 – 2027-01-16 |
+| OGTT window | 24w0d – 28w0d | 2027-01-30 – 2027-02-27 |
+| Tdap window | 27w0d – 36w0d | 2027-02-20 – 2027-04-24 |
+| Third trimester begins | 28w0d | 2027-02-27 |
+| RSV vaccine window opens | 32w0d | 2027-03-27 |
+| GBS swab window | 35w0d – 37w0d | 2027-04-17 – 2027-05-01 |
+| Hospital bag packed by | 35w0d | 2027-04-17 |
+| Term | 37w0d | 2027-05-01 |
+| **EDD** | **40w0d** | **2027-05-22** |
 
 ### If a caesarean is planned
 
 | Week | Window | Note |
 | --- | --- | --- |
-| 37 — early term | 2027-04-28 – 2027-05-04 | Only with a medical indication |
-| **38 — early term** | **2027-05-05 – 2027-05-11** | Only with a medical indication |
-| **39 — full term** | **2027-05-12 – 2027-05-18** | ACOG's recommended window for a planned section without an indication |
+| 37 — early term | 2027-05-01 – 2027-05-07 | Only with a medical indication |
+| **38 — early term** | **2027-05-08 – 2027-05-14** | Only with a medical indication |
+| **39 — full term** | **2027-05-15 – 2027-05-21** | ACOG's recommended window for a planned section without an indication |
 
 ACOG recommends timing an elective caesarean at **39w0d or later**, because
 neonatal respiratory problems, temperature and glucose instability and NICU
@@ -976,7 +956,7 @@ still the first trimester, late November is comfortably the second.
 
 ## 8. Travel
 
-Weeks below are on the dating in section 1 (EDD 19 May 2027, from the
+Weeks below are on the dating in section 1 (EDD 22 May 2027, from the
 18 September scan).
 
 | Trip | Dates | Week at start | Risk | Zika |
@@ -1823,13 +1803,19 @@ rather than taken from a magazine table. Times are Manila.
 | **Gemini** | **21 May 2027, 15:00** | 21 June 2027, 23:00 |
 | Cancer | 21 June 2027, 23:00 | — |
 
-**The due date of 19 May lands in Taurus with two days to spare.** That is a
-narrow margin: arriving three days late makes the cub a Gemini instead, and
-first babies are more often late than early. A planned caesarean at 38 or 39
-weeks would be firmly Taurus; going past the due date is a coin-toss.
+**The redating flipped this.** On the old due date of 19 May the cub was a
+Taurus with two days to spare. The crown-rump length moved the date to **22
+May**, which is a day and a half past the boundary — **the due date is now
+Gemini**, and no longer by a hair's breadth either way.
 
-The earliest plausible dates, from 37 weeks on 28 April, are all Taurus too — so
-in practice the only route to a Gemini is going past the due date.
+It is still not settled, because a due date is a midpoint rather than an
+appointment. **Arriving two days early or more makes the cub a Taurus**, and
+first babies are more often late than early, so Gemini is the way to bet.
+
+The planned-caesarean windows mostly fall the other way: **37, 38 and 39 weeks
+all end before 21 May**, so an elective section at any of them would be a
+Taurus. Only the last day of the 39-week window, 21 May, straddles the
+boundary — before 15:00 Taurus, after it Gemini.
 
 ### The Chinese year
 

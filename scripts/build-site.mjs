@@ -680,7 +680,10 @@ ${panel('birth', 'Birth', `
   `<p class="lede">How the birth happens, and when. Neither needs deciding yet &mdash; the plan settles around 36 weeks.</p>`)}
 
 ${panel('calendar', 'Calendar', `<div class="cal" id="callist"></div><div class="prose">${prose.milestones}</div>`,
-  `<p class="lede">The liturgical year against gestational age. Moveable feasts were computed, not recalled &mdash; Easter 2027 is 28 March, which lands at 32w2d.</p>`)}
+  `<p class="lede">The liturgical year against gestational age. Moveable feasts were computed, not recalled &mdash; Easter 2027 is 28 March, which lands at ${(() => {
+    const t = 280 - Math.round((Date.UTC(2027, 4, 22) - Date.UTC(2027, 2, 28)) / 86400000);
+    return `${Math.floor(t / 7)}w${t % 7}d`;
+  })()}.</p>`)}
 
 ${panel('glossary', 'Plain English', `<div class="prose">${prose.glossary}</div>`,
   `<p class="lede">Every abbreviation and bit of jargon in this handbook, in ordinary words. Nothing here is meant to be looked up elsewhere.</p>`)}
@@ -736,17 +739,17 @@ $('#now-meta').textContent = now.daysToGo < 0
   : 'Trimester ' + (now.weeks >= 28 ? 3 : now.weeks >= 14 ? 2 : 1);
 $('#now-count').textContent = now.daysToGo >= 0 ? now.daysToGo + ' days' : '\\u2014';
 
-/* ---- scan deadline ----------------------------------------------------- */
-/* The repeat-scan window from the 18 Sept report. Counted live so the card
-   nags accurately instead of going stale the day after it is built. */
-const SCAN_WINDOW_CLOSES = '2026-10-05';
+/* ---- the last milestone ------------------------------------------------ */
+/* This slot counted down to the repeat scan until 2 October, when the scan
+   happened and found a heartbeat. It now counts forward from it, because
+   "how long since" is the thing worth knowing once a deadline is met. */
+const HEARTBEAT_SEEN = '2026-10-02';
 (() => {
-  const left = Math.round((civil(SCAN_WINDOW_CLOSES) - todayManila()) / MS);
+  const since = Math.round((todayManila() - civil(HEARTBEAT_SEEN)) / MS);
   const el = $('#scan-deadline');
-  if (left > 1) el.textContent = 'Scan window closes in ' + left + ' days';
-  else if (left === 1) el.textContent = 'Scan window closes tomorrow';
-  else if (left === 0) el.textContent = 'Scan window closes today';
-  else { el.textContent = 'Scan window closed'; el.classList.add('past'); }
+  el.textContent = since <= 0
+    ? '\u2665 Heartbeat seen today \u2014 128 bpm'
+    : '\u2665 Heartbeat seen ' + since + ' day' + (since === 1 ? '' : 's') + ' ago \u2014 128 bpm';
 })();
 
 /* ---- week rails -------------------------------------------------------- */
