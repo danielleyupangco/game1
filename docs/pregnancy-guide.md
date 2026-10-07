@@ -183,6 +183,107 @@ antibody transfer needs time. Worth surfacing as a nudge, not just a date range.
 
 ---
 
+### Choosing an NIPT tier — the quoted options
+
+Three tiers were quoted in October 2026. The prices rise with the number of
+conditions screened, and **the usefulness does not rise with them.**
+
+| Tier | Price | What it adds |
+| --- | --- | --- |
+| **NICE Lite** | **₱21,500** | Trisomy 21, 18, 13. Fetal sex optional |
+| NICE Premium | ₱38,500 | Adds trisomy 9, 16, 22; sex chromosomes; 8 microdeletions; "108 other conditions" |
+| NICE Premium Plus | ₱44,000 | Adds all 22 chromosomes |
+
+**The short version: Lite, or nothing. Not the other two.**
+
+#### Why a bigger panel is not a better test
+
+NIPT is excellent at trisomy 21 and good at 18 and 13. It is poor at everything
+the expensive tiers add, and the reason is arithmetic rather than technology.
+
+A screening test's usefulness depends on how common the thing is. When a
+condition is rare, **most positives are false positives, however good the
+test.** The number that captures this is the positive predictive value — of
+everyone told "positive", what share actually are.
+
+At Dani's age, with a test at roughly 99.9% specificity:
+
+| What a "positive" would mean | Chance it is real |
+| --- | --- |
+| Down syndrome (T21) | **about 50%** |
+| Edwards (T18) | about 16% |
+| Turner (monosomy X) | about 28% |
+| 22q11.2 deletion | about 16% |
+| 1p36 deletion | about 12% |
+| Patau (T13) | about 5% |
+
+**Even the headline result is a coin toss at 27.** A positive T21 result is
+about as likely to be wrong as right, because Down syndrome is rare at her age —
+roughly 1 in 1,000 — and the test's small error rate is applied to the 999 who
+do not have it.
+
+#### The "plus 108 other conditions" is the part to be most wary of
+
+Screening for many rare things at once stacks up false alarms:
+
+| Conditions screened | Chance of at least one false positive |
+| --- | --- |
+| 3 (Lite) | 0.3% |
+| 10 | 1% |
+| **110 (Premium)** | **about 10%** |
+
+**Roughly one in ten people taking the 110-condition panel will be told
+something is wrong when nothing is** — and that is the optimistic figure,
+assuming every one of those 108 conditions is screened as accurately as trisomy
+21. They are not; most have no published performance data at all.
+
+#### What the professional bodies actually say
+
+- **Rare autosomal trisomies** (trisomy 9, 16, 22 — added by Premium): the
+  professional societies are **unanimous in recommending against** screening for
+  these, citing insufficient data.
+- **Microdeletions:** ACOG, SMFM and ISPD **do not endorse** screening for them.
+  ACMG supports **22q11.2 only**, and specifically does not recommend the others.
+- **All 22 chromosomes** (Premium Plus): this is rare-trisomy screening taken to
+  its maximum, and is the option with the least support of the three.
+- **Trisomy 21, 18, 13 and the sex chromosomes** are the part everyone endorses.
+
+#### What a positive result would actually lead to
+
+**Nothing on this card is a diagnosis.** Every tier is a screen. A positive
+result of any kind leads to the same place: a diagnostic test — CVS or
+amniocentesis — which takes a sample from the pregnancy itself and carries a
+small procedure-related miscarriage risk.
+
+So a false positive is not a harmless scare. It costs weeks of fear and can lead
+to an invasive test that was never needed. **That cost scales with the size of
+the panel, while the benefit does not.**
+
+#### Two things that are not this decision
+
+**Fetal sex is an opt-in on every tier**, including Lite. Wanting to know early
+is not a reason to upgrade.
+
+**The NT scan is separate, and it is not optional in the same way.** It is an
+ultrasound at 11–13+6 weeks, it is standard first-trimester care, and it happens
+whether or not any blood is drawn. Declining NIPT is a reasonable choice;
+skipping the NT scan is a different decision entirely.
+
+#### If it were a straight recommendation
+
+**Take Lite, or take none.** Dra. Villafria did not strongly recommend NIPT, and
+her reasoning — age 27, no family history — is the same reasoning that makes the
+expanded panels poor value. If the test is wanted for reassurance, Lite buys the
+reassurance. The extra ₱17,000 for Premium, and ₱22,500 for Premium Plus, buys
+screening that the professional bodies advise against and a materially higher
+chance of a false alarm.
+
+**Timing:** NIPT can be drawn from **10w0d, 24 October**. The NT scan window is
+**31 October – 20 November**. Drawing bloods in the last week of October puts
+the result in hand around the scan, which is the tidiest order.
+
+*Sources: [ACMG evidence-based clinical guideline on NIPS](https://www.gimjournal.org/article/S1098-3600(22)01004-8/pdf); [SMFM Consult Series #74 — cell-free DNA screening, updated guidance](https://obgyn.onlinelibrary.wiley.com/doi/10.1002/pmf2.70139); [overview of current prenatal screening guidelines](https://obgyn.onlinelibrary.wiley.com/doi/full/10.1002/pmf2.70016). Predictive values computed from published sensitivity and specificity against age-specific prevalence — illustrative of the size of the effect, not a quote for this laboratory's assay. Verified 2026-10-07. Confidence: high on the guidance, medium on the exact percentages.*
+
 ## 3. Week by week (4–40)
 
 Each week supplies six fields for the `weeks` seed table: `size`, `baby`,

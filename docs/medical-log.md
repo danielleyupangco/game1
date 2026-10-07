@@ -142,6 +142,12 @@ to-do that does not happen.
 - [ ] **Photograph the medicine boxes or the written prescription.** Two items
       on the list ("Lapas", "Quadrocol") could not be matched to any known
       medicine. Likely misheard names, and thirty seconds settles it.
+- [ ] **Decide on NIPT before 24 October** (10w0d, when it can first be drawn).
+      Three tiers quoted: **Lite ₱21,500**, Premium ₱38,500, Premium Plus
+      ₱44,000. **The recommendation is Lite or none** — the expensive tiers add
+      conditions the professional bodies advise against screening for, and a
+      roughly 1-in-10 chance of a false alarm. See the NIPT section in the guide.
+      Not deciding is also a decision: Dra. Villafria did not press for it.
 - [ ] **Request the work-from-home arrangement formally.** Dra. Villafria
       recommended it; two days a week in the office at present.
 - [ ] **The TSH of 5.13 — the detail for Dr. Capellan.** Every other result is
