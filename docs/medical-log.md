@@ -148,6 +148,12 @@ to-do that does not happen.
       conditions the professional bodies advise against screening for, and a
       roughly 1-in-10 chance of a false alarm. See the NIPT section in the guide.
       Not deciding is also a decision: Dra. Villafria did not press for it.
+- [ ] **Get HMO coverage in writing before the draw** — a Letter of
+      Authorisation, not a verbal yes at a clinic desk. Screening and genetic
+      tests are commonly excluded from Philippine HMO plans. Ask which tier is
+      covered, whether there is a cap, whether pre-approval is needed and
+      whether this laboratory is accredited. **If covered, also ask the lab
+      whether the report can be limited** to the trisomies and sex chromosomes.
 - [ ] **Request the work-from-home arrangement formally.** Dra. Villafria
       recommended it; two days a week in the office at present.
 - [ ] **The TSH of 5.13 — the detail for Dr. Capellan.** Every other result is

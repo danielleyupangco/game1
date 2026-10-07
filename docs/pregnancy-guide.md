@@ -269,9 +269,52 @@ ultrasound at 11–13+6 weeks, it is standard first-trimester care, and it happe
 whether or not any blood is drawn. Declining NIPT is a reasonable choice;
 skipping the NT scan is a different decision entirely.
 
+#### If an HMO is paying
+
+A reasonable objection: if the cost is not Dani's, why not take the biggest
+panel? **Because the money was never the main argument.**
+
+**What free does change.** The one defensible thing Premium adds over Lite is
+**sex chromosome screening** — Turner, Klinefelter, Triple X, XYY. That part
+*is* endorsed by ACOG and ACMG, and Lite does not include it. At ₱17,000 extra
+it was not worth it. At no extra cost, it is a fair reason to prefer Premium.
+
+**What free does not change.** The false-alarm problem is identical whoever
+pays. A 10% chance of being told something is wrong when it is not costs the
+same in fear, and in a possible amniocentesis, at ₱0 as at ₱38,500. **No HMO
+reimburses that.** And Premium Plus — all 22 chromosomes — is still screening
+the professional bodies are unanimously against, free or not.
+
+**So the question to ask the laboratory is not about price. It is: can the
+report be limited?** Some laboratories will run the panel and report only the
+trisomies and sex chromosomes, suppressing the microdeletions and the "108
+other conditions". If this one will, **Premium with a limited report is the
+best option available.** If the report comes as a whole, **Lite is still the
+better choice even at zero cost**, because the extra findings are mostly
+low-quality and cannot be un-known once read.
+
+**Before assuming it is covered, get it in writing.** Screening and genetic
+tests are among the most commonly excluded items in Philippine HMO plans, and
+maternity cover is often a separate rider with its own cap. Coverage of the
+consultation says nothing about coverage of the test. Ask for a **Letter of
+Authorisation before the blood is drawn**, and confirm:
+
+- Is NIPT covered at all, or excluded as screening or genetic testing?
+- **Which tier** — the basic one only, or any of them?
+- Is there a **cap**, and what is the balance if the tier costs more?
+- Does it need **pre-approval**, and from whom?
+- Is **this laboratory** accredited with the plan?
+
+A verbal "yes, it's covered" from a clinic desk is not coverage. If the claim is
+denied afterwards, the full amount falls to Dani.
+
 #### If it were a straight recommendation
 
-**Take Lite, or take none.** Dra. Villafria did not strongly recommend NIPT, and
+**Paying out of pocket: take Lite, or take none.** **Covered by an HMO: take
+Premium if the laboratory will limit the report to trisomies and sex
+chromosomes, and Lite if it will not.** Premium Plus in neither case.
+
+Dra. Villafria did not strongly recommend NIPT, and
 her reasoning — age 27, no family history — is the same reasoning that makes the
 expanded panels poor value. If the test is wanted for reassurance, Lite buys the
 reassurance. The extra ₱17,000 for Premium, and ₱22,500 for Premium Plus, buys
