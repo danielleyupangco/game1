@@ -15,6 +15,7 @@ export const DOCS = {
   prayer: readFileSync(new URL('../docs/prayer-book.md', import.meta.url), 'utf8'),
   medical: readFileSync(new URL('../docs/medical-log.md', import.meta.url), 'utf8'),
   buy: readFileSync(new URL('../docs/buy-list.md', import.meta.url), 'utf8'),
+  checkin: readFileSync(new URL('../docs/check-in.md', import.meta.url), 'utf8'),
 };
 
 /**
@@ -289,4 +290,49 @@ export function extractBuyList() {
 
   if (items.length < 100) throw new Error(`Expected 100+ buy-list items, extracted ${items.length}`);
   return items;
+}
+
+/**
+ * The check-in question bank.
+ *
+ * Each row carries the gestational window it applies in, which answer is the
+ * concerning one, and how serious that answer is. The page filters to the
+ * current week so nobody is asked about fetal movement at eight weeks or about
+ * progesterone at thirty.
+ */
+export function extractCheckin() {
+  const section = sections(DOCS.checkin).get('Questions');
+  if (!section) throw new Error('Check-in questions section not found');
+
+  const items = [];
+  for (const line of section.split('\n')) {
+    const cells = line.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim());
+    if (cells.length !== 6) continue;
+    if (cells[0] === 'From' || /^-+$/.test(cells[0])) continue;
+    const [from, until, q, concern, level, meaning] = cells;
+    if (!/^\d+$/.test(from)) continue;
+    if (!['call', 'mention', 'fine'].includes(level)) {
+      throw new Error(`Unknown check-in level "${level}" on: ${q}`);
+    }
+    if (!['yes', 'no'].includes(concern)) {
+      throw new Error(`Check-in "concern on" must be yes or no, got "${concern}" on: ${q}`);
+    }
+    items.push({
+      from: Number(from),
+      until: Number(until),
+      q: inline(q),
+      concern,
+      level,
+      meaning: inline(meaning),
+    });
+  }
+
+  if (items.length < 30) throw new Error(`Expected 30+ check-in questions, got ${items.length}`);
+  return items;
+}
+
+/** The framing text, so the page does not restate it in a second place. */
+export function checkinIntro() {
+  const body = DOCS.checkin.split('## Questions')[0];
+  return mdToHtml(body.split('\n').slice(1).join('\n').trim());
 }

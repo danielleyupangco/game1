@@ -15,6 +15,8 @@ import {
   extractCalendar,
   extractBudget,
   extractBuyList,
+  extractCheckin,
+  checkinIntro,
   DELIVERY,
   extractFoods,
   extractWeeklyPrayers,
@@ -96,6 +98,7 @@ const prose = {
 
   actions: renderSection('medical', 'Action steps'),
   meds: renderSection('medical', 'Medications'),
+  checkinIntro: checkinIntro(),
   vitals: renderSection('medical', 'Vitals'),
   glossary: renderSection('medical', 'Plain English'),
   birthday: renderSection('pregnancy', '13. Birth day — dates and signs'),
@@ -107,8 +110,9 @@ const prose = {
 
 const budget = extractBudget();
 const buy = extractBuyList();
+const checkin = extractCheckin();
 
-const data = JSON.stringify({ edd: EDD, weeks: weekData, foods, caffeine, calendar, vitals, budget, delivery: DELIVERY, buy })
+const data = JSON.stringify({ edd: EDD, weeks: weekData, foods, caffeine, calendar, vitals, budget, delivery: DELIVERY, buy, checkin })
   .replace(/</g, '\\u003c');
 
 const LOGO = `<svg viewBox="0 0 48 48" aria-hidden="true" class="mark">
@@ -124,6 +128,7 @@ ${Array.from({ length: 8 }, (_, i) => {
 
 const TABS = [
   ['weeks', 'Weeks'],
+  ['checkin', 'Check in'],
   ['food', 'Food'],
   ['move', 'Move'],
   ['sleep', 'Sleep'],
@@ -142,7 +147,12 @@ const TABS = [
 const panel = (id, title, body, extra = '') =>
   `<section class="view" id="view-${id}" hidden><h2 class="view-title">${title}</h2>${extra}${body}</section>`;
 
-const html = `<title>The Cub Handbook</title>
+const html = `<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>The Cub Handbook</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Nunito:wght@400;600;700&display=swap">
@@ -184,6 +194,7 @@ const html = `<title>The Cub Handbook</title>
   color-scheme:dark;
 }
 *{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
 h1,h2,h3,h4{font-family:var(--display);font-weight:600;line-height:1.2;text-wrap:balance;margin:0}
 a{color:var(--powder-deep)}
@@ -356,6 +367,35 @@ details.grief[open] summary{margin-bottom:.5rem}
 .wtrow .k{font-variant-numeric:tabular-nums;font-weight:700;justify-self:end}
 .wtcard .x{border:0;background:none;color:var(--fg-mute);cursor:pointer;font-size:.72rem;font-family:var(--body);text-decoration:underline;padding:.2rem 0}
 .wtnote{font-size:.76rem;color:var(--fg-mute);border-top:1px solid var(--line);padding-top:.7rem;margin:1rem 0 0}
+.cigroup{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1rem 1.15rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.cigroup h3{font-size:1.1rem;margin-bottom:.15rem}
+.cigroup .sub{font-size:.8rem;color:var(--fg-mute);margin-bottom:.9rem}
+.citem{display:flex;gap:.7rem;align-items:flex-start;padding:.6rem 0;border-bottom:1px solid var(--line);cursor:pointer}
+.citem:last-of-type{border-bottom:0}
+.citem input{width:22px;height:22px;margin-top:.1rem;accent-color:var(--blush-deep);flex:none;cursor:pointer}
+.citem span{font-size:.95rem;line-height:1.5}
+.citem.on span{font-weight:700}
+.ciask{padding:.6rem 0;border-bottom:1px solid var(--line)}
+.ciask:last-of-type{border-bottom:0}
+.ciask p{font-size:.95rem;line-height:1.5;margin:0 0 .5rem}
+.ciyn{display:flex;gap:.5rem}
+.ciyn button{min-height:40px;padding:0 1.1rem;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--fg-mute);font-family:var(--body);font-weight:700;font-size:.85rem;cursor:pointer}
+.ciyn button[aria-pressed="true"]{background:var(--blush);border-color:var(--blush-deep);color:var(--blush-deep)}
+.cibtn{width:100%;min-height:52px;border:0;border-radius:14px;background:var(--blush-deep);color:#fff;font-family:var(--body);font-weight:700;font-size:1rem;cursor:pointer;margin:.3rem 0 1rem}
+.cibtn.ghost{background:transparent;color:var(--fg-mute);border:1px solid var(--line);min-height:44px;font-size:.85rem}
+.ciout{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1.1rem 1.15rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.ciout.urgent{border-color:var(--blush-deep);border-width:2px}
+.civerdict{font-family:var(--display);font-size:1.3rem;line-height:1.35;margin-bottom:.5rem}
+.cilead{font-size:.95rem;line-height:1.6;color:var(--fg-mute);margin-bottom:1rem}
+.ciblock{margin-bottom:1.2rem}
+.ciblock h4{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-mute);margin-bottom:.5rem}
+.ciblock.call h4{color:var(--blush-deep)}
+.cirow{padding:.55rem 0;border-bottom:1px solid var(--line)}
+.cirow:last-child{border-bottom:0}
+.cirow b{display:block;font-size:.93rem;line-height:1.45;margin-bottom:.15rem}
+.cirow span{font-size:.84rem;line-height:1.5;color:var(--fg-mute)}
+.cicav{font-size:.84rem;line-height:1.6;color:var(--fg-mute);border-top:1px solid var(--line);padding-top:.8rem;margin:0}
+.cicav b{color:var(--fg)}
 .buys{display:grid;gap:.6rem}
 .buy{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:.75rem .9rem;box-shadow:var(--shadow);display:grid;grid-template-columns:auto 1fr;gap:.2rem .75rem;align-items:start}
 .buy.done{opacity:.5}
@@ -536,6 +576,9 @@ ${TABS.map(([id, label], n) => `<button class="tab" role="tab" id="tab-${id}" da
   <div id="weekcard"></div>
   <p class="installtip">On iPhone: <b>Share &rarr; Add to Home Screen</b> puts this one tap away, and the week updates itself each morning.</p>
 </section>
+
+${panel('checkin', 'Check in', `<div id="ci"></div>`,
+  `<p class="lede">Tick whatever is true. Nothing is scored, and anything you leave blank is taken as <em>not happening</em>.</p>`)}
 
 ${panel('food', 'Food', `<div id="foodlist" class="foods"></div>
   <div class="prose" id="nutrients">
@@ -1178,6 +1221,142 @@ function renderWeight() {
 }
 
 renderWeight();
+
+/* ---- check-in ------------------------------------------------------------ */
+/*
+ * A stage-aware triage, not a test. Three deliberate constraints:
+ *
+ *   - Nothing is scored. A pregnancy is not a thing to be marked out of ten,
+ *     and an average would let ten ordinary answers dilute one that matters.
+ *   - A single "call" answer decides the whole result on its own.
+ *   - The result always says that anything felt but not listed is still a
+ *     reason to ring. A checklist that talks someone out of an instinct has
+ *     done harm.
+ *
+ * Nothing is stored. Each run starts blank, because a check-in is about today.
+ */
+const ciState = { ticked: new Set(), asked: {} };
+
+const ciFor = (week) => DATA.checkin.filter((c) => week >= c.from && week < c.until);
+
+function renderCheckinForm() {
+  const week = now.weeks;
+  const items = ciFor(week);
+  const ticks = items.filter((c) => c.concern === 'yes');
+  const asks = items.filter((c) => c.concern === 'no');
+  const serious = ticks.filter((c) => c.level === 'call');
+  const ordinary = ticks.filter((c) => c.level !== 'call');
+
+  const tickList = (list) => list.map((c) => {
+    const id = 'ci-' + DATA.checkin.indexOf(c);
+    const on = ciState.ticked.has(c.q);
+    return '<label class="citem' + (on ? ' on' : '') + '" for="' + id + '">' +
+      '<input type="checkbox" id="' + id + '" data-q="' + c.q.replace(/"/g, '&quot;') + '"' +
+      (on ? ' checked' : '') + '><span>' + c.q + '</span></label>';
+  }).join('');
+
+  $('#ci').innerHTML =
+    '<section class="cigroup">' +
+      '<h3>Any of these, right now?</h3>' +
+      '<div class="sub">Leave blank anything that is not happening.</div>' +
+      tickList(serious) +
+    '</section>' +
+
+    '<section class="cigroup">' +
+      '<h3>And any of these?</h3>' +
+      '<div class="sub">The ordinary business of week ' + week + '. Ticking them is how you get told which are expected.</div>' +
+      tickList(ordinary) +
+    '</section>' +
+
+    (asks.length ? '<section class="cigroup">' +
+      '<h3>Two or three straight questions</h3>' +
+      '<div class="sub">Here a <em>no</em> is the answer worth flagging.</div>' +
+      asks.map((c) => {
+        const v = ciState.asked[c.q];
+        return '<div class="ciask"><p>' + c.q + '</p><div class="ciyn">' +
+          ['yes', 'no'].map((a) =>
+            '<button type="button" data-ask="' + c.q.replace(/"/g, '&quot;') + '" data-a="' + a +
+            '" aria-pressed="' + (v === a) + '">' + (a === 'yes' ? 'Yes' : 'No') + '</button>').join('') +
+          '</div></div>';
+      }).join('') +
+    '</section>' : '') +
+
+    '<button class="cibtn" type="button" id="ci-go">See what that means</button>' +
+    '<div id="ci-out"></div>';
+
+  $$('#ci input[type=checkbox]').forEach((cb) => cb.addEventListener('change', () => {
+    if (cb.checked) ciState.ticked.add(cb.dataset.q); else ciState.ticked.delete(cb.dataset.q);
+    cb.closest('.citem').classList.toggle('on', cb.checked);
+  }));
+  $$('#ci .ciyn button').forEach((btn) => btn.addEventListener('click', () => {
+    ciState.asked[btn.dataset.ask] = btn.dataset.a;
+    $$('#ci .ciyn button').forEach((o) => {
+      if (o.dataset.ask === btn.dataset.ask) o.setAttribute('aria-pressed', String(o === btn));
+    });
+  }));
+  $('#ci-go').addEventListener('click', showCheckinResult);
+}
+
+function showCheckinResult() {
+  const week = now.weeks;
+  const items = ciFor(week);
+
+  // A concerning answer is a ticked "yes" item, or a "no" to an inverted one.
+  const hit = items.filter((c) =>
+    c.concern === 'yes' ? ciState.ticked.has(c.q) : ciState.asked[c.q] === 'no');
+
+  const calls = hit.filter((c) => c.level === 'call');
+  const mentions = hit.filter((c) => c.level === 'mention');
+  const normals = hit.filter((c) => c.level === 'fine');
+  const unanswered = items.filter((c) => c.concern === 'no' && !ciState.asked[c.q]);
+
+  const rows = (list) => list.map((c) =>
+    '<div class="cirow"><b>' + c.q.replace(/\\?$/, '') + '</b><span>' + c.meaning + '</span></div>').join('');
+
+  let verdict, lead;
+  if (calls.length) {
+    verdict = calls.length === 1
+      ? 'One thing here is worth a call today.'
+      : calls.length + ' things here are worth a call today.';
+    lead = 'That stands on its own. Nothing else you ticked changes it, and it is not a reason to panic — it is a reason to pick up the phone rather than wait and see.';
+  } else if (mentions.length) {
+    verdict = 'Nothing urgent. ' + (mentions.length === 1 ? 'One thing' : mentions.length + ' things') + ' to mention at your next appointment.';
+    lead = 'None of this needs a call today. Write it down so it does not get forgotten in the room.';
+  } else {
+    verdict = 'Nothing here is out of the ordinary for week ' + week + '.';
+    lead = normals.length
+      ? 'Everything you ticked is the expected business of this stage.'
+      : 'Nothing ticked at all — which is its own kind of answer.';
+  }
+
+  $('#ci-out').innerHTML =
+    '<section class="ciout' + (calls.length ? ' urgent' : '') + '">' +
+      '<div class="civerdict">' + verdict + '</div>' +
+      '<p class="cilead">' + lead + '</p>' +
+
+      (calls.length ? '<div class="ciblock call"><h4>Call Dra. Villafria today</h4>' + rows(calls) + '</div>' : '') +
+      (mentions.length ? '<div class="ciblock"><h4>Worth mentioning next time</h4>' + rows(mentions) + '</div>' : '') +
+      (normals.length ? '<div class="ciblock"><h4>Ordinary for this stage</h4>' + rows(normals) + '</div>' : '') +
+      (unanswered.length ? '<div class="ciblock"><h4>Not answered</h4>' +
+        unanswered.map((c) => '<div class="cirow"><b>' + c.q.replace(/\\?$/, '') + '</b></div>').join('') +
+        '</div>' : '') +
+
+      '<p class="cicav"><b>This does not diagnose anything and it only knows the questions above.</b> ' +
+      'If something feels wrong and it is not on this list, that is still a reason to ring. ' +
+      'Nothing here is scored or averaged — one answer that matters is not cancelled out by ten that do not.</p>' +
+    '</section>' +
+    '<button class="cibtn ghost" type="button" id="ci-again">Start again</button>';
+
+  $('#ci-again').addEventListener('click', () => {
+    ciState.ticked.clear();
+    ciState.asked = {};
+    renderCheckinForm();
+    $('#ci').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  $('#ci-out').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+renderCheckinForm();
 
 /* ---- buy list ------------------------------------------------------------ */
 /*
