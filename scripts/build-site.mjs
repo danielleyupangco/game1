@@ -367,6 +367,14 @@ details.grief[open] summary{margin-bottom:.5rem}
 .wtrow .k{font-variant-numeric:tabular-nums;font-weight:700;justify-self:end}
 .wtcard .x{border:0;background:none;color:var(--fg-mute);cursor:pointer;font-size:.72rem;font-family:var(--body);text-decoration:underline;padding:.2rem 0}
 .wtnote{font-size:.76rem;color:var(--fg-mute);border-top:1px solid var(--line);padding-top:.7rem;margin:1rem 0 0}
+.fold{border:1px solid var(--line);border-radius:16px;background:var(--surface);margin-bottom:.7rem;overflow:hidden}
+.fold>summary{padding:.9rem 1rem;cursor:pointer;font-size:.92rem;line-height:1.45;color:var(--fg-mute);list-style:none;display:flex;gap:.6rem;align-items:baseline}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary::before{content:"›";font-size:1.1rem;color:var(--fg-mute);transition:transform .15s;flex:none;line-height:1}
+.fold[open]>summary::before{transform:rotate(90deg)}
+.fold>summary b{color:var(--fg)}
+.fold>*:not(summary){padding:0 1rem 1rem}
+.fold .prose{padding-top:0}
 .fc{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1rem 1.15rem;margin-bottom:1.25rem;box-shadow:var(--shadow)}
 .fc h3{font-size:1.2rem;margin-bottom:.15rem}
 .fc .sub{font-size:.8rem;color:var(--fg-mute);margin-bottom:.9rem}
@@ -374,7 +382,9 @@ details.grief[open] summary{margin-bottom:.5rem}
 .fcbar input{flex:1;min-width:0;min-height:48px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:0 .85rem;font-family:var(--body);font-size:1rem}
 .fcbtn{min-height:48px;padding:0 1.1rem;border:0;border-radius:14px;background:var(--blush-deep);color:#fff;font-family:var(--body);font-weight:700;font-size:.9rem;cursor:pointer;white-space:nowrap}
 .fcbtn[disabled]{opacity:.5;cursor:default}
-.fccam{min-height:48px;width:48px;flex:none;border:1px solid var(--line);border-radius:14px;background:var(--bg);color:var(--fg-mute);font-size:1.2rem;cursor:pointer;display:grid;place-items:center}
+.fccam{min-height:48px;width:48px;flex:none;border:1px solid var(--line);border-radius:14px;background:var(--bg);color:var(--fg-mute);cursor:pointer;display:grid;place-items:center;padding:0}
+.fccam[hidden]{display:none}
+.fccam svg{width:21px;height:21px;display:block}
 .fcnote{font-size:.78rem;color:var(--fg-mute);margin:.7rem 0 0;line-height:1.55}
 .fcres{margin-top:.9rem}
 .fccard{border:1px solid var(--line);border-radius:16px;padding:.85rem .95rem;margin-bottom:.6rem;background:var(--bg)}
@@ -618,20 +628,25 @@ ${TABS.map(([id, label], n) => `<button class="tab" role="tab" id="tab-${id}" da
 ${panel('checkin', 'Check in', `<div id="ci"></div>`,
   `<p class="lede">Tick whatever is true. Nothing is scored, and anything you leave blank is taken as <em>not happening</em>.</p>`)}
 
-${panel('food', 'Food', `<div id="fc"></div><div id="foodlist" class="foods"></div>
-  <div class="prose" id="nutrients">
-    <h3 style="font-family:var(--display);font-size:1.25rem;margin:2.5rem 0 .3rem">Nutrients that matter</h3>
-    <p class="lede">The eight that do the work, where to find them locally, and how to tell where your iron actually stands.</p>
-    ${prose.nutrients}
-  </div>`,
-  `<p class="lede">131 items. Most of them are fine &mdash; the list leads with reassurance and saves <b>avoid</b> for genuine risk.</p>
-   <div class="tools">
-     <input type="search" id="foodq" placeholder="Search kinilaw, tuyo, cheese&hellip;" aria-label="Search foods">
-     <button class="filt" data-s="safe" aria-pressed="false" type="button">Safe</button>
-     <button class="filt" data-s="caution" aria-pressed="false" type="button">Caution</button>
-     <button class="filt" data-s="avoid" aria-pressed="false" type="button">Avoid</button>
-     <span class="count" id="foodcount"></span>
-   </div>`)}
+${panel('food', 'Food', `<div id="fc"></div>
+
+  <details class="fold" id="fold-list">
+    <summary><b>Browse all 131</b> &mdash; the sourced list the checker reads first</summary>
+    <div class="tools">
+      <input type="search" id="foodq" placeholder="Search kinilaw, tuyo, cheese&hellip;" aria-label="Search foods">
+      <button class="filt" data-s="safe" aria-pressed="false" type="button">Safe</button>
+      <button class="filt" data-s="caution" aria-pressed="false" type="button">Caution</button>
+      <button class="filt" data-s="avoid" aria-pressed="false" type="button">Avoid</button>
+      <span class="count" id="foodcount"></span>
+    </div>
+    <div id="foodlist" class="foods"></div>
+  </details>
+
+  <details class="fold" id="fold-nutrients">
+    <summary><b>Nutrients that matter</b> &mdash; the eight that do the work, and where your iron stands</summary>
+    <div class="prose" id="nutrients">${prose.nutrients}</div>
+  </details>`,
+  `<p class="lede">Ask about anything &mdash; a dish, a brand, a restaurant order. Your own 131-item guide answers first; anything it does not cover goes to Claude.</p>`)}
 
 ${panel('move', 'Move', `<div class="prose">${prose.move}</div>`)}
 ${panel('sleep', 'Sleep', `
@@ -925,7 +940,7 @@ const caf = DATA.caffeine.map(c =>
   '<span class="s">' + c.serving + '</span>' +
   '<span class="bar' + (c.mg > 200 ? ' over' : '') + '"><i style="width:' + Math.min(100, (c.mg / 200) * 100) + '%"></i></span></div>'
 ).join('');
-$('#nutrients').insertAdjacentHTML('beforebegin',
+$('#fold-list').insertAdjacentHTML('beforeend',
   '<h3 style="font-family:var(--display);font-size:1.25rem;margin:2.5rem 0 .3rem">Caffeine</h3>' +
   '<p class="lede">The daily limit is 200mg. Each bar is measured against it &mdash; two cups of barako put her over before lunch.</p>' +
   '<div class="tw" style="padding:.3rem .6rem">' + caf + '</div>');
@@ -1509,7 +1524,11 @@ async function fcAsk() {
       '<div class="sub">Anything — a dish, a brand, a restaurant order. Your 131-item guide is checked first.</div>' +
       '<div class="fcbar">' +
         '<input type="text" id="fc-q" placeholder="sashimi, Chickenjoy, kesong puti…" autocomplete="off" enterkeyhint="search">' +
-        '<button class="fccam" id="fc-cam" type="button" title="Photograph a label" hidden>□</button>' +
+        '<button class="fccam" id="fc-cam" type="button" title="Photograph a label" aria-label="Photograph a label" hidden>' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
+          'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          '<path d="M3 8.5A1.5 1.5 0 0 1 4.5 7h2.2l1.1-1.8A1 1 0 0 1 8.7 4.7h6.6a1 1 0 0 1 .9.5L17.3 7h2.2A1.5 1.5 0 0 1 21 8.5v9A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/>' +
+          '<circle cx="12" cy="13" r="3.4"/></svg></button>' +
         '<button class="fcbtn" id="fc-go" type="button">Check</button>' +
       '</div>' +
       '<input type="file" id="fc-file" accept="image/*" capture="environment" hidden>' +
