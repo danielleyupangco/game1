@@ -2258,8 +2258,13 @@ async function fcAsk() {
   }
 
   if (!fcSample) {
-    fcShow('<div class="fccard caution"><p class="fcwhy">Not in your food guide, and Claude is not available in this view — so there is nothing to check it against.</p>' +
-      '<p class="fctip">The 131-item list below still works, and the Food guide covers the categories.</p></div>');
+    fcShow('<div class="fccard caution">' +
+      '<p class="fcwhy"><b>You are probably signed out.</b> Look at the very top of this page: ' +
+      'if it says <b>Sign in</b>, that is the whole problem.</p>' +
+      '<p class="fctip">Anything beyond the 131-item list is answered by Claude, and Claude answers ' +
+      'on <i>your</i> account — so it needs you signed in. Sign in at claude.ai, or open this ' +
+      'page from the Claude app, and this box becomes the part that works for any food at all.</p>' +
+      '<p class="fctip">Until then the list below still answers for 131 foods.</p></div>');
     return;
   }
 
