@@ -218,6 +218,44 @@ details.grief[open] summary{margin-bottom:.5rem}
 .wtrow .k{font-variant-numeric:tabular-nums;font-weight:700;justify-self:end}
 .wtcard .x{border:0;background:none;color:var(--fg-mute);cursor:pointer;font-size:.72rem;font-family:var(--body);text-decoration:underline;padding:.2rem 0}
 .wtnote{font-size:.76rem;color:var(--fg-mute);border-top:1px solid var(--line);padding-top:.7rem;margin:1rem 0 0}
+.fc{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1rem 1.15rem;margin-bottom:1.25rem;box-shadow:var(--shadow)}
+.fc h3{font-size:1.2rem;margin-bottom:.15rem}
+.fc .sub{font-size:.8rem;color:var(--fg-mute);margin-bottom:.9rem}
+.fcbar{display:flex;gap:.5rem;align-items:stretch}
+.fcbar input{flex:1;min-width:0;min-height:48px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:0 .85rem;font-family:var(--body);font-size:1rem}
+.fcbtn{min-height:48px;padding:0 1.1rem;border:0;border-radius:14px;background:var(--blush-deep);color:#fff;font-family:var(--body);font-weight:700;font-size:.9rem;cursor:pointer;white-space:nowrap}
+.fcbtn[disabled]{opacity:.5;cursor:default}
+.fccam{min-height:48px;width:48px;flex:none;border:1px solid var(--line);border-radius:14px;background:var(--bg);color:var(--fg-mute);font-size:1.2rem;cursor:pointer;display:grid;place-items:center}
+.fcnote{font-size:.78rem;color:var(--fg-mute);margin:.7rem 0 0;line-height:1.55}
+.fcres{margin-top:.9rem}
+.fccard{border:1px solid var(--line);border-radius:16px;padding:.85rem .95rem;margin-bottom:.6rem;background:var(--bg)}
+.fccard.safe{border-left:4px solid var(--safe-fg)}
+.fccard.caution{border-left:4px solid var(--caution-fg)}
+.fccard.avoid{border-left:4px solid var(--avoid-fg)}
+.fch{display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;margin-bottom:.5rem}
+.fcname{font-weight:700;font-size:1.02rem;flex:1;min-width:140px}
+.fcverdict{font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.22rem .5rem;border-radius:999px;white-space:nowrap}
+.fcverdict.safe{background:var(--safe-bg);color:var(--safe-fg)}
+.fcverdict.caution{background:var(--caution-bg);color:var(--caution-fg)}
+.fcverdict.avoid{background:var(--avoid-bg);color:var(--avoid-fg)}
+.fcscore{display:flex;align-items:baseline;gap:.25rem;font-variant-numeric:tabular-nums}
+.fcscore b{font-family:var(--display);font-size:1.5rem;line-height:1}
+.fcscore span{font-size:.72rem;color:var(--fg-mute)}
+.fcmeter{height:5px;border-radius:999px;background:var(--surface-2);overflow:hidden;margin:.1rem 0 .55rem}
+.fcmeter i{display:block;height:100%;border-radius:999px;background:var(--powder-deep)}
+.fcwhy{font-size:.9rem;line-height:1.55;margin:0 0 .35rem}
+.fctip{font-size:.85rem;line-height:1.5;color:var(--fg-mute);margin:0}
+.fclimit{font-size:.82rem;line-height:1.5;color:var(--caution-fg);background:var(--caution-bg);border-radius:10px;padding:.4rem .6rem;margin:.5rem 0 0}
+.fcsrc{font-size:.7rem;color:var(--fg-mute);margin-top:.55rem;display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+.fcflag{font-size:.66rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.18rem .42rem;border-radius:999px;background:var(--surface-2);color:var(--fg-mute)}
+.fcflag.unv{background:var(--caution-bg);color:var(--caution-fg)}
+.fclog{margin-top:.5rem}
+.fclogrow{display:flex;gap:.6rem;align-items:baseline;padding:.45rem 0;border-bottom:1px solid var(--line);font-size:.88rem}
+.fclogrow:last-child{border-bottom:0}
+.fclogrow .d{font-size:.72rem;color:var(--fg-mute);font-variant-numeric:tabular-nums;flex:none;width:3.1rem}
+.fclogrow .n{flex:1}
+.fclogrow .s{font-variant-numeric:tabular-nums;font-weight:700;flex:none}
+.fcx{border:0;background:none;color:var(--fg-mute);cursor:pointer;font-size:.72rem;text-decoration:underline;padding:.2rem 0;font-family:var(--body);flex:none}
 .cigroup{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1rem 1.15rem;margin-bottom:1rem;box-shadow:var(--shadow)}
 .cigroup h3{font-size:1.1rem;margin-bottom:.15rem}
 .cigroup .sub{font-size:.8rem;color:var(--fg-mute);margin-bottom:.9rem}
@@ -454,7 +492,7 @@ footer{border-top:1px solid var(--line);margin-top:3rem;padding-top:1.25rem;colo
      <button class="filt" data-s="caution" aria-pressed="false" type="button">Caution</button>
      <button class="filt" data-s="avoid" aria-pressed="false" type="button">Avoid</button>
      <span class="count" id="foodcount"></span>
-   </div><div id="foodlist" class="foods"></div>
+   </div><div id="fc"></div><div id="foodlist" class="foods"></div>
   <div class="prose" id="nutrients">
     <h3 style="font-family:var(--display);font-size:1.25rem;margin:2.5rem 0 .3rem">Nutrients that matter</h3>
     <p class="lede">The eight that do the work, where to find them locally, and how to tell where your iron actually stands.</p>
@@ -2014,6 +2052,284 @@ function renderWeight() {
 }
 
 renderWeight();
+
+/* ---- food checker -------------------------------------------------------- */
+/*
+ * Type a food or photograph a label; get a safety verdict and a nutrition
+ * score. Two numbers rather than one, because a single score would rate ice
+ * cream and kinilaw about the same for opposite reasons.
+ *
+ * Order of resort:
+ *   1. the 131-item guide, which was researched and sourced -- instant, free,
+ *      and the authority for anything it covers;
+ *   2. Claude, which CANNOT browse. It is good on ordinary food and cannot
+ *      verify a particular product's current label, so every answer it gives
+ *      is marked unverified and a photograph is offered as the way to turn a
+ *      guess into a reading.
+ *
+ * The log is localStorage, like the rest of this page: this device only.
+ */
+const FC_KEY = 'cub-food-v1';
+let fcSample = null;
+let fcImages = false;
+let fcBusy = false;
+
+const fcLoad = () => {
+  try {
+    const raw = localStorage.getItem(FC_KEY);
+    const v = raw ? JSON.parse(raw) : [];
+    return Array.isArray(v) ? v : [];
+  } catch (e) { return []; }
+};
+let fcLog = fcLoad();
+const fcSave = () => {
+  try { localStorage.setItem(FC_KEY, JSON.stringify(fcLog.slice(-200))); } catch (e) {}
+};
+
+/*
+ * Every guide entry the query could mean -- not the first, and not the worst.
+ * "cheese" matches four entries whose verdicts differ, and "tuna" matches
+ * three, one of which is avoid; answering such a query with a single card is
+ * a wrong answer delivered confidently. Ambiguity is the honest result.
+ */
+function fcLocalAll(query) {
+  const q = query.trim().toLowerCase();
+  if (q.length < 2) return [];
+  const exact = DATA.foods.filter((f) => f.plain === q);
+  if (exact.length) return exact;
+  const hits = DATA.foods.filter((f) =>
+    (f.plain.length > 3 && q.includes(f.plain)) || (q.length > 2 && f.plain.includes(q)));
+  // Shortest name first: the plainest entry is usually the one meant.
+  return hits.sort((a, b) => a.plain.length - b.plain.length).slice(0, 4);
+}
+
+/* Scores for the guide's own entries: the list carries safety, not nutrition,
+   so a local hit shows the verdict and leaves the score off rather than
+   inventing one. */
+/* The guide's text has already been through the markdown converter, so it
+   carries tags and entities. Strip the tags and decode the entities here;
+   fcEsc re-escapes on the way out, and double-escaping showed as "&quot;". */
+const fcPlain = (t) => String(t)
+  .replace(/<[^>]+>/g, '')
+  .replace(/&quot;/g, '"')
+  .replace(/&#39;/g, "'")
+  .replace(/&lt;/g, '<')
+  .replace(/&gt;/g, '>')
+  .replace(/&amp;/g, '&');
+
+const fcFromLocal = (f, query) => ({
+  food: fcPlain(f.name),
+  safety: f.status,
+  score: null,
+  why: fcPlain(f.reason),
+  tip: '',
+  limit: null,
+  confident: true,
+  source: 'guide',
+  query,
+});
+
+function fcPrompt(query, hasPhoto) {
+  const wk = now.weeks;
+  return [
+    'You are advising a pregnant woman in Metro Manila, Philippines. She is currently ' + wk + ' weeks pregnant.',
+    hasPhoto
+      ? 'She has photographed a food product. Read the label in the image -- the product name and the ingredients -- and rate THAT product. Her typed note, if any: "' + query + '".'
+      : 'Rate this food: "' + query + '".',
+    '',
+    'Give TWO separate judgements.',
+    '1. safety: "safe", "caution" or "avoid" for pregnancy. Base it on real risks only -- listeria, salmonella, toxoplasma, high-mercury fish, raw or undercooked animal food, unpasteurised dairy, alcohol, excess caffeine, excess vitamin A/liver. Ordinary food is "safe"; do not hedge food that is simply unhealthy.',
+    '2. score: an integer 1-10 for how NUTRITIONALLY useful it is in pregnancy. Iron, folate, calcium, protein, DHA, choline, fibre raise it; sugar, refined starch, fried food and empty calories lower it. These are independent: a food can be "safe" and score 2, or "avoid" and score 9.',
+    '',
+    'Other fields:',
+    '- why: one plain sentence, under 25 words, saying what decides the safety verdict.',
+    '- tip: one short practical sentence for her, or "" if there is nothing useful.',
+    '- limit: a portion or frequency cap as a short phrase if one genuinely applies (tuna, caffeine, liver), otherwise null.',
+    '- confident: true only if you are sure. Set false for a specific brand or packaged product whose current recipe you cannot verify, or if the food is ambiguous.',
+    '',
+    'Use Philippine foods, brands and portion norms where relevant. Be concrete, not cautious-by-default.',
+    'Reply with ONLY this JSON object and nothing else:',
+    '{"food":"...","safety":"safe","score":7,"why":"...","tip":"...","limit":null,"confident":true}',
+  ].join('\n');
+}
+
+let fcPending = [];
+
+function fcCard(r, pickIndex) {
+  const pct = typeof r.score === 'number' ? Math.max(0, Math.min(10, r.score)) * 10 : 0;
+  const unver = r.confident === false;
+  return '<div class="fccard ' + r.safety + '">' +
+    '<div class="fch">' +
+      '<span class="fcname">' + fcEsc(r.food) + '</span>' +
+      '<span class="fcverdict ' + r.safety + '">' + r.safety + '</span>' +
+      (typeof r.score === 'number'
+        ? '<span class="fcscore"><b>' + r.score + '</b><span>/10 nutrition</span></span>' : '') +
+    '</div>' +
+    (typeof r.score === 'number'
+      ? '<div class="fcmeter"><i style="width:' + pct + '%"></i></div>' : '') +
+    '<p class="fcwhy">' + fcEsc(r.why) + '</p>' +
+    (r.tip ? '<p class="fctip">' + fcEsc(r.tip) + '</p>' : '') +
+    (r.limit ? '<p class="fclimit">Limit: ' + fcEsc(r.limit) + '</p>' : '') +
+    '<div class="fcsrc">' +
+      (r.source === 'guide'
+        ? '<span class="fcflag">From your food guide</span>'
+        : '<span class="fcflag' + (unver ? ' unv' : '') + '">' + (unver ? 'Unverified' : 'Claude') + '</span>') +
+      (unver ? '<span>Check the label — a brand’s recipe cannot be verified from memory.</span>' : '') +
+      (typeof pickIndex === 'number'
+        ? '<button class="fcx fcpick" type="button" data-i="' + pickIndex + '">This is the one</button>' : '') +
+    '</div>' +
+  '</div>';
+}
+
+const fcEsc = (t) => String(t == null ? '' : t)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function fcRenderLog() {
+  const el = $('#fc-log');
+  if (!el) return;
+  const recent = [...fcLog].reverse().slice(0, 12);
+  el.innerHTML = recent.length
+    ? '<div class="sub" style="margin:1rem 0 .2rem">Logged — this device only</div>' +
+      recent.map((r, i) =>
+        '<div class="fclogrow"><span class="d">' + (r.at || '').slice(5) + '</span>' +
+        '<span class="n">' + fcEsc(r.food) + '</span>' +
+        '<span class="fcverdict ' + r.safety + '">' + r.safety + '</span>' +
+        (typeof r.score === 'number' ? '<span class="s">' + r.score + '</span>' : '') +
+        '<button class="fcx" type="button" data-i="' + (fcLog.length - 1 - i) + '">Remove</button></div>').join('')
+    : '';
+  $$('#fc-log .fcx').forEach((b) => b.addEventListener('click', () => {
+    fcLog.splice(Number(b.dataset.i), 1);
+    fcSave(); fcRenderLog();
+  }));
+}
+
+function fcShow(html) { $('#fc-res').innerHTML = html; }
+
+function fcRecord(r) {
+  fcLog.push({ ...r, at: todayIso() });
+  fcSave();
+  fcRenderLog();
+}
+
+async function fcAsk() {
+  if (fcBusy) return;
+  const q = $('#fc-q').value.trim();
+  const file = $('#fc-file').files[0];
+  if (!q && !file) return;
+
+  // The guide answers for itself, with no call and no guessing.
+  if (!file) {
+    const hits = fcLocalAll(q);
+    if (hits.length === 1) {
+      const r = fcFromLocal(hits[0], q);
+      fcShow(fcCard(r));
+      fcRecord(r);
+      $('#fc-q').value = '';
+      return;
+    }
+    if (hits.length > 1) {
+      fcPending = hits.map((h) => fcFromLocal(h, q));
+      fcShow('<p class="fcnote" style="margin:0 0 .7rem">Your guide has <b>' + hits.length +
+        '</b> entries this could mean, and they do not all say the same thing. Pick the one you ate.</p>' +
+        fcPending.map((r, i) => fcCard(r, i)).join(''));
+      $$('#fc-res .fcpick').forEach((btn) => btn.addEventListener('click', () => {
+        const r = fcPending[Number(btn.dataset.i)];
+        fcShow(fcCard(r));
+        fcRecord(r);
+        $('#fc-q').value = '';
+      }));
+      return;
+    }
+  }
+
+  if (!fcSample) {
+    fcShow('<div class="fccard caution"><p class="fcwhy">Not in your food guide, and Claude is not available in this view — so there is nothing to check it against.</p>' +
+      '<p class="fctip">The 131-item list below still works, and the Food guide covers the categories.</p></div>');
+    return;
+  }
+
+  fcBusy = true;
+  $('#fc-go').disabled = true;
+  fcShow('<div class="fccard"><p class="fcwhy">Thinking…</p></div>');
+
+  try {
+    const opts = { modelTier: 'default' };
+    if (file) opts.images = [file];
+    const r = await fcSample.json(fcPrompt(q, Boolean(file)), opts);
+    const safety = ['safe', 'caution', 'avoid'].includes(r.safety) ? r.safety : 'caution';
+    const score = Number.isFinite(Number(r.score)) ? Math.round(Number(r.score)) : null;
+    const out = {
+      food: r.food || q || 'That product',
+      safety,
+      score,
+      why: r.why || '',
+      tip: r.tip || '',
+      limit: r.limit || null,
+      confident: r.confident !== false,
+      source: 'claude',
+      query: q,
+    };
+    fcShow(fcCard(out));
+    fcRecord(out);
+    $('#fc-q').value = '';
+    $('#fc-file').value = '';
+  } catch (e) {
+    const code = (e && e.code) || 'upstream_error';
+    const copy = {
+      not_granted: 'You declined Claude for this page, so the checker is off. The food guide below still works.',
+      sampling_disabled: 'Claude is not available on this account.',
+      rate_limited: 'Too many requests just now. Give it a minute.',
+      session_expired: 'Sign in to Claude again, then retry.',
+      image_rejected: 'That image could not be read. Try a clearer photo of the label.',
+      images_unavailable: 'Photos are not available in this view. Type the food instead.',
+      invalid_json: 'The answer came back malformed. Try asking again.',
+      refused: 'Claude declined to answer that one.',
+      empty_completion: 'No answer came back. Try wording it differently.',
+    }[code] || 'Something went wrong reaching Claude. Try again in a moment.';
+    fcShow('<div class="fccard caution"><p class="fcwhy">' + copy + '</p></div>');
+  } finally {
+    fcBusy = false;
+    $('#fc-go').disabled = false;
+  }
+}
+
+(() => {
+  const el = $('#fc');
+  if (!el) return;
+  el.innerHTML =
+    '<section class="fc">' +
+      '<h3>Check a food</h3>' +
+      '<div class="sub">Anything — a dish, a brand, a restaurant order. Your 131-item guide is checked first.</div>' +
+      '<div class="fcbar">' +
+        '<input type="text" id="fc-q" placeholder="sashimi, Chickenjoy, kesong puti…" autocomplete="off" enterkeyhint="search">' +
+        '<button class="fccam" id="fc-cam" type="button" title="Photograph a label" hidden>□</button>' +
+        '<button class="fcbtn" id="fc-go" type="button">Check</button>' +
+      '</div>' +
+      '<input type="file" id="fc-file" accept="image/*" capture="environment" hidden>' +
+      '<div class="fcres" id="fc-res"></div>' +
+      '<div class="fclog" id="fc-log"></div>' +
+      '<p class="fcnote"><b>Two numbers, not one.</b> The verdict is about safety; the score is about nutrition. ' +
+      'They are independent — kinilaw is nutritious and still <b>avoid</b>.<br>' +
+      '<b>Claude cannot browse.</b> It is good on ordinary food and cannot verify a particular product’s current recipe. ' +
+      'For anything packaged, <b>photograph the label</b> — that turns a guess into a reading. ' +
+      'Nothing here replaces Dra. Villafria.</p>' +
+    '</section>';
+
+  $('#fc-go').addEventListener('click', fcAsk);
+  $('#fc-q').addEventListener('keydown', (e) => { if (e.key === 'Enter') fcAsk(); });
+  $('#fc-cam').addEventListener('click', () => $('#fc-file').click());
+  $('#fc-file').addEventListener('change', () => { if ($('#fc-file').files[0]) fcAsk(); });
+  fcRenderLog();
+
+  // Light the Claude-backed parts up only once the runtime answers.
+  Promise.resolve(window.claude && window.claude.use ? window.claude.use('sample') : null).then(async (s) => {
+    fcSample = s;
+    if (!s) return;
+    const lim = await s.limits().catch(() => null);
+    fcImages = Boolean(lim && lim.images);
+    $('#fc-cam').hidden = !fcImages;
+  }).catch(() => {});
+})();
 
 /* ---- check-in ------------------------------------------------------------ */
 /*

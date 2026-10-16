@@ -838,6 +838,62 @@ merely permitted — the omega-3s matter for brain development.
 
 ---
 
+### The food checker, and what its numbers mean
+
+The Food tab carries a checker: type any food, or photograph a label, and get
+a reading. It gives **two** answers rather than one, and that is deliberate.
+
+#### Why one score would mislead
+
+A single "how good is this for pregnancy, out of ten" collapses two unrelated
+questions:
+
+| | Safe to eat? | Nutritious? |
+| --- | --- | --- |
+| Ice cream | Yes | Barely |
+| Tuna | Yes, within a limit | Very |
+| Kinilaw | **No** | Very |
+| Boiled kangkong | Yes | Very |
+
+A single number would score ice cream and kinilaw about the same, for opposite
+reasons, and that is the one mistake a food checker must not make. So:
+
+- **A safety verdict** — safe, caution or avoid. This is the one that matters,
+  and it can override everything else.
+- **A nutrition score, 1 to 10**, for how much good it does *in pregnancy*
+  specifically — iron, folate, calcium, protein, DHA, choline push it up;
+  sugar, refined starch and empty calories pull it down.
+
+Kinilaw scores high on nutrition and is still **avoid**. Both facts are true and
+you need both.
+
+#### Where its answers come from
+
+**The 131-item food guide is checked first.** Anything already on that list is
+answered instantly from it, with no guessing, because those entries were
+researched and sourced. The checker says when an answer came from there.
+
+**Anything else is asked of Claude, which cannot browse the web.** That is the
+honest limit of it. It answers from what it knows, which is good for ordinary
+foods and well-known dishes and **cannot verify a particular product's current
+ingredient list**. A reformulated recipe, a regional variant, a new product — it
+will not know.
+
+**So for packaged food, photograph the label.** That turns a guess into a
+reading: the ingredients are right there, and the checker is looking at the
+actual packet rather than recalling what that brand usually contains. It is the
+difference between "pasteurised, probably" and reading the word on the carton.
+
+Every answer marks itself **confident** or **unverified**, and an unverified
+answer about a specific brand should be treated as a prompt to check the label
+rather than as the answer.
+
+#### What it is not
+
+It is not a clinician, it has no access to Dani's notes, and **a food question
+that actually matters belongs with Dra. Villafria.** Nothing it says overrides
+the red flags screen or the food guide's own entries.
+
 ## 5. Caffeine
 
 **Limit: 200mg a day.** ACOG advises that moderate caffeine intake below 200mg
