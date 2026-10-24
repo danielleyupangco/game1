@@ -299,8 +299,8 @@ standard first-trimester care and is not the same decision.
 **Japan in December**, at around **17–18 weeks** — the second trimester, which is
 the best window there is for travel. Dra. Villafria is aware. Much walking
 expected; sensible shoes advised. *Note: the prayer calendar still carries a
-Korea trip for 5–9 December. If that has become the Japan trip, say so and it
-will be corrected.*
+Korea trip for 5–9 December. **Resolved on 24 October: it is Japan, 12–16
+December.** The calendar and the travel section now carry those dates.*
 
 ### Also
 
@@ -469,7 +469,7 @@ Dra. Villafria**, because it has two concrete consequences here:
 - **The November marathon walk.** Ask specifically. Depending on the event date
   that falls somewhere in weeks 11–16.
 - **Travel.** Vietnam was cancelled on 18 September, which removes the nearest
-  conflict. Korea in December is the next trip, at week 16.
+  conflict. Japan, 12–16 December, is the next trip, at 17 weeks.
 
 **How Dra. Villafria described it:** *minor bleeding.* That is the plain-language
 name for exactly this finding — a subchorionic hemorrhage **is** a small bleed,

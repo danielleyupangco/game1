@@ -448,7 +448,7 @@ milestone appears varies by a week either way between sources.*
 - *Tests:* Routine. Book the anomaly scan.
 - *Nutrition:* Choline — eggs are the easiest source.
 - *Stretch:* Pelvic tilts. Avoid supine positions.
-- *Filipino life:* **Korea trip falls near here** — the best-timed trip. See travel.
+- *Filipino life:* **The Japan trip falls here** — 12–16 December, the best-timed one. See travel.
 
 **Week 17 — pear / one guava**
 - *Baby:* Fat stores begin to form. The skeleton shifts from cartilage to bone.
@@ -1162,9 +1162,14 @@ Weeks below are on the dating in section 1 (EDD 22 May 2027, from the
 | Trip | Dates | Week at start | Risk | Zika |
 | --- | --- | --- | --- | --- |
 | ~~Vietnam~~ | ~~early Oct 2026~~ | ~~7w3d~~ | **cancelled** | — |
-| Korea | 5–9 Dec 2026 | 16w3d – 17w0d | low | no |
+| **Japan** | **12–16 Dec 2026** | **17w0d – 17w4d** | low | no |
+| **Bacolod** | **March 2027** | **28w2d – 32w4d** | low — but needs a fit-to-fly note | no |
 | India | Jan 2027 | ~22w2d | high | yes — present |
 | Mexico | Mar 2027 | ~30w5d | **avoid** | yes — present |
+
+**India and Mexico are still listed from the original plan and have not been
+confirmed either way.** Mexico now also collides with Bacolod in March. If
+either is off, say so and the rows go.
 
 ### The rule that applies to every trip
 
@@ -1179,30 +1184,47 @@ full remaining duration.
 
 *Source: [CDC — Preventing Zika](https://www.cdc.gov/zika/prevention/index.html), [CDC — Recommendations for travelers](https://www.cdc.gov/zika/travel/index.html). Verified 2026-09-18. Confidence: high.*
 
-### Japan — December 2026, at around 17–18 weeks
+### Japan — 12–16 December 2026, **17w0d – 17w4d**
 
-Raised with Dra. Villafria on 2 October and she is aware of it. **The second
-trimester is the best window for travel there is** — the first-trimester nausea
-has usually passed, the bump is not yet an obstacle, and the late-pregnancy
-flying restrictions are months away. Around 17–18 weeks is comfortably inside it.
+**Confirmed dates, and the best-timed trip of the pregnancy.** Second trimester,
+past the nausea, months before any airline will ask a question, and a country
+with excellent medical care everywhere.
 
-What was actually advised, and what it is worth adding:
+**The timing is almost suspiciously tidy.** You land back on **16 December**,
+which is the first day of **Simbang Gabi**, and the **anomaly scan window opens
+on 19 December** — three days after you return. Book that scan *before* you go,
+while there is still choice of slot.
 
-- **Expect a great deal of walking.** Japan in December is a walking holiday
-  whether or not it is planned as one.
-- **Sensible shoes.** Her words. Ligaments loosen in pregnancy and footing on
-  wet or icy pavement is less reliable than usual.
-- **Cold, not heat, is the issue this time.** Layers, and bear in mind that
-  pregnancy runs warm — overdressing indoors is as likely a problem as the cold
-  outside.
-- **Take the handbook offline.** It works with no signal, which is the point.
-- **Know the hospital nearest where you are staying** before going. Not because
-  anything is expected, but because looking it up in advance costs nothing.
-- **Move every hour on the flight**, and drink more water than feels necessary.
-  Clot risk is higher in pregnancy and this is the whole of the mitigation.
+**The food is the real consideration, more than the cold.** Japan is built on
+exactly the things on the avoid list:
 
-*Note: the liturgical calendar still carries a Korea trip for 5–9 December, from
-an earlier plan. If Japan has replaced it, that entry needs correcting.*
+- **Sushi and sashimi — no.** This is the hard one and it is unavoidable there.
+  Cooked Japanese food is superb and enormous: ramen, katsu, yakitori, tempura,
+  sukiyaki, udon, gyoza, okonomiyaki, unagi.
+- **Raw egg is everywhere and is easy to miss.** The egg on sukiyaki, *tamago
+  kake gohan*, the soft yolk on ramen, carbonara-style udon. Japanese eggs are
+  produced to a high standard and are far safer than most — but the guidance
+  does not change for pregnancy. Ask for it cooked through.
+- **Unpasteurised and soft cheeses** in the European-style bakeries.
+- **Matcha counts toward the caffeine limit** and is easy to lose track of. A
+  strong matcha latte can be 70mg or more; the ceiling is still 200mg a day.
+- **Konbini food is genuinely safe** — the cold chain is formidable. Onigiri
+  with cooked fillings, egg sandwiches, oden.
+
+**Onsen: keep it brief and not too hot.** Overheating is the issue, not the
+bathing. Keep to the cooler baths, short, and get out if you feel at all
+light-headed. Skip the hottest tubs entirely.
+
+**The cold, and the footing.** December in Japan is freezing and pavements get
+icy. Ligaments are already looser than usual, so a slip is the single most
+likely way this trip goes wrong. **Flat boots with real grip, and no rushing for
+trains.** Layers that open — pregnancy runs warm and Japanese indoor heating is
+fierce.
+
+**Practical.** Manila to Tokyo is about four hours, so the clot precautions
+below are the short version: aisle seat, up every hour, water. Carry the scan
+report and Dra. Villafria's details. Japanese pharmacies are excellent; the
+paracetamol is called アセトアミノフェン (acetaminophen).
 
 ### Vietnam — cancelled
 
@@ -1214,23 +1236,43 @@ trimester at the worst of the nausea, in a Zika and dengue area, and squarely on
 top of the repeat-scan window after the subchorionic hemorrhage finding. Three
 separate reasons, any one of which was a good argument.
 
-Kept here rather than deleted so the itinerary history stays intact. **Korea is
-now the next trip.**
+Kept here rather than deleted so the itinerary history stays intact. **Japan,
+12–16 December, is now the next trip.**
 
-### Korea — 5–9 December 2026, weeks 16–17
+### Bacolod — March 2027, **28–32 weeks** — the one that needs paperwork
 
-**The best-timed trip, and now the next one.** Second trimester, past the nausea, well
-before any airline restriction, and a low-risk destination with excellent
-medical care.
+**Third trimester, and that changes the admin rather than the safety.** Any date
+in March puts you past 28 weeks: the 1st is **28w2d**, mid-month **30w2d**, the
+31st **32w4d**.
 
-- **No alcohol**, including in the soju-heavy social context.
-- **No raw seafood** — skip the hoe (raw fish) and raw marinated crab entirely.
-- **Icy footing** is the genuine risk. December in Seoul is below freezing and
-  pavements ice over. A fall in the second trimester is the thing to avoid. Flat
-  boots with real grip, and no rushing.
-- Cold air plus dry indoor heating aggravates nasal congestion, which is already
-  a pregnancy symptom. Saline spray helps.
-- Walking a lot is good; just keep the pace conversational.
+**Get a "fit to fly" certificate from Dra. Villafria.** Philippine carriers ask
+for one past a threshold that differs by airline, and the published figures
+disagree with each other — commonly quoted as 28 weeks or 34 weeks depending on
+the source and how recent it is. **Do not plan on which rule applies: ring the
+airline, and get the certificate regardless.** It costs a consultation slot and
+removes any chance of being turned away at the gate.
+
+**Two things about that certificate:**
+
+- **Validity is short** — often seven to ten days from issue. Timed wrong, it is
+  worthless at the gate. Get it in the week before you fly, not the month
+  before.
+- **Ask for two copies**, one for each leg. Gate staff sometimes keep one.
+
+**Everything else about this trip is easy.** Manila to Bacolod is under an hour,
+domestic, no time zone, no Zika, no vaccination questions. At 28–32 weeks you
+will be visibly pregnant, slower, and more comfortable with an aisle seat.
+
+**Know which hospital before you go.** Bacolod has tertiary hospitals with
+obstetric services; identify one, note where it is from where you are staying,
+and that is the whole precaution. At 30-odd weeks the relevant scenario is not
+delivery but wanting someone to check something — reduced movement, a bleed —
+without losing an evening working out where to go.
+
+**The food is straightforward.** Chicken inasal is grilled through and fine.
+Fresh lumpia, batchoy, piaya, napoleones — all cooked or baked. The things to
+watch are the same as anywhere: anything raw, anything unpasteurised, and
+street food that has been sitting warm rather than hot.
 
 ### India — January 2027, ~week 22
 

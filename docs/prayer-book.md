@@ -717,7 +717,7 @@ Moveable feasts were computed, not recalled: **Easter 2027 is 28 March**, which 
 | 2026-10-07 | 7w4d | Our Lady of the Rosary | Begin the Joyful Mysteries |
 | 2026-10-16 | 8w6d | **St Gerard Majella** | Patron of expectant mothers. End the novena here |
 | 2026-11-01 | 11w1d | All Saints / Undas | Family graves, and the generations this child joins |
-| 2026-12-08 | 16w3d | **Immaculate Conception** | Holy day of obligation in PH — *note: this falls during the Korea trip (5–9 Dec)* |
+| 2026-12-08 | 16w3d | **Immaculate Conception** | Holy day of obligation in PH — and four days before the Japan trip, so no conflict |
 | 2026-12-16 – 24 | 17w4d – 18w5d | **Simbang Gabi** | Nine dawn Masses. Second trimester — the best window for it |
 | 2026-12-25 | 18w6d | **Christmas — the Nativity** | Her first Christmas pregnant. A birth is the whole feast |
 | 2026-12-28 | 19w2d | Holy Innocents | For children lost, and mothers grieving |
