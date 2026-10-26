@@ -446,7 +446,7 @@ milestone appears varies by a week either way between sources.*
 - *Baby:* May begin to hear. Growing rapidly.
 - *You:* Some feel the first flutters between 16 and 22 weeks. First pregnancies tend towards the later end.
 - *Tests:* Routine. Book the anomaly scan.
-- *Nutrition:* Choline — eggs are the easiest source.
+- *Nutrition:* Choline — eggs are the easiest source, and if they are unbearable the nutrients section lists what replaces them.
 - *Stretch:* Pelvic tilts. Avoid supine positions.
 - *Filipino life:* **The Japan trip falls here** — 12–16 December, the best-timed one. See travel.
 
@@ -950,6 +950,102 @@ it is useful. Conversely, coffee and tea with a meal reduce iron absorption, so
 space them out.
 
 *Sources: ACOG nutrition in pregnancy; Philippine Dietary Reference Intakes (FNRI-DOST). Verified 2026-09-18. Confidence: high.*
+
+### Do you need a separate iron tablet?
+
+**On today's evidence: no — and check the prenatal's label before adding
+anything.**
+
+**Your own numbers say you are not short.** The CBC of 18 September:
+
+| | Result | What it means |
+| --- | --- | --- |
+| Haemoglobin | **13.5** g/dL | Comfortably normal; anaemia starts below 11.0 |
+| MCV | 88 fL | Mid-range. Iron deficiency makes cells **small** |
+| MCH | 29 pg | Mid-range. Iron deficiency makes them **pale** |
+| RDW | 12.3 % | Normal — **and this is the one that moves first** |
+
+RDW rises before haemoglobin falls, often before anything else shifts. Yours
+has not moved. That is a genuinely reassuring picture, not a hedge.
+
+**You are probably already taking iron.** Almost every prenatal vitamin contains
+it, usually around 27mg, which is the whole daily requirement in pregnancy. So
+"should I take iron" is usually really the question **"what is already in the
+tablet I take every morning?"** — and that is answered by turning the box over.
+
+**And one of the two unidentified medicines may be iron.** The 2 October notes
+list two items whose names could not be matched to any medicine. Several common
+Philippine hematinics would fit. **Photograph the boxes** and the question may
+answer itself — including the possibility of taking iron twice over without
+meaning to.
+
+**The guidance genuinely disagrees, so here is both sides.** The US Preventive
+Services Task Force reviewed this in 2024 and concluded the evidence is
+**insufficient** to recommend routine iron supplementation for pregnant people
+without anaemia — an open verdict rather than a no. The WHO recommends daily
+iron through pregnancy as a matter of course. Supplementation does reliably
+improve ferritin and haemoglobin on paper; what is unproven is whether that
+changes outcomes in someone who was not short to begin with.
+
+**What settles it for you is ferritin, which still has not been done.** The
+haemoglobin says the tank has not run dry. Ferritin says how much is left in it.
+Until that number exists, adding iron is guessing in one direction and skipping
+it is guessing in the other.
+
+**Extra iron is not free.** It constipates and it can worsen nausea — two things
+pregnancy supplies plenty of already. There is no prize for more.
+
+**One scheduling point for later.** If Dr. Capellan starts levothyroxine for the
+TSH, **iron blocks its absorption** — and that includes the iron inside the
+prenatal vitamin. The usual arrangement is levothyroxine on an empty stomach in
+the morning, then wait 30–60 minutes before eating, and **take the prenatal at
+dinner instead**, four hours clear. Worth setting up correctly from day one
+rather than discovering it at a later blood test.
+
+*Sources: [USPSTF 2024 recommendation on iron deficiency in pregnancy](https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/iron-deficiency-anemia-in-pregnant-women-screening-and-supplementation); [Perinatology.com — thyroid medication in pregnancy](https://www.perinatology.com/Reference/OBRx/Thyroid.htm). Verified 2026-10-26. Confidence: high.*
+
+### Choline, and what to do when eggs are unbearable
+
+**Going off eggs in the first trimester is extremely common and will almost
+certainly pass** — usually by 14 to 16 weeks. You are 10 weeks. Do not force
+them; forcing an aversion tends to make it stick.
+
+**But this is the one gap worth covering deliberately**, because unlike every
+other nutrient on the table above, **the prenatal vitamin will not do it for
+you.** A review of 188 prenatal products found only 40% contained any choline at
+all, at a median of **25mg** — against a daily target of **450mg**. The US
+National Institutes of Health is blunt about it: supplements "do not add
+substantially" to choline intake in pregnancy.
+
+So with eggs out and the prenatal not helping, choline has to come from other
+food. The good news is that it is in plenty of things you already eat:
+
+| Food | Choline, roughly | Note |
+| --- | --- | --- |
+| Beef, a serving | **117mg** | |
+| Pork, a serving | **83mg** | Which is convenient, here |
+| Salmon or bangus | **77mg** | Also the DHA source |
+| Chicken breast | **65mg** | |
+| Soy — tofu, taho, soy milk | **53mg** | A cup of cooked soybeans is far higher |
+| Shiitake mushrooms | 58mg | |
+| Broccoli | 51mg | |
+| Monggo and other beans | 45mg | |
+| Quinoa | 43mg | |
+| Beef liver | 356mg | **But keep liver occasional** — it is very high in vitamin A |
+
+**In practice: chicken or pork at one meal, fish at another, and tofu or monggo
+somewhere, and you are at or near the target without an egg in sight.** That is
+closer to how most people here eat anyway than a two-egg breakfast is.
+
+**Eggs are not irreplaceable for anything else either.** The protein, B12 and
+selenium they carry are all easy to get elsewhere. Choline is the only one where
+dropping them leaves a hole.
+
+**If the aversion persists past the first trimester**, mention it — a choline
+supplement exists and is an option, but it is a conversation with Dra. Villafria
+rather than something to add alone.
+
+*Sources: [NIH Office of Dietary Supplements — supplements in pregnancy](https://ods.od.nih.gov/factsheets/Pregnancy-HealthProfessional/) for the target and the prenatal shortfall. Per-serving food figures are from secondary compilations and serving sizes vary between them — treat them as the right order of magnitude rather than exact. Verified 2026-10-26. Confidence: high on the gap, medium on the individual numbers.*
 
 ### Knowing where your iron actually stands
 

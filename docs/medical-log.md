@@ -140,8 +140,11 @@ to-do that does not happen.
       the NT window opens and with the progesterone due for review. **Almost
       certainly a transcription slip — but worth one message to confirm.**
 - [ ] **Photograph the medicine boxes or the written prescription.** Two items
-      on the list ("Lapas", "Quadrocol") could not be matched to any known
-      medicine. Likely misheard names, and thirty seconds settles it.
+      ("Lapas", "Quadrocol") could not be matched to any known medicine. Likely
+      misheard names, and thirty seconds settles it. **This also answers the
+      iron question** — the prenatal almost certainly contains iron already, and
+      one of those two unidentified items may be iron as well, which would mean
+      taking it twice over without meaning to.
 - [ ] **Decide on NIPT before 24 October** (10w0d, when it can first be drawn).
       Three tiers quoted: **Lite ₱21,500**, Premium ₱38,500, Premium Plus
       ₱44,000. **The recommendation is Lite or none** — the expensive tiers add
