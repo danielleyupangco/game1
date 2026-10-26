@@ -104,7 +104,7 @@ routinely, and a drug name is not a thing to guess at.
 | --- | --- | --- | --- |
 | **Dydrogesterone** | As prescribed, until 12 weeks | Progesterone support across the luteoplacental shift | **High** — a standard, well-established choice in early pregnancy |
 | **Folic acid** | 400–600mcg daily, six more weeks | Neural tube; the tube closes around week 6 | High |
-| **Prenatal vitamin** | Daily — switching to a smaller tablet | General | High on the plan, **unverified on the brand** |
+| **Prenatal vitamin** | Daily — switching to a smaller tablet | Iron, vitamin D, iodine, B12 | **Prescribed 2 Oct and not currently being taken** — see the action list |
 | "Lapas" | One tablet twice daily, for circulation | — | **Unverified.** No medicine of that name identified |
 | "Quadrocol" | Continue as prescribed | — | **Unverified.** No medicine of that name identified |
 
@@ -141,10 +141,9 @@ to-do that does not happen.
       certainly a transcription slip — but worth one message to confirm.**
 - [ ] **Photograph the medicine boxes or the written prescription.** Two items
       ("Lapas", "Quadrocol") could not be matched to any known medicine. Likely
-      misheard names, and thirty seconds settles it. **This also answers the
-      iron question** — the prenatal almost certainly contains iron already, and
-      one of those two unidentified items may be iron as well, which would mean
-      taking it twice over without meaning to.
+      misheard names, and thirty seconds settles it. **One of them may be iron** — several
+      common Philippine hematinics would fit those garbled names, and with no
+      prenatal being taken it matters whether any iron is coming in at all.
 - [ ] **Decide on NIPT before 24 October** (10w0d, when it can first be drawn).
       Three tiers quoted: **Lite ₱21,500**, Premium ₱38,500, Premium Plus
       ₱44,000. **The recommendation is Lite or none** — the expensive tiers add
@@ -179,6 +178,17 @@ to-do that does not happen.
       steeply from the second trimester, so knowing now is worth more than
       knowing at 32 weeks. It is not part of a standard panel, so it has to be
       asked for by name.
+- [ ] **Start the prenatal vitamin.** Prescribed on 2 October and not being
+      taken — folic acid alone is what has been running since. One tablet covers
+      **iron, vitamin D and iodine** together, and all three are currently
+      uncovered: iron with second-trimester demand about to climb, vitamin D
+      measured at 29.6 against a cutoff of 30, and iodine with the thyroid still
+      open. If the tablet is hard to swallow, that is the thing to solve — ask
+      for a smaller one or a different form rather than skipping it.
+- [ ] **Ask Dr. Capellan about iodine specifically.** It is raw material for
+      thyroid hormone and the baby has none of its own until about week 12 — but
+      too much iodine can suppress a thyroid, so with a TSH of 5.13 this is his
+      call, not a gap to fill alone.
 - [ ] **Vitamin D at 29.6, against a cutoff of 30.** Borderline rather than
       deficient. Ask whether the prenatal vitamin already covers it or whether a
       separate supplement is worth adding. Least urgent thing on the list.

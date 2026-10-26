@@ -968,16 +968,25 @@ anything.**
 RDW rises before haemoglobin falls, often before anything else shifts. Yours
 has not moved. That is a genuinely reassuring picture, not a hedge.
 
-**You are probably already taking iron.** Almost every prenatal vitamin contains
-it, usually around 27mg, which is the whole daily requirement in pregnancy. So
-"should I take iron" is usually really the question **"what is already in the
-tablet I take every morning?"** — and that is answered by turning the box over.
+**Correction, 26 October.** An earlier version of this section assumed the
+prenatal vitamin was being taken and therefore that iron was already covered.
+It is not: **Dani has been taking folic acid alone.** That changes the answer
+below, and the section that follows sets out what folic acid does and does not
+cover.
 
-**And one of the two unidentified medicines may be iron.** The 2 October notes
-list two items whose names could not be matched to any medicine. Several common
-Philippine hematinics would fit. **Photograph the boxes** and the question may
-answer itself — including the possibility of taking iron twice over without
-meaning to.
+**So there is currently no supplemental iron at all.** The normal CBC above was
+drawn on 18 September, during that same folic-acid-only period — which is
+genuinely reassuring, because it means those numbers reflect her actual diet
+rather than a tablet propping them up.
+
+**But the demand curve is about to turn.** Iron requirement climbs steeply from
+the second trimester and peaks in the third. A normal haemoglobin at 5 weeks on
+no supplement says little about where stores will be at 28. This is the stage
+where it starts mattering.
+
+**Two things could still be iron.** The 2 October notes list two items whose
+names could not be matched to any medicine, and several common Philippine
+hematinics would fit. **Photograph the boxes.**
 
 **The guidance genuinely disagrees, so here is both sides.** The US Preventive
 Services Task Force reviewed this in 2024 and concluded the evidence is
@@ -987,10 +996,11 @@ iron through pregnancy as a matter of course. Supplementation does reliably
 improve ferritin and haemoglobin on paper; what is unproven is whether that
 changes outcomes in someone who was not short to begin with.
 
-**What settles it for you is ferritin, which still has not been done.** The
-haemoglobin says the tank has not run dry. Ferritin says how much is left in it.
-Until that number exists, adding iron is guessing in one direction and skipping
-it is guessing in the other.
+**What settles it for you is ferritin, which still has not been done — and it
+matters more now than when nothing was riding on it.** The haemoglobin says the
+tank has not run dry. Ferritin says how much is left. With no iron coming in
+from a supplement and demand rising, that is the number that decides whether to
+start one.
 
 **Extra iron is not free.** It constipates and it can worsen nausea — two things
 pregnancy supplies plenty of already. There is no prize for more.
@@ -1003,6 +1013,46 @@ dinner instead**, four hours clear. Worth setting up correctly from day one
 rather than discovering it at a later blood test.
 
 *Sources: [USPSTF 2024 recommendation on iron deficiency in pregnancy](https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/iron-deficiency-anemia-in-pregnant-women-screening-and-supplementation); [Perinatology.com — thyroid medication in pregnancy](https://www.perinatology.com/Reference/OBRx/Thyroid.htm). Verified 2026-10-26. Confidence: high.*
+
+### Folic acid alone: what it covers, and what it does not
+
+**Taking folic acid and nothing else got the most important thing right, and got
+it right at the only time it counted.** The neural tube closes around week 6.
+Folate is the one supplement in pregnancy with a hard deadline, and it was being
+taken before that deadline. Nothing else on this page is in the same category of
+urgency, and it would be wrong to read what follows as having got something
+wrong.
+
+**What a folic acid tablet contains is folic acid.** Not iron, not iodine, not
+vitamin D, not B12. A prenatal vitamin was prescribed on 2 October and is not
+being taken, so those are currently uncovered. Three of them matter here
+specifically:
+
+| | Why it matters for Dani | Status |
+| --- | --- | --- |
+| **Iron** | Demand climbs steeply from the second trimester, which starts in about three weeks | None. Ferritin still not drawn |
+| **Vitamin D** | Hers measured **29.6**, just under the lab's own sufficiency line of 30 | None. Nothing has been correcting it |
+| **Iodine** | Requirement rises to 220mcg in pregnancy, and the thyroid is already the open question | None from a supplement |
+
+**On iodine, do not simply start taking it.** It is genuinely important — it is
+raw material for thyroid hormone, and the baby has no thyroid of its own until
+about week 12. But **too much iodine can also suppress a thyroid**, and with a
+TSH of 5.13 already under investigation, this is a question for Dr. Capellan
+rather than a gap to fill unilaterally. The Philippines has mandatory salt
+iodisation, so ordinary iodised salt at home may already be covering it. **Ask
+him; do not guess.**
+
+**The simplest fix for the rest is the tablet already prescribed.** One prenatal
+covers iron, vitamin D, iodine and B12 together. The reason it was being
+switched on 2 October was that the old one was hard to swallow — which is a
+solvable problem, and worth solving rather than quietly dropping.
+
+**Do not stop the folic acid.** Dra. Villafria said continue for six more weeks
+from 2 October, which runs to about mid-November. A prenatal usually contains
+folate too, so check the label before doubling up — though folate is safe at
+well above these amounts, so an overlap is not a worry.
+
+*Verified 2026-10-26. Confidence: high on what folic acid does not contain; the iodine caution is general guidance and the specific answer is Dr. Capellan's.*
 
 ### Choline, and what to do when eggs are unbearable
 
