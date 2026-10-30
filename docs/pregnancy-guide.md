@@ -2129,7 +2129,66 @@ large ones, measured as a meaningful *fraction* of the sac. This is not on that
 scale, and a volume of under three drops is not where the danger in this subject
 lives.
 
-#### What is worth doing
+#### The five that would help most, if anything does
+
+**Read the caveat before the list.** No lifestyle change has been shown to stop
+a subchorionic hemorrhage or to make one resolve faster. **The thing most likely
+to end this is time**, and it already did once in this pregnancy. What follows
+is ranked by how plausibly it touches bleeding, and every item costs nothing and
+is worth doing on its own merits. **Only the first has a direct mechanism; the
+rest are sensible rather than proven.** Anyone who tells you otherwise is
+selling something.
+
+**1. Clear out everything working against clotting.** The only item on this list
+with a real mechanism on bleeding, and the only one that might be doing active
+harm right now.
+
+- **No NSAIDs.** Locally this means **mefenamic acid (Ponstan)** above all — it
+  is the reflex cramp remedy in the Philippines, it is sold over the counter,
+  and it is an antiplatelet drug. Also ibuprofen (Advil, Medicol), naproxen,
+  aspirin. **Paracetamol (Biogesic) is the one to take instead.**
+- **The unnamed "for circulation" tablet.** Settle what it is this week.
+  **Do not stop it yourself** — if it is low-dose aspirin it may be prescribed
+  for good reason.
+- **Supplements with antiplatelet effects**, which people rarely count as drugs:
+  **high-dose fish oil or omega-3, vitamin E, ginkgo, turmeric or curcumin
+  capsules, high-dose ginger.** Culinary amounts in food are not the issue —
+  keep eating curry — **capsules and concentrates are.**
+- **No smoke, including other people's.** Smoking is an established risk factor
+  for placental bleeding, and it is the one lifestyle factor here with that
+  standing. Worth minding in enclosed spaces and bars.
+
+**2. Never strain — and that means fixing the constipation.** Anything that
+spikes abdominal pressure is the most mechanically plausible thing to avoid, and
+**straining on the toilet is the one almost nobody counts.** Progesterone has
+already slowed the bowel, so this is a daily event rather than a rare one. Fibre,
+water, do not sit and push, and **ask about a stool softener** rather than
+toughing it out. Same principle as not holding your breath to lift something.
+
+**3. Pelvic rest while there is visible blood.** No sex, no orgasm, no tampons,
+no douching. Semen carries prostaglandins, orgasm contracts the uterus, and a
+cervix with more blood flow through it bleeds more readily when touched. Standard
+advice while actively bleeding, and easy to resume.
+
+**4. Trade impact for volume — and specifically do not go to bed.** Drop
+running, jumping, HIIT and heavy or breath-holding strength work. **Keep
+walking daily**, and swimming is ideal. The distinction matters: **lying still is
+not the safer option.** Pregnancy already makes blood clot more readily, and
+immobility stacks on top of that — see *What is not worth doing* below.
+
+**5. Stay ahead on fluids.** Dehydration makes the uterus more irritable and
+more inclined to cramp, and in Manila heat it happens without effort. **Target
+pale urine, not thirst** — thirst arrives late. It also solves item 2, which is
+why it earns its place over several more exotic candidates.
+
+**What is not on this list, deliberately:** stress reduction (the evidence is
+thin and the advice is unkind to someone already worried), special diets,
+supplements marketed for bleeding, and anything claiming to strengthen the sac.
+**And nothing to stop bleeding should be taken on your own** — including
+tranexamic acid, which gets suggested informally and is not a self-prescribed
+medicine in pregnancy.
+
+#### And the practical bits
 
 - **Use pads, not tampons.** Partly so nothing is introduced, mostly so the
   amount is visible — the volume is the question that gets asked, and it cannot
@@ -2137,10 +2196,6 @@ lives.
 - **Write down three things when there is any bleeding:** the **colour**, the
   **amount** (liner, pad, soaking), and whether there was **pain** with it.
   Those three are what the clinic will ask. Memory is unreliable under worry.
-- **Pelvic rest while actively bleeding** — no sex, no tampons, no douching.
-  Low cost, widely advised, and sensible while blood is visible.
-- **Skip heavy lifting and high-impact exercise while actively bleeding.** Not
-  because it is proven to matter, but because it costs nothing to pause.
 - **Ask Dra. Villafria to put the activity guidance in writing now that it is on
   the scan twice.** That is on the action list.
 
@@ -2174,7 +2229,9 @@ small.
 **Do not stop anything prescribed on the strength of this page** — the point is
 to be able to name it when asked, not to make a decision alone.
 
-*Sources: [Cochrane — bed rest during pregnancy for preventing miscarriage](https://www.cochrane.org/CD003576/PREG_bed-rest-during-pregnancy-for-preventing-miscarriage); [Radiopaedia — subchorionic hemorrhage](https://radiopaedia.org/articles/subchorionic-haemorrhage); volume and sac-fraction arithmetic recomputed from the 18 Sept and 30 Oct report dimensions. Verified 2026-10-30. Confidence: high on there being no treatment and on bed rest being unsupported; the sac-volume comparison is an order-of-magnitude scale check, not a clinical grading.*
+*Sources: [Cochrane — bed rest during pregnancy for preventing miscarriage](https://www.cochrane.org/CD003576/PREG_bed-rest-during-pregnancy-for-preventing-miscarriage); [Radiopaedia — subchorionic hemorrhage](https://radiopaedia.org/articles/subchorionic-haemorrhage); FDA drug safety communication on NSAIDs in pregnancy; volume and sac-fraction arithmetic recomputed from the 18 Sept and 30 Oct report dimensions. Verified 2026-10-30.*
+
+*Confidence, item by item, because it varies and the list would mislead without it: **high** that there is no treatment, that bed rest is unsupported, that NSAIDs and smoking are the real antagonists, and that pregnancy plus immobility raises clot risk. **Moderate** on the antiplatelet supplements — the effect is real but mostly shown at concentrated doses. **Plausible mechanism only, not demonstrated outcomes** for avoiding strain, pelvic rest, downgrading exercise and hydration. **None of the five has been shown to make a subchorionic hemorrhage resolve**, and the section says so above the list rather than below it.*
 
 ### Bruising more easily
 
