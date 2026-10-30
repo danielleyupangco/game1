@@ -153,10 +153,16 @@ weeks**, where the femur is about **3 centimetres** instead of 3 millimetres and
 the measurement carries real information. Nobody calls a short-limb finding off
 an eleven-week femur, and this scan did not try to.
 
-**The report's own conclusion was the opposite of concern:** estimated weight on
-the **56th percentile**, "appropriate for gestational age" — written after
-measuring that femur, not in spite of it. A scan where all four measurements
-agreed to the day would be the surprising one.
+**A scan where all four measurements agreed to the day would be the surprising
+one.** Eight days of spread, at a stage where the smallest of the four is three
+millimetres long, is a tight result rather than a worrying one.
+
+**One thing not to lean on here.** The report's "46 g, 56th percentile,
+appropriate for gestational age" looks like the reassurance that settles this,
+and it is not usable — the weight formula does not work at eleven weeks, for the
+same reason the femur chart does not. The check-up entry for 30 October shows the
+arithmetic. **The reassurance that does hold needs no formula:** a live baby, a
+normal heart rate, normal fluid, and nothing structurally flagged.
 
 ### What moved, and what it means practically
 
@@ -173,9 +179,10 @@ Gemini on 21 May 2027 at about 15:00 Manila time, and the new date is the 22nd.
 ### Where the pregnancy stands
 
 On **30 October 2026**: **10 weeks 6 days**, with 204 days to go. The second
-scan put the heart rate at **163 beats per minute** and the estimated weight at
-**46 grams, the 56th percentile** — "appropriate for gestational age" in the
-report's own words. The small subchorionic hemorrhage is on the scan again at
+scan put the heart rate at **163 beats per minute**, with normal fluid and
+nothing structurally flagged. (It also reports a weight of 46 g on the 56th
+percentile; **that number is not usable at eleven weeks** and the 30 October
+check-up entry shows why.) The small subchorionic hemorrhage is on the scan again at
 **0.1 mL**, essentially unchanged from September and too small to be a concern
 in itself.
 
@@ -194,7 +201,7 @@ the version this app ran on through September.
 | Implied conception | 2w0d | 2026-08-29 |
 | **Heartbeat seen — 128 bpm** | **6w6d** | **2026-10-02** |
 | NIPT available from | 10w0d | 2026-10-24 |
-| **Second scan — 163 bpm, 46 g, 56th centile** | **10w6d** | **2026-10-30** |
+| **Second scan — 163 bpm, fluid normal** | **10w6d** | **2026-10-30** |
 | **NT scan window — not yet booked** | **11w0d – 13w6d** | **2026-10-31 – 2026-11-20** |
 | End of first trimester | 13w6d | 2026-11-20 |
 | Anomaly scan window | 18w0d – 22w0d | 2026-12-19 – 2027-01-16 |

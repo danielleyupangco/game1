@@ -256,9 +256,10 @@ the progesterone question and the due-date question are all now answered.
 **Fatigue, cramps and white discharge were all raised and all called normal** —
 which matches what this handbook has been saying about each of them.
 
-**From the 30 October scan:** heart rate **163 bpm**, estimated weight **46 g at
-the 56th percentile** — "appropriate for gestational age" in the report's own
-words — normal fluid, nothing flagged on the baby. **Two things came out of it
+**From the 30 October scan:** heart rate **163 bpm**, normal fluid, a live baby
+and nothing structurally flagged. **The reported 46 g at the 56th percentile is
+not usable** — the weight formula does not work at this size, as the entry
+explains — but nothing in the real good news rests on it. **Two things came out of it
 rather than being closed by it:** the eight-day dating disagreement, and the NT
 scan that was not measured and now has a three-week window. Both are at the top
 of the list above.
@@ -275,7 +276,7 @@ choice, not a finding.)
 | | Finding |
 | --- | --- |
 | **Fetal heart rate** | **163 bpm** |
-| **Estimated fetal weight** | **46 g — 56th percentile** (Hadlock) |
+| Estimated fetal weight | 46 g — 56th percentile (Hadlock) — **ignore this, see below** |
 | Biparietal diameter | 1.4 cm → 12w0d |
 | Head circumference | 5.8 cm → 12w1d |
 | Abdominal circumference | 4.8 cm → 11w6d |
@@ -295,8 +296,16 @@ hemorrhage as described. Estimated fetal weight appropriate for gestational age.
 scan; the rate climbs through the first trimester and settles in the 120–160s,
 so 163 at this stage is unremarkable in the best sense.
 
-**56th percentile.** Dead centre. "Appropriate for gestational age" is the
-report's own conclusion, and 46 grams is on the middle line rather than an edge.
+**Normal fluid, a live baby, nothing structurally flagged.** That is the real
+substance of this scan, and it does not depend on any of the calculated numbers.
+
+**The 46 grams and the 56th percentile should be ignored — a correction to what
+this log said first.** They were recorded here as reassurance. They are not
+reassurance; they are a formula being run a long way outside its range, and the
+arithmetic is checkable. See *"Things in this report worth knowing about"*
+below. **This is not a new worry — 46 g is not a finding of any kind, in either
+direction.** It simply carries no information, and the genuine good news in the
+paragraph above is untouched by it.
 
 **Normal fluid, nothing else flagged.** The cephalic note means nothing at this
 stage — the baby will turn many times before it matters, from about 36 weeks.
@@ -367,9 +376,13 @@ what counts as term.
 sonographer, different approach, and a small collection low at the inferior pole
 is easy to miss. The second is at least as likely as the first.
 
-**What matters more than its presence is its size, and it is tiny.** 0.1 mL,
-against six weeks earlier at 0.082 mL — essentially unchanged across the whole
-of the first trimester. Small subchorionic hemorrhages are common, most resolve,
+**What matters more than its presence is its size, and it is tiny.** The report
+rounds to 0.1 mL; the dimensions it gives work out at **0.136 mL** on the
+ellipsoid formula the September report used, against **0.080 mL** then. So it is
+**about 1.7 times the September volume — not "essentially unchanged", which is
+what this log said first and is too generous.** In absolute terms it has gone
+from **under two drops to under three**, which is why the growth does not change
+the reading. Small subchorionic hemorrhages are common, most resolve,
 and the ones that carry risk are the large ones taking up a meaningful fraction
 of the sac. This is not that.
 
@@ -377,6 +390,57 @@ of the sac. This is not that.
 about activity, now that it is documented a second time, and to keep the red
 flags screen in mind: fresh red bleeding is the thing to ring about, brown is
 old blood draining.
+
+### Things in this report worth knowing about
+
+**The weight is the machine guessing, and there is a clean way to show it.** The
+report names **Hadlock** as the formula. Hadlock's four-measurement equation was
+built on fetuses from **14 weeks to term** — it has no business being run at
+eleven. Feeding it the measurements actually on this report reproduces the
+answer (44.8 g against the 46 g printed, so the right formula has been
+identified). Then feed it **zeros — a fetus of no size at all** — and it
+returns **22.9 grams.** The equation has a floor of nearly 23 g before it has
+measured anything, so it cannot describe a real eleven-week fetus, which weighs
+about **7 grams**. A 46 g answer at this stage is arithmetic, not a baby.
+
+**And 46 g is a fourteen-week weight**, which is the same story told another way:
+roughly 7 g at 11 weeks, 14 g at 12, 23 g at 13, 45 g at 14. The report's own
+EDD would make the baby 12 weeks, where the chart says 14 g. **This is not a sign
+of a large baby** — the 2 October crown-rump length rules that out flatly — it
+is the formula off the end of its table, exactly like the femur.
+
+**The heart rate is probably close to the fastest this heart will ever beat.**
+It starts near 110 around week six, climbs to a peak of roughly 170 at nine or
+ten weeks, then falls away for the rest of the pregnancy and settles near 140 at
+term. 128 on 2 October was the climb; **163 now is at or just past the summit.**
+At that rate it is about **235,000 beats a day**, a little over double Dani's own.
+
+**The bleed is under three drops.** A drop is about 0.05 mL. 0.136 mL is 2.7 of
+them — the thing that caused a fortnight of worry in September is a volume you
+could lose off a fingertip.
+
+**Several fields on this report do not belong at eleven weeks, and that is the
+template's fault, not a finding.** It was written on the second- and
+third-trimester form. "Cephalic presentation" is the clearest example: the baby
+is swimming freely and will turn many times over, and which way up it lies does
+not begin to matter until about **36 weeks**. "Normohydramnios" is a real
+reassurance but is being judged against second-trimester cutoffs. The deepest
+pocket of fluid measured 3.2 cm in a sac that at this stage holds perhaps
+**40 mL in total — under three tablespoons.**
+
+**That fluid is about to change into something else.** Right now it is mostly
+fluid transferring across the membranes and the baby's own thin skin. The kidneys
+have only just started working; **from about sixteen weeks the fluid is mostly
+fetal urine**, and by twenty weeks the skin has sealed and the transfer stops.
+
+**And the week itself is a boundary.** The embryonic period ends with week ten,
+so at **10w6d this is days into the fetal period** — the organs are built, and
+from here it is growth and finishing rather than construction. It is also why the
+risk of structural damage from an exposure drops sharply after week ten. One
+oddity of the timing: the intestines spend the previous weeks developing
+**outside the abdomen, inside the base of the umbilical cord**, and move back in
+around weeks ten to twelve. It is normal, it is why a gut-wall problem cannot be
+diagnosed before about twelve weeks — and it is happening this week.
 
 ### The nuchal translucency was not measured
 
@@ -389,7 +453,7 @@ window; it cannot be done late. **Ask whether this was meant to be the NT scan.*
 Note that NT is the ultrasound and NIPT is the blood test — separate things in
 overlapping windows, and declining one is not declining the other.
 
-*Source: Makati Medical Center ultrasound report, 30 October 2026, 10:12. Verified 2026-10-30. Confidence: high on the findings as reported; the dating recommendation is reasoning from the two scans, not a clinical decision.*
+*Source: Makati Medical Center ultrasound report, 30 October 2026, 10:12. Verified 2026-10-30. Confidence: high on the findings as reported; high on the Hadlock and volume arithmetic, both recomputed from the report's own numbers; the dating recommendation is reasoning from the two scans, not a clinical decision.*
 
 ---
 

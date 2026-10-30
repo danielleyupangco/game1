@@ -860,9 +860,9 @@ const LAST_SCAN = '2026-10-30';
   }
   const since = Math.round((todayManila() - civil(LAST_SCAN)) / MS);
   el.textContent = since <= 0
-    ? '\u2665 Scan today \u2014 163 bpm, 56th centile'
+    ? '\u2665 Scan today \u2014 163 bpm, all well'
     : '\u2665 Last scan ' + since + ' day' + (since === 1 ? '' : 's') +
-      ' ago \u2014 163 bpm, 56th centile';
+      ' ago \u2014 163 bpm, all well';
 })();
 
 /* ---- week rails -------------------------------------------------------- */
