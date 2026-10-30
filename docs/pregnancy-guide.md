@@ -2112,6 +2112,70 @@ goes everywhere.
 
 *Sources: [UKTIS — clotrimazole in pregnancy](https://uktis.org/monographs/use-of-clotrimazole-in-pregnancy/); [MotherToBaby — fluconazole](https://mothertobaby.org/fact-sheets/fluconazole-pregnancy/); [Cochrane — topical treatment for vaginal candidiasis in pregnancy](https://pubmed.ncbi.nlm.nih.gov/11687074/). Verified 2026-09-21. Confidence: high.*
 
+### A bleed seen on a scan: what to actually do about it
+
+**Mostly nothing — and that is the real answer, not a brush-off.** A
+subchorionic hemorrhage is blood that has collected between the sac and the wall
+of the uterus. **There is no treatment for one.** Nothing to take, nothing to
+apply, nothing to fix. It is managed by watching, and most resolve on their own.
+This pregnancy has already shown that: seen in September, not seen in October,
+seen again at the end of October, and tiny throughout.
+
+**Scale is the thing to hold onto.** The collection on 30 October works out at
+about **0.136 mL** from the dimensions given. At eleven weeks the whole sac holds
+perhaps **40 mL**. So it is roughly **a third of one percent of the sac — about
+1 part in 300.** The hemorrhages that carry real risk in the research are the
+large ones, measured as a meaningful *fraction* of the sac. This is not on that
+scale, and a volume of under three drops is not where the danger in this subject
+lives.
+
+#### What is worth doing
+
+- **Use pads, not tampons.** Partly so nothing is introduced, mostly so the
+  amount is visible — the volume is the question that gets asked, and it cannot
+  be answered from a tampon.
+- **Write down three things when there is any bleeding:** the **colour**, the
+  **amount** (liner, pad, soaking), and whether there was **pain** with it.
+  Those three are what the clinic will ask. Memory is unreliable under worry.
+- **Pelvic rest while actively bleeding** — no sex, no tampons, no douching.
+  Low cost, widely advised, and sensible while blood is visible.
+- **Skip heavy lifting and high-impact exercise while actively bleeding.** Not
+  because it is proven to matter, but because it costs nothing to pause.
+- **Ask Dra. Villafria to put the activity guidance in writing now that it is on
+  the scan twice.** That is on the action list.
+
+#### What is not worth doing
+
+- **Bed rest is not the answer, and should not be volunteered for.** It is
+  prescribed often and the evidence does not support it — the Cochrane review on
+  bed rest for threatened miscarriage found **insufficient evidence of any
+  benefit**, and it carries real costs: raised clot risk, loss of fitness, lost
+  income, and the particular misery of lying still while frightened. **If
+  Dra. Villafria prescribes rest, follow her** — she knows things this handbook
+  does not. The point is not to impose it on yourself.
+- **Do not read the progesterone as treatment for the bleed.** Dydrogesterone
+  was prescribed as luteal support until 12 weeks. It is not a clotting
+  medicine, and the bleed neither justifies more of it nor less.
+- **Do not go looking for a cause.** Most subchorionic hemorrhages have no
+  identifiable reason. Nothing caused this one, and nothing done differently
+  would have prevented it.
+
+#### The one gap that now matters more
+
+**One of the two unidentified medicines was described as being "for
+circulation".** That phrase covers everything from a vitamin to a drug that
+affects clotting, and **with a bleed documented twice on ultrasound, which one it
+is stops being a tidy-up and becomes the thing to settle this week.** It may
+well be entirely deliberate — low-dose aspirin, for instance, is prescribed in
+pregnancy for good reasons and would not be stopped over a collection this
+small.
+
+**Photograph the boxes, or the written prescription.** Thirty seconds.
+**Do not stop anything prescribed on the strength of this page** — the point is
+to be able to name it when asked, not to make a decision alone.
+
+*Sources: [Cochrane — bed rest during pregnancy for preventing miscarriage](https://www.cochrane.org/CD003576/PREG_bed-rest-during-pregnancy-for-preventing-miscarriage); [Radiopaedia — subchorionic hemorrhage](https://radiopaedia.org/articles/subchorionic-haemorrhage); volume and sac-fraction arithmetic recomputed from the 18 Sept and 30 Oct report dimensions. Verified 2026-10-30. Confidence: high on there being no treatment and on bed rest being unsupported; the sac-volume comparison is an order-of-magnitude scale check, not a clinical grading.*
+
 ### Bruising more easily
 
 Most people bruise more easily in pregnancy, and it starts early. Oestrogen and

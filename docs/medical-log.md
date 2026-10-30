@@ -156,9 +156,14 @@ to-do that does not happen.
       date is the open bit: on the current dating the anomaly scan falls at
       **18 to 22 weeks, which is 19 December to 16 January**, and the NT scan
       has to be squeezed in before 20 November.
-- [ ] **Photograph the medicine boxes or the written prescription.** Two items
-      ("Lapas", "Quadrocol") could not be matched to any known medicine. Likely
-      misheard names, and thirty seconds settles it. **One of them may be iron** — several
+- [ ] **Photograph the medicine boxes or the written prescription — this week.**
+      Two items ("Lapas", "Quadrocol") could not be matched to any known
+      medicine. Likely misheard names, and thirty seconds settles it. **One was
+      described as being "for circulation", and the bleed is now on the scan
+      twice** — that phrase covers everything from a vitamin to something that
+      affects clotting, so naming it has stopped being housekeeping. It may be
+      entirely deliberate. **Nothing should be stopped over this**; the point is
+      to be able to name it when asked. **The other may be iron** — several
       common Philippine hematinics would fit those garbled names, and with no
       prenatal being taken it matters whether any iron is coming in at all.
 - [ ] **Decide on NIPT — it can be drawn now.** The 24 October mark (10w0d,

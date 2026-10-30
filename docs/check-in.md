@@ -23,6 +23,8 @@ fetal movement and the care checkpoints it is *no*.
 | From | Until | Question | Concern on | Level | What it means |
 | --- | --- | --- | --- | --- | --- |
 | 4 | 43 | Bleeding heavily — soaking through a pad in an hour or less? | yes | call | Heavy bleeding at any stage is assessed the same day. |
+| 4 | 43 | Fresh red blood — bright and new, even if it is not heavy? | yes | call | Fresh red is the one to ring about, and a bleed already seen on a scan does not change that. Brown is the different question, further down. |
+| 4 | 43 | Passing clots, or anything that looks like tissue? | yes | call | Worth a same-day call, and worth keeping what was passed. |
 | 4 | 43 | Severe pain that is not easing? | yes | call | Pain that does not settle wants looking at, whatever the stage. |
 | 4 | 43 | Pain stuck on one side and getting worse — with dizziness, fainting or pain at the tip of your shoulder? | yes | call | That combination is assessed urgently. Shoulder-tip pain is the specific one. |
 | 4 | 43 | A fever above 38°C? | yes | call | Infection in pregnancy is treated promptly rather than watched. |
