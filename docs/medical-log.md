@@ -322,10 +322,18 @@ it is close to half the size an eight-week embryo would be.
 
 **This scan also disagrees with itself by eight days** — the same gap it is
 claiming. Femur says 11w0d, head circumference says 12w1d. At eleven weeks these
-four measurements are at the very bottom of their useful range; a femur of
-**3 millimetres** is a measurement where a fraction of a millimetre moves the
-answer by days. Crown-rump length before 9 weeks is the most accurate dating in
-obstetrics, roughly ±5–7 days.
+four measurements are at the very bottom of their useful range; the femur was
+**3 millimetres**, written as `0.3 cm`, where a single millimetre is worth about
+three days and the rounding alone covers a day or two. Crown-rump length before
+9 weeks is the most accurate dating in obstetrics, roughly ±5–7 days.
+
+**This does not mean the legs are behind and the head is ahead.** Those are four
+separate length-to-age lookups, not a comparison of one body part against
+another, and the whole spread sits in the smallest measurement on the page. The
+guide's dating section answers this at length under *"Does that mean the legs
+are behind and the head is ahead?"* — the short version is that limb
+proportions are an anomaly-scan question at 18 to 22 weeks, when the femur is
+3 centimetres rather than 3 millimetres.
 
 **So the recommendation here is to keep 22 May** — but this is a clinical
 judgement and **it is Dra. Villafria's to make, not this handbook's.** The app

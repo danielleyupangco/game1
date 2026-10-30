@@ -103,9 +103,9 @@ actually on paper fits the date in use.
 **Two: the 30 October scan disagrees with itself by the same eight days.** Femur
 length says 11w0d; head circumference says 12w1d. At eleven weeks these
 measurements are at the bottom of their useful range — the femur was
-**3 millimetres long**, where a fraction of a millimetre moves the answer by
-days. A crown-rump length before 9 weeks is accurate to about ±5–7 days and is
-the most accurate dating in obstetrics; late-first-trimester biometry is not.
+**3 millimetres long**, where a single millimetre is worth about three days. A
+crown-rump length before 9 weeks is accurate to about ±5–7 days and is the most
+accurate dating in obstetrics; late-first-trimester biometry is not.
 
 **Three: an unstable due date is itself a problem.** This pregnancy has now had
 four candidate dates. Moving to a weaker measurement, having already settled on
@@ -120,6 +120,43 @@ be read here; secondary sources give the thresholds consistently, but the
 stronger claim that a first-trimester date should *never* be revised later could
 not be verified in ACOG's own words. **Which is exactly why this is a question
 for Dra. Villafria and not a decision the handbook should make.**
+
+### Does that mean the legs are behind and the head is ahead?
+
+**No — and it is worth separating out, because the numbers invite exactly that
+reading.**
+
+**Those "weeks" figures are not grades.** The machine measured four lengths and
+looked each one up in a table that converts a length into an age. Four tables,
+four slightly different answers, one baby. **Nothing in the scan compared the
+head to the legs.** Put a ruler and a bathroom scale on the same person and they
+will give you two different estimates of their height; that is not the person
+being lopsided.
+
+**The femur is the one measurement that cannot carry that weight yet.** It was
+**3 millimetres long**, and the report writes it as `0.3 cm` — rounded to the
+nearest millimetre. At this stage a femur grows roughly two to three millimetres
+a week, so **one millimetre is worth about three days**. The rounding alone
+accounts for a day or two before anyone's hand on the calipers is counted. The
+head circumference was 5.8 cm, where the same rounding is under 1% of the
+number. **That is the whole gap, and it sits in the smallest measurement on the
+page.** It is also why femur-based dating charts generally do not begin until
+about 12–14 weeks — at eleven weeks the machine is reading off the bottom edge
+of its own table.
+
+**"Behind schedule" is also not really a thing yet.** In the first trimester
+almost all difference in size is difference in *dating*, not growth — babies
+have barely begun to differ from one another. Growth that genuinely runs ahead
+or behind, and limbs that are genuinely short for the body, are second- and
+third-trimester findings. **They are looked for at the anomaly scan, 18 to 22
+weeks**, where the femur is about **3 centimetres** instead of 3 millimetres and
+the measurement carries real information. Nobody calls a short-limb finding off
+an eleven-week femur, and this scan did not try to.
+
+**The report's own conclusion was the opposite of concern:** estimated weight on
+the **56th percentile**, "appropriate for gestational age" — written after
+measuring that femur, not in spite of it. A scan where all four measurements
+agreed to the day would be the surprising one.
 
 ### What moved, and what it means practically
 
