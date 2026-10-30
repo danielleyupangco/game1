@@ -131,25 +131,44 @@ to-do that does not happen.
 
 ### Do now
 
+- [ ] **Settle the due date with Dra. Villafria.** The 30 October scan reports
+      **14 May 2027**; the handbook runs on **22 May 2027** from the 2 October
+      crown-rump length. Eight days apart. Ask it in one line: *"The CRL on
+      2 October gave 22 May and this scan gives 14 May — which are we working
+      to, and is it going in the chart?"* **This is the first question of the
+      next visit**, because everything else is measured from it: the NT window,
+      the anomaly scan, when progesterone stops, and what counts as term.
+      *From the 30 Oct scan.*
+- [ ] **Book the NT scan — the window opens tomorrow and shuts 20 November.**
+      11w0d to 13w6d on the current dating is **31 October to 20 November**. The
+      30 October scan did not measure it. It cannot be done late, so this is a
+      phone call this week, not next. **Ask whether the 30 October scan was
+      meant to be the NT scan** — if it was, that is worth knowing before
+      booking another. NT is the ultrasound; NIPT is the blood test. Separate
+      things, overlapping windows, and declining one is not declining the other.
+      *From the 30 Oct scan.*
 - [ ] **Book Dr. Capellan, the endocrinologist.** Dra. Villafria's referral for
       the TSH. This is the one open clinical question, and the thing that most
       wants a date in the diary. *From the 2 Oct consultation.*
-- [ ] **Confirm the next OB appointment is four WEEKS, not four months.** As
-      noted it was four months, which lands at 24w3d and skips the NT scan, the
-      NIPT window and the anomaly scan. Four weeks is 30 October, the day before
-      the NT window opens and with the progesterone due for review. **Almost
-      certainly a transcription slip — but worth one message to confirm.**
+- [ ] **Ask when the next appointment is, and write it down.** The four-month
+      note in the 2 October transcript was indeed a slip — the follow-up
+      happened on **30 October, four weeks out, as it should have.** The next
+      date is the open bit: on the current dating the anomaly scan falls at
+      **18 to 22 weeks, which is 19 December to 16 January**, and the NT scan
+      has to be squeezed in before 20 November.
 - [ ] **Photograph the medicine boxes or the written prescription.** Two items
       ("Lapas", "Quadrocol") could not be matched to any known medicine. Likely
       misheard names, and thirty seconds settles it. **One of them may be iron** — several
       common Philippine hematinics would fit those garbled names, and with no
       prenatal being taken it matters whether any iron is coming in at all.
-- [ ] **Decide on NIPT before 24 October** (10w0d, when it can first be drawn).
+- [ ] **Decide on NIPT — it can be drawn now.** The 24 October mark (10w0d,
+      the earliest it can be taken) has passed, so the blood can go any day.
       Three tiers quoted: **Lite ₱21,500**, Premium ₱38,500, Premium Plus
       ₱44,000. **The recommendation is Lite or none** — the expensive tiers add
       conditions the professional bodies advise against screening for, and a
       roughly 1-in-10 chance of a false alarm. See the NIPT section in the guide.
-      Not deciding is also a decision: Dra. Villafria did not press for it.
+      Not deciding is also a decision: Dra. Villafria did not press for it. If
+      it is wanted, pairing the draw with the NT scan visit saves a trip.
 - [ ] **Get HMO coverage in writing before the draw** — a Letter of
       Authorisation, not a verbal yes at a clinic desk. Screening and genetic
       tests are commonly excluded from Philippine HMO plans. Ask which tier is
@@ -170,6 +189,16 @@ to-do that does not happen.
 
 ### Ask Dra. Villafria
 
+- [ ] **When does the progesterone stop?** Dydrogesterone was prescribed
+      "until 12 weeks". On 22 May dating that is **around 14 November**; on the
+      scan's 14 May dating it would be **about a week ago**. So this one hangs
+      on the due-date question above — worth asking in the same breath, and
+      **not a thing to stop or carry on alone.**
+- [ ] **The small bleed is on the scan again — ask about activity.** 0.1 mL on
+      30 October, against 0.082 mL six weeks earlier: essentially unchanged, and
+      tiny. Not a reason to change anything by itself, but it is now documented
+      twice, so the activity guidance from 2 October is worth re-confirming
+      rather than assumed to still hold. *From the 30 Oct scan.*
 - [ ] **Ferritin, as a separate request.** The CBC has now arrived and the
       haemoglobin is normal at 13.5, so this is no longer about anaemia — it is
       a stock-check. Haemoglobin shows whether the tank has run dry; ferritin
@@ -226,6 +255,133 @@ the progesterone question and the due-date question are all now answered.
 
 **Fatigue, cramps and white discharge were all raised and all called normal** —
 which matches what this handbook has been saying about each of them.
+
+**From the 30 October scan:** heart rate **163 bpm**, estimated weight **46 g at
+the 56th percentile** — "appropriate for gestational age" in the report's own
+words — normal fluid, nothing flagged on the baby. **Two things came out of it
+rather than being closed by it:** the eight-day dating disagreement, and the NT
+scan that was not measured and now has a three-week window. Both are at the top
+of the list above.
+
+---
+
+## 30 October 2026 — Second scan · 10w6d · **and a dating conflict**
+
+**Makati Medical Center**, Section of Maternal & Fetal Medicine. Attending:
+**Dr. Maria Fe P. Villafria**. Scanned by **Dr. Joanne De Grano-Marave**, FPOGS,
+FPSUOG. (Reported on the second/third-trimester template — that is a form
+choice, not a finding.)
+
+| | Finding |
+| --- | --- |
+| **Fetal heart rate** | **163 bpm** |
+| **Estimated fetal weight** | **46 g — 56th percentile** (Hadlock) |
+| Biparietal diameter | 1.4 cm → 12w0d |
+| Head circumference | 5.8 cm → 12w1d |
+| Abdominal circumference | 4.8 cm → 11w6d |
+| Femur length | 0.3 cm → 11w0d |
+| Average ultrasound age | 12w0d |
+| Amniotic fluid, deepest pocket | 3.2 cm — normohydramnios |
+| Presentation | Cephalic |
+| **Subchorionic hemorrhage** | **11.0 × 5.5 × 4.3 mm, 0.1 mL** |
+
+**Impression as reported:** Single live intrauterine pregnancy, 12 weeks by
+average biometry. Cephalic presentation. Normohydramnios. Subchorionic
+hemorrhage as described. Estimated fetal weight appropriate for gestational age.
+
+### The good news first
+
+**Heart rate 163.** Exactly where it should be. It was 128 at the 2 October
+scan; the rate climbs through the first trimester and settles in the 120–160s,
+so 163 at this stage is unremarkable in the best sense.
+
+**56th percentile.** Dead centre. "Appropriate for gestational age" is the
+report's own conclusion, and 46 grams is on the middle line rather than an edge.
+
+**Normal fluid, nothing else flagged.** The cephalic note means nothing at this
+stage — the baby will turn many times before it matters, from about 36 weeks.
+
+### The dating conflict, which is the real content of this scan
+
+**This report gives an EDD of 14 May 2027. The app has been running on 22 May,
+from the crown-rump length of 2 October. That is eight days apart, and it is the
+one thing on this page worth a conversation.**
+
+| Source | EDD | What she would be today |
+| --- | --- | --- |
+| **Crown-rump length, 2 Oct — in use** | **22 May 2027** | **10w6d** |
+| Average biometry, this scan | 14 May 2027 | 12w0d |
+| Report header, LMP 14 Aug | 21 May 2027 | 11w0d |
+
+**The two scans cannot both be right, and there is a way to see which.** The
+2 October scan measured a crown-rump length of **8.5 mm**. If today were really
+12w0d, then on 2 October — 28 days earlier — she would have been **8w0d**. An
+embryo at 8 weeks measures roughly **14–18 mm**. One at 6w6d measures about
+**8–10 mm**. The 8.5 mm actually recorded fits 6w6d and does not fit 8 weeks;
+it is close to half the size an eight-week embryo would be.
+
+**This scan also disagrees with itself by eight days** — the same gap it is
+claiming. Femur says 11w0d, head circumference says 12w1d. At eleven weeks these
+four measurements are at the very bottom of their useful range; a femur of
+**3 millimetres** is a measurement where a fraction of a millimetre moves the
+answer by days. Crown-rump length before 9 weeks is the most accurate dating in
+obstetrics, roughly ±5–7 days.
+
+**So the recommendation here is to keep 22 May** — but this is a clinical
+judgement and **it is Dra. Villafria's to make, not this handbook's.** The app
+continues on 22 May because changing the date on the strength of a weaker
+measurement would be the worse error, and because an unstable due date is itself
+a problem.
+
+**Honest limitation.** ACOG's Committee Opinion 700 sets the thresholds for when
+a scan should replace an existing date — more than 7 days at this stage, and
+this discrepancy is 8. **acog.org is blocked by this session's network policy,
+so its full text could not be read here.** Secondary sources give the thresholds
+consistently; the stronger claim that an established first-trimester date should
+never be revised by a later scan appears on calculator sites and **could not be
+verified in ACOG's own words**. Treat the threshold as real and the "never" as
+unconfirmed.
+
+**What to ask:** *"The CRL on 2 October gave 22 May and this scan gives 14 May.
+Which are we working to, and is it going in the chart?"* Everything downstream
+hangs on the answer — the anomaly scan window, any planned section date, and
+what counts as term.
+
+### The subchorionic hemorrhage is back
+
+| Date | Age | Finding |
+| --- | --- | --- |
+| 18 Sept | 4w6d | 4.0 × 11.6 × 3.3 mm — **0.082 mL** |
+| 2 Oct | 6w6d | **None seen** |
+| **30 Oct** | **10w6d** | 11.0 × 5.5 × 4.3 mm — **0.1 mL** |
+
+**Either it reformed, or it was there on 2 October and not seen.** Different
+sonographer, different approach, and a small collection low at the inferior pole
+is easy to miss. The second is at least as likely as the first.
+
+**What matters more than its presence is its size, and it is tiny.** 0.1 mL,
+against six weeks earlier at 0.082 mL — essentially unchanged across the whole
+of the first trimester. Small subchorionic hemorrhages are common, most resolve,
+and the ones that carry risk are the large ones taking up a meaningful fraction
+of the sac. This is not that.
+
+**It is not a reason to change anything** — but it is a reason to ask again
+about activity, now that it is documented a second time, and to keep the red
+flags screen in mind: fresh red bleeding is the thing to ring about, brown is
+old blood draining.
+
+### The nuchal translucency was not measured
+
+**This scan carries no NT measurement.** The NT window runs **11w0d to 13w6d**,
+which on the current dating is **31 October to 20 November** — it opens tomorrow
+and she has **three weeks**.
+
+If NT screening is wanted, it has to be booked, and it has to happen inside that
+window; it cannot be done late. **Ask whether this was meant to be the NT scan.**
+Note that NT is the ultrasound and NIPT is the blood test — separate things in
+overlapping windows, and declining one is not declining the other.
+
+*Source: Makati Medical Center ultrasound report, 30 October 2026, 10:12. Verified 2026-10-30. Confidence: high on the findings as reported; the dating recommendation is reasoning from the two scans, not a clinical decision.*
 
 ---
 

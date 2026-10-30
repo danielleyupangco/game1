@@ -838,17 +838,31 @@ $('#now-meta').textContent = now.daysToGo < 0
   : 'Trimester ' + (now.weeks >= 28 ? 3 : now.weeks >= 14 ? 2 : 1);
 $('#now-count').textContent = now.daysToGo >= 0 ? now.daysToGo + ' days' : '\\u2014';
 
-/* ---- the last milestone ------------------------------------------------ */
-/* This slot counted down to the repeat scan until 2 October, when the scan
-   happened and found a heartbeat. It now counts forward from it, because
-   "how long since" is the thing worth knowing once a deadline is met. */
-const HEARTBEAT_SEEN = '2026-10-02';
+/* ---- the one live deadline --------------------------------------------- */
+/* This slot carries whatever is closest to running out. It counted down to the
+   repeat scan, then counted forward from the heartbeat; the 30 October scan did
+   not measure the nuchal translucency, so until 20 November that window is the
+   thing with a clock on it. Once it closes the slot falls back to the last
+   scan, because "how long since" is what is worth knowing with no deadline. */
+const NT_CLOSES = '2026-11-20';
+const LAST_SCAN = '2026-10-30';
 (() => {
-  const since = Math.round((todayManila() - civil(HEARTBEAT_SEEN)) / MS);
   const el = $('#scan-deadline');
+  const left = Math.round((civil(NT_CLOSES) - todayManila()) / MS);
+  if (left > 0) {
+    el.textContent = '\u23f3 NT scan window closes in ' + left + ' day' +
+      (left === 1 ? '' : 's') + ' \u2014 not yet booked';
+    return;
+  }
+  if (left === 0) {
+    el.textContent = '\u23f3 NT scan window closes today';
+    return;
+  }
+  const since = Math.round((todayManila() - civil(LAST_SCAN)) / MS);
   el.textContent = since <= 0
-    ? '\u2665 Heartbeat seen today \u2014 128 bpm'
-    : '\u2665 Heartbeat seen ' + since + ' day' + (since === 1 ? '' : 's') + ' ago \u2014 128 bpm';
+    ? '\u2665 Scan today \u2014 163 bpm, 56th centile'
+    : '\u2665 Last scan ' + since + ' day' + (since === 1 ? '' : 's') +
+      ' ago \u2014 163 bpm, 56th centile';
 })();
 
 /* ---- week rails -------------------------------------------------------- */

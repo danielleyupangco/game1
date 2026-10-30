@@ -47,6 +47,11 @@ section for how this is handled.
 2027**. This is the measurement everything before it was waiting for, and it is
 not provisional in the way the earlier dates were.
 
+**Challenged on 30 October, and held.** The second scan reported an EDD of
+**14 May 2027** from its average measurements — eight days earlier. The
+handbook has kept 22 May, for the reasons set out just below, but **the final
+say is Dra. Villafria's and the question is at the top of the action list.**
+
 ### How the date was reached
 
 | Field | Value | Source |
@@ -68,10 +73,11 @@ else including the last menstrual period.
 
 | Method | EDD | Status |
 | --- | --- | --- |
-| **Crown-rump length, 2 Oct** | **2027-05-22** | **In use. Final unless something unexpected happens.** |
+| **Crown-rump length, 2 Oct** | **2027-05-22** | **In use.** |
+| Average biometry, 30 Oct | 2027-05-14 | **Eight days earlier. Not adopted — see below.** |
 | Chart header, LMP 14 Aug + 280 | 2027-05-21 | One day out. Superseded. |
 | Mean sac diameter, 18 Sept | 2027-05-19 | Three days out. Superseded. |
-| Dani's recalled LMP, 15 Aug | 2027-05-22 | **Matches the scan exactly.** |
+| Dani's recalled LMP, 15 Aug | 2027-05-22 | **Matches the 2 Oct scan exactly.** |
 
 **The last row is worth a moment.** Dani said from the beginning that her last
 period began on **15 August**. The clinic chart recorded the 14th, and the app
@@ -82,6 +88,38 @@ knowledge of it.
 It also lands the implied conception on **29 August**, which is the first day of
 the window the couple independently recall. Three independent routes to the same
 few days.
+
+### Why the 30 October scan did not move the date
+
+**Three reasons, and the first is the strongest.**
+
+**One: the two scans cannot both be right, and the arithmetic shows which.** The
+2 October scan measured a crown-rump length of **8.5 mm**. If the 30 October
+dating were correct, 2 October would have been **8w0d**, and an embryo at eight
+weeks measures roughly **14–18 mm**. One at 6w6d measures about **8–10 mm**.
+8.5 mm is about half the size an eight-week embryo would be. The measurement
+actually on paper fits the date in use.
+
+**Two: the 30 October scan disagrees with itself by the same eight days.** Femur
+length says 11w0d; head circumference says 12w1d. At eleven weeks these
+measurements are at the bottom of their useful range — the femur was
+**3 millimetres long**, where a fraction of a millimetre moves the answer by
+days. A crown-rump length before 9 weeks is accurate to about ±5–7 days and is
+the most accurate dating in obstetrics; late-first-trimester biometry is not.
+
+**Three: an unstable due date is itself a problem.** This pregnancy has now had
+four candidate dates. Moving to a weaker measurement, having already settled on
+a stronger one, would be the larger of the two available errors.
+
+**The honest limitation.** [ACOG Committee Opinion
+700](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2017/05/methods-for-estimating-the-due-date)
+sets the thresholds for when a later scan should replace an existing date — more
+than 7 days at this stage, and this gap is 8, so **the threshold is technically
+crossed.** acog.org is blocked by this app's network, so its full text could not
+be read here; secondary sources give the thresholds consistently, but the
+stronger claim that a first-trimester date should *never* be revised later could
+not be verified in ACOG's own words. **Which is exactly why this is a question
+for Dra. Villafria and not a decision the handbook should make.**
 
 ### What moved, and what it means practically
 
@@ -97,9 +135,12 @@ Gemini on 21 May 2027 at about 15:00 Manila time, and the new date is the 22nd.
 
 ### Where the pregnancy stands
 
-On **2 October 2026**: **6 weeks 6 days**, with 232 days to go. A heartbeat was
-seen at **128 beats per minute**, and the subchorionic hemorrhage found in
-September had resolved completely.
+On **30 October 2026**: **10 weeks 6 days**, with 204 days to go. The second
+scan put the heart rate at **163 beats per minute** and the estimated weight at
+**46 grams, the 56th percentile** — "appropriate for gestational age" in the
+report's own words. The small subchorionic hemorrhage is on the scan again at
+**0.1 mL**, essentially unchanged from September and too small to be a concern
+in itself.
 
 The app computes gestational age as `280 − (EDD − today)` on Manila calendar
 dates. The per-pregnancy `dating_offset_days` is zero and should stay there:
@@ -116,7 +157,8 @@ the version this app ran on through September.
 | Implied conception | 2w0d | 2026-08-29 |
 | **Heartbeat seen — 128 bpm** | **6w6d** | **2026-10-02** |
 | NIPT available from | 10w0d | 2026-10-24 |
-| NT scan window | 11w0d – 13w6d | 2026-10-31 – 2026-11-20 |
+| **Second scan — 163 bpm, 46 g, 56th centile** | **10w6d** | **2026-10-30** |
+| **NT scan window — not yet booked** | **11w0d – 13w6d** | **2026-10-31 – 2026-11-20** |
 | End of first trimester | 13w6d | 2026-11-20 |
 | Anomaly scan window | 18w0d – 22w0d | 2026-12-19 – 2027-01-16 |
 | OGTT window | 24w0d – 28w0d | 2027-01-30 – 2027-02-27 |
