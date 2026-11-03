@@ -315,6 +315,31 @@ on a string. The myths table in section 11 goes through them. The 163 bpm from
 the 30 October scan says nothing either: the old "over 140 means a girl" rule has
 been tested repeatedly and does not hold.
 
+#### And if someone insists on guessing
+
+**The only real information available is the birth ratio**, which runs about
+**105 boys to 100 girls** worldwide. That makes any guess **51.2% boy** — an edge
+of one and a bit percentage points over a coin. Anyone offering more confidence
+than that from an early scan picture, this handbook included, is performing
+rather than reading.
+
+#### Keeping the scan pictures — a practical note
+
+**Those printouts are thermal paper and they fade.** Months to a few years,
+faster in heat and light, and Manila supplies both. The images are a keepsake
+worth more than the paper will survive.
+
+- **Ask for the digital files** at each scan — a USB stick, an emailed set, or a
+  portal download. Most units can do it and most do not offer unless asked.
+- **Photograph the printout the same day**, flat, straight-on, in even light
+  with no flash. **Do not zoom in while photographing** — fill the frame and
+  crop later, which keeps every pixel the paper actually holds.
+- **Zooming cannot recover detail that is not there.** The cross-hatch texture
+  on a scan printout is the printer's dither pattern, not the scan — so a
+  magnified photo of a printout is reading the printer, not the baby. Another
+  reason the digital file is the one to ask for.
+- Keep them out of the sun, and out of plastic sleeves that trap heat.
+
 *Sources: [Efrat et al. — first-trimester determination of fetal gender by ultrasound](https://pubmed.ncbi.nlm.nih.gov/10520895/); [NHS — 20-week screening scan](https://www.nhs.uk/pregnancy/your-pregnancy-care/20-week-scan/); cfDNA sex-chromosome performance from the NIPT sources in this section. Verified 2026-11-03. Confidence: high on the routes and the windows; the nub accuracy figures vary between studies and are given as the usual range, not as precise values.*
 
 ### Choosing an NIPT tier — the quoted options
