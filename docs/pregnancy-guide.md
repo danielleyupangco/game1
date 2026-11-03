@@ -1895,7 +1895,10 @@ frequently and this list will go stale.
 A couple in BGC kept a 101-line registry through their first baby and went back
 afterwards to mark what each thing was worth. That hindsight column is the rare
 part — anyone can produce a list of what to buy, almost nobody records what they
-regretted. Their total came to **₱161,229.75**.
+regretted. **Their total came to ₱163,919.75** — their own sheet says
+₱161,229.75, but its grand-total formula stopped two rows short and left out a
+toothbrush and a baby trolley. A ₱2,690 gap, corrected here and in the
+spreadsheet export.
 
 **Two caveats before reading it.** The sheet is from **2022**, so treat every
 peso figure as a shape rather than a price — four years of inflation sit between
