@@ -269,6 +269,54 @@ antibody transfer needs time. Worth surfacing as a nudge, not just a date range.
 
 ---
 
+### When the sex can actually be known
+
+**Not from an eleven-week scan picture, and not by anybody.** This is worth
+stating plainly because early scan images get studied hopefully, and the honest
+position is that there is nothing there to read yet — not because the picture is
+blurry, but because the anatomy has not finished happening.
+
+**The reason is rather lovely.** External genitalia grow from **the same
+structure in both sexes** — the genital tubercle, which forms around week nine
+and looks identical either way. It only begins to differentiate from about week
+eleven, under testosterone or its absence, and is not finished until roughly
+week fourteen. **So at 11w3d it is mid-process.** There is nothing to see because
+it has not been decided yet in the visible sense, however long ago it was
+decided in the chromosomal one.
+
+#### The three routes, in order of when they can answer
+
+| Route | Earliest | On this pregnancy | Accuracy |
+| --- | --- | --- | --- |
+| **NIPT blood test** | 10w0d | **from 24 Oct — available now** | **>99%** |
+| Nub angle at the NT scan | ~12w | the NT visit, before 20 Nov | ~70% at 11w, ~80% at 12w, ~90% at 13w |
+| **Anomaly scan** | 18w0d | **19 Dec – 16 Jan** | ~99% with a cooperative baby |
+
+**NIPT is the only one that can answer today.** It reads fetal DNA from a
+maternal blood sample and reports sex chromosomes to better than 99%. **Fetal
+sex is an opt-in on every tier, Lite included** — so wanting to know early is
+not a reason to buy a more expensive panel, which is the upsell this handbook
+warns about in the next section. Occasionally it is wrong for interesting
+reasons — a vanishing twin, or maternal mosaicism — but these are rare.
+
+**The nub angle is a guess, and should be treated as one.** Between 11 and 13
+weeks a sonographer can measure the genital tubercle's angle against the spine:
+roughly 30 degrees or more reads male, flat or parallel reads female. It needs a
+precise mid-sagittal plane and a still baby. **At eleven weeks it is about 70%
+accurate — three nurseries in ten painted the wrong colour.** By thirteen weeks
+it is about 90%. **If the NT scan happens late in its window it is worth asking**,
+with the number attached to the answer.
+
+**The anomaly scan is the definitive ultrasound answer**, and on the current
+dating that is **19 December to 16 January.**
+
+**None of the folk methods work** — belly shape, heart rate, cravings, the ring
+on a string. The myths table in section 11 goes through them. The 163 bpm from
+the 30 October scan says nothing either: the old "over 140 means a girl" rule has
+been tested repeatedly and does not hold.
+
+*Sources: [Efrat et al. — first-trimester determination of fetal gender by ultrasound](https://pubmed.ncbi.nlm.nih.gov/10520895/); [NHS — 20-week screening scan](https://www.nhs.uk/pregnancy/your-pregnancy-care/20-week-scan/); cfDNA sex-chromosome performance from the NIPT sources in this section. Verified 2026-11-03. Confidence: high on the routes and the windows; the nub accuracy figures vary between studies and are given as the usual range, not as precise values.*
+
 ### Choosing an NIPT tier — the quoted options
 
 Three tiers were quoted in October 2026. The prices rise with the number of
