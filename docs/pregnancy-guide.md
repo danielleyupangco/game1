@@ -1408,6 +1408,66 @@ The target on treatment is a TSH in range and **below 2.5** — but that one is 
 **conditional recommendation on low-quality evidence**, unlike the four-weekly
 interval. An aim, not a cliff edge.
 
+| Draw | Gestation | Why |
+| --- | --- | --- |
+| **29 Nov 2026** | **15w1d** | Four weeks in. Just past the hCG dip. |
+| **27 Dec 2026** | 19w1d | Still before midgestation. **Holiday week — book it early.** |
+| ~13 Mar 2027 | 30w0d | The one ATA asks for in the third trimester. |
+
+**Midgestation falls on 2 January**, so the four-weekly run is really just those
+first two. **Any dose change restarts the four-week clock**, so expect more
+draws than the table shows if the dose moves.
+
+**Ask for TSH and free T4 together** — and TPO antibodies too, if they were not
+drawn on 31 October. One needle. **Free T4 matters** because if TSH comes back
+suppressed, free T4 is what says whether that is genuine over-replacement.
+
+**Do not take the tablet before the blood draw.** Levothyroxine causes a
+several-hour peak in free T4, which distorts that result. On night dosing a
+morning draw is automatically 10–12 hours clear, which is one more small point
+in its favour.
+
+#### What the result will actually mean
+
+| TSH comes back | What it means | What follows |
+| --- | --- | --- |
+| **Above 4.0** | Under-treated | Dose goes **up** |
+| **2.5 – 4.0** | Short of target | Dose probably goes **up** |
+| **0.1 – 2.5** | On target | **Continue**, repeat in four weeks |
+| **Below 0.1** | Over-replaced | Dose comes **down** — free T4 helps decide by how much |
+
+*Bands are the general targets, not a prescription. The lab's own
+pregnancy-specific ranges and Dr. Ang-Golangco's reading come first.*
+
+#### What would actually end the tablet — and no blood test does it
+
+**There is no TSH result that means "stop", and this is the part worth
+understanding properly.**
+
+**Once the tablet is being taken, the TSH measures the dose, not the thyroid.**
+A beautiful 1.4 does not mean the thyroid recovered; it means 50mcg is the right
+amount of help. **The question "did I ever need this?" cannot be answered by a
+blood test taken while on it** — only by stopping and retesting, which is not
+something anyone does mid-pregnancy.
+
+**A low result means the dose comes down, not off.**
+
+**The real decision point is after delivery.** Levothyroxine started during a
+pregnancy is usually stopped postpartum, with **TSH and free T4 rechecked at
+about six weeks.** That test is taken off the tablet, so it finally shows what
+the thyroid does unaided. Roughly a quarter to a third of women need to restart.
+
+**TPO antibodies decide which way that goes**, which is why the test matters
+more than any single TSH:
+
+- **TPO positive** — autoimmune. It does not recover. Expect to continue.
+- **TPO negative** — likely pregnancy strain. Expect to stop and recheck.
+
+**The one thing that could end it sooner** is Dr. Ang-Golangco deciding, on the
+antibody result and the whole picture, that it was not needed. That is a
+clinician's judgement, not a number crossing a line, and it would be unusual
+mid-pregnancy. **It is not a decision to take alone.**
+
 **The dose will probably need to go up, not down.** Pregnancy raises
 thyroxine-binding globulin, the placenta breaks T4 down, and iodine demand
 rises; women on levothyroxine before pregnancy typically need **25–50% more** as

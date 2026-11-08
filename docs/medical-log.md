@@ -152,11 +152,16 @@ to-do that does not happen.
       October.** Levothyroxine (TFOUR) 50mcg daily started. The referral was
       recorded as "Dr. Capellan" in the 2 October notes; the prescription gives
       the real name.
-- [ ] **Repeat TSH around 29 November — four weeks after starting.** This is
-      how you find out whether the dose is right, and it is the only way to find
-      out. ATA guidance is **every four weeks until midgestation, then at least
-      once around 30 weeks**. Target on treatment is **below 2.5**. Book the draw
-      now rather than remembering later. *From the 31 Oct prescription.*
+- [ ] **Book the TSH for around 29 November — four weeks after starting.**
+      **Ask for TSH and free T4 together**, plus TPO antibodies if they were not
+      drawn on 31 October. **Do not take the tablet before the draw.** Then
+      **27 December** (19w1d, holiday week — book that one early), and at least
+      once around **13 March** (30 weeks). Any dose change restarts the
+      four-week clock. Target is **below 2.5**, which is an aim rather than a
+      threshold. **No result here says "stop"** — while the tablet is being
+      taken the TSH measures the dose, not the thyroid; a low number means the
+      dose comes down. **The stop decision is postpartum**, on a test taken off
+      the tablet at about six weeks. *From the 31 Oct prescription.*
 - [ ] **Ask whether TPO antibodies and free T4 were drawn on 31 October.** This
       is the test that says whether the tablet is for this pregnancy or for
       good: TPO positive means autoimmune and long-term, TPO negative means it
