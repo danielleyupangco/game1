@@ -102,6 +102,7 @@ routinely, and a drug name is not a thing to guess at.
 
 | What | Dose | For | Confidence |
 | --- | --- | --- | --- |
+| **Levothyroxine (TFOUR)** | **50mcg daily, empty stomach** | The TSH of 5.13 | **High** — prescription in hand, Dr. Ang-Golangco, 31 Oct. **Keep 4 hours clear of the prenatal** |
 | **Dydrogesterone** | As prescribed, until 12 weeks | Progesterone support across the luteoplacental shift | **High** — a standard, well-established choice in early pregnancy |
 | **Folic acid** | 400–600mcg daily, six more weeks | Neural tube; the tube closes around week 6 | High |
 | **Prenatal vitamin** | Daily — switching to a smaller tablet | Iron, vitamin D, iodine, B12 | **Prescribed 2 Oct and not currently being taken** — see the action list |
@@ -147,9 +148,20 @@ to-do that does not happen.
       booking another. NT is the ultrasound; NIPT is the blood test. Separate
       things, overlapping windows, and declining one is not declining the other.
       *From the 30 Oct scan.*
-- [ ] **Book Dr. Capellan, the endocrinologist.** Dra. Villafria's referral for
-      the TSH. This is the one open clinical question, and the thing that most
-      wants a date in the diary. *From the 2 Oct consultation.*
+- [x] **~~Book the endocrinologist.~~ Done — Dr. Nerissa Ang-Golangco, 31
+      October.** Levothyroxine (TFOUR) 50mcg daily started. The referral was
+      recorded as "Dr. Capellan" in the 2 October notes; the prescription gives
+      the real name.
+- [ ] **Repeat TSH around 29 November — four weeks after starting.** This is
+      how you find out whether the dose is right, and it is the only way to find
+      out. ATA guidance is **every four weeks until midgestation, then at least
+      once around 30 weeks**. Target on treatment is **below 2.5**. Book the draw
+      now rather than remembering later. *From the 31 Oct prescription.*
+- [ ] **Ask whether TPO antibodies and free T4 were drawn on 31 October.** This
+      is the test that says whether the tablet is for this pregnancy or for
+      good: TPO positive means autoimmune and long-term, TPO negative means it
+      is often stopped after delivery. If they were not drawn, request them with
+      the November TSH — one draw, three tests.
 - [ ] **Ask when the next appointment is, and write it down.** The four-month
       note in the 2 October transcript was indeed a slip — the follow-up
       happened on **30 October, four weeks out, as it should have.** The next
@@ -182,7 +194,7 @@ to-do that does not happen.
       whether the report can be limited** to the trisomies and sex chromosomes.
 - [ ] **Request the work-from-home arrangement formally.** Dra. Villafria
       recommended it; two days a week in the office at present.
-- [ ] **The TSH of 5.13 — the detail for Dr. Capellan.** Every other result is
+- [ ] **The TSH of 5.13 — the detail for Dr. Ang-Golangco.** Every other result is
       normal and the 2 October scan was good, which leaves this as the only
       outstanding question in the pregnancy. Ask for **TPO antibodies, free T4
       and a repeat TSH** — one draw, three tests. If it was already raised at
@@ -219,7 +231,11 @@ to-do that does not happen.
       measured at 29.6 against a cutoff of 30, and iodine with the thyroid still
       open. If the tablet is hard to swallow, that is the thing to solve — ask
       for a smaller one or a different form rather than skipping it.
-- [ ] **Ask Dr. Capellan about iodine specifically.** It is raw material for
+      **Now that levothyroxine has started, timing matters:** the prenatal's
+      iron and calcium block it, so keep the two **four hours apart.** The
+      simplest arrangement is levothyroxine at night and the prenatal in the
+      morning.
+- [ ] **Ask Dr. Ang-Golangco about iodine specifically.** It is raw material for
       thyroid hormone and the baby has none of its own until about week 12 — but
       too much iodine can suppress a thyroid, so with a TSH of 5.13 this is his
       call, not a gap to fill alone.
@@ -268,6 +284,135 @@ explains — but nothing in the real good news rests on it. **Two things came ou
 rather than being closed by it:** the eight-day dating disagreement, and the NT
 scan that was not measured and now has a three-week window. Both are at the top
 of the list above.
+
+---
+
+## 31 October 2026 — Endocrinology · 11w0d · **levothyroxine started**
+
+**Dr. Nerissa Ang-Golangco, MD**, Internal Medicine – Endocrinology, Makati
+Medical Center Online Clinic. (The 2 October transcript recorded the referral as
+"Dr. Capellan" — another mis-heard name from the same notes that gave "Lapas"
+and "Quadrocol". The prescription is the reliable record; the log has been
+corrected throughout.)
+
+| | |
+| --- | --- |
+| **Prescribed** | **Levothyroxine sodium (TFOUR) 50mcg** |
+| Sig | One tablet, 1 hour before breakfast, daily |
+| Quantity | #100 — about 14 weeks' supply |
+| For | TSH 5.13 from the 18 September panel |
+
+**Teleconsults are daily 5–7PM by Zoom or Viber**; face-to-face Mon/Wed 1–3PM
+walk-in, Tue/Thu 9AM–12NN walk-in, Fri by appointment. *The clinic's phone number
+and the prescription's security code are deliberately not recorded here, because
+this handbook is shared by link. They are on the prescription photo.*
+
+### Was treating the right call on a seven-week-old number?
+
+**Yes, and the reasoning is worth having.** Outside pregnancy a single raised TSH
+would normally be repeated before anyone started a tablet. **In pregnancy it is
+not**, because the window that matters cannot be re-opened: the baby has no
+working thyroid of its own until about week 12 and runs entirely on what crosses
+from the mother until roughly week 16–18. Waiting to confirm costs part of the
+only period in which the treatment does its main job.
+
+**And 5.13 was above the line.** ATA 2017 uses **4.0 mIU/L** as the upper limit
+for the first trimester where no local range exists. 5.13 clears it.
+
+### "What if it normalized on its own and I am now taking TFOUR anyway?"
+
+**The honest answer is that this is unlikely, and the reason is a quirk of
+timing that works against it.**
+
+**The 5.13 was drawn at 5w0d — during the window when TSH should be at its
+lowest point of the entire pregnancy.** hCG looks enough like TSH to the thyroid
+that it stimulates it directly; hCG peaks around 8–11 weeks, and the normal
+effect is to push TSH *down* through the first trimester. A TSH of 5.13
+*despite* that push is more concerning than the same number would be at 25
+weeks, not less.
+
+**And demand only climbs from here.** Oestrogen raises thyroxine-binding
+globulin, the placenta actively breaks T4 down, and iodine losses rise. Women
+already on levothyroxine typically need **25–50% more of it** during pregnancy.
+A thyroid that was struggling at 5 weeks has more work in front of it at 20 and
+30, not less.
+
+**So the realistic possibilities are that the TSH is where it was, or higher —
+not that it quietly fixed itself.**
+
+### What happens if the tablet turns out not to have been needed
+
+**Not very much, and it is reversible.** 50mcg is a modest starting dose — full
+replacement for an adult with no thyroid at all runs around 1.6mcg per kilo,
+so roughly 90mcg. **50 is about half of that**, chosen as a starting point, not
+a full dose.
+
+If it is more than needed, the TSH comes back **below range**, and the dose is
+reduced or stopped. The signs of over-replacement are **palpitations, tremor,
+feeling hot, anxiety, trouble sleeping** — worth mentioning if they appear, but
+not the way the decision gets made.
+
+**The asymmetry is the thing to hold onto: in pregnancy, too little thyroid
+hormone is considered the worse error, and 50mcg is a long way from too much.**
+
+### How you know whether to stop — and it is not by how you feel
+
+**By a repeat TSH, on a schedule, and by nothing else.** ATA 2017 is specific
+and rates it a strong recommendation on high-quality evidence: **TSH every four
+weeks until midgestation, and at least once around 30 weeks.**
+
+**Started about 1 November, so the first repeat is due around 29 November.**
+Target on treatment is a TSH in range and **below 2.5**.
+
+**Do not stop it independently, and do not change the dose on a symptom.**
+Stopping it if it was needed costs exactly the window the treatment exists for.
+
+### The one test that decides whether this is temporary
+
+**TPO antibodies.** They say whether this is autoimmune thyroid disease or a
+one-off strain of pregnancy:
+
+- **TPO positive** — the thyroid is under immune attack, it will not recover,
+  and treatment is likely long-term.
+- **TPO negative** — more likely a transient demand problem. **Levothyroxine is
+  often stopped after delivery** and the TSH rechecked weeks later.
+
+**Ask whether TPO antibodies and free T4 were drawn on 31 October.** If they
+were not, that is the next request. It is the difference between a tablet for
+the pregnancy and a tablet for good.
+
+### Taking it at night instead — yes, and here it may suit better
+
+**Bedtime dosing is well studied and comes out equivalent to morning dosing.**
+A [2022 randomized crossover trial](https://www.frontiersin.org/articles/10.3389/fmed.2022.828762/full)
+found no significant difference in TSH between taking it 60 minutes before
+breakfast and taking it at bedtime at least 60 minutes after the last meal
+(2.95 vs 3.64, p = 0.107), and the meta-analysis it cites found the same.
+**Equivalent, not better** — the older claim that bedtime is superior has not
+held up.
+
+**Two reasons it may suit this pregnancy specifically:**
+
+1. **Morning sickness.** A dose taken at 7am and vomited at 7.20 is a dose lost,
+   and there is no way to know how much was absorbed. Bedtime sidesteps it.
+2. **It solves the prenatal clash instead of creating one.** The prenatal
+   vitamin contains **iron and calcium, both of which block levothyroxine**, and
+   they need about four hours of separation. Levothyroxine at night and the
+   prenatal in the morning separates them cleanly, where two morning tablets
+   fight each other.
+
+**The rules if switching:**
+
+- **At least 3 hours after the last food.** An empty stomach is the whole point.
+- **Four hours clear of iron, calcium, and antacids.**
+- **Pick one time and keep it.** The dose is titrated against a TSH measured
+  under whatever routine is being followed, so moving the time around makes the
+  result uninterpretable. Switch once, then do not drift.
+- **Tell Dr. Ang-Golangco**, so the 29 November TSH is read against the right
+  routine. This is not asking permission — it is making the number mean
+  something.
+
+*Sources: prescription, Dr. Nerissa Ang-Golangco, 31 October 2026. [ATA 2017 guideline recommendations](https://eguideline.guidelinecentral.com/i/1545288/22) for the monitoring interval, the 4.0 mIU/L first-trimester limit and the below-2.5 target; [Frontiers in Medicine 2022 crossover trial](https://www.frontiersin.org/articles/10.3389/fmed.2022.828762/full) for bedtime dosing. Verified 2026-11-08. Confidence: high on the monitoring schedule, the absorption rules and the bedtime equivalence; the reasoning about why spontaneous normalization is unlikely is physiology applied to this case, not a statement about this particular thyroid — only the 29 November blood test answers that.*
 
 ---
 
@@ -476,7 +621,7 @@ against the paperwork** — three items below did not survive that check.
 | Folic acid | Continue for six more weeks |
 | Prenatal vitamin | Switching to a smaller tablet, easier to swallow |
 | Two further items | Names unverified — see below |
-| Endocrinology referral | **Dr. Capellan**, for the TSH |
+| Endocrinology referral | **Dr. Nerissa Ang-Golangco**, for the TSH — seen 31 Oct |
 | Due date, as given | 22 May, give or take two weeks |
 
 **Progesterone is now prescribed, and the reasoning is sound.** Until about
@@ -511,7 +656,7 @@ finding. **Thyroid crisis — thyroid storm — is a complication of an
 one. The risks that are actually established for untreated subclinical
 hypothyroidism in pregnancy are **miscarriage and preterm birth**, which is
 reason enough to treat it and is almost certainly what was said. Worth asking
-Dr. Capellan to state the risk in his own words rather than relying on this line.
+Dr. Ang-Golangco to state the risk in her own words rather than relying on this line.
 
 **3. "Next OB appointment in approximately 4 months."** Four months from
 2 October is early February, which is **24w3d** — and that interval would skip

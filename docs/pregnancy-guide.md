@@ -1164,12 +1164,12 @@ start one.
 **Extra iron is not free.** It constipates and it can worsen nausea — two things
 pregnancy supplies plenty of already. There is no prize for more.
 
-**One scheduling point for later.** If Dr. Capellan starts levothyroxine for the
-TSH, **iron blocks its absorption** — and that includes the iron inside the
-prenatal vitamin. The usual arrangement is levothyroxine on an empty stomach in
-the morning, then wait 30–60 minutes before eating, and **take the prenatal at
-dinner instead**, four hours clear. Worth setting up correctly from day one
-rather than discovering it at a later blood test.
+**This is now live, not hypothetical.** Levothyroxine (TFOUR) 50mcg was started
+on **31 October**, and **iron blocks its absorption** — including the iron inside
+the prenatal vitamin, and the calcium too. **Keep the two four hours apart.**
+The tidiest arrangement, now that both are in play, is **levothyroxine at night
+and the prenatal in the morning** — see the levothyroxine section below. Worth
+setting up correctly from day one rather than discovering it at a blood test.
 
 *Sources: [USPSTF 2024 recommendation on iron deficiency in pregnancy](https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/iron-deficiency-anemia-in-pregnant-women-screening-and-supplementation); [Perinatology.com — thyroid medication in pregnancy](https://www.perinatology.com/Reference/OBRx/Thyroid.htm). Verified 2026-10-26. Confidence: high.*
 
@@ -1195,8 +1195,8 @@ specifically:
 
 **On iodine, do not simply start taking it.** It is genuinely important — it is
 raw material for thyroid hormone, and the baby has no thyroid of its own until
-about week 12. But **too much iodine can also suppress a thyroid**, and with a
-TSH of 5.13 already under investigation, this is a question for Dr. Capellan
+about week 12. But **too much iodine can also suppress a thyroid**, and with
+levothyroxine now started, this is a question for Dr. Ang-Golangco
 rather than a gap to fill unilaterally. The Philippines has mandatory salt
 iodisation, so ordinary iodised salt at home may already be covering it. **Ask
 him; do not guess.**
@@ -1211,7 +1211,7 @@ from 2 October, which runs to about mid-November. A prenatal usually contains
 folate too, so check the label before doubling up — though folate is safe at
 well above these amounts, so an overlap is not a worry.
 
-*Verified 2026-10-26. Confidence: high on what folic acid does not contain; the iodine caution is general guidance and the specific answer is Dr. Capellan's.*
+*Verified 2026-10-26. Confidence: high on what folic acid does not contain; the iodine caution is general guidance and the specific answer is Dr. Ang-Golangco's.*
 
 ### Choline, and what to do when eggs are unbearable
 
@@ -1344,6 +1344,72 @@ weight loss, dark urine, dizziness on standing. That is hyperemesis territory
 and needs a call, not endurance.
 
 ---
+
+### Levothyroxine — how to take it, and when it gets reviewed
+
+**Started 31 October: TFOUR 50mcg, one tablet daily.** The full reasoning,
+including why treating on a seven-week-old blood test was the right call, is in
+the 31 October check-up entry. This is the practical half.
+
+#### The three rules that decide whether it works
+
+**1. Empty stomach.** Food roughly halves how much is absorbed. Either **1 hour
+before breakfast**, as prescribed, or **3+ hours after the last food at night**.
+
+**2. Four hours clear of iron, calcium and antacids.** The prenatal vitamin has
+the first two. So does milk, and so do calcium-set tofu and fortified drinks.
+This is the rule most often broken, and it is broken silently — nothing feels
+different, the blood test is just worse.
+
+**3. Same time every day.** The dose is adjusted against a TSH measured under
+whatever routine is being kept. Move the time around and the number stops
+meaning anything.
+
+**Coffee counts as food here.** Within an hour of the tablet it measurably cuts
+absorption — an awkward interaction with a tablet designed to be taken first
+thing.
+
+#### Morning or night?
+
+**Either. They come out equivalent.** A [2022 randomized crossover
+trial](https://www.frontiersin.org/articles/10.3389/fmed.2022.828762/full) found
+no significant difference in TSH between 60 minutes before breakfast and bedtime
+at least 60 minutes after eating, and the meta-analysis it cites agrees. The
+older claim that **bedtime is better** has not held up — it is as good, not
+superior.
+
+**Two arguments for night in this particular pregnancy:**
+
+- **Nausea.** A tablet taken at 7am and brought back up at 7.20 is simply lost,
+  with no way to know how much got in.
+- **It separates the prenatal instead of colliding with it.** Levothyroxine at
+  night, prenatal in the morning, four hours clear in both directions — against
+  two tablets in the same morning fighting over the same absorption.
+
+**If switching: switch once, then keep it, and tell Dr. Ang-Golangco** so the
+next TSH is read against the right routine.
+
+#### When it gets reviewed
+
+**Every four weeks until midgestation, then at least once around 30 weeks.**
+That is [ATA 2017](https://eguideline.guidelinecentral.com/i/1545288/22), rated
+a strong recommendation on high-quality evidence. **The first repeat is due
+around 29 November.** The target on treatment is a TSH in range and **below
+2.5**.
+
+**The dose will probably need to go up, not down.** Pregnancy raises
+thyroxine-binding globulin, the placenta breaks T4 down, and iodine demand
+rises; women on levothyroxine typically need **25–50% more** as pregnancy
+proceeds. A rising dose is the expected path, not a sign of anything going
+wrong.
+
+**Nothing about this is decided by how you feel.** Over-replacement shows as
+palpitations, tremor, feeling hot, poor sleep — all worth reporting, none of
+them the basis for changing a dose. **Do not stop or adjust it independently:**
+stopping it, if it was needed, forfeits exactly the window the treatment exists
+for.
+
+*Sources: [ATA 2017 guideline recommendations](https://eguideline.guidelinecentral.com/i/1545288/22); [Frontiers in Medicine 2022 crossover trial on bedtime dosing](https://www.frontiersin.org/articles/10.3389/fmed.2022.828762/full); [Perinatology.com — thyroid medication in pregnancy](https://www.perinatology.com/Reference/OBRx/Thyroid.htm). Verified 2026-11-08. Confidence: high.*
 
 ## 7. Movement and stretching
 
