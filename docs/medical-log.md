@@ -321,31 +321,41 @@ for the first trimester where no local range exists. 5.13 clears it.
 
 ### "What if it normalized on its own and I am now taking TFOUR anyway?"
 
-**The honest answer is that this is unlikely, and the reason is a quirk of
-timing that works against it.**
+> **Correction, 8 November.** The first version of this entry argued that the
+> 5.13 was drawn when TSH should be at its lowest, so normalization was
+> unlikely. **That was wrong**, and the log's own September entry had it right.
+> The corrected answer is below.
 
-**The 5.13 was drawn at 5w0d — during the window when TSH should be at its
-lowest point of the entire pregnancy.** hCG looks enough like TSH to the thyroid
-that it stimulates it directly; hCG peaks around 8–11 weeks, and the normal
-effect is to push TSH *down* through the first trimester. A TSH of 5.13
-*despite* that push is more concerning than the same number would be at 25
-weeks, not less.
+**It is genuinely possible that the TSH is lower now than 5.13.**
 
-**And demand only climbs from here.** Oestrogen raises thyroxine-binding
-globulin, the placenta actively breaks T4 down, and iodine losses rise. Women
-already on levothyroxine typically need **25–50% more of it** during pregnancy.
-A thyroid that was struggling at 5 weeks has more work in front of it at 20 and
-30, not less.
+hCG looks enough like TSH to the thyroid that it stimulates it directly, pushing
+TSH down. But that effect **bottoms out around weeks 8–14**, tracking the hCG
+peak at roughly 8–12 weeks. **The sample was drawn at 4w6d — before most of
+that dip.** At 12w1d today, she is inside it. So a TSH drawn this morning could
+well read lower than it did in September.
 
-**So the realistic possibilities are that the TSH is where it was, or higher —
-not that it quietly fixed itself.**
+**But a dip is borrowed, not banked.** hCG falls away through the second
+trimester and TSH climbs back — while the demands rise: oestrogen raises
+thyroxine-binding globulin, the placenta actively breaks T4 down, and iodine
+losses increase. Women on levothyroxine before pregnancy typically need
+**25–50% more of it** as pregnancy proceeds.
+
+**So "normalized" and "fixed" are not the same thing.** A reassuring number read
+during the hCG window says little about 20 or 30 weeks, which is exactly why
+the monitoring runs to term rather than stopping at one good result.
+
+**Which makes the timing of the repeat fortunate.** 29 November falls at
+**15w1d — just past the dip**, so the number will not be flattered by hCG.
 
 ### What happens if the tablet turns out not to have been needed
 
-**Not very much, and it is reversible.** 50mcg is a modest starting dose — full
-replacement for an adult with no thyroid at all runs around 1.6mcg per kilo,
-so roughly 90mcg. **50 is about half of that**, chosen as a starting point, not
-a full dose.
+**Not very much, and it is reversible.** 50mcg is a modest starting dose. Full
+replacement for an adult with no thyroid at all runs around **1.6mcg per kilo**
+— so between about 80mcg and 110mcg across a normal adult range. **50mcg is
+roughly half of a full dose**, chosen as a starting point rather than a
+replacement. *(Her pre-pregnancy weight is still not recorded, so this is the
+general figure and not a calculation for her — an earlier version of this entry
+wrongly stated a personalized number.)*
 
 If it is more than needed, the TSH comes back **below range**, and the dose is
 reduced or stopped. The signs of over-replacement are **palpitations, tremor,
@@ -362,7 +372,10 @@ and rates it a strong recommendation on high-quality evidence: **TSH every four
 weeks until midgestation, and at least once around 30 weeks.**
 
 **Started about 1 November, so the first repeat is due around 29 November.**
-Target on treatment is a TSH in range and **below 2.5**.
+The target on treatment is a TSH in range and **below 2.5** — though note this
+one is a **conditional recommendation on low-quality evidence** in the same
+guideline, unlike the four-weekly interval, which is strong. Treat 2.5 as the
+aim, not a cliff edge.
 
 **Do not stop it independently, and do not change the dose on a symptom.**
 Stopping it if it was needed costs exactly the window the treatment exists for.
@@ -375,7 +388,18 @@ one-off strain of pregnancy:
 - **TPO positive** — the thyroid is under immune attack, it will not recover,
   and treatment is likely long-term.
 - **TPO negative** — more likely a transient demand problem. **Levothyroxine is
-  often stopped after delivery** and the TSH rechecked weeks later.
+  usually stopped after delivery** and TSH and free T4 rechecked at about six
+  weeks. It is not automatic: in one cohort of women who stopped, **11 of 39
+  redeveloped subclinical hypothyroidism and restarted.**
+
+**And TPO negative would make the decision to treat a contested one rather than
+a clear one — worth knowing, and not a reason to stop.** ATA 2017 says
+treatment *may be considered* at a TSH of 4.0 or above, which 5.13 clears. Other
+bodies set the bar higher for antibody-negative women, some only treating above
+10. The one randomized trial in TPO-negative women found a benefit using a
+cutoff above 4 and none using 2.5. **So the prescription sits inside mainstream
+guidance but not unanimous guidance**, and which side of that line this falls on
+depends on an antibody test that may not have been done.
 
 **Ask whether TPO antibodies and free T4 were drawn on 31 October.** If they
 were not, that is the next request. It is the difference between a tablet for
@@ -403,7 +427,10 @@ held up.
 
 **The rules if switching:**
 
-- **At least 3 hours after the last food.** An empty stomach is the whole point.
+- **At least 3 hours after the last food.** Worth being clear that the trial
+  above only required **60 minutes** after the last meal and still showed
+  equivalence; 3–4 hours is the more conservative clinical advice and costs
+  nothing. An empty stomach is the whole point.
 - **Four hours clear of iron, calcium, and antacids.**
 - **Pick one time and keep it.** The dose is titrated against a TSH measured
   under whatever routine is being followed, so moving the time around makes the
@@ -412,7 +439,9 @@ held up.
   routine. This is not asking permission — it is making the number mean
   something.
 
-*Sources: prescription, Dr. Nerissa Ang-Golangco, 31 October 2026. [ATA 2017 guideline recommendations](https://eguideline.guidelinecentral.com/i/1545288/22) for the monitoring interval, the 4.0 mIU/L first-trimester limit and the below-2.5 target; [Frontiers in Medicine 2022 crossover trial](https://www.frontiersin.org/articles/10.3389/fmed.2022.828762/full) for bedtime dosing. Verified 2026-11-08. Confidence: high on the monitoring schedule, the absorption rules and the bedtime equivalence; the reasoning about why spontaneous normalization is unlikely is physiology applied to this case, not a statement about this particular thyroid — only the 29 November blood test answers that.*
+*Sources: prescription, Dr. Nerissa Ang-Golangco, 31 October 2026. [ATA 2017 guideline recommendations](https://eguideline.guidelinecentral.com/i/1545288/22) for the monitoring interval, the 4.0 mIU/L first-trimester limit and the below-2.5 target — **note this is a guideline reproduction, not the primary journal text, which was not reachable from here**; [Frontiers in Medicine 2022 crossover trial](https://www.frontiersin.org/articles/10.3389/fmed.2022.828762/full) for bedtime dosing; [CMAJ review](https://dx.doi.org/10.1503/cmaj.161388) for postpartum discontinuation and the antibody-negative threshold debate. Verified 2026-11-08.*
+
+*Confidence: **high** on the four-weekly monitoring interval, the absorption rules, the bedtime equivalence and postpartum discontinuation being usual. **Moderate** on the below-2.5 target, which is a conditional recommendation. **Contested, as described above**, on whether an antibody-negative woman at 5.13 should be treated at all. **Nothing here is a statement about this particular thyroid** — only the 29 November blood test answers that.*
 
 ---
 
@@ -774,7 +803,7 @@ weeks. **Uterus noticeably larger** than three weeks ago — 70.8mm against
 
 ---
 
-## 18 September 2026 — First OB scan · 5w0d
+## 18 September 2026 — First OB scan · 4w6d
 
 **Makati Medical Center**, Department of Obstetrics and Gynecology, Section of
 Maternal & Fetal Medicine and OB-GYN Ultrasound.
@@ -950,7 +979,7 @@ activity and crown-rump length.
 
 ---
 
-## 18 September 2026 — Thyroid, fasting glucose and vitamin D · 5w0d
+## 18 September 2026 — Thyroid, fasting glucose and vitamin D · 4w6d
 
 **Lab 26596449, page 2.** Same report as the hepatitis and rubella serology,
 same draw, released 18 September 12:02. Page 1 was the only page seen until
@@ -981,7 +1010,7 @@ why guidelines lean towards treating rather than watching.
 
 **Timing makes this more striking, not less.** hCG mildly stimulates the thyroid
 and normally pushes TSH *down* through the first trimester, reaching its lowest
-point around weeks 9–12. This sample was drawn at **5w0d**, so the number was
+point around **weeks 8–14**, tracking the hCG peak at roughly 8–12 weeks. This sample was drawn at **4w6d**, so the number was
 taken before much of that dip, and it was still above range.
 
 **What decides the treatment is a test you have not had: TPO antibodies.**
@@ -1003,7 +1032,7 @@ well-established medications in pregnancy.
 T3 and T4, not **free** T4. Oestrogen raises thyroxine-binding globulin sharply
 in pregnancy, which inflates the total figures by roughly half by mid-pregnancy.
 Total T4 is the wrong denominator from here on; **free T4** is the pregnancy
-test. At 5w0d the distortion is still small, so the 10.06 is probably a fair
+test. At 4w6d the distortion is still small, so the 10.06 is probably a fair
 reading — but any repeat should be free T4.
 
 **What to ask for:** TPO antibodies, free T4, and a repeat TSH. All three from
@@ -1029,7 +1058,7 @@ new.
 
 ---
 
-## 18 September 2026 — Complete blood count · 5w0d
+## 18 September 2026 — Complete blood count · 4w6d
 
 **Lab 26596440**, Hematology. Ordered 4 September, released 18 September
 10:48. Retrieved from the Makati Med portal on 29 September, eleven days after
@@ -1094,7 +1123,7 @@ sentence to Dra. Villafria for completeness, not worth thinking about.
 
 ---
 
-## 18 September 2026 — Booking bloods, serology and urinalysis · 5w0d
+## 18 September 2026 — Booking bloods, serology and urinalysis · 4w6d
 
 **Makati Medical Center**, Department of Pathology and Laboratories. Ordered
 4 September 2026 by Dr. Marinette Tuason Sto. Domingo; collected and released

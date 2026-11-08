@@ -1353,8 +1353,11 @@ the 31 October check-up entry. This is the practical half.
 
 #### The three rules that decide whether it works
 
-**1. Empty stomach.** Food roughly halves how much is absorbed. Either **1 hour
-before breakfast**, as prescribed, or **3+ hours after the last food at night**.
+**1. Empty stomach.** Food substantially reduces how much is absorbed. Either
+**1 hour before breakfast**, as prescribed, or **3–4 hours after the last food
+at night**. (The trial below only required 60 minutes after the last meal and
+still showed equivalence — 3–4 hours is the more conservative advice, and it
+costs nothing.)
 
 **2. Four hours clear of iron, calcium and antacids.** The prenatal vitamin has
 the first two. So does milk, and so do calcium-set tofu and fortified drinks.
@@ -1393,15 +1396,31 @@ next TSH is read against the right routine.
 
 **Every four weeks until midgestation, then at least once around 30 weeks.**
 That is [ATA 2017](https://eguideline.guidelinecentral.com/i/1545288/22), rated
-a strong recommendation on high-quality evidence. **The first repeat is due
-around 29 November.** The target on treatment is a TSH in range and **below
-2.5**.
+a strong recommendation on high-quality evidence — though read from a guideline
+reproduction rather than the primary journal text, which was not reachable from
+here. **The first repeat is due around 29 November, which falls at 15w1d.**
+
+**That timing matters.** hCG suppresses TSH, bottoming out around **weeks
+8–14**; a test taken inside that window reads lower than the underlying picture.
+29 November sits just past it, so the number will mean what it says.
+
+The target on treatment is a TSH in range and **below 2.5** — but that one is a
+**conditional recommendation on low-quality evidence**, unlike the four-weekly
+interval. An aim, not a cliff edge.
 
 **The dose will probably need to go up, not down.** Pregnancy raises
 thyroxine-binding globulin, the placenta breaks T4 down, and iodine demand
-rises; women on levothyroxine typically need **25–50% more** as pregnancy
-proceeds. A rising dose is the expected path, not a sign of anything going
+rises; women on levothyroxine before pregnancy typically need **25–50% more** as
+it proceeds. A rising dose is the expected path, not a sign of anything going
 wrong.
+
+**And it usually stops after the birth.** Levothyroxine started during a
+pregnancy is generally discontinued postpartum, with TSH and free T4 rechecked
+at about six weeks — unless it was being taken before conception, which it was
+not here. Not guaranteed: in one cohort, **11 of 39 women who stopped
+redeveloped subclinical hypothyroidism and restarted.** But this is more likely
+a tablet for a pregnancy than a tablet for life, and **TPO antibodies are the
+test that says which.**
 
 **Nothing about this is decided by how you feel.** Over-replacement shows as
 palpitations, tremor, feeling hot, poor sleep — all worth reporting, none of
@@ -1409,7 +1428,7 @@ them the basis for changing a dose. **Do not stop or adjust it independently:**
 stopping it, if it was needed, forfeits exactly the window the treatment exists
 for.
 
-*Sources: [ATA 2017 guideline recommendations](https://eguideline.guidelinecentral.com/i/1545288/22); [Frontiers in Medicine 2022 crossover trial on bedtime dosing](https://www.frontiersin.org/articles/10.3389/fmed.2022.828762/full); [Perinatology.com — thyroid medication in pregnancy](https://www.perinatology.com/Reference/OBRx/Thyroid.htm). Verified 2026-11-08. Confidence: high.*
+*Sources: [ATA 2017 guideline recommendations](https://eguideline.guidelinecentral.com/i/1545288/22) (a guideline reproduction, not the primary journal text); [Frontiers in Medicine 2022 crossover trial on bedtime dosing](https://www.frontiersin.org/articles/10.3389/fmed.2022.828762/full); [CMAJ review of subclinical hypothyroidism in pregnancy](https://dx.doi.org/10.1503/cmaj.161388) for postpartum discontinuation. Verified 2026-11-08. Confidence: high on the absorption rules, the monitoring interval and the bedtime equivalence; moderate on the below-2.5 target, which the guideline rates conditional.*
 
 ## 7. Movement and stretching
 
