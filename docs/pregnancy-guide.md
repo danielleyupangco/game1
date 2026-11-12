@@ -342,6 +342,21 @@ worth more than the paper will survive.
 
 *Sources: [Efrat et al. — first-trimester determination of fetal gender by ultrasound](https://pubmed.ncbi.nlm.nih.gov/10520895/); [NHS — 20-week screening scan](https://www.nhs.uk/pregnancy/your-pregnancy-care/20-week-scan/); cfDNA sex-chromosome performance from the NIPT sources in this section. Verified 2026-11-03. Confidence: high on the routes and the windows; the nub accuracy figures vary between studies and are given as the usual range, not as precise values.*
 
+### How it turned out
+
+> **Resolved 11 November 2026 — everything below is kept as the reasoning at the
+> time.** The **Premium** panel was taken, drawn 31 October. **Every item came
+> back Low Risk**: trisomies, sex chromosomes, and the 108-syndrome microdeletion
+> screen, on a fetal fraction of **17.5%** against a 4% minimum. The roughly
+> 1-in-10 chance of a false alarm that the sections below warn about **did not
+> materialise** — which was always the likely outcome. The money bought
+> reassurance rather than information, and nothing was lost by it. Full numbers
+> in the 11 November check-up entry.
+>
+> **One thing a clear result does not do: replace the anomaly scan.** NIPT does
+> not look at structure and does not screen for open neural tube defects. That
+> is still 19 December to 16 January.
+
 ### Choosing an NIPT tier — the quoted options
 
 Three tiers were quoted in October 2026. The prices rise with the number of

@@ -140,7 +140,12 @@ to-do that does not happen.
       next visit**, because everything else is measured from it: the NT window,
       the anomaly scan, when progesterone stops, and what counts as term.
       *From the 30 Oct scan.*
-- [ ] **Book the NT scan — the window opens tomorrow and shuts 20 November.**
+- [ ] **Book the NT scan — 8 days of window left, and the reason has changed.**
+      **The NIPT has made it redundant as a Down syndrome screen.** What it
+      still does is look at the baby's structure: an enlarged NT carries a
+      roughly tenfold cardiac anomaly rate **even with normal chromosomes**, and
+      the 11–14 week scan is the first real anatomy check. **Book it for that.**
+      *(Original note follows.)* The window opens tomorrow and shuts 20 November.
       11w0d to 13w6d on the current dating is **31 October to 20 November**. The
       30 October scan did not measure it. It cannot be done late, so this is a
       phone call this week, not next. **Ask whether the 30 October scan was
@@ -183,14 +188,10 @@ to-do that does not happen.
       to be able to name it when asked. **The other may be iron** — several
       common Philippine hematinics would fit those garbled names, and with no
       prenatal being taken it matters whether any iron is coming in at all.
-- [ ] **Decide on NIPT — it can be drawn now.** The 24 October mark (10w0d,
-      the earliest it can be taken) has passed, so the blood can go any day.
-      Three tiers quoted: **Lite ₱21,500**, Premium ₱38,500, Premium Plus
-      ₱44,000. **The recommendation is Lite or none** — the expensive tiers add
-      conditions the professional bodies advise against screening for, and a
-      roughly 1-in-10 chance of a false alarm. See the NIPT section in the guide.
-      Not deciding is also a decision: Dra. Villafria did not press for it. If
-      it is wanted, pairing the draw with the NT scan visit saves a trip.
+- [x] **~~Decide on NIPT.~~ Done — drawn 31 October, all clear 11 November.**
+      Premium panel taken. Trisomies, sex chromosomes and the 108-syndrome
+      microdeletion screen all **Low Risk**, on an excellent sample (fetal
+      fraction 17.5%). See the 11 Nov entry.
 - [ ] **Get HMO coverage in writing before the draw** — a Letter of
       Authorisation, not a verbal yes at a clinic desk. Screening and genetic
       tests are commonly excluded from Philippine HMO plans. Ask which tier is
@@ -289,6 +290,119 @@ explains — but nothing in the real good news rests on it. **Two things came ou
 rather than being closed by it:** the eight-day dating disagreement, and the NT
 scan that was not measured and now has a three-week window. Both are at the top
 of the list above.
+
+---
+
+## 11 November 2026 — NIPT result · drawn at 11w0d · **everything low risk**
+
+**Cordlife / EDGC (Eone-Diagnomics Genome Center)**, Incheon. Drawn **31 October**,
+received 5 November, reported **11 November**. Requesting physician: Dra. Villafria.
+Singleton. *The report also states fetal sex. It is deliberately not recorded
+anywhere in this handbook — that one is being kept as a surprise.*
+
+### The result, in one line
+
+**Low Risk on every single item tested.** Nothing flagged, nothing equivocal,
+no resample needed.
+
+| | Result |
+| --- | --- |
+| Trisomy 21, 18, 13 | **Low Risk** |
+| Trisomy 9, 16, 22 | Low Risk |
+| XO, XXX, XXY, XYY | Low Risk |
+| All other autosomal trisomies | Low Risk |
+| **108 microdeletion / duplication syndromes** | **Low Risk** |
+| Quality checks — sample, DNA, library, sequencing, reference | **All Pass** |
+
+### The number that decides whether to trust it
+
+**Fetal fraction: 17.5%.** This is the proportion of the DNA in the sample that
+came from the placenta rather than from Dani, and **it is the single most
+important quality figure on the page.** Below about 4% the test cannot be relied
+on, and low fetal fraction is the usual reason NIPT comes back as a no-call or a
+false reassurance. **17.5% is more than four times the threshold.** Everything
+below rests on this being a genuinely good sample.
+
+### What the risk actually moved from, and to
+
+| | Before — age-based | Per 10,000 | After |
+| --- | --- | --- | --- |
+| Trisomy 21 | 1 in 710 | 14.1 | **under 2 in 10,000** |
+| Trisomy 18 | 1 in 1,963 | 5.1 | under 2 in 10,000 |
+| Trisomy 13 | 1 in 6,183 | 1.6 | under 2 in 10,000 |
+
+**The starting risks were already low**, because the figure that drives them is
+maternal age and Dani is 27. The test took the biggest of them down by **at
+least sevenfold.**
+
+**Two honest notes on how to read that table.**
+
+**One: the "after" column is a floor, not a measurement.** The lab reports
+anything below 2 in 10,000 as "<2/10,000" and stops. Run the arithmetic with
+the report's own sensitivity and specificity and the real residual risk for
+trisomy 21 after a Low Risk result works out at roughly **1 in 250,000**. The
+printed figure is deliberately conservative, and sensibly so — biology sets a
+floor the sensitivity numbers do not capture, chiefly **confined placental
+mosaicism**, where the placenta being sequenced does not match the baby.
+
+**Two: for trisomy 13 the floor is actually higher than the starting risk.**
+1 in 6,183 is 1.6 per 10,000, which is already under the 2 per 10,000 the report
+floors at. That is a quirk of the reporting format, not a test that failed to
+help.
+
+### Why a negative result here is strong, when this handbook warned about NIPT
+
+**Because the warning was about positives, and this is a negative.** The guide's
+NIPT section argued against the larger panels on the grounds that screening 110
+rare conditions carries roughly a **1-in-10 chance of at least one false alarm**,
+and that a positive result on a rare condition is more likely wrong than right.
+
+**That risk was real and it did not land.** The Premium panel was taken, the
+108-syndrome microdeletion screen came back clear, and the predicted false alarm
+did not happen — which was always the likely outcome, just not a guaranteed one.
+**The extra money bought reassurance rather than information**, and no harm came
+of it. **For a Low Risk result the relevant number is not PPV but NPV, and here
+it is above 99%** on every chromosome with a figure attached.
+
+### What this result does not cover
+
+**It is a screen, not a diagnosis.** The report says so itself, and four
+limitations are worth carrying forward:
+
+- **It does not screen for open neural tube defects.** Stated explicitly in the
+  report. That is the anomaly scan's job.
+- **It does not detect structural birth defects** — heart, kidneys, limbs,
+  brain, spine, face. **A clear NIPT does not replace the anomaly scan**, and
+  this is the most common misreading of a result like this one.
+- **Confined placental mosaicism** can make placental DNA differ from the baby's.
+- **Microdeletion detection specifically degrades** with low fetal fraction or a
+  short deletion — less of a worry here, at 17.5%.
+
+### What it changes about the NT scan — the reason, not the answer
+
+**Still worth doing, for a different reason than before.** As an aneuploidy
+screen the NT has now been comprehensively outclassed; there is nothing it could
+add to a 17.5%-fraction NIPT on trisomy 21.
+
+**But an enlarged NT matters independently of chromosomes.** In chromosomally
+normal babies, an NT above 3.4mm carries a cardiac anomaly rate of about
+**78 per 1,000 against a background of 5–8 per 1,000** — roughly a tenfold
+difference, and a 2023 registry study found the association holds in euploid
+fetuses. The 11–14 week scan is also the first proper look at the baby's
+structure.
+
+**So: book it for the anatomy, not for the Down syndrome risk. Window closes
+20 November.**
+
+### One loose end this result quietly reopens
+
+**The lab recorded the gestational age at draw as 12w1d.** On the handbook's
+dating, 31 October was **11w0d**. The lab has used the 30 October scan's 14 May
+due date. It does not affect the result — the test needs 10w0d and either
+dating clears it — but **the unresolved due date is now propagating into
+outside records**, which is a second reason to settle it.
+
+*Source: Cordlife / EDGC NIPT Test Report and Microdeletion/Duplication Report, reported 11 November 2026. Patient identifiers and sample IDs deliberately omitted. Residual-risk arithmetic computed from the report's own sensitivity and specificity tables. NT and cardiac figures from [Frontiers in Pediatrics 2023](https://www.frontiersin.org/articles/10.3389/fped.2023.1104179/full) and the pooled 2005 analysis it cites. Verified 2026-11-12. Confidence: high on the results and the quality metrics; the 1-in-250,000 figure is arithmetic from the lab's quoted performance and is an idealisation — the lab's printed floor is the safer number to quote.*
 
 ---
 
