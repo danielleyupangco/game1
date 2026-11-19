@@ -240,6 +240,87 @@ means.
 
 All timings are the standard schedule; Dra. Villafria sets the actual plan.
 
+### The second trimester, dated
+
+**Weeks 14 to 27 — 21 November 2026 to 26 February 2027.** Everything below is
+computed from the 22 May due date, so if that date moves, these move with it.
+
+| When | Gestation | What |
+| --- | --- | --- |
+| **20 Nov** | 13w6d | **NT window closes. Last day.** |
+| **29 Nov** | 15w1d | Thyroid bloods — **add blood type, Rh, ferritin and varicella to this draw** |
+| 5 Dec | 16w0d | First flutters possible from about here |
+| 12–16 Dec | 17w0d | Japan. The best travel window of the pregnancy. |
+| **19 Dec – 16 Jan** | **18–22w** | **The anomaly scan. The big one of this trimester.** |
+| 2 Jan | 20w0d | **Halfway.** Pre-eclampsia becomes a thing to watch from here. |
+| 30 Jan – 27 Feb | 24–28w | Glucose test (OGTT) |
+| 20 Feb | 27w0d | Tdap opens — **early in the window beats late** |
+| **27 Feb** | 28w0d | **Anti-D due, if Rh negative** — which still cannot be known |
+| 26 Feb | 27w6d | Third trimester starts the next day |
+
+#### The four still outstanding from September, now with deadlines
+
+1. **Blood type and Rh.** Never ordered — the box on the request form was blank.
+   **This now has a hard date: if the blood type is Rh negative, the anti-D
+   injection is due at 28 weeks, which is 27 February.** It cannot be given
+   without knowing the type, and the test takes minutes. **Put it on the
+   29 November draw.**
+2. **Ferritin.** Iron demand climbs steeply from the second trimester — this is
+   the stretch where stores get drained, and haemoglobin only shows it once the
+   tank is already empty.
+3. **Varicella IgG.** Also never ordered.
+4. **Pre-pregnancy weight.** The weight tracker cannot say whether gain is on
+   track without it, **and this is the trimester where gain actually starts** —
+   roughly 0.4kg a week from here for a normal starting BMI.
+
+**All four of the blood tests are one draw.** 29 November is already booked for
+the thyroid; adding three tubes to it costs nothing extra in needles.
+
+#### What changes in the body
+
+**This is the good stretch, and the reputation is earned.** Nausea usually
+eases, energy comes back, and appetite returns.
+
+- **The bump shows**, usually 16–20 weeks.
+- **First movements, 16–22 weeks.** With a first baby it is usually nearer 20
+  than 16, and it feels like bubbles or flutters rather than kicks. **There is
+  nothing to count yet** — movement counting matters in the third trimester,
+  once a pattern exists.
+- **Round ligament pain** — sharp twinges low down when standing, sneezing or
+  turning over. The uterus is outgrowing the ligaments holding it. Normal.
+- **Heartburn, constipation, bleeding gums, nosebleeds, a blocked nose.** All
+  ordinary, all from more blood volume and relaxed smooth muscle.
+- **Skin:** linea nigra down the belly, and melasma on the face. **Sunscreen
+  matters more than usual in Manila** — sun makes melasma worse.
+- **Start the habit of sleeping on your side**, before the bump makes it
+  compulsory.
+
+#### The red flags change shape here
+
+The first-trimester list was about losing the pregnancy. This one is not.
+
+- **Bleeding**, at any point
+- **Regular contractions before 37 weeks**
+- **Fluid leaking** from the vagina
+- **Severe headache with vision changes and sudden swelling** — the
+  pre-eclampsia pattern, which only becomes possible **after 20 weeks**, so
+  from 2 January
+- **A change in movement, once movements are established**
+
+#### Life admin that belongs in this trimester
+
+**CJ's own checklist put all of this in the second trimester, and she was
+right** — it is the window where there is energy to do it.
+
+- **Start the yaya search.** Finding, vetting and the paperwork take months.
+- **Buy the High-priority items.** ₱194,544 of the ₱196,704 sits in that tier,
+  so this is the real spend. Travel and Nursery are 66% of it between them.
+- **Prenatal yoga or classes**, and a dental check-up while the gums are
+  cooperating.
+- **The hospital bag is not this trimester.** That is about 35 weeks.
+
+*Verified 2026-11-19. All dates computed from the 22 May 2027 due date. Confidence: high on the windows, which are standard; the body changes are typical rather than guaranteed.*
+
 | Test | When | What it is | Source | Confidence |
 | --- | --- | --- | --- | --- |
 | Dating / viability scan | 6–9 weeks | Confirms pregnancy location, heartbeat, and dating. Dating by crown-rump length in the first trimester is more accurate than LMP. | ACOG / RCOG standard practice | high |
