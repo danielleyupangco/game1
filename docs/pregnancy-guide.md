@@ -3189,6 +3189,96 @@ afterwards.
 
 First-trimester gain of **0.5 – 2kg** applies to every band.
 
+### Your gain, week by week
+
+**This is the one thing the handbook cannot personalise yet.** The bands are set
+by **pre-pregnancy BMI**, and that is still not recorded — so what follows is
+every band, and the job is to find your row. **Once the starting weight is in,
+this collapses to one column and turns into actual target weights on the scale
+rather than amounts gained.**
+
+#### Step one: which band
+
+Find your height, then your pre-pregnancy weight.
+
+| Height | Under 18.5 | 18.5–24.9 | 25–29.9 | 30+ |
+| --- | --- | --- | --- | --- |
+| 150 cm | under 42 | 42–56 | 56–67 | 68 and over |
+| 152 cm | under 43 | 43–58 | 58–69 | 69 and over |
+| 154 cm | under 44 | 44–59 | 59–71 | 71 and over |
+| 156 cm | under 45 | 45–61 | 61–73 | 73 and over |
+| 158 cm | under 46 | 46–62 | 62–75 | 75 and over |
+| 160 cm | under 47 | 47–64 | 64–77 | 77 and over |
+| 162 cm | under 49 | 49–65 | 66–78 | 79 and over |
+| 164 cm | under 50 | 50–67 | 67–80 | 81 and over |
+| 166 cm | under 51 | 51–69 | 69–82 | 83 and over |
+| 168 cm | under 52 | 52–70 | 71–84 | 85 and over |
+| 170 cm | under 53 | 53–72 | 72–86 | 87 and over |
+| 172 cm | under 55 | 55–74 | 74–88 | 89 and over |
+| 174 cm | under 56 | 56–75 | 76–91 | 91 and over |
+
+#### Step two: the table
+
+**Cumulative gain since pre-pregnancy weight, in kg.** Not weekly gain — the
+running total. Anywhere inside the range is fine.
+
+| Week | Date | Under 18.5 | 18.5–24.9 | 25–29.9 | 30+ |
+| --- | --- | --- | --- | --- | --- |
+| **14** | 21 Nov **← you** | 0.9–2.6 | 0.9–2.5 | 0.7–2.4 | 0.7–2.3 |
+| **15** | 28 Nov | 1.4–3.2 | 1.3–3.0 | 1.0–2.7 | 0.8–2.5 |
+| **16** | 5 Dec | 1.8–3.8 | 1.7–3.6 | 1.2–3.1 | 1.0–2.8 |
+| **17** | 12 Dec | 2.3–4.4 | 2.1–4.1 | 1.5–3.4 | 1.2–3.0 |
+| **18** | 19 Dec | 2.7–5.0 | 2.5–4.6 | 1.7–3.8 | 1.3–3.3 |
+| **19** | 26 Dec | 3.2–5.6 | 2.9–5.1 | 1.9–4.1 | 1.5–3.6 |
+| **20** | 2 Jan | 3.6–6.1 | 3.4–5.6 | 2.2–4.5 | 1.7–3.8 |
+| **21** | 9 Jan | 4.1–6.7 | 3.8–6.1 | 2.4–4.8 | 1.8–4.1 |
+| **22** | 16 Jan | 4.5–7.3 | 4.2–6.7 | 2.7–5.2 | 2.0–4.3 |
+| **23** | 23 Jan | 4.9–7.9 | 4.6–7.2 | 2.9–5.5 | 2.2–4.6 |
+| **24** | 30 Jan | 5.4–8.5 | 5.0–7.7 | 3.1–5.9 | 2.3–4.9 |
+| **25** | 6 Feb | 5.8–9.1 | 5.4–8.2 | 3.4–6.2 | 2.5–5.1 |
+| **26** | 13 Feb | 6.3–9.7 | 5.8–8.7 | 3.6–6.6 | 2.7–5.4 |
+| **27** | 20 Feb | 6.7–10.3 | 6.2–9.3 | 3.9–6.9 | 2.8–5.6 |
+| **28** | 27 Feb | 7.2–10.9 | 6.6–9.8 | 4.1–7.3 | 3.0–5.9 |
+| **29** | 6 Mar | 7.6–11.5 | 7.0–10.3 | 4.4–7.6 | 3.2–6.1 |
+| **30** | 13 Mar | 8.1–12.1 | 7.4–10.8 | 4.6–8.0 | 3.3–6.4 |
+| **31** | 20 Mar | 8.5–12.7 | 7.8–11.3 | 4.8–8.3 | 3.5–6.7 |
+| **32** | 27 Mar | 8.9–13.3 | 8.2–11.9 | 5.1–8.7 | 3.7–6.9 |
+| **33** | 3 Apr | 9.4–13.9 | 8.6–12.4 | 5.3–9.0 | 3.8–7.2 |
+| **34** | 10 Apr | 9.8–14.4 | 9.1–12.9 | 5.6–9.4 | 4.0–7.4 |
+| **35** | 17 Apr | 10.3–15.0 | 9.5–13.4 | 5.8–9.7 | 4.2–7.7 |
+| **36** | 24 Apr | 10.7–15.6 | 9.9–13.9 | 6.0–10.1 | 4.3–8.0 |
+| **37** | 1 May | 11.2–16.2 | 10.3–14.4 | 6.3–10.4 | 4.5–8.2 |
+| **38** | 8 May | 11.6–16.8 | 10.7–15.0 | 6.5–10.8 | 4.7–8.5 |
+| **39** | 15 May | 12.1–17.4 | 11.1–15.5 | 6.8–11.1 | 4.8–8.7 |
+| **40** | 22 May | 12.5–18.0 | 11.5–16.0 | 7.0–11.5 | 5.0–9.0 |
+
+**How it is built.** Every band starts from the same **0.5–2kg first-trimester
+allowance** at 13 weeks and runs in a straight line to the IOM total at 40
+weeks. The implied weekly rates come out at 0.44–0.59, 0.41–0.52, 0.24–0.35 and
+0.17–0.26 kg — which match the IOM's own published rates in the table above
+almost exactly, and that agreement is the check that the arithmetic is right.
+**The one gap:** for the 18.5–24.9 band the low end lands at 0.41 where the IOM
+publishes 0.35, because their total range and their rate range are not perfectly
+consistent with each other. **Use the lower figure if you are worried about
+gaining too little.**
+
+#### How to actually use it
+
+- **Weigh at the same time of day, on the same scale, in the same clothes.**
+  Morning, after the loo, before breakfast. Day-to-day noise is easily a kilo.
+- **Read the trend over three or four weeks, never a single reading.** One
+  number above the range after a weekend means nothing.
+- **The range is wide on purpose.** At 20 weeks the 18.5–24.9 band spans
+  3.4–5.6kg — a 2.2kg window. Being inside it anywhere is the target; the middle
+  is not better than the edge.
+- **Gain is not smooth and is not meant to be.** Weeks of nothing followed by a
+  kilo are ordinary.
+- **Below the range is as worth mentioning as above it.** Low gain is associated
+  with smaller babies and preterm birth, and it attracts far less comment than
+  the other direction.
+
+*Dates computed from the 22 May 2027 due date and will move if it does. Bands from IOM 2009, singleton pregnancies. Verified 2026-11-21. Confidence: high on the bands and the dates; the week-by-week interpolation is the standard linear assumption, not a separately published table.*
+
 ### How to read it, and how not to
 
 **It is a range, not a target.** There is no prize for landing in the middle,
