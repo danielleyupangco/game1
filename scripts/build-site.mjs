@@ -980,19 +980,25 @@ const GAIN_BANDS = [
 const T1_GAIN = [0.5, 2];
 const STEADY_FROM = 13;
 
+/* Dani's own figures, given 21 Nov 2026. Seeded as the defaults so the tracker
+   works on a fresh device without a setup step; anything saved on the device
+   still wins, so editing them in the app is never overwritten from here. */
+const KNOWN = { height: 160, pre: 50 };
+
 const loadWt = () => {
+  const base = () => ({ height: KNOWN.height, pre: KNOWN.pre, units: 'metric', log: [] });
   try {
     const raw = localStorage.getItem(WT_KEY);
     const v = raw ? JSON.parse(raw) : null;
-    if (!v || typeof v !== 'object') return { height: null, pre: null, log: [] };
+    if (!v || typeof v !== 'object') return base();
     return {
-      height: v.height ?? null,
-      pre: v.pre ?? null,
+      height: v.height ?? KNOWN.height,
+      pre: v.pre ?? KNOWN.pre,
       units: v.units === 'imperial' ? 'imperial' : 'metric',
       log: Array.isArray(v.log) ? v.log : [],
     };
   } catch (e) {
-    return { height: null, pre: null, units: 'metric', log: [] };
+    return base();
   }
 };
 let wt = loadWt();

@@ -3191,96 +3191,80 @@ First-trimester gain of **0.5 – 2kg** applies to every band.
 
 ### Your gain, week by week
 
-**Height 160cm, pre-pregnancy BMI in the 18.5–24.9 band.** At 160cm that band
-runs **47.4 to 63.7kg** before pregnancy — worth a glance to confirm the right
-row was picked. **Total gain target: 11.5 – 16kg.**
+**160cm, 50kg before pregnancy — BMI 19.5.** That lands in the **18.5–24.9**
+band, confirming the right row. **Total gain target: 11.5 – 16kg, finishing at
+61.5 – 66kg.**
 
-**The starting weight itself is still not recorded**, so this table gives
-**gain**, not scale readings. Add your starting weight to any row to get the
-number the scale should show. The Weight tab's tracker will do it live once the
-figure is entered.
+**One thing the number is worth noticing for.** 19.5 is in the **lower half** of
+the healthy band — the underweight line at 160cm is 47.4kg, so there is 2.6kg
+between the starting weight and it. That does not change the band or the target.
+It does mean that **of the two ways to miss, gaining too little is the one worth
+watching**, and it is the one nobody ever comments on.
 
-| Week | Date | Gain so far (kg) | |
-| --- | --- | --- | --- |
-| **14** | 21 Nov **← you** | **0.9 – 2.5** |  |
-| **15** | 28 Nov | **1.3 – 3.0** |  |
-| **16** | 5 Dec | **1.7 – 3.6** |  |
-| **17** | 12 Dec | **2.1 – 4.1** |  |
-| **18** | 19 Dec | **2.5 – 4.6** |  |
-| **19** | 26 Dec | **2.9 – 5.1** |  |
-| **20** | 2 Jan | **3.4 – 5.6** | Halfway |
-| **21** | 9 Jan | **3.8 – 6.1** |  |
-| **22** | 16 Jan | **4.2 – 6.7** |  |
-| **23** | 23 Jan | **4.6 – 7.2** |  |
-| **24** | 30 Jan | **5.0 – 7.7** |  |
-| **25** | 6 Feb | **5.4 – 8.2** |  |
-| **26** | 13 Feb | **5.8 – 8.7** |  |
-| **27** | 20 Feb | **6.2 – 9.3** |  |
-| **28** | 27 Feb | **6.6 – 9.8** | Third trimester |
-| **29** | 6 Mar | **7.0 – 10.3** |  |
-| **30** | 13 Mar | **7.4 – 10.8** |  |
-| **31** | 20 Mar | **7.8 – 11.3** |  |
-| **32** | 27 Mar | **8.2 – 11.9** |  |
-| **33** | 3 Apr | **8.6 – 12.4** |  |
-| **34** | 10 Apr | **9.1 – 12.9** |  |
-| **35** | 17 Apr | **9.5 – 13.4** |  |
-| **36** | 24 Apr | **9.9 – 13.9** |  |
-| **37** | 1 May | **10.3 – 14.4** |  |
-| **38** | 8 May | **10.7 – 15.0** |  |
-| **39** | 15 May | **11.1 – 15.5** |  |
-| **40** | 22 May | **11.5 – 16.0** | Due date |
+| Week | Date | What the scale should read | Gain | |
+| --- | --- | --- | --- | --- |
+| **14** | 21 Nov **← you** | **50.9 – 52.5** | 0.9 – 2.5 |  |
+| **15** | 28 Nov | **51.3 – 53.0** | 1.3 – 3.0 |  |
+| **16** | 5 Dec | **51.7 – 53.6** | 1.7 – 3.6 |  |
+| **17** | 12 Dec | **52.1 – 54.1** | 2.1 – 4.1 |  |
+| **18** | 19 Dec | **52.5 – 54.6** | 2.5 – 4.6 |  |
+| **19** | 26 Dec | **52.9 – 55.1** | 2.9 – 5.1 |  |
+| **20** | 2 Jan | **53.4 – 55.6** | 3.4 – 5.6 | Halfway |
+| **21** | 9 Jan | **53.8 – 56.1** | 3.8 – 6.1 |  |
+| **22** | 16 Jan | **54.2 – 56.7** | 4.2 – 6.7 |  |
+| **23** | 23 Jan | **54.6 – 57.2** | 4.6 – 7.2 |  |
+| **24** | 30 Jan | **55.0 – 57.7** | 5.0 – 7.7 |  |
+| **25** | 6 Feb | **55.4 – 58.2** | 5.4 – 8.2 |  |
+| **26** | 13 Feb | **55.8 – 58.7** | 5.8 – 8.7 |  |
+| **27** | 20 Feb | **56.2 – 59.3** | 6.2 – 9.3 |  |
+| **28** | 27 Feb | **56.6 – 59.8** | 6.6 – 9.8 | Third trimester |
+| **29** | 6 Mar | **57.0 – 60.3** | 7.0 – 10.3 |  |
+| **30** | 13 Mar | **57.4 – 60.8** | 7.4 – 10.8 |  |
+| **31** | 20 Mar | **57.8 – 61.3** | 7.8 – 11.3 |  |
+| **32** | 27 Mar | **58.2 – 61.9** | 8.2 – 11.9 |  |
+| **33** | 3 Apr | **58.6 – 62.4** | 8.6 – 12.4 |  |
+| **34** | 10 Apr | **59.1 – 62.9** | 9.1 – 12.9 |  |
+| **35** | 17 Apr | **59.5 – 63.4** | 9.5 – 13.4 |  |
+| **36** | 24 Apr | **59.9 – 63.9** | 9.9 – 13.9 |  |
+| **37** | 1 May | **60.3 – 64.4** | 10.3 – 14.4 |  |
+| **38** | 8 May | **60.7 – 65.0** | 10.7 – 15.0 |  |
+| **39** | 15 May | **61.1 – 65.5** | 11.1 – 15.5 |  |
+| **40** | 22 May | **61.5 – 66.0** | 11.5 – 16.0 | Due date |
 
-**Weekly rate in this band: about 0.4 – 0.5kg.** Roughly **half a kilo a week**,
-every week, from now to the end. That is the whole rule — the table is just that
-rule with the arithmetic done.
-
-#### What the scale reads at term
-
-Pick the row nearest your starting weight.
-
-| Started at | At 40 weeks |
-| --- | --- |
-| 48 kg | 59.5 – 64.0 kg |
-| 50 kg | 61.5 – 66.0 kg |
-| 52 kg | 63.5 – 68.0 kg |
-| 54 kg | 65.5 – 70.0 kg |
-| 56 kg | 67.5 – 72.0 kg |
-| 58 kg | 69.5 – 74.0 kg |
-| 60 kg | 71.5 – 76.0 kg |
-| 62 kg | 73.5 – 78.0 kg |
-| 64 kg | 75.5 – 80.0 kg |
-
-#### The other three bands
-
-Kept for reference; **the 18.5–24.9 row above is the one that applies.**
-
-| Pre-pregnancy BMI | Total gain | Weekly from week 14 |
-| --- | --- | --- |
-| Under 18.5 | 12.5 – 18kg | 0.44 – 0.58kg |
-| **18.5 – 24.9** | **11.5 – 16kg** | **0.35 – 0.50kg** |
-| 25 – 29.9 | 7 – 11.5kg | 0.23 – 0.33kg |
-| 30 and above | 5 – 9kg | 0.17 – 0.27kg |
-
-**How the weekly figures were derived.** Each band starts from the same
-**0.5 – 2kg first-trimester allowance** at 13 weeks and runs in a straight line
-to its IOM total at 40 weeks. The implied rates reproduce the IOM's own
-published rates almost exactly, which is the check that the arithmetic holds.
-**One gap:** for this band the derived low end is 0.41 where the IOM publishes
-0.35, because their total range and rate range are not perfectly consistent.
-**Use 0.35 if the worry is gaining too little.**
+**The rule behind the table: about half a kilo a week, every week, from now to
+the end.** Everything above is that with the arithmetic done.
 
 #### How to actually use it
 
 - **Weigh the same way every time.** Morning, after the loo, before breakfast,
   same scale, same clothes. Day-to-day noise is easily a kilo.
 - **Read the trend over three or four weeks, never a single reading.**
-- **The range is wide on purpose.** At 20 weeks it spans 3.4 – 5.6kg, a 2.2kg
+- **The range is wide on purpose.** At 20 weeks it spans 53.4 – 55.6kg, a 2.2kg
   window. Anywhere inside is the target; the middle is not better than the edge.
 - **Gain is not smooth.** Weeks of nothing then a kilo is ordinary.
-- **Below the range is as worth raising as above it.** Low gain is associated
-  with smaller babies and preterm birth, and it attracts far less comment.
+- **The Weight tab already knows these figures** — 160cm and 50kg are built in,
+  so logging a weight checks it against this table automatically. Changing them
+  in the app overrides what is here, and that change sticks.
 
-*Dates computed from the 22 May 2027 due date and will move if it does. Bands from IOM 2009, singleton pregnancies. Verified 2026-11-21. Confidence: high on the band and the dates; the week-by-week interpolation is the standard linear assumption, not a separately published table.*
+#### Where the schedule comes from
+
+Each band starts from the same **0.5 – 2kg first-trimester allowance** at 13
+weeks and runs in a straight line to its IOM 2009 total at 40 weeks.
+
+| Pre-pregnancy BMI | Total gain | Weekly from week 14 |
+| --- | --- | --- |
+| Under 18.5 | 12.5 – 18kg | 0.44 – 0.58kg |
+| **18.5 – 24.9 — yours** | **11.5 – 16kg** | **0.35 – 0.50kg** |
+| 25 – 29.9 | 7 – 11.5kg | 0.23 – 0.33kg |
+| 30 and above | 5 – 9kg | 0.17 – 0.27kg |
+
+The derived weekly rates reproduce the IOM's published ones almost exactly,
+which is the check that the arithmetic holds. **One gap:** for this band the
+derived low end is 0.41 where the IOM publishes 0.35, because their total range
+and rate range are not perfectly consistent. **Given the starting BMI, use 0.35
+— the more generous low end is the safer one here.**
+
+*Dates computed from the 22 May 2027 due date and will move if it does. Bands from IOM 2009, singleton pregnancies. Verified 2026-11-21. Confidence: high on the band, the targets and the dates; the week-by-week interpolation is the standard linear assumption, not a separately published table.*
 
 ### How to read it, and how not to
 
