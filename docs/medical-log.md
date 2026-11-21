@@ -55,8 +55,8 @@ looks at, not just what the lab called it. Status is written as a word — `good
 | Vitamin D (25-OH) | Your vitamin D stores | 29.6 ng/mL | 30.0 or above is sufficient | watch | 2026-09-18 |
 | Blood type & Rh | Your blood group, and whether you are Rh positive or negative | — | Needed by 28 weeks | pending | not ordered |
 | HIV screen | Standard test offered to everyone in pregnancy | Nonreactive, 0.31 S/CO | Below 1.0 is negative | good | 2026-09-18 |
-| Pre-pregnancy weight | Your starting weight, used to work out healthy gain | — | Not recorded | pending | not recorded |
-| Height | Used with weight to work out BMI | — | Not recorded | pending | not recorded |
+| Pre-pregnancy weight | Your starting weight, used to work out healthy gain | — | **Still not recorded** — BMI band confirmed as 18.5–24.9, so 47.4–63.7kg at 160cm | pending | band given 2026-11-21 |
+| Height | Used with weight to work out BMI | **160 cm** | normal | ok | given 2026-11-21 |
 | Sugar test (OGTT) | The proper test for pregnancy diabetes — a sweet drink, then bloods | — | Due 24–28 weeks | pending | 2027-01-27 – 2027-02-24 |
 
 ### The one flagged `watch`, and why it is not a problem
