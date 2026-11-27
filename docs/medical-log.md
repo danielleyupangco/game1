@@ -156,7 +156,14 @@ to-do that does not happen.
       taken the TSH measures the dose, not the thyroid; a low number means the
       dose comes down. **The stop decision is postpartum**, on a test taken off
       the tablet at about six weeks. *From the 31 Oct prescription.*
-- [ ] **Ask whether TPO antibodies and free T4 were drawn on 31 October.** This
+- [ ] **TPO antibodies — now the single most useful test outstanding.** The
+      27 November ultrasound found a normal, uniform, normal-sized gland with no
+      nodules, which **leans towards this not being autoimmune** and so towards
+      the tablet being temporary. **It does not settle it** — an
+      antibody-positive gland can look normal. The antibodies do settle it, and
+      **the draw is on 29 November.** Ask whether they were already taken on
+      31 October; if not, add them.
+- [ ] **Ask whether free T4 was drawn on 31 October.** This
       is the test that says whether the tablet is for this pregnancy or for
       good: TPO positive means autoimmune and long-term, TPO negative means it
       is often stopped after delivery. If they were not drawn, request them with
@@ -279,6 +286,84 @@ explains — but nothing in the real good news rests on it. **Two things came ou
 rather than being closed by it:** the eight-day dating disagreement, and the NT
 scan that was not measured and now has a three-week window. Both are at the top
 of the list above.
+
+---
+
+## 27 November 2026 — Thyroid ultrasound · 14w6d · **completely normal**
+
+**Makati Medical Center, Radiology.** Neck with colour Doppler. Referred by
+**Dr. Nerissa Ang-Golangco**; read by **Dr. Carmencita Verayo**. Same day as the
+anatomy scan.
+
+| | |
+| --- | --- |
+| Right lobe | 4.8 × 1.1 × 1.2 cm |
+| Left lobe | 4.2 × 1.3 × 1.0 cm |
+| Isthmus | 0.9 mm |
+| Parenchyma | **Homogenous, no focal masses** |
+| Calcifications | **None** |
+| Vascularity | **Normal** |
+| Cervical lymph nodes | **None abnormal** |
+| Extrathyroidal masses | **None** |
+
+**Impression: normal-sized thyroid gland, homogenous parenchyma, normal
+vascularity, no abnormal lymph nodes or masses.** There is nothing on this scan.
+
+### The frightening table at the bottom is not about you
+
+**The TI-RADS 1–5 list — "benign / not suspicious / mildly / moderately / highly
+suspicious", with its FNA biopsy thresholds — is printed on every thyroid report
+the department issues.** It is a scoring key for **nodules**.
+
+**There are no nodules.** Nothing was scored, no category was assigned, and no
+biopsy threshold applies. **It is a legend, not a result.**
+
+### What it actually tells us, which is more than it looks
+
+**It is a point in favour of this being temporary rather than permanent — and
+that has been the open question since the levothyroxine started.**
+
+Autoimmune thyroid disease, Hashimoto's, usually looks like something on
+ultrasound: an **enlarged, darker, patchy gland, often with micronodules**
+scattered through it. Her gland is **normal-sized, uniform and normally
+supplied** — the opposite description.
+
+**But it is not the answer, and it must not be read as one.** Hypoechogenicity
+tracks with how advanced the disease is, and heterogeneity has been detected by
+measurement in antibody-positive people whose glands looked normal to the eye.
+**A clean ultrasound does not rule out early or mild autoimmune disease.** No
+study found here puts a number on how often an antibody-positive gland looks
+normal, so none is quoted. **TPO antibodies remain the test that answers this**,
+and the draw is two days away.
+
+### What it does not tell you at all — the important caveat
+
+**An ultrasound shows what the thyroid looks like, not what it does.**
+
+**The problem is a functional one.** A TSH of 5.13 says the gland is being asked
+to work harder than it should need to. A structurally perfect thyroid can still
+underperform, and this one being photogenic says nothing about its output.
+
+**So this is not evidence for or against taking the tablet.** It is a
+structural baseline — which is exactly why an endocrinologist orders it for a
+raised TSH: to see whether there is a nodule or a Hashimoto's pattern behind the
+number. There is neither.
+
+### Two smaller observations
+
+**No nodules is worth something going forward.** Pregnancy can make existing
+thyroid nodules grow, and there are none to watch. One fewer thing on the list.
+
+**On size.** Working the reported dimensions through the usual ellipsoid formula
+gives roughly **5.7 mL in total**, which sits at the **low end** of the ranges
+usually quoted for an adult woman. **This is an observation, not a finding:** the
+lobe depths of 1.1–1.3 cm are comfortably normal — enlargement is generally
+called above 2 cm — the volume formula carries real error, published ranges vary
+widely, and **the radiologist who saw the images called it normal-sized, which
+is the authoritative read.** Worth a passing mention at the next endocrinology
+visit and nothing more.
+
+*Source: Makati Medical Center Department of Radiology imaging report, 27 November 2026, procedure 4458147, electronically signed 14:11. Volume computed here from the report's own dimensions. Hashimoto ultrasound features from [Radiopaedia](https://radiopaedia.org/articles/hashimoto-thyroiditis?lang=gb) and the heterogeneity finding from [Kaneko et al. 2013](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3610302/). Verified 2026-11-27. Confidence: high on the report's contents and on ultrasound not measuring function; the autoimmune inference is directional and deliberately unquantified, because no figure was found for how often an antibody-positive gland appears normal.*
 
 ---
 
