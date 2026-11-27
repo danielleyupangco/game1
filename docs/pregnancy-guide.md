@@ -47,10 +47,18 @@ section for how this is handled.
 2027**. This is the measurement everything before it was waiting for, and it is
 not provisional in the way the earlier dates were.
 
-**Challenged on 30 October, and held.** The second scan reported an EDD of
-**14 May 2027** from its average measurements — eight days earlier. The
-handbook has kept 22 May, for the reasons set out just below, but **the final
-say is Dra. Villafria's and the question is at the top of the action list.**
+**Challenged on 30 October, and settled on 27 November — in favour of 22 May.**
+The 30 October scan had offered **14 May**, eight days earlier, and the handbook
+kept 22 May on the reasoning set out below. **The chart header of the
+27 November scan now reads `LMP Aug 15, 2026` and `EDC May 22, 2027`**, with the
+age of gestation at 14w6d — the handbook's date, to the day. The clinic's
+recorded LMP was also corrected from the 14th to **the 15th, which is what Dani
+said from the beginning**.
+
+**The two scans converged rather than diverged.** The 27 November scan's own
+biometry gives 19 May — a **three-day** gap against 22 May, where the redating
+threshold at 14–15 weeks is seven days. The October gap was eight days; this one
+is three. **Nothing more needs deciding.**
 
 ### How the date was reached
 
@@ -73,8 +81,10 @@ else including the last menstrual period.
 
 | Method | EDD | Status |
 | --- | --- | --- |
-| **Crown-rump length, 2 Oct** | **2027-05-22** | **In use.** |
-| Average biometry, 30 Oct | 2027-05-14 | **Eight days earlier. Not adopted — see below.** |
+| **Crown-rump length, 2 Oct** | **2027-05-22** | **In use, and now confirmed on the chart.** |
+| **Chart header, 27 Nov — LMP 15 Aug** | **2027-05-22** | **Agrees. The clinic and the handbook now run on the same date.** |
+| Average biometry, 27 Nov | 2027-05-19 | Three days out, inside the threshold. Not adopted. |
+| Average biometry, 30 Oct | 2027-05-14 | Eight days earlier. Not adopted — see below. |
 | Chart header, LMP 14 Aug + 280 | 2027-05-21 | One day out. Superseded. |
 | Mean sac diameter, 18 Sept | 2027-05-19 | Three days out. Superseded. |
 | Dani's recalled LMP, 15 Aug | 2027-05-22 | **Matches the 2 Oct scan exactly.** |
@@ -247,7 +257,8 @@ computed from the 22 May due date, so if that date moves, these move with it.
 
 | When | Gestation | What |
 | --- | --- | --- |
-| **20 Nov** | 13w6d | **NT window closes. Last day.** |
+| ~~20 Nov~~ | 13w6d | ~~NT window closes~~ — passed without one. Little lost; see 27 Nov entry. |
+| **27 Nov** | 14w6d | **Done — anatomy survey all normal, due date settled at 22 May.** |
 | **29 Nov** | 15w1d | Thyroid bloods — **add blood type, Rh, ferritin and varicella to this draw** |
 | 5 Dec | 16w0d | First flutters possible from about here |
 | 12–16 Dec | 17w0d | Japan. The best travel window of the pregnancy. |
@@ -282,10 +293,13 @@ the thyroid; adding three tubes to it costs nothing extra in needles.
 eases, energy comes back, and appetite returns.
 
 - **The bump shows**, usually 16–20 weeks.
-- **First movements, 16–22 weeks.** With a first baby it is usually nearer 20
-  than 16, and it feels like bubbles or flutters rather than kicks. **There is
-  nothing to count yet** — movement counting matters in the third trimester,
-  once a pattern exists.
+- **First movements, 16–22 weeks — and expect the later end.** With a first baby
+  it is usually nearer 20 than 16, and **the 27 November scan found an anterior
+  placenta**, which sits between the baby and the front of the abdomen and
+  cushions the kicks. **Later still, then: nearer 20–22 weeks.** It feels like
+  bubbles or flutters rather than kicks. **A quiet month from here is expected,
+  not a warning.** There is nothing to count yet — movement counting matters in
+  the third trimester, once a pattern exists.
 - **Round ligament pain** — sharp twinges low down when standing, sneezing or
   turning over. The uterus is outgrowing the ligaments holding it. Normal.
 - **Heartburn, constipation, bleeding gums, nosebleeds, a blocked nose.** All

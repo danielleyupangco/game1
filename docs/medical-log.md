@@ -132,27 +132,16 @@ to-do that does not happen.
 
 ### Do now
 
-- [ ] **Settle the due date with Dra. Villafria.** The 30 October scan reports
-      **14 May 2027**; the handbook runs on **22 May 2027** from the 2 October
-      crown-rump length. Eight days apart. Ask it in one line: *"The CRL on
-      2 October gave 22 May and this scan gives 14 May — which are we working
-      to, and is it going in the chart?"* **This is the first question of the
-      next visit**, because everything else is measured from it: the NT window,
-      the anomaly scan, when progesterone stops, and what counts as term.
-      *From the 30 Oct scan.*
-- [ ] **Book the NT scan — 8 days of window left, and the reason has changed.**
-      **The NIPT has made it redundant as a Down syndrome screen.** What it
-      still does is look at the baby's structure: an enlarged NT carries a
-      roughly tenfold cardiac anomaly rate **even with normal chromosomes**, and
-      the 11–14 week scan is the first real anatomy check. **Book it for that.**
-      *(Original note follows.)* The window opens tomorrow and shuts 20 November.
-      11w0d to 13w6d on the current dating is **31 October to 20 November**. The
-      30 October scan did not measure it. It cannot be done late, so this is a
-      phone call this week, not next. **Ask whether the 30 October scan was
-      meant to be the NT scan** — if it was, that is worth knowing before
-      booking another. NT is the ultrasound; NIPT is the blood test. Separate
-      things, overlapping windows, and declining one is not declining the other.
-      *From the 30 Oct scan.*
+- [x] **~~Settle the due date.~~ Done — 27 November.** The chart header now
+      reads **LMP 15 August, EDC 22 May 2027**, and puts her at 14w6d, matching
+      the handbook to the day. The LMP was corrected to her own recollection of
+      the 15th. The 14 May date is gone.
+- [x] **~~Book the NT scan.~~ Window closed 20 November without one.** **Little
+      was lost.** Its main job — screening for Down syndrome — had already been
+      done far better by the NIPT on a 17.5% fetal fraction. Its residual value
+      was cardiac, and the **27 November scan reported a normal 4-chamber heart
+      view**. The detailed cardiac assessment comes at the anomaly scan,
+      19 December to 16 January, which is now the one to protect.
 - [x] **~~Book the endocrinologist.~~ Done — Dr. Nerissa Ang-Golangco, 31
       October.** Levothyroxine (TFOUR) 50mcg daily started. The referral was
       recorded as "Dr. Capellan" in the 2 October notes; the prescription gives
@@ -290,6 +279,146 @@ explains — but nothing in the real good news rests on it. **Two things came ou
 rather than being closed by it:** the eight-day dating disagreement, and the NT
 scan that was not measured and now has a three-week window. Both are at the top
 of the list above.
+
+---
+
+## 27 November 2026 — Anatomy survey · 14w6d · **the due date is settled, and everything is normal**
+
+**Makati Medical Center**, Maternal & Fetal Medicine. Attending **Dra. Ma. Fe
+Villafria**, scanned by **Dr. Joanne De Grano-Marave**, FPOGS, FPSUOG. G1 P0.
+*(Age on the report reads 28 — birthday was the day before.)*
+
+### The headline is in the chart header, not the findings
+
+**The chart now reads `LMP Aug 15, 2026` and `EDC May 22, 2027`, and puts the
+age of gestation at 14 weeks 6 days.** That is the handbook's date, to the day.
+
+**Three things resolved in one line of letterhead.**
+
+1. **The due date question is closed.** It has been the top action item since
+   30 October. The chart runs on **22 May**.
+2. **The LMP was corrected to the 15th.** The clinic chart had recorded 14
+   August; Dani always said the 15th. The crown-rump length implied the 15th in
+   October, and the paperwork has now caught up with her.
+3. **The 14 May date from the 30 October scan is gone**, and was never adopted.
+
+### And the gap has closed on its own
+
+| Scan | Scan's own EDD | Gap from 22 May | Redating threshold then | Verdict |
+| --- | --- | --- | --- | --- |
+| 30 Oct, 10w6d | 14 May | **8 days** | >7 days | Threshold crossed; not adopted |
+| **27 Nov, 14w6d** | **19 May** | **3 days** | >7 days | **Comfortably inside. Keep 22 May.** |
+
+**The two scans are converging on the handbook's date rather than away from it**,
+which is the pattern you would expect if 22 May is right and the earlier
+disagreement was measurement noise at the bottom of the biometry's useful range.
+
+### The anatomy survey — twelve for twelve
+
+**Every structure examined was reported normal.** This is the substance of the
+scan and it is worth listing in full rather than summarising:
+
+| | | | |
+| --- | --- | --- | --- |
+| Lateral ventricles ✓ | Cerebellum ✓ | Posterior fossa ✓ | Face ✓ |
+| **4-chamber heart ✓** | Stomach ✓ | Kidneys ✓ | Urinary bladder ✓ |
+| 3-vessel cord ✓ | Cord insertion ✓ | Spine ✓ | Extremities ✓ |
+
+**The 4-chamber heart view matters more than the rest of the list**, because the
+NT scan never happened — its window shut on 20 November. The residual reason to
+want an NT was cardiac, and a normal 4-chamber view at 15 weeks covers part of
+that gap. **The detailed cardiac views come at the anomaly scan**, 19 December
+to 16 January.
+
+**This does not replace the anomaly scan.** It is an early survey; several
+structures are simply easier to see at 18–22 weeks.
+
+### Measurements
+
+| | Value | Reads as | Percentile |
+| --- | --- | --- | --- |
+| Biparietal diameter | 3.1 cm | 15w6d | **84th** |
+| Head circumference | 10.6 cm | 15w1d | 41st |
+| Abdominal circumference | 9.4 cm | 15w4d | 76th |
+| Femur length | 1.7 cm | 15w1d | 53rd |
+| Cerebellum | 1.4 cm | 15w2d | 62nd |
+| **Estimated weight** | **121 g** (4.3 oz) | ±18 g | **68th** |
+| Heart rate | **158 bpm** | | |
+| Deepest fluid pocket | 3.2 cm | normohydramnios | |
+
+**The weight figure is usable this time, unlike the last one.** Feeding the
+report's own measurements into the Hadlock formula returns **120 g against the
+121 g printed**, and at 15w2d the pregnancy is now **inside** the range the
+formula was built on (14 weeks and up) and **5.2 times its zero-size floor**
+rather than sitting on top of it. The 68th percentile can be read as meaning
+something.
+
+> **A correction to the 11 November entry while this is in view.** That entry
+> argued the 46 g reading was unusable, and gave two reasons: the formula's
+> 22.9 g floor with validation starting at 14 weeks, and separately that "46 g
+> is a fourteen-week weight". **The first reason is sound and still carries the
+> conclusion. The second was shakier than it was presented** — published early
+> fetal-weight references differ substantially from each other at these
+> gestations, and against Hadlock's own curve that cross-check does not hold.
+> The conclusion is unchanged; one of the two arguments for it was not as strong
+> as stated.
+
+### Why the head reads 84th and the circumference reads 41st
+
+**Not because anything is growing unevenly. Because the head is a slightly round
+one.**
+
+The report gives a **cephalic index of 85.3%** — biparietal diameter divided by
+occipitofrontal diameter, which is width against length. Recomputing from the
+image measurements gives 85.5%, so the figure is right. **Typical is around 78.**
+
+**A rounder head is wider for its circumference**, so the width measurement
+reads large while the circumference — which does not care about shape — reads
+true. That is exactly the pattern here: BPD 84th, HC 41st. **The head
+circumference is the more reliable of the two**, and it sits mid-range.
+
+*Cutoffs for what counts as "round" vary between sources, so 85.3 is best read
+as the upper part of normal rather than a label. The mechanism is geometry and
+does not depend on the cutoff.*
+
+**On HC/AC at 1.13, the 18th percentile.** Low-normal, driven by the abdomen
+measuring at the 76th while the head sits at the 41st. **This ratio is a
+third-trimester tool** for spotting asymmetric growth restriction; at 15 weeks
+it is not answering a question anyone is asking. Noted so it is on the record
+if it ever matters.
+
+### Three new things on the record
+
+**The placenta is anterior, developing, grade 0.** Front wall, immature, exactly
+as it should be at this stage — grade 0 is normal until well into the third
+trimester. **It is not previa**; nothing suggests it is near the cervix.
+
+**The one practical consequence is about feeling movement.** An anterior
+placenta sits between the baby and the front of the abdomen and cushions the
+kicks. **First movements are commonly felt later with one** — nearer 20–22 weeks
+than 16–18. **So a quiet stretch over the next month is expected, not a
+warning.** It changes nothing about movement counting later, which starts in the
+third trimester regardless.
+
+**"Focal contractions at the posterior uterine wall."** This reads alarmingly
+and is not. It is a patch of uterine muscle that has tightened up during the
+scan, which looks like a lump or a fibroid on the screen and disappears again
+within the hour. **It is not a contraction in the labour sense and means
+nothing at 15 weeks.**
+
+**The subchorionic hemorrhage is not mentioned.** It was 0.136 mL on 30 October.
+On a structured report with an Other Findings line that was used for something
+else, its absence is meaningful: **it has resolved.** Worth one confirming
+question rather than assumed, but that is the reading.
+
+### Everything else
+
+**Heart rate 158**, down from 163 on 30 October — the expected direction, since
+the rate peaks around 9–10 weeks and declines from there to about 140 at term.
+**Cephalic presentation**, which still means nothing until about 36 weeks.
+**Normohydramnios.**
+
+*Source: Makati Medical Center second/third-trimester ultrasound report, 27 November 2026, 10:52. Hadlock recomputation and cephalic index recomputed here from the report's own figures. Cephalic index reference values from [Radiopaedia](https://www.radiopaedia.org/articles/cephalic-index?lang=us). Verified 2026-11-27. Confidence: high on the findings, the dating resolution and the arithmetic; the head-shape explanation is sound geometry rather than a diagnosis, and the subchorionic hemorrhage being resolved is inferred from its absence rather than stated.*
 
 ---
 

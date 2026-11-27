@@ -840,29 +840,37 @@ $('#now-count').textContent = now.daysToGo >= 0 ? now.daysToGo + ' days' : '\\u2
 
 /* ---- the one live deadline --------------------------------------------- */
 /* This slot carries whatever is closest to running out. It counted down to the
-   repeat scan, then counted forward from the heartbeat; the 30 October scan did
-   not measure the nuchal translucency, so until 20 November that window is the
-   thing with a clock on it. Once it closes the slot falls back to the last
-   scan, because "how long since" is what is worth knowing with no deadline. */
-const NT_CLOSES = '2026-11-20';
-const LAST_SCAN = '2026-10-30';
+   repeat scan, then forward from the heartbeat, then down to the NT window,
+   which closed on 20 November without one. The anomaly scan is now the thing
+   with a clock on it: it counts down to the window opening, then to it closing,
+   then falls back to the last scan, because "how long since" is what is worth
+   knowing when nothing is pending. */
+const ANOMALY_OPENS = '2026-12-19';
+const ANOMALY_CLOSES = '2027-01-16';
+const LAST_SCAN = '2026-11-27';
+const LAST_SCAN_NOTE = '158 bpm, anatomy all normal';
 (() => {
   const el = $('#scan-deadline');
-  const left = Math.round((civil(NT_CLOSES) - todayManila()) / MS);
-  if (left > 0) {
-    el.textContent = '\u23f3 NT scan window closes in ' + left + ' day' +
-      (left === 1 ? '' : 's') + ' \u2014 not yet booked';
+  const days = (d) => Math.round((civil(d) - todayManila()) / MS);
+  const plural = (n) => n + ' day' + (n === 1 ? '' : 's');
+  const toOpen = days(ANOMALY_OPENS);
+  const toClose = days(ANOMALY_CLOSES);
+  if (toOpen > 0) {
+    el.textContent = '\u23f3 Anomaly scan window opens in ' + plural(toOpen);
     return;
   }
-  if (left === 0) {
-    el.textContent = '\u23f3 NT scan window closes today';
+  if (toClose > 0) {
+    el.textContent = '\u23f3 Anomaly scan window closes in ' + plural(toClose);
     return;
   }
-  const since = Math.round((todayManila() - civil(LAST_SCAN)) / MS);
+  if (toClose === 0) {
+    el.textContent = '\u23f3 Anomaly scan window closes today';
+    return;
+  }
+  const since = days(LAST_SCAN) * -1;
   el.textContent = since <= 0
-    ? '\u2665 Scan today \u2014 163 bpm, all well'
-    : '\u2665 Last scan ' + since + ' day' + (since === 1 ? '' : 's') +
-      ' ago \u2014 163 bpm, all well';
+    ? '\u2665 Scan today \u2014 ' + LAST_SCAN_NOTE
+    : '\u2665 Last scan ' + plural(since) + ' ago \u2014 ' + LAST_SCAN_NOTE;
 })();
 
 /* ---- week rails -------------------------------------------------------- */
