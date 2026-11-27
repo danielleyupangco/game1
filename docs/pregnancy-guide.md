@@ -2399,6 +2399,64 @@ frightening cause of one-sided early pain away.
 
 *Sources: [Ectopic Pregnancy Trust — signs and symptoms](https://ectopic.org.uk/ectopic-pregnancy-symptoms); [Mayo Clinic — ectopic pregnancy](https://www.mayoclinic.org/diseases-conditions/ectopic-pregnancy/diagnosis-treatment/drc-20372093); FDA drug safety communication on NSAIDs in pregnancy. Verified 2026-09-20. Confidence: high.*
 
+### When the bump goes hard or tight
+
+**Two different things get called this, and only one of them is something you
+can feel.**
+
+#### The one on the scan report
+
+**"Focal contraction" on the 27 November report is a picture, not a symptom.**
+It is a patch of uterine muscle that tightened while the probe was on it — so
+yes, technically a cramp of sorts, but **there is nothing to stop, because it
+already stopped.** These last minutes to about an hour and resolve on their own.
+**You almost certainly felt nothing at the time.** Its only real significance is
+that it mimics a fibroid on screen, which is why the sonographer names it.
+
+#### The one you can feel
+
+From the middle of pregnancy the bump can go **firm and tight all over**, then
+soften again. Those are **Braxton Hicks** — practice tightenings. They are
+sometimes noticed from about 16 weeks, usually later, and they are **irregular,
+painless and do not build.**
+
+**The common triggers are dull and fixable:**
+
+- **Dehydration.** The single most frequent cause of an irritable uterus, and in
+  Manila heat it takes no effort at all.
+- **A full bladder.**
+- **A busy day on your feet**, or having just stood up quickly.
+- **Sex**, or an orgasm.
+
+**What to do, in order:**
+
+1. **Drink a large glass of water** and have another.
+2. **Empty your bladder.**
+3. **Lie down on your left side** for twenty minutes.
+4. **If it settles, that was it.** That is the test and the treatment in one.
+
+**A different thing worth separating out: round ligament pain.** Sharp, brief,
+low down and usually on one side, triggered by standing, sneezing or rolling
+over. **That is a stab, not a tightening**, and it is the ligaments stretching
+as the uterus outgrows them. Nothing to do about it beyond moving more slowly.
+
+#### When it is not ordinary
+
+**Tightening that does not settle after water, an empty bladder and twenty
+minutes lying down is the thing to ring about.** Specifically:
+
+- **Regular** — coming at intervals you could time
+- **Painful**, or building rather than fading
+- With **bleeding**, or **fluid leaking**
+- With **low back pain** that comes and goes in waves
+- Four or more in an hour
+
+**Before 37 weeks, regular timeable tightening is assessed the same day, not
+watched overnight.** It is very unlikely to be that at this stage, and that is
+exactly why it is worth knowing the shape of rather than guessing at.
+
+*Verified 2026-11-27. Confidence: high on the focal contraction being insignificant and on the red-flag list; the hydration advice is standard practice rather than strongly evidenced, and costs nothing.*
+
 ### Discharge: what the ordinary kind looks like
 
 More discharge is one of the earliest pregnancy changes there is — often the
